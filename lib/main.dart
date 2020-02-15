@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:io';
-import 'dart:convert' as convert;
 import 'Login.dart';
 
 void main() => runApp(MyApp());

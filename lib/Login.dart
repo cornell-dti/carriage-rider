@@ -71,8 +71,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // add guard based on backend verification later
-    if (currentUser == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
@@ -86,8 +84,6 @@ class _LoginState extends State<Login> {
                       SignInButton()
                     ],
                   ))));
-    } else {
-    }
   }
 }
 
@@ -115,7 +111,7 @@ class SignInButton extends StatelessWidget {
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
                     'Sign in with Google',
-                    style: TextStyle(fontSize: 20, color: Colors.grey),
+                    style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
                 )
               ],
