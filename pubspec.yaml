@@ -25,7 +25,6 @@ dependencies:
   cupertino_icons: ^0.1.2
   google_sign_in: ^4.1.1
   http: ^0.12.0+2
-  url_launcher: ^5.0.3
 
 dev_dependencies:
   flutter_test:
@@ -34,12 +33,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/images/
   fonts:
     - family: SFPro
       fonts:
         - asset: fonts/SF-Pro-Text-Medium.ttf
+  assets:
+    - assets/images/
 
 flutter_icons:
   image_path: "assets/images/logo_rider.png"
