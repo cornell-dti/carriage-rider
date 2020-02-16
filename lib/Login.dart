@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'dart:convert';
+import 'app_config.dart';
+import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -57,7 +58,7 @@ class _LoginState extends State<Login> {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(token);
+        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
