@@ -7,8 +7,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:carriage_rider/main.dart';
-
 void main() {
   testWidgets('MyApp can be loaded.', (WidgetTester tester) async {
     // Build our app and trigger a frame.
