@@ -51,14 +51,15 @@ class _LoginState extends State<Login> {
     currentUser = null;
     success = false;
     try {
-      _googleSignIn.signInSilently(); }
-    catch (error) {
+      _googleSignIn.signInSilently();
+    } catch (error) {
       _googleSignIn.signIn();
     }
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(AppConfig.of(context).baseUrl, token);
+        return await authenticationRequest(
+            AppConfig.of(context).baseUrl, token);
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
@@ -72,19 +73,21 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    if (currentUser == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
               child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlutterLogo(size: 150),
-                      SizedBox(height: 50),
-                      SignInButton()
-                    ],
-                  ))));
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
+    }
   }
 }
 
