@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'app_config.dart';
 import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'Profile.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -73,20 +74,23 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    // add guard based on backend verification later
     if (currentUser == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
               child: Center(
                   child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlutterLogo(size: 150),
-                  SizedBox(height: 50),
-                  SignInButton()
-                ],
-              ))));
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlutterLogo(size: 150),
+                      SizedBox(height: 50),
+                      SignInButton()
+                    ],
+                  ))));
+    } else {
+      return Profile();
     }
   }
 }

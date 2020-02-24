@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Carriage Rider',
       theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: Colors.green,
           fontFamily: 'SFPro',
           accentColor: Color.fromRGBO(60, 60, 67, 0.6),
           textTheme: TextTheme(
@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
             subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
           )),
       home: Login(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
