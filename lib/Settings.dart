@@ -1,8 +1,7 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-class Profile extends StatelessWidget {
+class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +50,7 @@ class Profile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  "Your Profile",
+                                  "Settings",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 40,
@@ -93,19 +92,37 @@ class Profile extends StatelessWidget {
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SFPro',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 2,
                               ),
                               Text(
-                                "Joined 06/2019",
+                                "+1 657-500-1311",
                                 style: TextStyle(
                                   color: Colors.grey[500],
                                   fontFamily: 'SFPro',
-                                  fontSize: 12,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                "yk568@cornell.edu",
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontFamily: 'SFPro',
+                                  fontSize: 13,
                                 ),
                               ),
                             ],
                           ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 20,
                         ),
                       ],
                     ),
@@ -147,7 +164,7 @@ class Profile extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.fromLTRB(10, 10, 20, 10),
                               child: Text(
-                                "Account Info",
+                                "Locations",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SFPro',
@@ -167,7 +184,7 @@ class Profile extends StatelessWidget {
                                   width: 5,
                                 ),
                                 Icon(
-                                  Icons.email,
+                                  Icons.home,
                                   color: Colors.black,
                                   size: 30,
                                 ),
@@ -175,14 +192,14 @@ class Profile extends StatelessWidget {
                                   width: 20,
                                 ),
                                 Text(
-                                  "yk568@cornell.edu",
+                                  "Add Home",
                                   style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: "SFPro",
                                       fontSize: 15),
                                 ),
                                 SizedBox(
-                                  width: 129,
+                                  width: 194,
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -206,7 +223,7 @@ class Profile extends StatelessWidget {
                                   width: 5,
                                 ),
                                 Icon(
-                                  Icons.phone,
+                                  Icons.star_border,
                                   color: Colors.black,
                                   size: 30,
                                 ),
@@ -214,14 +231,14 @@ class Profile extends StatelessWidget {
                                   width: 20,
                                 ),
                                 Text(
-                                  "Add your number",
+                                  "Add Favorites",
                                   style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: "SFPro",
                                       fontSize: 15),
                                 ),
                                 SizedBox(
-                                  width: 145,
+                                  width: 170,
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -269,7 +286,7 @@ class Profile extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.fromLTRB(10, 10, 20, 10),
                               child: Text(
-                                "Personal Info",
+                                "Privacy",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SFPro',
@@ -286,25 +303,17 @@ class Profile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.person_outline,
-                                  color: Colors.black,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
+                                  width: 10,
                                 ),
                                 Text(
-                                  "How should we address you?",
+                                  "Choose what data you share with us",
                                   style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: "SFPro",
                                       fontSize: 15),
                                 ),
                                 SizedBox(
-                                  width: 60,
+                                  width: 50,
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -315,35 +324,38 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Divider(
-                          color: Colors.black,
-                          height: 20,
+                        SizedBox(
+                          height: 10,
                         ),
+                        Row(children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(10, 10, 20, 10),
+                              child: Text(
+                                "Legal",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SFPro',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ]),
                         Column(
                           children: <Widget>[
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.accessible,
-                                  color: Colors.black,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
+                                  width: 10,
                                 ),
                                 Text(
-                                  "Any accessibility assistance?",
+                                  "Terms of service & Private Policy",
                                   style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: "SFPro",
                                       fontSize: 15),
                                 ),
                                 SizedBox(
-                                  width: 59,
+                                  width: 75,
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -357,6 +369,49 @@ class Profile extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.all(3),
+                    color: Colors.grey[100],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 4,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: RaisedButton(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.exit_to_app),
+                            SizedBox(width: 10),
+                            Text(
+                              'Sign out',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "SFPro",
+                                  fontSize: 15),
+                            )
+                          ],
+                        ),
+                        onPressed: () {},
+                      )),
                 ],
               ),
             ),

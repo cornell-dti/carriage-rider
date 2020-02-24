@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'app_config.dart';
 import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'Profile.dart';
+import 'Settings.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -90,7 +90,7 @@ class _LoginState extends State<Login> {
                     ],
                   ))));
     } else {
-      return Profile();
+      return Settings();
     }
   }
 }
