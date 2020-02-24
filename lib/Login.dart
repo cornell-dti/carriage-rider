@@ -5,6 +5,10 @@ import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'Profile.dart';
 
+String name;
+String email;
+String imageUrl;
+
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
     'email',
@@ -66,6 +70,9 @@ class _LoginState extends State<Login> {
         setState(() {
           success = json['success'] == 'true' ? true : false;
         });
+
+
+
         print(json['success']);
         return json['success'];
       });
@@ -76,19 +83,25 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // add guard based on backend verification later
     if (currentUser == null) {
+      assert(_googleSignIn.currentUser.email != null);
+      assert(_googleSignIn.currentUser.displayName != null);
+      assert(_googleSignIn.currentUser.photoUrl != null);
+      name = _googleSignIn.currentUser.displayName;
+      email = _googleSignIn.currentUser.email;
+      imageUrl = _googleSignIn.currentUser.photoUrl;
       return Scaffold(
           body: Container(
               color: Colors.white,
               child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlutterLogo(size: 150),
-                      SizedBox(height: 50),
-                      SignInButton()
-                    ],
-                  ))));
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
     } else {
       return Profile();
     }

@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'Login.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
@@ -115,7 +115,7 @@ class Profile extends StatelessWidget {
                     height: 16,
                   ),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(3),
                     color: Colors.grey[100],
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -232,9 +232,8 @@ class Profile extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(3),
                     color: Colors.grey[100],
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,7 +253,6 @@ class Profile extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.only(
                         left: 15, right: 32, top: 10, bottom: 32),
@@ -343,6 +341,27 @@ class Profile extends StatelessWidget {
                                   Icons.arrow_forward_ios,
                                   color: Colors.black,
                                   size: 20,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(3),
+                    color: Colors.grey[100],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 4,
                                 ),
                               ],
                             ),
