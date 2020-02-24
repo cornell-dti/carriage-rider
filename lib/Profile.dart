@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'Login.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
