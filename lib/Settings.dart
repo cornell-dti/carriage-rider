@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'Login.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -74,11 +75,12 @@ class Settings extends StatelessWidget {
                         SizedBox(
                             height: 90,
                             width: 90,
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/logo_rider.png',
-                                fit: BoxFit.cover,
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                imageUrl,
                               ),
+                              radius: 60,
+                              backgroundColor: Colors.transparent,
                             )),
                         SizedBox(
                           width: 16,
@@ -88,7 +90,7 @@ class Settings extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Aiden Kim",
+                                name,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SFPro',
@@ -109,7 +111,7 @@ class Settings extends StatelessWidget {
                                 height: 2,
                               ),
                               Text(
-                                "yk568@cornell.edu",
+                                email,
                                 style: TextStyle(
                                   color: Colors.grey[500],
                                   fontFamily: 'SFPro',
