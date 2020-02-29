@@ -31,10 +31,6 @@ class Settings extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  //for user profile header
-                  SizedBox(
-                    height: 12,
-                  ),
                   Container(
                     padding: EdgeInsets.all(12),
                     color: Colors.grey[100],
@@ -61,7 +57,6 @@ class Settings extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.only(left: 32, right: 32, top: 32),
                     color: Colors.white,
@@ -125,7 +120,6 @@ class Settings extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   SizedBox(
                     height: 16,
                   ),
@@ -150,7 +144,6 @@ class Settings extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.only(
                         left: 15, right: 32, top: 10, bottom: 32),
@@ -250,7 +243,6 @@ class Settings extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.all(3),
                     color: Colors.grey[100],
@@ -272,7 +264,6 @@ class Settings extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.only(
                         left: 15, right: 32, top: 10, bottom: 32),
