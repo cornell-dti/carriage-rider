@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Login.dart';
 
@@ -380,9 +381,9 @@ class Settings extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: RaisedButton(
+                      width: double.maxFinite,
+                      height: 75,
+                      child: MaterialButton(
                         color: Colors.white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -391,7 +392,7 @@ class Settings extends StatelessWidget {
                             SizedBox(width: 10),
                             Text(
                               'Sign out',
-                              textAlign: TextAlign.left,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontFamily: "SFPro",
