@@ -399,7 +399,9 @@ class Settings extends StatelessWidget {
                             )
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          googleSignIn.signOut();
+                        },
                       )),
                 ],
               ),

@@ -9,7 +9,7 @@ String name;
 String email;
 String imageUrl;
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
+GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
     'https://www.googleapis.com/auth/userinfo.profile',
@@ -18,7 +18,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 
 _handleSignIn() async {
   try {
-    await _googleSignIn.signIn();
+    await googleSignIn.signIn();
   } catch (error) {
     print(error);
   }
@@ -56,11 +56,11 @@ class _LoginState extends State<Login> {
     currentUser = null;
     success = false;
     try {
-      _googleSignIn.signInSilently();
+      googleSignIn.signInSilently();
     } catch (error) {
-      _googleSignIn.signIn();
+      googleSignIn.signIn();
     }
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
         return await authenticationRequest(
@@ -85,21 +85,21 @@ class _LoginState extends State<Login> {
               color: Colors.white,
               child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlutterLogo(size: 150),
-                      SizedBox(height: 50),
-                      SignInButton()
-                    ],
-                  ))));
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
     } else {
-      assert(_googleSignIn.currentUser.email != null);
-      assert(_googleSignIn.currentUser.displayName != null);
-      assert(_googleSignIn.currentUser.photoUrl != null);
-      name = _googleSignIn.currentUser.displayName;
-      email = _googleSignIn.currentUser.email;
-      imageUrl = _googleSignIn.currentUser.photoUrl;
+      assert(googleSignIn.currentUser.email != null);
+      assert(googleSignIn.currentUser.displayName != null);
+      assert(googleSignIn.currentUser.photoUrl != null);
+      name = googleSignIn.currentUser.displayName;
+      email = googleSignIn.currentUser.email;
+      imageUrl = googleSignIn.currentUser.photoUrl;
       return Settings();
     }
   }
