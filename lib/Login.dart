@@ -5,6 +5,10 @@ import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'Profile.dart';
 
+String name;
+String email;
+String imageUrl;
+
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
     'email',
@@ -90,6 +94,12 @@ class _LoginState extends State<Login> {
                     ],
                   ))));
     } else {
+      assert(_googleSignIn.currentUser.email != null);
+      assert(_googleSignIn.currentUser.displayName != null);
+      assert(_googleSignIn.currentUser.photoUrl != null);
+      name = _googleSignIn.currentUser.displayName;
+      email = _googleSignIn.currentUser.email;
+      imageUrl = _googleSignIn.currentUser.photoUrl;
       return Profile();
     }
   }
