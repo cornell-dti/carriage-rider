@@ -6,28 +6,24 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Schedule',
-          style:
-              TextStyle(color: Colors.black, fontSize: 20, fontFamily: 'SFPro'),
+        appBar: AppBar(
+          title: Text(
+            'Schedule',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontFamily: 'SFPro'),
+          ),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
+          ),
         ),
-        backgroundColor: Colors.white,
-        titleSpacing: 0.0,
-        iconTheme: IconThemeData(color: Colors.black),
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
-        ),
-      ),
-      body: DraggableScrollableSheet(
-        minChildSize: 0.1,
-        initialChildSize: 0.22,
-        builder: (context, scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            child: Container(
+        body: ListView(
+          children: <Widget>[
+            Container(
               constraints:
                   BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               color: Colors.white,
@@ -417,9 +413,7 @@ class Settings extends StatelessWidget {
                 ],
               ),
             ),
-          );
-        },
-      ),
-    );
+          ],
+        ));
   }
 }
