@@ -22,11 +22,11 @@ class Profile extends StatelessWidget {
           onPressed: () => Navigator.pop(context, false),
         ),
       ),
-      body: ListView (
+      body: ListView(
         children: <Widget>[
           Container(
             constraints:
-            BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+                BoxConstraints(minHeight: MediaQuery.of(context).size.height),
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,6 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.only(left: 32, right: 32, top: 32),
                   color: Colors.white,
@@ -104,7 +103,6 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 SizedBox(
                   height: 16,
                 ),
@@ -129,10 +127,9 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Container(
-                  padding: EdgeInsets.only(
-                      left: 15, right: 32, top: 10, bottom: 32),
+                  padding:
+                      EdgeInsets.only(left: 15, right: 32, top: 10, bottom: 32),
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,8 +245,8 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(
-                      left: 15, right: 32, top: 10, bottom: 32),
+                  padding:
+                      EdgeInsets.only(left: 15, right: 32, top: 10, bottom: 32),
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
