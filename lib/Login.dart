@@ -42,7 +42,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   GoogleSignInAccount currentUser;
-  bool success;
+  String id;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     currentUser = null;
-    success = false;
+    id = null;
     try {
       _googleSignIn.signInSilently();
     } catch (error) {
@@ -68,10 +68,13 @@ class _LoginState extends State<Login> {
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
-          success = json['success'] == 'true' ? true : false;
+          id = (json['id'] != null) ? 'id' : 'error';
+          if (id = null) {
+            currentUser = null;
+          }
         });
-        print(json['success']);
-        return json['success'];
+        print(json['id']);
+        return json['id'];
       });
     });
   }
@@ -85,14 +88,14 @@ class _LoginState extends State<Login> {
               color: Colors.white,
               child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlutterLogo(size: 150),
-                      SizedBox(height: 50),
-                      SignInButton()
-                    ],
-                  ))));
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlutterLogo(size: 150),
+                  SizedBox(height: 50),
+                  SignInButton()
+                ],
+              ))));
     } else {
       assert(_googleSignIn.currentUser.email != null);
       assert(_googleSignIn.currentUser.displayName != null);

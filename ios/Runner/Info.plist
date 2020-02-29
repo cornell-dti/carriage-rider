@@ -33,7 +33,7 @@
             			<string>Editor</string>
             			<key>CFBundleURLSchemes</key>
             			<array>
-            				<string>com.carriage.carriageRiderr</string>
+            				<string>com.carriage.carriageRider</string>
             			</array>
             		</dict>
 	</array>
