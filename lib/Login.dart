@@ -83,12 +83,6 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // add guard based on backend verification later
     if (currentUser == null) {
-      assert(_googleSignIn.currentUser.email != null);
-      assert(_googleSignIn.currentUser.displayName != null);
-      assert(_googleSignIn.currentUser.photoUrl != null);
-      name = _googleSignIn.currentUser.displayName;
-      email = _googleSignIn.currentUser.email;
-      imageUrl = _googleSignIn.currentUser.photoUrl;
       return Scaffold(
           body: Container(
               color: Colors.white,
@@ -103,6 +97,12 @@ class _LoginState extends State<Login> {
                 ],
               ))));
     } else {
+      assert(_googleSignIn.currentUser.email != null);
+      assert(_googleSignIn.currentUser.displayName != null);
+      assert(_googleSignIn.currentUser.photoUrl != null);
+      name = _googleSignIn.currentUser.displayName;
+      email = _googleSignIn.currentUser.email;
+      imageUrl = _googleSignIn.currentUser.photoUrl;
       return Profile();
     }
   }
