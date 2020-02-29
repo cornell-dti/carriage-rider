@@ -32,10 +32,6 @@ class Profile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                //for user profile header
-                SizedBox(
-                  height: 12,
-                ),
                 Container(
                   padding: EdgeInsets.all(12),
                   color: Colors.grey[100],
