@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_config.dart';
+import 'Login.dart';
+import 'package:http/http.dart';
 
 void mainCommon() {
 
@@ -10,47 +12,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppConfig config = AppConfig.of(context);
-    return _build(config.baseUrl);
+    return _buildApp(config.baseUrl);
   }
 
-  Widget _build(String baseUrl) {
+  Widget _buildApp(String baseUrl) {
     return MaterialApp(
       title: 'Carriage Rider',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(title: 'Carriage Rider'),
+          primarySwatch: Colors.green,
+          fontFamily: 'SFPro',
+          accentColor: Color.fromRGBO(60, 60, 67, 0.6),
+          textTheme: TextTheme(
+            headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+          )),
+      home: Login(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'This is the beginning of the app',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+authenticationRequest(String baseUrl, String token) async {
+  var endpoint = baseUrl + '/auth';
+  Response response = await post(endpoint, body: {"token": token});
+  return response.body;
 }
