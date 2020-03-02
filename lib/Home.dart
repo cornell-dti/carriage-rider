@@ -59,7 +59,6 @@ class Home extends StatelessWidget {
       body: ListView(
         scrollDirection: Axis.vertical,
         children: <Widget>[
-          //subheading Next Ride
           Container(
             margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
             child: Text('Next Ride', style: subHeadingStyle,

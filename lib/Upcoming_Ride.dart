@@ -68,7 +68,6 @@ class UpcomingRide extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 2.0),
@@ -147,7 +146,6 @@ class UpcomingRide extends StatelessWidget {
                         SizedBox(width: 5.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Text('Davea Butler', style: infoStyle),
                             Row(
@@ -177,7 +175,6 @@ class UpcomingRide extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 2.0),
@@ -256,7 +253,6 @@ class UpcomingRide extends StatelessWidget {
                         SizedBox(width: 5.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Text('George Michael', style: infoStyle),
                             Row(

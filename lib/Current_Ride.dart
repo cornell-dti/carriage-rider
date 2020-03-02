@@ -61,7 +61,6 @@ class CurrentRide extends StatelessWidget {
                 Icon(Icons.arrow_forward),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text('To', style: directionStyle),
                     Text('Uris Hall', style: infoStyle,)
@@ -81,7 +80,6 @@ class CurrentRide extends StatelessWidget {
                 SizedBox(width: 5.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text('Davea Butler', style: infoStyle),
                     Row(
