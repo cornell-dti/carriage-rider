@@ -148,7 +148,7 @@ class Current extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(
-                                    width: 4,
+                                    width: 2,
                                   ),
                                 ],
                               ),
@@ -188,12 +188,18 @@ class Current extends StatelessWidget {
                     onPressed: () {},
                   )),
             ),
-            flex: 2,
+            flex: 1,
           ),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-            ),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: MaterialButton(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  onPressed: () {},
+                )),
             flex: 2,
           ),
         ],
