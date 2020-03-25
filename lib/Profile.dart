@@ -287,7 +287,7 @@ class Profile extends StatelessWidget {
                                     fontSize: 15),
                               ),
                               SizedBox(
-                                width: 60,
+                                width: 59,
                               ),
                               Icon(
                                 Icons.arrow_forward_ios,
