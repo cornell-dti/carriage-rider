@@ -301,7 +301,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('${title}\n ${subTile}',
+              Text('$title\n $subTile',
                   style: TextStyle(
                       fontFamily: "regular",
                       fontSize: 14,
