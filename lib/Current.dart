@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'Login.dart';
 import 'package:flutter/material.dart';
+import 'size_config.dart';
 
 class Current extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -31,6 +33,9 @@ class Current extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
                       Text(
                         "Your Profile",
                         style: TextStyle(
@@ -48,8 +53,32 @@ class Current extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-            ),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.safeBlockHorizontal * 3,
+                            left: SizeConfig.safeBlockHorizontal * 7,
+                          ),
+                          child: Text(
+                            "Ride Status",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'SFPro',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    orderTimeline()
+                  ],
+                )),
             flex: 6,
           ),
           Expanded(
@@ -81,8 +110,10 @@ class Current extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        SizedBox(
-                          width: 20,
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.safeBlockHorizontal * 7,
+                          ),
                         ),
                         SizedBox(
                             height: 50,
@@ -204,6 +235,132 @@ class Current extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget orderTimeline() {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
+      margin: EdgeInsets.only(
+        bottom: SizeConfig.safeBlockHorizontal * 3,
+      ),
+      padding: EdgeInsets.only(
+        top: SizeConfig.safeBlockHorizontal * 3,
+        left: SizeConfig.safeBlockHorizontal * 7,
+        bottom: SizeConfig.safeBlockHorizontal * 3,
+      ),
+      child: Column(
+        children: <Widget>[
+          timelineRow("Your driver is on the way.", ""),
+          timelineRow("Driver has arrived.", ""),
+          timelineRow("You are on the way!", ""),
+          timelineLastRow("Arrived!", ""),
+        ],
+      ),
+    );
+  }
+
+  Widget timelineRow(String title, String subTile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 30),
+        Expanded(
+          flex: 1,
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 18,
+                height: 18,
+                decoration: new BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(""),
+              ),
+              Container(
+                width: 3,
+                height: 50,
+                decoration: new BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.rectangle,
+                ),
+                child: Text(""),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 9,
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('${title}\n ${subTile}',
+                  style: TextStyle(
+                      fontFamily: "regular",
+                      fontSize: 14,
+                      color: Colors.black54)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget timelineLastRow(String title, String subTile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 18,
+                height: 18,
+                decoration: new BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(""),
+              ),
+              Container(
+                width: 3,
+                height: 20,
+                decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                  shape: BoxShape.rectangle,
+                ),
+                child: Text(""),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 9,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('${title}\n ${subTile}',
+                  style: TextStyle(
+                      fontFamily: "regular",
+                      fontSize: 14,
+                      color: Colors.black54)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
