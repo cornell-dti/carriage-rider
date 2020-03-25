@@ -22,9 +22,7 @@ class Profile extends StatelessWidget {
         ),
       ),
       body: ListView(
-        children: <Widget>[
-
-        ],
+        children: <Widget>[],
       ),
     );
   }
