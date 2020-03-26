@@ -81,7 +81,7 @@ class Current extends StatelessWidget {
                     orderTimeline()
                   ],
                 )),
-            flex: 9,
+            flex: 10,
           ),
           Expanded(
             child: Container(
@@ -200,7 +200,7 @@ class Current extends StatelessWidget {
                     onPressed: () {},
                   )),
             ),
-            flex: 3,
+            flex: 2,
           ),
         ],
       ),
@@ -358,40 +358,47 @@ class Current extends StatelessWidget {
                       fontFamily: "regular",
                       fontSize: 19,
                       color: Colors.black)),
-              Column(
+              Row(
                 children: <Widget>[
-                  Text(
-                    "•",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: 'SFPro',
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "•",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: 'SFPro',
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "•",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: 'SFPro',
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "•",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: 'SFPro',
-                        fontWeight: FontWeight.bold),
-                  )
+                  Container(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "•",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'SFPro',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "•",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'SFPro',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "•",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'SFPro',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "•",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'SFPro',
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  )),
                 ],
               )
             ],
