@@ -134,6 +134,7 @@ class _ProfileState extends State<Profile> {
         AccountInfo(),
         SizedBox(height: 6),
         PersonalInfo(),
+        SizedBox(height: 6),
       ]),
     );
   }
