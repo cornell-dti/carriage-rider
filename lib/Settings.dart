@@ -113,6 +113,29 @@ class _SettingsState extends State<Settings> {
         Locations(),
         SizedBox(height: 6),
         PrivacyLegalInfo(),
+        SizedBox(height: 6),
+        SizedBox(
+            width: double.maxFinite,
+            height: 100,
+            child: MaterialButton(
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.exit_to_app),
+                  SizedBox(width: 10),
+                  Text(
+                    'Sign out',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Colors.black, fontFamily: "SFPro", fontSize: 15),
+                  )
+                ],
+              ),
+              onPressed: () {
+                googleSignIn.signOut();
+              },
+            )),
       ]),
     );
   }
@@ -151,8 +174,8 @@ class _LocationsState extends State<Locations> {
   @override
   Widget build(BuildContext context) {
     final List<IconData> icons = new List();
-    icons.add(Icons.home);
-    icons.add(Icons.star_border);
+    icons.add(Icons.person_outline);
+    icons.add(Icons.accessible);
     final List<String> tempText = new List();
     tempText.add("Add Home");
     tempText.add("Add Favorites");
@@ -199,13 +222,15 @@ class PrivacyLegalInfo extends StatefulWidget {
 }
 
 class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text) {
+  Widget infoRow(BuildContext context, String heading, String text) {
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
           children: <Widget>[
-            Icon(icon),
-            SizedBox(width: 19),
+            Expanded(
+              child: Text(heading,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
             Expanded(
               child: Text(
                 text,
@@ -215,22 +240,18 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
-            )
           ],
         ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = new List();
-    icons.add(Icons.person_outline);
-    icons.add(Icons.accessible);
+    final List<String> headings = new List();
+    headings.add("Privacy");
+    headings.add("Legal");
     final List<String> tempText = new List();
-    tempText.add("How should we address you?");
-    tempText.add("Any accessiblility assistance?");
+    tempText.add("Choose what data you share with us");
+    tempText.add("Terms of service \& Privacy Policy");
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -250,14 +271,14 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
               children: <Widget>[
                 Text('Personal Info',
                     style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
+                    itemCount: tempText.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], tempText[index]);
+                      return infoRow(context, headings[index], tempText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
@@ -268,4 +289,3 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
             )));
   }
 }
-
