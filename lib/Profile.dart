@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
@@ -208,9 +207,7 @@ class _AccountInfoState extends State<AccountInfo> {
                       return infoRow(context, icons[index], tempText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 0,
-                      );
+                      return Divider(height: 0, color: Colors.black);
                     })
               ],
             )));
@@ -276,7 +273,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
-                    padding: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: icons.length,
@@ -286,6 +283,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
                         height: 0,
+                        color: Colors.black,
                       );
                     })
               ],
