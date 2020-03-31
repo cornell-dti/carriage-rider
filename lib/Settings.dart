@@ -102,12 +102,14 @@ class _SettingsState extends State<Settings> {
                       )
                     ],
                   )),
-              Padding(
-                  padding: EdgeInsets.only(left: 105),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () {},
-                  ))
+              Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 20.0),
+                      child: IconButton(
+                        alignment: Alignment.topRight,
+                        icon: Icon(Icons.arrow_forward_ios),
+                        onPressed: () {},
+                      )))
             ])),
         SizedBox(height: 6),
         Locations(),
