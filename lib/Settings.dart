@@ -116,28 +116,7 @@ class _SettingsState extends State<Settings> {
         SizedBox(height: 6),
         PrivacyLegalInfo(),
         SizedBox(height: 6),
-        SizedBox(
-            width: double.maxFinite,
-            height: 100,
-            child: MaterialButton(
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.exit_to_app),
-                  SizedBox(width: 10),
-                  Text(
-                    'Sign out',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Colors.black, fontFamily: "SFPro", fontSize: 15),
-                  )
-                ],
-              ),
-              onPressed: () {
-                googleSignIn.signOut();
-              },
-            )),
+        SignOutButton()
       ]),
     );
   }
@@ -306,5 +285,33 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                     })
               ],
             )));
+  }
+}
+
+class SignOutButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: double.maxFinite,
+        height: 80,
+        child: MaterialButton(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.exit_to_app),
+              SizedBox(width: 10),
+              Text(
+                'Sign out',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: Colors.black, fontFamily: "SFPro", fontSize: 15),
+              )
+            ],
+          ),
+          onPressed: () {
+            googleSignIn.signOut();
+          },
+        ));
   }
 }
