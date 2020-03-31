@@ -224,19 +224,31 @@ class PrivacyLegalInfo extends StatefulWidget {
 class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
   Widget infoRow(BuildContext context, String heading, String text) {
     return Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 10),
+        padding: EdgeInsets.only(bottom: 15),
         child: Column(
           children: <Widget>[
             Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                child: Text(heading,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-            ),
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(heading,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    Expanded(
+                        child: IconButton(
+                      alignment: Alignment.topRight,
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: () {},
+                    )),
+                  ],
+                )),
             SizedBox(
-              height: 10,
+              height: 2,
             ),
             Align(
               alignment: Alignment.topLeft,
@@ -288,10 +300,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                       return infoRow(context, headings[index], tempText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 0,
-                        color: Colors.white
-                      );
+                      return Divider(height: 0, color: Colors.white);
                     })
               ],
             )));
