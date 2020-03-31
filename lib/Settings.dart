@@ -224,22 +224,32 @@ class PrivacyLegalInfo extends StatefulWidget {
 class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
   Widget infoRow(BuildContext context, String heading, String text) {
     return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
+        padding: EdgeInsets.only(top: 5, bottom: 10),
+        child: Column(
           children: <Widget>[
-            Expanded(
-              child: Text(heading,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).accentColor,
-                ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                child: Text(heading,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ),
+            )
           ],
         ));
   }
@@ -269,9 +279,6 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Personal Info',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
@@ -283,6 +290,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
                         height: 0,
+                        color: Colors.white
                       );
                     })
               ],
