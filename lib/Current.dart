@@ -314,7 +314,7 @@ class Current extends StatelessWidget {
               ),
               Container(
                 width: 3,
-                height: 125,
+                height: 180,
                 decoration: new BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.rectangle,
@@ -336,15 +336,8 @@ class Current extends StatelessWidget {
                       fontFamily: "regular",
                       fontSize: 19,
                       color: Colors.black)),
-              Row(
-                children: <Widget>[
-                  Container(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[],
-                  )),
-                ],
+              Column(
+                children: <Widget>[RideStatus()],
               )
             ],
           ),
@@ -469,13 +462,52 @@ class _RideStatusState extends State<RideStatus> {
                   fontFamily: 'SFPro',
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 2),
+            SizedBox(width: 4),
             Expanded(
               child: Text(
                 textCenter,
                 style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).accentColor,
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                textEnd,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget timeRow(BuildContext context, String textLocation, String textTime) {
+    return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                textLocation,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                textTime,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
                 ),
               ),
             )
@@ -495,27 +527,26 @@ class _RideStatusState extends State<RideStatus> {
     tempText.add("Pickup Passenger 2");
     tempText.add("Dropoff Passenger 2");
     tempText.add("Expected Dropoff");
+    final List<String> locText = new List();
+    locText.add("109 Tower Rd, Ithaca, NY 14850");
+    locText.add("107 Hoy Rd, Ithaca, NY 14853");
+    locText.add("7 East Ave, Ithaca, NY 14853");
+    locText.add("109 Tower Rd, Ithaca, NY 14850");
+    final List<String> timeText = new List();
+    timeText.add("3:20 PM");
+    timeText.add("3:15 PM");
+    timeText.add("ETA 3:18 PM");
+    timeText.add("ETA 3:19 PM");
 
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(3),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(15, 0, 0, 0),
-                offset: Offset(0, 4.0),
-                blurRadius: 10.0,
-                spreadRadius: 1.0)
-          ],
         ),
         child: Padding(
-            padding: EdgeInsets.only(top: 24, left: 16, right: 16),
+            padding: EdgeInsets.only(right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Account Info',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -525,7 +556,7 @@ class _RideStatusState extends State<RideStatus> {
                       return infoRow(context, text[index], tempText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.black);
+                      return Divider(height: 0, color: Colors.white);
                     })
               ],
             )));
