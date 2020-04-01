@@ -176,29 +176,7 @@ class Current extends StatelessWidget {
               child: SizedBox(
                   width: double.maxFinite,
                   height: 20,
-                  child: MaterialButton(
-                    padding: EdgeInsets.only(
-                      bottom: SizeConfig.safeBlockHorizontal * 7,
-                    ),
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.repeat),
-                        SizedBox(width: 10),
-                        Text(
-                          'Repeat This Ride',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: "SFPro",
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    onPressed: () {},
-                  )),
+                  child: RepeatRideButton()),
             ),
             flex: 2,
           ),
@@ -364,40 +342,7 @@ class Current extends StatelessWidget {
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "•",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: 'SFPro',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "•",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: 'SFPro',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "•",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: 'SFPro',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "•",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: 'SFPro',
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                    children: <Widget>[],
                   )),
                 ],
               )
@@ -473,6 +418,117 @@ class Current extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class RepeatRideButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      padding: EdgeInsets.only(
+        bottom: SizeConfig.safeBlockHorizontal * 7,
+      ),
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.repeat),
+          SizedBox(width: 10),
+          Text(
+            'Repeat This Ride',
+            textAlign: TextAlign.start,
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: "SFPro",
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+      onPressed: () {},
+    );
+  }
+}
+
+class RideStatus extends StatefulWidget {
+  @override
+  _RideStatusState createState() => _RideStatusState();
+}
+
+class _RideStatusState extends State<RideStatus> {
+  Widget infoRow(BuildContext context, String textCenter, String textEnd) {
+    return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          children: <Widget>[
+            Text(
+              "•",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'SFPro',
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 2),
+            Expanded(
+              child: Text(
+                textCenter,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> text = new List();
+    text.add("Uris Hall");
+    text.add("Gates Hall");
+    text.add("Statler Hall");
+    text.add("Uris Hall");
+    final List<String> tempText = new List();
+    tempText.add("Dropoff Passenger 1");
+    tempText.add("Pickup Passenger 2");
+    tempText.add("Dropoff Passenger 2");
+    tempText.add("Expected Dropoff");
+
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(3),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(15, 0, 0, 0),
+                offset: Offset(0, 4.0),
+                blurRadius: 10.0,
+                spreadRadius: 1.0)
+          ],
+        ),
+        child: Padding(
+            padding: EdgeInsets.only(top: 24, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Account Info',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ListView.separated(
+                    padding: EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: text.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return infoRow(context, text[index], tempText[index]);
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(height: 0, color: Colors.black);
+                    })
+              ],
+            )));
   }
 }
 
