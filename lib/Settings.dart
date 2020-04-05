@@ -18,6 +18,7 @@ class _SettingsState extends State<Settings> {
     double _picRadius = _picDiameter / 3;
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 8;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -154,12 +155,8 @@ class _LocationsState extends State<Locations> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = new List();
-    icons.add(Icons.person_outline);
-    icons.add(Icons.accessible);
-    final List<String> tempText = new List();
-    tempText.add("Add Home");
-    tempText.add("Add Favorites");
+    List<IconData> icons = [Icons.person_outline, Icons.accessible];
+    List<String> text = ["Add Home", "Add Favorites"];
 
     return Container(
         decoration: BoxDecoration(
@@ -187,10 +184,10 @@ class _LocationsState extends State<Locations> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], tempText[index]);
+                      return infoRow(context, icons[index], text[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.black);
+                      return Divider(color: Colors.black);
                     })
               ],
             )));
@@ -249,12 +246,12 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> headings = new List();
-    headings.add("Privacy");
-    headings.add("Legal");
-    final List<String> tempText = new List();
-    tempText.add("Choose what data you share with us");
-    tempText.add("Terms of service \& Privacy Policy");
+    List<String> headings = ["Privacy", "Legal"];
+    final List<String> subText = [
+      "Choose what data you share with us",
+      "Terms of service \& Privacy Policy"
+    ];
+
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -276,9 +273,9 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: tempText.length,
+                    itemCount: subText.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, headings[index], tempText[index]);
+                      return infoRow(context, headings[index], subText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(height: 0, color: Colors.white);
