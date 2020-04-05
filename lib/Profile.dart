@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:image_picker/image_picker.dart';
 import 'Login.dart';
 
 class Profile extends StatefulWidget {
@@ -13,15 +11,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  File _image;
-
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -30,6 +19,7 @@ class _ProfileState extends State<Profile> {
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -77,11 +67,9 @@ class _ProfileState extends State<Profile> {
                       Padding(
                           padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
                           child: CircleAvatar(
-                            backgroundImage: _image == null
-                                ? NetworkImage(
-                                    imageUrl,
-                                  )
-                                : FileImage(_image),
+                            backgroundImage: NetworkImage(
+                              imageUrl,
+                            ),
                             radius: _picRadius,
                           )),
                       Positioned(
@@ -92,7 +80,7 @@ class _ProfileState extends State<Profile> {
                               child: FloatingActionButton(
                                 backgroundColor: Colors.black,
                                 child: Icon(Icons.add, size: _picBtnDiameter),
-                                onPressed: getImage,
+                                onPressed: () {},
                               ),
                             ),
                           ),
@@ -171,12 +159,8 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = new List();
-    icons.add(Icons.mail_outline);
-    icons.add(Icons.phone);
-    final List<String> tempText = new List();
-    tempText.add(email);
-    tempText.add("Add your number");
+    final List<IconData> icons = [Icons.mail_outline, Icons.phone];
+    final List<String> text = [email, "Add your number"];
 
     return Container(
         decoration: BoxDecoration(
@@ -204,7 +188,7 @@ class _AccountInfoState extends State<AccountInfo> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], tempText[index]);
+                      return infoRow(context, icons[index], text[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(height: 0, color: Colors.black);
@@ -246,12 +230,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = new List();
-    icons.add(Icons.person_outline);
-    icons.add(Icons.accessible);
-    final List<String> tempText = new List();
-    tempText.add("How should we address you?");
-    tempText.add("Any accessiblility assistance?");
+    final List<IconData> icons = [Icons.person_outline, Icons.accessible];
+    final List<String> text = [
+      "How should we address you?",
+      "Any accessiblility assistance?"
+    ];
+
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -278,7 +262,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], tempText[index]);
+                      return infoRow(context, icons[index], text[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
