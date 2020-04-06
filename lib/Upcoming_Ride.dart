@@ -53,14 +53,14 @@ class UpcomingRide extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 17.0),
-      height: 260.0,
+      height: MediaQuery.of(context).size.height,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 15.0),
-            width: 260.0,
-            height: 300.0,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
             child: Card(
               elevation: 3.0,
               child: Column(

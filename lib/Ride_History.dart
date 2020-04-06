@@ -48,8 +48,8 @@ class RideHistory extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(left: 17.0, right: 17.0, bottom: 15.0),
-          width: 400.0,
-          height: 125.0,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Card(
             elevation: 3.0,
             child: Column(
@@ -116,8 +116,8 @@ class RideHistory extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(left: 17.0, right: 17.0, bottom: 15.0),
-          width: 400.0,
-          height: 125.0,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Card(
             elevation: 3.0,
             child: Column(

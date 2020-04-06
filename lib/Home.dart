@@ -1,3 +1,5 @@
+import 'package:carriage_rider/Profile.dart';
+import 'package:carriage_rider/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
@@ -23,7 +25,8 @@ class Home extends StatelessWidget {
               leading: Icon(Icons.person),
               title: Text('Profile'),
               onTap: (){
-                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Profile()));
               },
             ),
             Divider(
@@ -33,7 +36,8 @@ class Home extends StatelessWidget {
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: (){
-                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Settings()));
               },
             ),
             Divider(
