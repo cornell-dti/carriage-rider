@@ -1,24 +1,23 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'Login.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+class Settings extends StatefulWidget {
+  Settings({Key key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  _SettingsState createState() => _SettingsState();
 }
 
-class _ProfileState extends State<Profile> {
+class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
-    double _picRadius = _picDiameter / 2;
+    double _picRadius = _picDiameter / 3;
     double _picMarginLR = _picDiameter / 6.25;
-    double _picMarginTB = _picDiameter / 4;
-    double _picBtnDiameter = _picDiameter * 0.39;
+    double _picMarginTB = _picDiameter / 8;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,8 +39,7 @@ class _ProfileState extends State<Profile> {
           Widget>[
         Padding(
           padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-          child:
-              Text('Your Profile', style: Theme.of(context).textTheme.headline),
+          child: Text('Settings', style: Theme.of(context).textTheme.headline),
         ),
         Container(
             decoration: BoxDecoration(
@@ -72,20 +70,6 @@ class _ProfileState extends State<Profile> {
                             ),
                             radius: _picRadius,
                           )),
-                      Positioned(
-                          child: Container(
-                            height: _picBtnDiameter,
-                            width: _picBtnDiameter,
-                            child: FittedBox(
-                              child: FloatingActionButton(
-                                backgroundColor: Colors.black,
-                                child: Icon(Icons.add, size: _picBtnDiameter),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
-                          left: _picDiameter * 0.61,
-                          top: _picDiameter * 0.66)
                     ],
                   )),
               Padding(
@@ -98,16 +82,19 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Text(name,
                                 style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
                                 )),
-                            IconButton(
-                              icon: Icon(Icons.edit, size: 20),
-                              onPressed: () {},
-                            )
                           ]),
                       Positioned(
-                        child: Text("Joined 03/2020",
+                        child: Text("+1 657-500-1311",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).accentColor,
+                            )),
+                        top: 25,
+                      ),
+                      Positioned(
+                        child: Text(email,
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).accentColor,
@@ -115,24 +102,33 @@ class _ProfileState extends State<Profile> {
                         top: 45,
                       )
                     ],
-                  ))
+                  )),
+              Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 20.0),
+                      child: IconButton(
+                        alignment: Alignment.topRight,
+                        icon: Icon(Icons.arrow_forward_ios),
+                        onPressed: () {},
+                      )))
             ])),
         SizedBox(height: 6),
-        AccountInfo(),
+        Locations(),
         SizedBox(height: 6),
-        PersonalInfo(),
+        PrivacyLegalInfo(),
         SizedBox(height: 6),
+        SignOutButton()
       ]),
     );
   }
 }
 
-class AccountInfo extends StatefulWidget {
+class Locations extends StatefulWidget {
   @override
-  _AccountInfoState createState() => _AccountInfoState();
+  _LocationsState createState() => _LocationsState();
 }
 
-class _AccountInfoState extends State<AccountInfo> {
+class _LocationsState extends State<Locations> {
   Widget infoRow(BuildContext context, IconData icon, String text) {
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -159,8 +155,8 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = [Icons.mail_outline, Icons.phone];
-    final List<String> text = [email, "Add your number"];
+    List<IconData> icons = [Icons.person_outline, Icons.accessible];
+    List<String> text = ["Add Home", "Add Favorites"];
 
     return Container(
         decoration: BoxDecoration(
@@ -179,7 +175,7 @@ class _AccountInfoState extends State<AccountInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Account Info',
+                Text('Locations',
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
@@ -191,38 +187,58 @@ class _AccountInfoState extends State<AccountInfo> {
                       return infoRow(context, icons[index], text[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.black);
+                      return Divider(color: Colors.black);
                     })
               ],
             )));
   }
 }
 
-class PersonalInfo extends StatefulWidget {
+class PrivacyLegalInfo extends StatefulWidget {
   @override
-  _PersonalInfoState createState() => _PersonalInfoState();
+  _PrivacyLegalInfoState createState() => _PrivacyLegalInfoState();
 }
 
-class _PersonalInfoState extends State<PersonalInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text) {
+class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
+  Widget infoRow(BuildContext context, String heading, String text) {
     return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
+        padding: EdgeInsets.only(bottom: 15),
+        child: Column(
           children: <Widget>[
-            Icon(icon),
-            SizedBox(width: 19),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).accentColor,
+            Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(heading,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    Expanded(
+                        child: IconButton(
+                      alignment: Alignment.topRight,
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: () {},
+                    )),
+                  ],
+                )),
+            SizedBox(
+              height: 2,
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Theme.of(context).accentColor,
+                  ),
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
             )
           ],
         ));
@@ -230,10 +246,10 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = [Icons.person_outline, Icons.accessible];
-    final List<String> text = [
-      "How should we address you?",
-      "Any accessiblility assistance?"
+    List<String> headings = ["Privacy", "Legal"];
+    final List<String> subText = [
+      "Choose what data you share with us",
+      "Terms of service \& Privacy Policy"
     ];
 
     return Container(
@@ -253,24 +269,46 @@ class _PersonalInfoState extends State<PersonalInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Personal Info',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
+                    itemCount: subText.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], text[index]);
+                      return infoRow(context, headings[index], subText[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 0,
-                        color: Colors.black,
-                      );
+                      return Divider(height: 0, color: Colors.white);
                     })
               ],
             )));
+  }
+}
+
+class SignOutButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: double.maxFinite,
+        height: 80,
+        child: MaterialButton(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.exit_to_app),
+              SizedBox(width: 10),
+              Text(
+                'Sign out',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: Colors.black, fontFamily: "SFPro", fontSize: 15),
+              )
+            ],
+          ),
+          onPressed: () {
+            googleSignIn.signOut();
+          },
+        ));
   }
 }
