@@ -308,6 +308,8 @@ class SignOutButton extends StatelessWidget {
           ),
           onPressed: () {
             googleSignIn.signOut();
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ));
   }
