@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "241748771473-85rt88coou8vb0k5ltij8m6ae5kuahf4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carriage.carriage_rider",
+            "certificate_hash": "6e72934b93741bbb329262b72c0683904e9b1b70"
+          }
+        },
+        {
           "client_id": "241748771473-f9t7p3d01hpo30v8jl2j0qrvhq53ff1t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -48,10 +56,10 @@
               "client_type": 3
             },
             {
-              "client_id": "241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c.apps.googleusercontent.com",
+              "client_id": "241748771473-rrbkuem88932jsu0q71j5mr8lr998uqt.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.carriage.carriageRider"
+                "bundle_id": "com.s"
               }
             }
           ]
@@ -66,6 +74,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "241748771473-16rt38so3hf7suh6k55f0v5hnv7166hn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carriage",
+            "certificate_hash": "666784a95c68d071d66aa20f58dbb75cc7700e8e"
+          }
+        },
+        {
+          "client_id": "241748771473-nke6j3oinkibuprb4i4ocpldcbgev9fi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carriage",
+            "certificate_hash": "f408e344e250aa8d6fa478ac53ad7744456575b9"
+          }
+        },
         {
           "client_id": "241748771473-mocs1f9labmir71n6lc9fl65i7fqr5js.apps.googleusercontent.com",
           "client_type": 1,
@@ -100,10 +124,10 @@
               "client_type": 3
             },
             {
-              "client_id": "241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c.apps.googleusercontent.com",
+              "client_id": "241748771473-rrbkuem88932jsu0q71j5mr8lr998uqt.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.carriage.carriageRider"
+                "bundle_id": "com.s"
               }
             }
           ]
