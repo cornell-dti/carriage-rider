@@ -33,7 +33,7 @@ class CurrentRide extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(
-                top: 5.0, bottom: 5.0, left: 84.2, right: 84.22),
+                top: 5.0, bottom: 5.0, left: 64.8, right: 64.8),
             decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.only(

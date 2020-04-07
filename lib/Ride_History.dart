@@ -49,7 +49,7 @@ class RideHistory extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(left: 17.0, right: 17.0, bottom: 15.0),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height * .16,
           child: Card(
             elevation: 3.0,
             child: Column(
@@ -91,18 +91,18 @@ class RideHistory extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 70.0),
+                        padding: EdgeInsets.only(left: 50.0),
                         child: Icon(Icons.arrow_forward),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(left: 85.0),
+                            padding: EdgeInsets.only(left: 66.0),
                             child: Text('To', style: directionStyle),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 85.0),
+                            padding: EdgeInsets.only(left: 66.0),
                             child: Text('Uris Hall', style: infoStyle),
                           )
                         ],
@@ -117,7 +117,7 @@ class RideHistory extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(left: 17.0, right: 17.0, bottom: 15.0),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height * .16,
           child: Card(
             elevation: 3.0,
             child: Column(
@@ -159,18 +159,18 @@ class RideHistory extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 70.0),
+                        padding: EdgeInsets.only(left: 50.0),
                         child: Icon(Icons.arrow_forward),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(left: 85.0),
+                            padding: EdgeInsets.only(left: 68.0),
                             child: Text('To', style: directionStyle),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 85.0),
+                            padding: EdgeInsets.only(left: 68.0),
                             child: Text('Gates Hall', style: infoStyle),
                           )
                         ],

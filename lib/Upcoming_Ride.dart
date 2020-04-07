@@ -53,13 +53,13 @@ class UpcomingRide extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 17.0),
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 15.0),
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width*0.65,
             height: MediaQuery.of(context).size.height,
             child: Card(
               elevation: 3.0,
@@ -84,7 +84,7 @@ class UpcomingRide extends StatelessWidget {
                           child: Text('12:00 PM', style: timeStyle),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 44.0),
+                          padding: const EdgeInsets.only(left: 12.0),
                           child: Icon(Icons.touch_app),
                         )
                       ],
@@ -166,8 +166,8 @@ class UpcomingRide extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(right: 15.0),
-            width: 260.0,
-            height: 300.0,
+            width: MediaQuery.of(context).size.width*0.65,
+            height: MediaQuery.of(context).size.height,
             child: Card(
               elevation: 3.0,
               child: Column(
@@ -191,7 +191,7 @@ class UpcomingRide extends StatelessWidget {
                           child: Text('1:00 PM', style: timeStyle),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 44.0),
+                          padding: const EdgeInsets.only(left: 12.0),
                           child: Icon(Icons.touch_app),
                         )
                       ],
