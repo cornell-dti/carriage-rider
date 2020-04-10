@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'Login.dart';
+import 'Home.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -33,7 +34,7 @@ class _ProfileState extends State<Profile> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+          onPressed: () => Home()
         ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

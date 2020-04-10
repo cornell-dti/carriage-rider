@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Login.dart';
+import 'Home.dart';
 
 class Settings extends StatefulWidget {
   Settings({Key key}) : super(key: key);
@@ -32,7 +33,7 @@ class _SettingsState extends State<Settings> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+          onPressed: () => Home()
         ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
