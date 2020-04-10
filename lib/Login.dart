@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'app_config.dart';
 import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-//import 'package:carriage_rider/Home.dart';
-import 'Notifications.dart';
+import 'package:carriage_rider/Home.dart';
+
 
 String name;
 String email;
@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
       name = googleSignIn.currentUser.displayName;
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
-      return Notifications();
+      return Home();
     }
   }
 }

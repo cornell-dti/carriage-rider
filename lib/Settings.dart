@@ -21,6 +21,7 @@ class _SettingsState extends State<Settings> {
     double _picMarginTB = _picDiameter / 8;
 
     return Scaffold(
+
       appBar: AppBar(
         title: Text(
           'Schedule',
@@ -33,7 +34,8 @@ class _SettingsState extends State<Settings> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Home()
+          onPressed: () { Home(); }
+
         ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

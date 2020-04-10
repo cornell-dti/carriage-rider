@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'Home.dart';
 
 class Notifications extends StatefulWidget {
   Notifications({Key key}) : super(key: key);
@@ -25,7 +26,7 @@ class _NotificationsState extends State<Notifications> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+          onPressed: () => Home(),
         ),
       ),
       body: Column(
@@ -53,7 +54,7 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   @override
-  Widget build(BuildContext) {
+  Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
