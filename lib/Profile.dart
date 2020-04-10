@@ -34,7 +34,7 @@ class _ProfileState extends State<Profile> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Home()
+          onPressed: () { Home(); }
         ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

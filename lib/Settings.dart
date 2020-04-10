@@ -21,7 +21,6 @@ class _SettingsState extends State<Settings> {
     double _picMarginTB = _picDiameter / 8;
 
     return Scaffold(
-
       appBar: AppBar(
         title: Text(
           'Schedule',
