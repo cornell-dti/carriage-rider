@@ -81,7 +81,7 @@ class Current extends StatelessWidget {
                     orderTimeline()
                   ],
                 )),
-            flex: 9,
+            flex: 8,
           ),
           Expanded(
             child: Container(
