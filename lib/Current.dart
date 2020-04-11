@@ -81,7 +81,7 @@ class Current extends StatelessWidget {
                     orderTimeline()
                   ],
                 )),
-            flex: 10,
+            flex: 9,
           ),
           Expanded(
             child: Container(
@@ -89,7 +89,7 @@ class Current extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(3),
+                      padding: EdgeInsets.all(2),
                       color: Colors.grey[100],
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -97,7 +97,7 @@ class Current extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                        top: SizeConfig.safeBlockHorizontal * 3,
+                        top: SizeConfig.safeBlockHorizontal * 2,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,7 +163,7 @@ class Current extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(3),
+                      padding: EdgeInsets.all(2),
                       color: Colors.grey[100],
                     ),
                   ],
@@ -246,7 +246,7 @@ class Current extends StatelessWidget {
               ),
               Container(
                 width: 3,
-                height: 50,
+                height: 20,
                 decoration: new BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.rectangle,
@@ -314,7 +314,7 @@ class Current extends StatelessWidget {
               ),
               Container(
                 width: 3,
-                height: 180,
+                height: 160,
                 decoration: new BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.rectangle,
@@ -449,115 +449,261 @@ class RideStatus extends StatefulWidget {
 }
 
 class _RideStatusState extends State<RideStatus> {
-  Widget infoRow(BuildContext context, String textCenter, String textEnd) {
-    return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          children: <Widget>[
-            Text(
-              "•",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'SFPro',
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                textCenter,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                textEnd,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
-        ));
-  }
-
-  Widget timeRow(BuildContext context, String textLocation, String textTime) {
-    return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          children: <Widget>[
-            SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                textLocation,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                textTime,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<String> text = new List();
-    text.add("Uris Hall");
-    text.add("Gates Hall");
-    text.add("Statler Hall");
-    text.add("Uris Hall");
-    final List<String> tempText = new List();
-    tempText.add("Dropoff Passenger 1");
-    tempText.add("Pickup Passenger 2");
-    tempText.add("Dropoff Passenger 2");
-    tempText.add("Expected Dropoff");
-    final List<String> locText = new List();
-    locText.add("109 Tower Rd, Ithaca, NY 14850");
-    locText.add("107 Hoy Rd, Ithaca, NY 14853");
-    locText.add("7 East Ave, Ithaca, NY 14853");
-    locText.add("109 Tower Rd, Ithaca, NY 14850");
-    final List<String> timeText = new List();
-    timeText.add("3:20 PM");
-    timeText.add("3:15 PM");
-    timeText.add("ETA 3:18 PM");
-    timeText.add("ETA 3:19 PM");
-
+    List<String> text = [
+      "Uris Hall",
+      "Gates Hall",
+      "Statler Hall",
+      "Uris Hall"
+    ];
+    List<String> tempText = [
+      "Dropoff Passenger 1",
+      "Pickup Passenger 2",
+      "Dropoff Passenger 2",
+      "Expected Dropoff"
+    ];
+    List<String> locText = [
+      "109 Tower Rd, Ithaca, NY 14850",
+      "107 Hoy Rd, Ithaca, NY 14853",
+      "7 East Ave, Ithaca, NY 14853",
+      "109 Tower Rd, Ithaca, NY 14850"
+    ];
+    List<String> timeText = [
+      "3:20 PM",
+      "3:15 PM",
+      "ETA 3:18 PM",
+      "ETA 3:19 PM"
+    ];
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
         child: Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: EdgeInsets.only(top: 2, left: 2, right: 2),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ListView.separated(
-                    padding: EdgeInsets.all(0),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: text.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, text[index], tempText[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.white);
-                    })
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "•",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'SFPro',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        text[0],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        tempText[0],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        locText[0],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        timeText[0],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "•",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'SFPro',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        text[1],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        tempText[1],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        locText[1],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        timeText[1],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "•",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'SFPro',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        text[2],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        tempText[2],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        locText[2],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        timeText[2],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "•",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'SFPro',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        text[3],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        tempText[3],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        locText[3],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        timeText[3],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             )));
   }
