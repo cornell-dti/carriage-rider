@@ -500,7 +500,6 @@ class _RideStatusState extends State<RideStatus> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         tempText[0],
@@ -556,7 +555,6 @@ class _RideStatusState extends State<RideStatus> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         tempText[1],
@@ -612,7 +610,6 @@ class _RideStatusState extends State<RideStatus> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         tempText[2],
@@ -668,7 +665,6 @@ class _RideStatusState extends State<RideStatus> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         tempText[3],
