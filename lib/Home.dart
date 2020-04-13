@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -17,6 +18,22 @@ class Home extends StatelessWidget {
     );
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(context, new MaterialPageRoute(builder: (context) => Request_Ride_Loc()));
+          },
+          icon: Icon(Icons.add),
+          label: Text("Request Ride"),
+          backgroundColor: Colors.black,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: MediaQuery.of(context).size.height*0.05,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white,
+        ),
+      ),
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.all(5.0),
