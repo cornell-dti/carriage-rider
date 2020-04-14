@@ -207,7 +207,7 @@ class Current extends StatelessWidget {
     );
   }
 
-  Widget ColoredCircle(Color color) {
+  Widget coloredCircle(Color color) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
@@ -245,7 +245,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ColoredCircle(Colors.grey),
+              coloredCircle(Colors.grey),
               Container(
                 width: 3,
                 height: 20,
@@ -290,7 +290,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ColoredCircle(Colors.black),
+              coloredCircle(Colors.black),
               Container(
                 width: 3,
                 height: 160,
@@ -337,7 +337,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ColoredCircle(Colors.grey),
+              coloredCircle(Colors.grey),
               Container(
                 width: 3,
                 height: 20,
