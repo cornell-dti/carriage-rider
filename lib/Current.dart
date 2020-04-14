@@ -337,7 +337,7 @@ class Current extends StatelessWidget {
                       fontSize: 19,
                       color: Colors.black)),
               Column(
-                children: <Widget>[],
+                children: <Widget>[RideStatus()],
               )
             ],
           ),
