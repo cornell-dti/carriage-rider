@@ -53,34 +53,36 @@ class Current extends StatelessWidget {
             flex: 1,
           ),
           Expanded(
-            child: Container(
-                decoration: const BoxDecoration(color: Colors.white),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(
-                            top: SizeConfig.safeBlockHorizontal * 7,
-                            left: SizeConfig.safeBlockHorizontal * 7,
-                            bottom: SizeConfig.safeBlockHorizontal * 3,
+            child: SingleChildScrollView(
+              child: Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.safeBlockHorizontal * 7,
+                              left: SizeConfig.safeBlockHorizontal * 7,
+                              bottom: SizeConfig.safeBlockHorizontal * 3,
+                            ),
+                            child: Text(
+                              "Ride Status",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontFamily: 'SFPro',
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          child: Text(
-                            "Ride Status",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontFamily: 'SFPro',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    orderTimeline()
-                  ],
-                )),
+                        ],
+                      ),
+                      orderTimeline()
+                    ],
+                  )),
+            ),
             flex: 8,
           ),
           Expanded(
@@ -232,47 +234,47 @@ class Current extends StatelessWidget {
     );
   }
 
+  Widget nonHighlightLine(Color color) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        coloredCircle(Colors.grey),
+        Container(
+          width: 3,
+          height: 20,
+          decoration: new BoxDecoration(
+            color: color,
+            shape: BoxShape.rectangle,
+          ),
+          child: Text(""),
+        ),
+      ],
+    );
+  }
+
+  Widget timeLineTitle(String title, String subTile, Color color) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('$title\n $subTile',
+            style:
+                TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
+      ],
+    );
+  }
+
   Widget timelineRow(String title, String subTile) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 30),
-        Expanded(
-          flex: 1,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              coloredCircle(Colors.grey),
-              Container(
-                width: 3,
-                height: 20,
-                decoration: new BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.rectangle,
-                ),
-                child: Text(""),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 9,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('$title\n $subTile',
-                  style: TextStyle(
-                      fontFamily: "regular",
-                      fontSize: 19,
-                      color: Colors.black54)),
-            ],
-          ),
-        ),
+        Expanded(flex: 1, child: nonHighlightLine(Colors.black)),
+        Expanded(flex: 9, child: timeLineTitle(title, subTile, Colors.black54)),
       ],
     );
   }
@@ -330,39 +332,14 @@ class Current extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              coloredCircle(Colors.grey),
-              Container(
-                width: 3,
-                height: 20,
-                decoration: new BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.rectangle,
-                ),
-                child: Text(""),
-              ),
-            ],
-          ),
-        ),
+        Expanded(flex: 1, child: nonHighlightLine(Colors.transparent)),
         Expanded(
           flex: 9,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('$title\n $subTile',
-                  style: TextStyle(
-                      fontFamily: "regular",
-                      fontSize: 19,
-                      color: Colors.black54)),
-            ],
+            children: <Widget>[timeLineTitle(title, subTile, Colors.black54)],
           ),
         ),
       ],
@@ -405,6 +382,19 @@ class RideStatus extends StatefulWidget {
 }
 
 class _RideStatusState extends State<RideStatus> {
+
+  Widget rideText (String text, double size, Color color) {
+     return Expanded(
+       child: Text(
+         text,
+         style: TextStyle(
+           fontSize: size,
+           color: color,
+         ),
+       ),
+     );
+  }
+
   Widget titleRow(BuildContext context, String fst, String snd) {
     return Row(
       children: <Widget>[
@@ -417,24 +407,8 @@ class _RideStatusState extends State<RideStatus> {
               fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 4),
-        Expanded(
-          child: Text(
-            fst,
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Text(
-            snd,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
-        )
+        rideText(fst, 15, Colors.black),
+        rideText(snd, 10, Colors.grey)
       ],
     );
   }
@@ -443,25 +417,9 @@ class _RideStatusState extends State<RideStatus> {
     return Row(
       children: <Widget>[
         SizedBox(width: 4),
-        Expanded(
-          child: Text(
-            fst,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
-        ),
+        rideText(fst, 10, Colors.grey),
         SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            snd,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
-        )
+        rideText(snd, 10, Colors.grey)
       ],
     );
   }
