@@ -57,28 +57,7 @@ class Current extends StatelessWidget {
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(
-                            top: SizeConfig.safeBlockHorizontal * 7,
-                            left: SizeConfig.safeBlockHorizontal * 7,
-                            bottom: SizeConfig.safeBlockHorizontal * 3,
-                          ),
-                          child: Text(
-                            "Ride Status",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontFamily: 'SFPro',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    orderTimeline()
+                    Scrol
                   ],
                 )),
             flex: 8,
@@ -337,7 +316,7 @@ class Current extends StatelessWidget {
                       fontSize: 19,
                       color: Colors.black)),
               Column(
-                children: <Widget>[RideStatus()],
+                children: <Widget>[],
               )
             ],
           ),
@@ -449,6 +428,76 @@ class RideStatus extends StatefulWidget {
 }
 
 class _RideStatusState extends State<RideStatus> {
+
+  Widget titleRow(BuildContext context, String fst, String snd) {
+    return Padding(
+        padding: EdgeInsets.only(),
+        child: Row(
+          children: <Widget>[
+            Text(
+              "•",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'SFPro',
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                fst,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                snd,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget descriptionRow(BuildContext context, String fst, String snd) {
+    return Padding(
+        padding: EdgeInsets.only(),
+        child: Row(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    fst,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    snd,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> text = [
@@ -457,7 +506,7 @@ class _RideStatusState extends State<RideStatus> {
       "Statler Hall",
       "Uris Hall"
     ];
-    List<String> tempText = [
+    List<String> actionText = [
       "Dropoff Passenger 1",
       "Pickup Passenger 2",
       "Dropoff Passenger 2",
@@ -480,226 +529,14 @@ class _RideStatusState extends State<RideStatus> {
             padding: EdgeInsets.only(top: 2, left: 2, right: 2),
             child: Column(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "•",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'SFPro',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        text[0],
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        tempText[0],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        locText[0],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        timeText[0],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "•",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'SFPro',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        text[1],
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        tempText[1],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        locText[1],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        timeText[1],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "•",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'SFPro',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        text[2],
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        tempText[2],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        locText[2],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        timeText[2],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "•",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'SFPro',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        text[3],
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        tempText[3],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        locText[3],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        timeText[3],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                titleRow(context, text[0], actionText[0]),
+                descriptionRow(context, locText[0], timeText[0]),
+                titleRow(context, text[1], actionText[1]),
+                descriptionRow(context, locText[1], timeText[1]),
+                titleRow(context, text[2], actionText[2]),
+                descriptionRow(context, locText[2], timeText[2]),
+                titleRow(context, text[3], actionText[3]),
+                descriptionRow(context, locText[3], timeText[3]),
               ],
             )));
   }

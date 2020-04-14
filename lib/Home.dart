@@ -1,3 +1,4 @@
+import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,17 @@ class Home extends StatelessWidget {
               title: Text('Notifications'),
               onTap: (){
                 Navigator.pop(context);
+              },
+            ),
+            Divider(
+              color: Colors.grey[500],
+            ),
+            ListTile(
+              leading: Icon(Icons.directions_car),
+              title: Text('Current Ride'),
+              onTap: (){
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Current()));
               },
             )
           ],
