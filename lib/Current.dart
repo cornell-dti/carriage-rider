@@ -37,14 +37,7 @@ class Current extends StatelessWidget {
                           padding: EdgeInsets.only(
                             left: SizeConfig.safeBlockHorizontal * 7,
                           ),
-                          child: Text(
-                            "Current Ride",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 35,
-                                fontFamily: 'SFPro',
-                                fontWeight: FontWeight.bold),
-                          )),
+                          child: headerText("Current Ride", Colors.white, 35)),
                     ],
                   ),
                 ],
@@ -62,21 +55,13 @@ class Current extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.safeBlockHorizontal * 7,
-                              left: SizeConfig.safeBlockHorizontal * 7,
-                              bottom: SizeConfig.safeBlockHorizontal * 3,
-                            ),
-                            child: Text(
-                              "Ride Status",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                  fontFamily: 'SFPro',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                              padding: EdgeInsets.only(
+                                top: SizeConfig.safeBlockHorizontal * 7,
+                                left: SizeConfig.safeBlockHorizontal * 7,
+                                bottom: SizeConfig.safeBlockHorizontal * 3,
+                              ),
+                              child:
+                                  headerText("Ride Status", Colors.black, 24)),
                         ],
                       ),
                       orderTimeline()
@@ -86,90 +71,7 @@ class Current extends StatelessWidget {
             flex: 8,
           ),
           Expanded(
-            child: Container(
-                decoration: const BoxDecoration(color: Colors.white),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(2),
-                      color: Colors.grey[100],
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.safeBlockHorizontal * 2,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.safeBlockHorizontal * 7,
-                            ),
-                          ),
-                          SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  imageUrl,
-                                ),
-                                radius: 20,
-                                backgroundColor: Colors.transparent,
-                              )),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  name,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SFPro',
-                                      fontSize: 15),
-                                ),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Icon(Icons.phone),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      "+1 657-500-1311",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'SFPro',
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                    bottom: SizeConfig.safeBlockHorizontal * 5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(2),
-                      color: Colors.grey[100],
-                    ),
-                  ],
-                )),
+            child: profileInfo(),
             flex: 2,
           ),
           Expanded(
@@ -185,6 +87,106 @@ class Current extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget headerText(String text, Color color, double size) {
+    return Text(
+      text,
+      textAlign: TextAlign.left,
+      style: TextStyle(
+          color: color,
+          fontSize: size,
+          fontFamily: 'SFPro',
+          fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget infoDivider() {
+    return Container(
+      padding: EdgeInsets.all(2),
+      color: Colors.grey[100],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+      ),
+    );
+  }
+
+  Widget profileInfo() {
+    return Container(
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Column(
+          children: <Widget>[
+            infoDivider(),
+            Container(
+              padding: EdgeInsets.only(
+                top: SizeConfig.safeBlockHorizontal * 2,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: SizeConfig.safeBlockHorizontal * 7,
+                    ),
+                  ),
+                  SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          imageUrl,
+                        ),
+                        radius: 20,
+                        backgroundColor: Colors.transparent,
+                      )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          name,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'SFPro',
+                              fontSize: 15),
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.phone),
+                            SizedBox(width: 10),
+                            Text(
+                              "+1 657-500-1311",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SFPro',
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.safeBlockHorizontal * 5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            infoDivider(),
+          ],
+        ));
   }
 
   Widget orderTimeline() {
@@ -382,17 +384,16 @@ class RideStatus extends StatefulWidget {
 }
 
 class _RideStatusState extends State<RideStatus> {
-
-  Widget rideText (String text, double size, Color color) {
-     return Expanded(
-       child: Text(
-         text,
-         style: TextStyle(
-           fontSize: size,
-           color: color,
-         ),
-       ),
-     );
+  Widget rideText(String text, double size, Color color) {
+    return Expanded(
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: size,
+          color: color,
+        ),
+      ),
+    );
   }
 
   Widget titleRow(BuildContext context, String fst, String snd) {
