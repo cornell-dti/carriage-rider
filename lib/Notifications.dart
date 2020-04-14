@@ -52,6 +52,16 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
+
+  List<Color> colors = [
+    Colors.black,
+    Colors.black,
+    Colors.black,
+    Colors.red,
+    Colors.black,
+    Colors.red
+  ];
+
   List<IconData> icons = [
     Icons.directions_car,
     Icons.check,
@@ -70,7 +80,7 @@ class _DetailState extends State<Detail> {
     "Your driver cancelled the ride because the driver was unable to find you."
   ];
 
-  Widget BlackInfoRow(BuildContext context, IconData icon, String text) {
+  Widget notificationRow(BuildContext context, Color color, IconData icon, String text) {
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
@@ -79,32 +89,7 @@ class _DetailState extends State<Detail> {
               radius: 22,
               child: CircleAvatar(
                 radius: 22,
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                child: Icon(icon),
-              ),
-            ),
-            SizedBox(width: 19),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
-          ],
-        ));
-  }
-
-  Widget RedInfoRow(BuildContext context, IconData icon, String text) {
-    return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 22,
-              child: CircleAvatar(
-                radius: 22,
-                backgroundColor: Colors.red,
+                backgroundColor: color,
                 foregroundColor: Colors.white,
                 child: Icon(icon),
               ),
@@ -138,12 +123,20 @@ class _DetailState extends State<Detail> {
             padding: EdgeInsets.only(top: 24, left: 16, right: 16),
             child: Column(
               children: <Widget>[
-                BlackInfoRow(context, icons[0], text[0]),
-                BlackInfoRow(context, icons[1], text[1]),
-                BlackInfoRow(context, icons[2], text[2]),
-                RedInfoRow(context, icons[3], text[3]),
-                BlackInfoRow(context, icons[4], text[4]),
-                BlackInfoRow(context, icons[5], text[5]),
+                ListView.separated(
+                    padding: EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: icons.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return notificationRow(context, colors[index], icons[index], text[index]);
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        height: 0, color: Colors.white,
+                      );
+                    }
+                )
               ],
             )));
   }
