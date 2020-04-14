@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Home.dart';
 
 class Notifications extends StatefulWidget {
   Notifications({Key key}) : super(key: key);
@@ -26,7 +25,7 @@ class _NotificationsState extends State<Notifications> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Home(),
+          onPressed: () => Navigator.pop(context, false),
         ),
       ),
       body: Column(
@@ -40,7 +39,7 @@ class _NotificationsState extends State<Notifications> {
             Detail(),
             Container(
               color: Colors.white,
-              height: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 5,
             )
           ]),
     );
@@ -53,6 +52,74 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
+  List<IconData> icons = [
+    Icons.directions_car,
+    Icons.check,
+    Icons.directions_car,
+    Icons.edit,
+    Icons.directions_car,
+    Icons.cancel
+  ];
+
+  List<String> text = [
+    "Your driver is on the way! Wait outside to meet your driver.",
+    "Your ride on MM/DD/YYYY has been confirmed",
+    "How was your ride with Jennifer? Leave a review so we can improve our service",
+    "Your ride information has been edited by the admin. Please review your ride info.",
+    "Your driver is here! Meet your driver at the pickup point.",
+    "Your driver cancelled the ride because the driver was unable to find you."
+  ];
+
+  Widget BlackInfoRow(BuildContext context, IconData icon, String text) {
+    return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          children: <Widget>[
+            CircleAvatar(
+              radius: 22,
+              child: CircleAvatar(
+                radius: 22,
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                child: Icon(icon),
+              ),
+            ),
+            SizedBox(width: 19),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget RedInfoRow(BuildContext context, IconData icon, String text) {
+    return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          children: <Widget>[
+            CircleAvatar(
+              radius: 22,
+              child: CircleAvatar(
+                radius: 22,
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                child: Icon(icon),
+              ),
+            ),
+            SizedBox(width: 19),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
+            ),
+          ],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,137 +138,12 @@ class _DetailState extends State<Detail> {
             padding: EdgeInsets.only(top: 24, left: 16, right: 16),
             child: Column(
               children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.directions_car),
-                      ),
-                    ),
-                    SizedBox(width: 19),
-                    Expanded(
-                      child: Text(
-                        "Your driver is on the way! Wait outside to meet your driver.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.check),
-                      ),
-                    ),
-                    SizedBox(width: 19),
-                    Expanded(
-                      child: Text(
-                        "Your ride on MM/DD/YYYY has been confirmed.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.directions_car),
-                      ),
-                    ),
-                    SizedBox(width: 19),
-                    Expanded(
-                      child: Text(
-                        "How was your ride with Jennifer? Leave a review so we can improve our service.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.edit),
-                      ),
-                    ),
-                    SizedBox(width: 19),
-                    Expanded(
-                      child: Text(
-                        "Your ride information has been edited by the admin. Please review your ride info.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 20,
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.directions_car),
-                      ),
-                    ),
-                    SizedBox(width: 19),
-                    Expanded(
-                      child: Text(
-                        "Your driver is here! Meet your driver at the pickup point.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        child: Icon(Icons.cancel),
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: Text(
-                        "Your driver cancelled the ride because the driver was unable to find you.",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
+                BlackInfoRow(context, icons[0], text[0]),
+                BlackInfoRow(context, icons[1], text[1]),
+                BlackInfoRow(context, icons[2], text[2]),
+                RedInfoRow(context, icons[3], text[3]),
+                BlackInfoRow(context, icons[4], text[4]),
+                BlackInfoRow(context, icons[5], text[5]),
               ],
             )));
   }
