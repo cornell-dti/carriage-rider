@@ -57,7 +57,28 @@ class Current extends StatelessWidget {
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Column(
                   children: <Widget>[
-                    Scrol
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.safeBlockHorizontal * 7,
+                            left: SizeConfig.safeBlockHorizontal * 7,
+                            bottom: SizeConfig.safeBlockHorizontal * 3,
+                          ),
+                          child: Text(
+                            "Ride Status",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontFamily: 'SFPro',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    orderTimeline()
                   ],
                 )),
             flex: 8,
@@ -430,72 +451,64 @@ class RideStatus extends StatefulWidget {
 class _RideStatusState extends State<RideStatus> {
 
   Widget titleRow(BuildContext context, String fst, String snd) {
-    return Padding(
-        padding: EdgeInsets.only(),
-        child: Row(
-          children: <Widget>[
-            Text(
-              "•",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'SFPro',
-                  fontWeight: FontWeight.bold),
+    return Row(
+      children: <Widget>[
+        Text(
+          "•",
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'SFPro',
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            fst,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
             ),
-            SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                fst,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
-              ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            snd,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
             ),
-            Expanded(
-              child: Text(
-                snd,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
-        ));
+          ),
+        )
+      ],
+    );
   }
 
   Widget descriptionRow(BuildContext context, String fst, String snd) {
-    return Padding(
-        padding: EdgeInsets.only(),
-        child: Row(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    fst,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    snd,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  ),
-                )
-              ],
+    return Row(
+      children: <Widget>[
+        SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            fst,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
             ),
-          ],
-        ));
+          ),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            snd,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   @override
