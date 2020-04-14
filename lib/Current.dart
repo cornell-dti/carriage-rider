@@ -207,6 +207,31 @@ class Current extends StatelessWidget {
     );
   }
 
+  Widget ColoredCircle(Color color) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        width: 18,
+        height: 18,
+        decoration: new BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: new Border.all(
+              color: Colors.white, width: 6.0, style: BorderStyle.solid),
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.grey[300],
+              blurRadius: 10.0,
+            )
+          ],
+        ),
+        child: Text(
+          "",
+        ),
+      ),
+    );
+  }
+
   Widget timelineRow(String title, String subTile) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -220,30 +245,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: new BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                    border: new Border.all(
-                        color: Colors.white,
-                        width: 6.0,
-                        style: BorderStyle.solid),
-                    boxShadow: [
-                      new BoxShadow(
-                        color: Colors.grey[300],
-                        blurRadius: 10.0,
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    "",
-                  ),
-                ),
-              ),
+              ColoredCircle(Colors.grey),
               Container(
                 width: 3,
                 height: 20,
@@ -288,30 +290,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: new BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    border: new Border.all(
-                        color: Colors.white,
-                        width: 6.0,
-                        style: BorderStyle.solid),
-                    boxShadow: [
-                      new BoxShadow(
-                        color: Colors.grey[300],
-                        blurRadius: 30.0,
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    "",
-                  ),
-                ),
-              ),
+              ColoredCircle(Colors.black),
               Container(
                 width: 3,
                 height: 160,
@@ -358,30 +337,7 @@ class Current extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: new BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                    border: new Border.all(
-                        color: Colors.white,
-                        width: 6.0,
-                        style: BorderStyle.solid),
-                    boxShadow: [
-                      new BoxShadow(
-                        color: Colors.grey[300],
-                        blurRadius: 30.0,
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    "",
-                  ),
-                ),
-              ),
+              ColoredCircle(Colors.grey),
               Container(
                 width: 3,
                 height: 20,
@@ -449,7 +405,6 @@ class RideStatus extends StatefulWidget {
 }
 
 class _RideStatusState extends State<RideStatus> {
-
   Widget titleRow(BuildContext context, String fst, String snd) {
     return Row(
       children: <Widget>[
