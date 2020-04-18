@@ -52,9 +52,12 @@ class Rider {
         description: json['description'],
         picture: json['picture'],
         joinDate: json['joinDate'],
-        pastRides: json['pastRides'],
-        requestedRides: json['requestedRides'],
-        favoriteLocations: json['favoriteLocations']);
+        pastRides: (json['pastRides'] as List<dynamic>).cast<String>().toList(),
+        requestedRides:
+            (json['requestedRides'] as List<dynamic>).cast<String>().toList(),
+        favoriteLocations: (json['favoriteLocations'] as List<dynamic>)
+            .cast<String>()
+            .toList());
   }
 
   Map<String, dynamic> toJson() => {

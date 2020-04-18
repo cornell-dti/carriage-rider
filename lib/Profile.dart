@@ -1,14 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-// import 'package:http/http.dart' as http;
-//import 'dart:convert';
+import 'dart:core';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'Login.dart';
-//import 'Rider.dart';
+import 'Rider.dart';
 
+Future<Rider> fetchRider() async {
+  final response = await http.get("http://10.0.2.2:3000");
+
+  if (response.statusCode == 200) {
+    return Rider.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load rider info');
+  }
+}
 
 class Profile extends StatefulWidget {
-
   Profile({Key key}) : super(key: key);
 
   @override
@@ -16,6 +25,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Future<Rider> user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = fetchRider();
+  }
 
   @override
   Widget build(BuildContext context) {
