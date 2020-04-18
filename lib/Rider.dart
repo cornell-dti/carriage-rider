@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'dart:core';
-
-import 'package:flutter/cupertino.dart';
 
 class Rider {
   final String id;
