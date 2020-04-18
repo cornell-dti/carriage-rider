@@ -33,6 +33,7 @@ class _SettingsState extends State<Settings> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context, false),
+
         ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

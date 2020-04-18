@@ -1,3 +1,5 @@
+import 'package:carriage_rider/Current.dart';
+import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:flutter/material.dart';
@@ -5,17 +7,18 @@ import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
+import 'package:carriage_rider/Login.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String headerName = "Hi " + name.split(" ")[0] + "!";
     final subHeadingStyle = TextStyle(
         color: Colors.grey[700],
         fontWeight: FontWeight.w700,
         letterSpacing: 0.3,
         fontSize: 20,
-        height: 2
-    );
+        height: 2);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
@@ -41,9 +44,9 @@ class Home extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Profile'),
-              onTap: (){
-                Navigator.push(context, new MaterialPageRoute(builder:
-                    (context) => Profile()));
+              onTap: () {
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => Profile()));
               },
             ),
             Divider(
@@ -52,9 +55,9 @@ class Home extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
-              onTap: (){
-                Navigator.push(context, new MaterialPageRoute(builder:
-                    (context) => Settings()));
+              onTap: () {
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => Settings()));
               },
             ),
             Divider(
@@ -63,8 +66,22 @@ class Home extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.notifications),
               title: Text('Notifications'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => Notifications()));
+              },
+            ),
+            Divider(
+              color: Colors.grey[500],
+            ),
+            ListTile(
+              leading: Icon(Icons.directions_car),
+              title: Text('Current Ride'),
               onTap: (){
-                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Current()));
               },
             )
           ],
@@ -72,7 +89,9 @@ class Home extends StatelessWidget {
       ),
       appBar: AppBar(
         title: Text(
-          'Hi Aiden!', style: TextStyle(color: Colors.black, fontSize: 30),
+          headerName,
+          style:
+              TextStyle(color: Colors.black, fontSize: 30, fontFamily: 'SFPro'),
         ),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
@@ -82,19 +101,25 @@ class Home extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text('Next Ride', style: subHeadingStyle,
+            child: Text(
+              'Next Ride',
+              style: subHeadingStyle,
             ),
           ),
           CurrentRide(),
           Container(
             margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text('Upcoming Rides', style: subHeadingStyle,
+            child: Text(
+              'Upcoming Rides',
+              style: subHeadingStyle,
             ),
           ),
           UpcomingRide(),
           Container(
             margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text('Ride History', style: subHeadingStyle,
+            child: Text(
+              'Ride History',
+              style: subHeadingStyle,
             ),
           ),
           RideHistory(),

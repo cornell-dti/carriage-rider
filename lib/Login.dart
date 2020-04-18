@@ -5,6 +5,7 @@ import 'main_common.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:carriage_rider/Home.dart';
 
+
 String name;
 String email;
 String imageUrl;
@@ -103,7 +104,9 @@ class _LoginState extends State<Login> {
       name = googleSignIn.currentUser.displayName;
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
+      
       return Home();
+
     }
   }
 }
