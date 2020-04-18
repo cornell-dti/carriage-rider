@@ -1,9 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+// import 'package:http/http.dart' as http;
+//import 'dart:convert';
 import 'Login.dart';
+//import 'Rider.dart';
+
 
 class Profile extends StatefulWidget {
+
   Profile({Key key}) : super(key: key);
 
   @override
@@ -11,6 +16,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
