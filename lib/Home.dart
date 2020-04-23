@@ -1,3 +1,4 @@
+import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Settings.dart';
@@ -53,6 +54,17 @@ class Home extends StatelessWidget {
                     context,
                     new MaterialPageRoute(
                         builder: (context) => Notifications()));
+              },
+            ),
+            Divider(
+              color: Colors.grey[500],
+            ),
+            ListTile(
+              leading: Icon(Icons.directions_car),
+              title: Text('Current Ride'),
+              onTap: (){
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Current()));
               },
             )
           ],
