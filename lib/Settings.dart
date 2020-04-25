@@ -114,7 +114,9 @@ class _SettingsState extends State<Settings> {
                       )))
             ])),
         SizedBox(height: 6),
-        Locations(),
+        LocationsInfo("Locations",
+            [Icons.person_outline, Icons.accessible],
+            ["Add Home", "Add Favorites"]),
         SizedBox(height: 6),
         PrivacyLegalInfo(),
         SizedBox(height: 6),
@@ -124,15 +126,22 @@ class _SettingsState extends State<Settings> {
   }
 }
 
-class Locations extends StatefulWidget {
+class LocationsInfo extends StatefulWidget {
+  LocationsInfo(this.title, this.icons, this.fields);
+
+  final String title;
+  final List<IconData> icons;
+  final List<String> fields;
+
   @override
-  _LocationsState createState() => _LocationsState();
+  _LocationsInfoState createState() => _LocationsInfoState();
 }
 
-class _LocationsState extends State<Locations> {
+class _LocationsInfoState extends State<LocationsInfo> {
   Widget infoRow(BuildContext context, IconData icon, String text) {
+    double paddingTB = 10;
     return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
+        padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
         child: Row(
           children: <Widget>[
             Icon(icon),
@@ -156,9 +165,6 @@ class _LocationsState extends State<Locations> {
 
   @override
   Widget build(BuildContext context) {
-    List<IconData> icons = [Icons.person_outline, Icons.accessible];
-    List<String> text = ["Add Home", "Add Favorites"];
-
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -176,19 +182,20 @@ class _LocationsState extends State<Locations> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Locations',
+                Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
-                    padding: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
+                    itemCount: widget.icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], text[index]);
+                      return infoRow(
+                          context, widget.icons[index], widget.fields[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(color: Colors.black);
+                      return Divider(height: 0, color: Colors.black);
                     })
               ],
             )));
