@@ -8,7 +8,7 @@ import 'Login.dart';
 import 'Rider.dart';
 
 Future<Rider> fetchRider() async {
-  final response = await http.get("http://10.0.2.2:3000");
+  final response = await http.get("http://10.0.2.2:3001");
 
   if (response.statusCode == 200) {
     return Rider.fromJson(json.decode(response.body));
@@ -58,122 +58,118 @@ class _ProfileState extends State<Profile> {
           onPressed: () => Navigator.pop(context, false),
         ),
       ),
-      body: Center(
-        child: FutureBuilder<Rider>(
-          future: user,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-                      child: Text('Your Profile',
-                          style: Theme.of(context).textTheme.headline),
-                    ),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromARGB(15, 0, 0, 0),
-                                offset: Offset(0, 4.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 1.0)
-                          ],
-                        ),
-                        child: Row(children: [
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: _picMarginLR,
-                                  right: _picMarginLR,
-                                  top: _picMarginTB,
-                                  bottom: _picMarginTB),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: _picDiameter * 0.05),
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          imageUrl,
-                                        ),
-                                        radius: _picRadius,
-                                      )),
-                                  Positioned(
-                                      child: Container(
-                                        height: _picBtnDiameter,
-                                        width: _picBtnDiameter,
-                                        child: FittedBox(
-                                          child: FloatingActionButton(
-                                            backgroundColor: Colors.black,
-                                            child: Icon(Icons.add,
-                                                size: _picBtnDiameter),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                      ),
-                                      left: _picDiameter * 0.61,
-                                      top: _picDiameter * 0.66)
-                                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+            child: Text('Your Profile',
+                style: Theme.of(context).textTheme.headline),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(3),
+                boxShadow: [
+                  BoxShadow(
+                      color: Color.fromARGB(15, 0, 0, 0),
+                      offset: Offset(0, 4.0),
+                      blurRadius: 10.0,
+                      spreadRadius: 1.0)
+                ],
+              ),
+              child: Row(children: [
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: _picMarginLR,
+                        right: _picMarginLR,
+                        top: _picMarginTB,
+                        bottom: _picMarginTB),
+                    child: Stack(
+                      children: [
+                        Padding(
+                            padding:
+                                EdgeInsets.only(bottom: _picDiameter * 0.05),
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                imageUrl,
+                              ),
+                              radius: _picRadius,
+                            )),
+                        Positioned(
+                            child: Container(
+                              height: _picBtnDiameter,
+                              width: _picBtnDiameter,
+                              child: FittedBox(
+                                child: FloatingActionButton(
+                                  backgroundColor: Colors.black,
+                                  child: Icon(Icons.add, size: _picBtnDiameter),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
+                            left: _picDiameter * 0.61,
+                            top: _picDiameter * 0.66)
+                      ],
+                    )),
+                Padding(
+                    padding: EdgeInsets.only(bottom: 30),
+                    child: Stack(
+                      overflow: Overflow.visible,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(name,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              IconButton(
+                                icon: Icon(Icons.edit, size: 20),
+                                onPressed: () {},
+                              )
+                            ]),
+                        Positioned(
+                          child: Text("Joined 03/2020",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).accentColor,
                               )),
-                          Padding(
-                              padding: EdgeInsets.only(bottom: 30),
-                              child: Stack(
-                                overflow: Overflow.visible,
-                                children: [
-                                  Row(
-                                      //crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(name,
-                                            style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                        IconButton(
-                                          icon: Icon(Icons.edit, size: 20),
-                                          onPressed: () {},
-                                        )
-                                      ]),
-                                  Positioned(
-                                    child: Text("Joined 03/2020",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Theme.of(context).accentColor,
-                                        )),
-                                    top: 45,
-                                  )
-                                ],
-                              ))
-                        ])),
-                    SizedBox(height: 6),
-                    AccountInfo(),
-                    SizedBox(height: 6),
-                    PersonalInfo(),
-                    SizedBox(height: 6),
-                  ]);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return Text("${snapshot.error}");
-          },
-        ),
+                          top: 45,
+                        )
+                      ],
+                    ))
+              ])),
+          SizedBox(height: 6),
+          ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
+              [email, "Add your number"]),
+          SizedBox(height: 6),
+          ProfileInfo("Personal Info", [Icons.person_outline, Icons.accessible],
+              ["How should we address you?", "Any accessiblility assistance?"]),
+          SizedBox(height: 6),
+        ],
       ),
     );
   }
 }
 
-class AccountInfo extends StatefulWidget {
+class ProfileInfo extends StatefulWidget {
+  ProfileInfo(this.title, this.icons, this.fields);
+
+  final String title;
+  final List<IconData> icons;
+  final List<String> fields;
+
   @override
-  _AccountInfoState createState() => _AccountInfoState();
+  _ProfileInfoState createState() => _ProfileInfoState();
 }
 
-class _AccountInfoState extends State<AccountInfo> {
+class _ProfileInfoState extends State<ProfileInfo> {
   Widget infoRow(BuildContext context, IconData icon, String text) {
+    double paddingTB = 10;
     return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
+        padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
         child: Row(
           children: <Widget>[
             Icon(icon),
@@ -197,9 +193,6 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = [Icons.mail_outline, Icons.phone];
-    final List<String> text = [email, "Add your number"];
-
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -217,96 +210,20 @@ class _AccountInfoState extends State<AccountInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Account Info',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ListView.separated(
-                    padding: EdgeInsets.all(0),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], text[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.black);
-                    })
-              ],
-            )));
-  }
-}
-
-class PersonalInfo extends StatefulWidget {
-  @override
-  _PersonalInfoState createState() => _PersonalInfoState();
-}
-
-class _PersonalInfoState extends State<PersonalInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text) {
-    return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          children: <Widget>[
-            Icon(icon),
-            SizedBox(width: 19),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
-            )
-          ],
-        ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final List<IconData> icons = [Icons.person_outline, Icons.accessible];
-    final List<String> text = [
-      "How should we address you?",
-      "Any accessiblility assistance?"
-    ];
-
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(3),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(15, 0, 0, 0),
-                offset: Offset(0, 4.0),
-                blurRadius: 10.0,
-                spreadRadius: 1.0)
-          ],
-        ),
-        child: Padding(
-            padding: EdgeInsets.only(top: 24, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Personal Info',
+                Text(widget.title,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
+                    itemCount: widget.icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(context, icons[index], text[index]);
+                      return infoRow(
+                          context, widget.icons[index], widget.fields[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 0,
-                        color: Colors.black,
-                      );
+                      return Divider(height: 0, color: Colors.black);
                     })
               ],
             )));

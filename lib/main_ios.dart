@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   AppConfig configuredApp = AppConfig(
-    baseUrl: "http://localhost:3000",
+    baseUrl: "http://localhost:3001",
     child: MyApp(),
   );
 

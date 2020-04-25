@@ -44,6 +44,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   GoogleSignInAccount currentUser;
   String id;
+  String riderID;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -55,6 +56,7 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     currentUser = null;
+    riderID = null;
     id = null;
     try {
       googleSignIn.signInSilently();
@@ -104,9 +106,8 @@ class _LoginState extends State<Login> {
       name = googleSignIn.currentUser.displayName;
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
-      
+      riderID = id;
       return Home();
-
     }
   }
 }
