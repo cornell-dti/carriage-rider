@@ -9,6 +9,14 @@ import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:carriage_rider/Login.dart';
 
+void main(){
+  runApp(MaterialApp(
+    routes: {
+      '/': (context) => Home(),
+    }
+  ));
+}
+
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

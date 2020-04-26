@@ -103,9 +103,7 @@ class Assistance extends StatelessWidget {
                       height: 45.0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
-                        onPressed: (){
-                          Navigator.push(context, new MaterialPageRoute(builder: (context) => Assistance()));
-                        },
+                        onPressed: (){},
                         elevation: 3.0,
                         color: Colors.black,
                         textColor: Colors.white,
