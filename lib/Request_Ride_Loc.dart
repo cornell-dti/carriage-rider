@@ -1,3 +1,4 @@
+import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
 class RequestRideLoc extends StatefulWidget {
@@ -25,29 +26,17 @@ class _RequestRideLocState extends State<RequestRideLoc> {
       fontSize: 15,
   );
 
-  final fromToStyle = TextStyle(
-      color: Colors.grey,
-      fontWeight: FontWeight.w200,
-      fontSize: 12,
-  );
-
   final questionStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w800,
       fontSize: 25,
   );
 
-  final locationStyle = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w600,
-      fontSize: 16,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               Row(
@@ -67,7 +56,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Icon(Icons.location_on),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(Icons.location_on),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 4.0),
                     child: Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
@@ -110,7 +102,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         height: 45.0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.push(context, new MaterialPageRoute(builder: (context) => RequestRideTime()));
+                          },
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
