@@ -10,11 +10,11 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:carriage_rider/Login.dart';
 
 void main(){
-  runApp(MaterialApp(
+MaterialApp(
     routes: {
       '/': (context) => Home(),
     }
-  ));
+  );
 }
 
 class Home extends StatelessWidget {

@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Repeat_Ride.dart';
 
-class Assistance extends StatelessWidget {
+class Assistance extends StatefulWidget {
+
+  @override
+  _AssistanceState createState() => _AssistanceState();
+
+}
+
+class _AssistanceState extends State<Assistance> {
+
+  int selectedRadio = 0;
+
+  setSelectedRadio(int val){
+    setState(() {
+      selectedRadio = val;
+    });
+  }
+
 
   final cancelStyle = TextStyle(
     color: Colors.black,
@@ -75,23 +91,24 @@ class Assistance extends StatelessWidget {
                 Flexible(child: Text("Do you need any assistance? (optional)", style: questionStyle))
               ],
             ),
-            SizedBox(height: 80),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.panorama_fish_eye),
-                SizedBox(width: 10.0),
-                Text('Wheelchair')
-              ],
+            SizedBox(height: 40),
+            RadioListTile(
+              title: Text("Wheelchair"),
+              value: 1,
+              groupValue: selectedRadio,
+              activeColor: Colors.black,
+              onChanged: (val){
+                setSelectedRadio(val);
+              },
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.panorama_fish_eye),
-                SizedBox(width: 10.0),
-                Text('Other')
-              ],
+            RadioListTile(
+              title: Text("Other"),
+              value: 2,
+              groupValue: selectedRadio,
+              activeColor: Colors.black,
+              onChanged: (val){
+                setSelectedRadio(val);
+              },
             ),
             Expanded(
               child: Align(
@@ -103,7 +120,9 @@ class Assistance extends StatelessWidget {
                       height: 45.0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          Navigator.popUntil(context, ModalRoute.withName('/'));
+                        },
                         elevation: 3.0,
                         color: Colors.black,
                         textColor: Colors.white,
@@ -117,5 +136,6 @@ class Assistance extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
