@@ -31,19 +31,34 @@ class CurrentRide extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 20.0),
       child: Column(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(
-                top: 5.0, bottom: 5.0, left: 64.8, right: 64.8),
-            decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(3.0),
-                    topRight: Radius.circular(3.0)
-                )
-            ),
-            child: Text('Your driver will arrive in 2 mintues',
-              style: TextStyle(color: Colors.white),
-            ),
+          Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: 5.0, bottom: 5.0),
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(3.0),
+                            topRight: Radius.circular(3.0)
+                        )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text('Your driver will arrive in 2 mintues',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 10.0),
           Container(
