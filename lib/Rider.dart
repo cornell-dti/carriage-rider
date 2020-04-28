@@ -14,9 +14,7 @@ class Rider {
   final String description;
   final String picture;
   final String joinDate;
-  List<String> pastRides;
-  List<String> requestedRides;
-  List<String> favoriteLocations;
+
 
   Rider({
     this.id,
@@ -32,33 +30,23 @@ class Rider {
     this.description,
     this.picture,
     this.joinDate,
-    this.pastRides,
-    this.requestedRides,
-    this.favoriteLocations,
   });
 
   factory Rider.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> itemJson = json['Item'];
     return Rider(
-        id: itemJson['id'],
-        email: itemJson['email'],
-        phoneNumber: itemJson['phoneNumber'],
-        firstName: itemJson['firstName'],
-        lastName: itemJson['lastName'],
-        pronouns: itemJson['pronouns'],
-        accessibilityNeeds: itemJson['accessibilityNeeds'],
-        hasWheelchair: itemJson['hasWheelchair'],
-        hasCrutches: itemJson['hasCrutches'],
-        needsAssistant: itemJson['needsAssistant'],
-        description: itemJson['description'],
-        picture: itemJson['picture'],
-        joinDate: itemJson['joinDate'],
-        pastRides: (itemJson['pastRides'] as List<dynamic>).cast<String>().toList(),
-        requestedRides:
-            (itemJson['requestedRides'] as List<dynamic>).cast<String>().toList(),
-        favoriteLocations: (itemJson['favoriteLocations'] as List<dynamic>)
-            .cast<String>()
-            .toList());
+        id: json['id'],
+        email: json['email'],
+        phoneNumber: json['phoneNumber'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        pronouns: json['pronouns'],
+        accessibilityNeeds: json['accessibilityNeeds'],
+        hasWheelchair: json['hasWheelchair'],
+        hasCrutches: json['hasCrutches'],
+        needsAssistant: json['needsAssistant'],
+        description: json['description'],
+        picture: json['picture'],
+        joinDate: json['joinDate']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -75,8 +63,5 @@ class Rider {
         'description': description,
         'picture': picture,
         'joinDate': joinDate,
-        'pastRides': pastRides,
-        'requestedRides': requestedRides,
-        'favoriteLocations': favoriteLocations
       };
 }

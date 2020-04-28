@@ -7,30 +7,34 @@ import 'dart:convert';
 import 'Login.dart';
 import 'Rider.dart';
 
-Future<Rider> fetchRider() async {
-  final response = await http.get("http://10.0.2.2:3001");
-
-  if (response.statusCode == 200) {
-    return Rider.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load rider info');
-  }
-}
+import 'app_config.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+
+  final String riderID;
+
+  Profile(this.riderID, {Key key}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  Future<Rider> user;
+
+  Future<Rider> fetchRider(String id) async {
+    final response =
+        await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
+
+    if (response.statusCode == 200) {
+      return Rider.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load rider info');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    user = fetchRider();
   }
 
   @override
@@ -58,97 +62,123 @@ class _ProfileState extends State<Profile> {
           onPressed: () => Navigator.pop(context, false),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-            child: Text('Your Profile',
-                style: Theme.of(context).textTheme.headline),
-          ),
-          Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(3),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color.fromARGB(15, 0, 0, 0),
-                      offset: Offset(0, 4.0),
-                      blurRadius: 10.0,
-                      spreadRadius: 1.0)
-                ],
-              ),
-              child: Row(children: [
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: _picMarginLR,
-                        right: _picMarginLR,
-                        top: _picMarginTB,
-                        bottom: _picMarginTB),
-                    child: Stack(
-                      children: [
+      body: Center(
+        child: FutureBuilder<Rider>(
+          future: fetchRider("61274c50-819f-11ea-8b9d-c3580ef31720"),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              String phoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
+                  "-" +
+                  snapshot.data.phoneNumber.substring(3, 6) +
+                  "-" +
+                  snapshot.data.phoneNumber.substring(6, 10);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding:
+                        EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                    child: Text('Your Profile',
+                        style: Theme.of(context).textTheme.headline),
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(15, 0, 0, 0),
+                              offset: Offset(0, 4.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 1.0)
+                        ],
+                      ),
+                      child: Row(children: [
                         Padding(
-                            padding:
-                                EdgeInsets.only(bottom: _picDiameter * 0.05),
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                imageUrl,
-                              ),
-                              radius: _picRadius,
+                            padding: EdgeInsets.only(
+                                left: _picMarginLR,
+                                right: _picMarginLR,
+                                top: _picMarginTB,
+                                bottom: _picMarginTB),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: _picDiameter * 0.05),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        imageUrl,
+                                      ),
+                                      radius: _picRadius,
+                                    )),
+                                Positioned(
+                                    child: Container(
+                                      height: _picBtnDiameter,
+                                      width: _picBtnDiameter,
+                                      child: FittedBox(
+                                        child: FloatingActionButton(
+                                          backgroundColor: Colors.black,
+                                          child: Icon(Icons.add,
+                                              size: _picBtnDiameter),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ),
+                                    left: _picDiameter * 0.61,
+                                    top: _picDiameter * 0.66)
+                              ],
                             )),
-                        Positioned(
-                            child: Container(
-                              height: _picBtnDiameter,
-                              width: _picBtnDiameter,
-                              child: FittedBox(
-                                child: FloatingActionButton(
-                                  backgroundColor: Colors.black,
-                                  child: Icon(Icons.add, size: _picBtnDiameter),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ),
-                            left: _picDiameter * 0.61,
-                            top: _picDiameter * 0.66)
-                      ],
-                    )),
-                Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Stack(
-                      overflow: Overflow.visible,
-                      children: [
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(name,
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              IconButton(
-                                icon: Icon(Icons.edit, size: 20),
-                                onPressed: () {},
-                              )
-                            ]),
-                        Positioned(
-                          child: Text("Joined 03/2020",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).accentColor,
-                              )),
-                          top: 45,
-                        )
-                      ],
-                    ))
-              ])),
-          SizedBox(height: 6),
-          ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
-              [email, "Add your number"]),
-          SizedBox(height: 6),
-          ProfileInfo("Personal Info", [Icons.person_outline, Icons.accessible],
-              ["How should we address you?", "Any accessiblility assistance?"]),
-          SizedBox(height: 6),
-        ],
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 30),
+                            child: Stack(
+                              overflow: Overflow.visible,
+                              children: [
+                                Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(name,
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      IconButton(
+                                        icon: Icon(Icons.edit, size: 20),
+                                        onPressed: () {},
+                                      )
+                                    ]),
+                                Positioned(
+                                  child: Text(
+                                      "Joined " + snapshot.data.joinDate,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).accentColor,
+                                      )),
+                                  top: 45,
+                                )
+                              ],
+                            ))
+                      ])),
+                  SizedBox(height: 6),
+                  ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
+                      [email, phoneNumber]),
+                  SizedBox(height: 6),
+                  ProfileInfo("Personal Info", [
+                    Icons.person_outline,
+                    Icons.accessible
+                  ], [
+                    snapshot.data.pronouns,
+                    "Any accessiblility assistance?"
+                  ]),
+                  SizedBox(height: 6),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

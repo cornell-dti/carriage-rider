@@ -9,6 +9,7 @@ import 'package:carriage_rider/Home.dart';
 String name;
 String email;
 String imageUrl;
+String riderID;
 
 GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
@@ -31,7 +32,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
     auth = await account.authentication;
     print('okay');
   } catch (error) {
-    print('error');
+    return null;
   }
   return auth.idToken;
 }
@@ -44,7 +45,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   GoogleSignInAccount currentUser;
   String id;
-  String riderID;
 
   setCurrentUser(GoogleSignInAccount account) {
     setState(() {
@@ -56,7 +56,6 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     currentUser = null;
-    riderID = null;
     id = null;
     try {
       googleSignIn.signInSilently();
@@ -77,7 +76,7 @@ class _LoginState extends State<Login> {
           }
         });
         print(json['id']);
-        return json['id'];
+        return id;
       });
     });
   }
@@ -107,7 +106,7 @@ class _LoginState extends State<Login> {
       email = googleSignIn.currentUser.email;
       imageUrl = googleSignIn.currentUser.photoUrl;
       riderID = id;
-      return Home();
+      return Home(riderID);
     }
   }
 }

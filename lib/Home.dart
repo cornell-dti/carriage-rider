@@ -9,6 +9,11 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:carriage_rider/Login.dart';
 
 class Home extends StatelessWidget {
+
+  final String riderID;
+
+  Home(this.riderID, {Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final String headerName = "Hi " + name.split(" ")[0] + "!";
@@ -29,7 +34,7 @@ class Home extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Profile()));
+                    new MaterialPageRoute(builder: (context) => Profile(this.riderID)));
               },
             ),
             Divider(
