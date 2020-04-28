@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Repeat_Ride.dart';
+import 'package:carriage_rider/Review_Ride.dart';
 
 class Assistance extends StatefulWidget {
 
@@ -29,17 +30,6 @@ class _AssistanceState extends State<Assistance> {
     color: Colors.black,
     fontWeight: FontWeight.w800,
     fontSize: 25,
-  );
-
-  final toggleStyle = TextStyle(
-    fontWeight: FontWeight.w200,
-    fontSize: 18,
-  );
-
-  final descriptionStyle = TextStyle(
-      color: Colors.grey,
-      fontWeight: FontWeight.w100,
-      fontSize: 13
   );
 
   @override
@@ -121,7 +111,7 @@ class _AssistanceState extends State<Assistance> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: (){
-                          Navigator.popUntil(context, ModalRoute.withName('/'));
+                          Navigator.push(context, new MaterialPageRoute(builder: (context) => ReviewRide()));
                         },
                         elevation: 3.0,
                         color: Colors.black,
