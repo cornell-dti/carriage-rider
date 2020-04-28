@@ -1,12 +1,21 @@
 import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:carriage_rider/Login.dart';
+
+void main(){
+MaterialApp(
+    routes: {
+      '/': (context) => Home(),
+    }
+  );
+}
 
 class Home extends StatelessWidget {
 
@@ -84,35 +93,71 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: ListView(
-        scrollDirection: Axis.vertical,
+      body: Stack(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text(
-              'Next Ride',
-              style: subHeadingStyle,
+          ListView(
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
+                child: Text(
+                  'Next Ride',
+                  style: subHeadingStyle,
+                ),
+              ),
+              CurrentRide(),
+              Container(
+                margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
+                child: Text(
+                  'Upcoming Rides',
+                  style: subHeadingStyle,
+                ),
+              ),
+              UpcomingRide(),
+              Container(
+                margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
+                child: Text(
+                  'Ride History',
+                  style: subHeadingStyle,
+                ),
+              ),
+              RideHistory(),
+              SizedBox(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height/8,)
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height/8,
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                      child: ButtonTheme(
+                        minWidth: MediaQuery.of(context).size.width * 0.8,
+                        height: 45.0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                        child: RaisedButton.icon(
+                          onPressed: (){
+                            Navigator.push(context,
+                                new MaterialPageRoute(builder: (context) => RequestRideLoc()));
+                          },
+                          elevation: 3.0,
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          icon: Icon(Icons.add),
+                          label:Text('Request Ride'),
+                        ),
+                      )
+                  )
+                ],
+              ),
             ),
           ),
-          CurrentRide(),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text(
-              'Upcoming Rides',
-              style: subHeadingStyle,
-            ),
-          ),
-          UpcomingRide(),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-            child: Text(
-              'Ride History',
-              style: subHeadingStyle,
-            ),
-          ),
-          RideHistory(),
         ],
-      ),
+      )
     );
   }
 }
