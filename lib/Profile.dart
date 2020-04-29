@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Login.dart';
 import 'Rider.dart';
-
 import 'app_config.dart';
 
 class Profile extends StatefulWidget {
