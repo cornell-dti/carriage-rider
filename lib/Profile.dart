@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'Login.dart';
 import 'Rider.dart';
@@ -11,9 +13,7 @@ import 'app_config.dart';
 
 class Profile extends StatefulWidget {
 
-  final String riderID;
-
-  Profile(this.riderID, {Key key}) : super(key: key);
+  Profile({Key key}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -39,6 +39,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
@@ -64,7 +65,7 @@ class _ProfileState extends State<Profile> {
       ),
       body: Center(
         child: FutureBuilder<Rider>(
-          future: fetchRider("61274c50-819f-11ea-8b9d-c3580ef31720"),
+          future: fetchRider(authProvider.id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               String phoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
@@ -107,7 +108,7 @@ class _ProfileState extends State<Profile> {
                                         bottom: _picDiameter * 0.05),
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        imageUrl,
+                                        authProvider.googleSignIn.currentUser.photoUrl,
                                       ),
                                       radius: _picRadius,
                                     )),
@@ -137,7 +138,7 @@ class _ProfileState extends State<Profile> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Text(name,
+                                      Text(snapshot.data.firstName + " " + snapshot.data.lastName,
                                           style: TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
@@ -161,7 +162,7 @@ class _ProfileState extends State<Profile> {
                       ])),
                   SizedBox(height: 6),
                   ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
-                      [email, phoneNumber]),
+                      [snapshot.data.email, phoneNumber]),
                   SizedBox(height: 6),
                   ProfileInfo("Personal Info", [
                     Icons.person_outline,
