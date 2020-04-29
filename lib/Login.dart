@@ -16,6 +16,12 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
+    try {
+      authProvider.signInSilently();
+    } catch (e) {
+      print('User has not logged in previously, therefore, we should not proceed');
+    }
       return Scaffold(
           body: Container(
               color: Colors.white,

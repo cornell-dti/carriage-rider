@@ -78,6 +78,10 @@ class AuthProvider with ChangeNotifier {
     googleSignIn.signIn();
   }
 
+  void signInSilently() {
+    googleSignIn.signInSilently();
+  }
+
   void signOut() {
     googleSignIn.signOut();
     id = null;
