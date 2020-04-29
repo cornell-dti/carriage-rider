@@ -1,7 +1,9 @@
+import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/material.dart';
-import 'app_config.dart';
+import 'package:provider/provider.dart';
 import 'Login.dart';
-import 'package:http/http.dart';
+import 'Home.dart';
 
 void mainCommon() {
 
@@ -11,12 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    AppConfig config = AppConfig.of(context);
-    return _buildApp(config.baseUrl);
-  }
-
-  Widget _buildApp(String baseUrl) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (BuildContext context) {
+            return AuthProvider();
+          }
+        )
+      ],
+    child: MaterialApp(
       title: 'Carriage Rider',
       theme: ThemeData(
           primarySwatch: Colors.green,
@@ -26,20 +31,19 @@ class MyApp extends StatelessWidget {
             headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
             subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
           )),
-      home: Login(),
+      home: Logic(),
       debugShowCheckedModeBanner: false,
+    )
     );
   }
 }
 
-authenticationRequest(String baseUrl, String token, String email) async {
-  var endpoint = baseUrl + '/auth';
-  var requestBody = {
-    "token": token,
-    "email": email,
-    "clientID": "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
-    "table": "Riders"
-  };
-  Response response = await post(endpoint, body: requestBody);
-  return response.body;
+class Logic extends StatelessWidget {
+  Logic({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
+    return authProvider.isAuthenticated ? Home(authProvider.id) : Login();
+  }
 }
