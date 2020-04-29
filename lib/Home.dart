@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
               title: Text('Settings'),
               onTap: () {
                 Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Settings()));
+                    new MaterialPageRoute(builder: (context) => Settings(this.riderID)));
               },
             ),
             Divider(
