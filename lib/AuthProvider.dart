@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
-import 'Rider.dart';
-
 Future<String> auth(String baseUrl, String token, String email) async {
   String endpoint = baseUrl + '/auth';
   Map<String, dynamic> requestBody = {
