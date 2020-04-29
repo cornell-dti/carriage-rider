@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'app_config.dart';
-import 'AuthProvider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-
-String name;
-String email;
-String imageUrl;
-String riderID;
-
+import 'package:carriage_rider/AuthProvider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -18,14 +8,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  GoogleSignInAccount currentUser;
-  String id;
-
-  setCurrentUser(GoogleSignInAccount account) {
-    setState(() {
-      currentUser = account;
-    });
-  }
 
   @override
   void initState() {
