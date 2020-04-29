@@ -71,4 +71,8 @@ class AuthProvider with ChangeNotifier {
     }
     super.dispose();
   }
+
+  bool get isAuthenticated {
+    return user != null;
+  }
 }
