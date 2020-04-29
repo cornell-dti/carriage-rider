@@ -29,7 +29,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
 
 class AuthProvider with ChangeNotifier {
   String id;
-  StreamSubscription userAuthSub;
+  StreamSubscription _userAuthSub;
   GoogleSignIn googleSignIn;
 
   AuthProvider() {
@@ -37,7 +37,7 @@ class AuthProvider with ChangeNotifier {
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
     ]);
-    userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
+    _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         id = await tokenFromAccount(newUser).then((token) async {
           return auth("http://192.168.1.19:3001", token, newUser.email);
@@ -60,9 +60,9 @@ class AuthProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    if(userAuthSub != null) {
-      userAuthSub.cancel();
-      userAuthSub = null;
+    if(_userAuthSub != null) {
+      _userAuthSub.cancel();
+      _userAuthSub = null;
     }
     super.dispose();
   }

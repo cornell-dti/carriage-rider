@@ -25,7 +25,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
-    print('home');
     final String headerName = "Hi " + authProvider.googleSignIn.currentUser.displayName.split(" ")[0] + "!";
     final subHeadingStyle = TextStyle(
         color: Colors.grey[700],
