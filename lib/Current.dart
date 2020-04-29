@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'Login.dart';
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'size_config.dart';
 
 class Current extends StatelessWidget {
@@ -71,7 +72,7 @@ class Current extends StatelessWidget {
             flex: 8,
           ),
           Expanded(
-            child: profileInfo(),
+            child: profileInfo(context),
             flex: 2,
           ),
           Expanded(
@@ -111,7 +112,8 @@ class Current extends StatelessWidget {
     );
   }
 
-  Widget profileInfo() {
+  Widget profileInfo(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     return Container(
         decoration: const BoxDecoration(color: Colors.white),
         child: Column(
@@ -134,7 +136,7 @@ class Current extends StatelessWidget {
                       width: 50,
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                          imageUrl,
+                          authProvider.googleSignIn.currentUser.photoUrl,
                         ),
                         radius: 20,
                         backgroundColor: Colors.transparent,
@@ -150,7 +152,7 @@ class Current extends StatelessWidget {
                           height: 15,
                         ),
                         Text(
-                          name,
+                          authProvider.googleSignIn.currentUser.displayName,
                           style: TextStyle(
                               color: Colors.black,
                               fontFamily: 'SFPro',
