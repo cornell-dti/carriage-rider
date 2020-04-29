@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -40,7 +41,9 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         id = await tokenFromAccount(newUser).then((token) async {
-          return auth("http://192.168.1.19:3001", token, newUser.email);
+          // BuildContext inaccessible from ChangeNotifier, so no Flavors :/
+          String baseUrl = Platform.isAndroid ? "http://10.0.2.2:3001" : "http://localhost:3001";
+          return auth(baseUrl, token, newUser.email);
         }).then((response) {
           Map<String, dynamic> json = jsonDecode(response);
           if (!json.containsKey('id')) {
