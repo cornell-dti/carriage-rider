@@ -22,19 +22,19 @@ class _LoginState extends State<Login> {
     } catch (e) {
       print('User has not logged in previously, therefore, we should not proceed');
     }
-      return Scaffold(
-          body: Container(
-              color: Colors.white,
-              child: Center(
-                  child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlutterLogo(size: 150),
-                  SizedBox(height: 50),
-                  SignInButton()
-                ],
-              ))));
+    return Scaffold(
+        body: Container(
+            color: Colors.white,
+            child: Center(
+                child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlutterLogo(size: 150),
+                SizedBox(height: 50),
+                SignInButton()
+              ],
+            ))));
   }
 }
 
