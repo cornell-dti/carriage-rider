@@ -15,13 +15,13 @@ Future<String> auth(String baseUrl, String token, String email) async {
     "clientID": "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
     "table": "Riders"
   };
-  return await post(endpoint, body: requestBody).then((res) {
+  return post(endpoint, body: requestBody).then((res) {
     return res.body;
   });
 }
 
 Future<String> tokenFromAccount(GoogleSignInAccount account) async {
-  return await account.authentication.then((auth) {
+  return account.authentication.then((auth) {
     return auth.idToken;
   }).catchError((e) {
     print('tokenFromAccount - $e');
@@ -30,7 +30,7 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
 }
 
 class AuthProvider with ChangeNotifier {
-  Rider user;
+  Map<String, dynamic> user;
   StreamSubscription userAuthSub;
 
   AuthProvider(String baseUrl) {
@@ -41,6 +41,22 @@ class AuthProvider with ChangeNotifier {
 
     userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) {
       print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $newUser');
+      tokenFromAccount(newUser)
+          .then((token) async {
+        return auth(baseUrl, token, newUser.email);
+      })
+          .then((response) {
+        Map<String, dynamic> json = jsonDecode(response);
+        if (!json.containsKey('id')) {
+          user = null;
+          googleSignIn.signOut();
+        } else {
+          user = {
+            "google": newUser,
+            "id": json['id']
+          };
+        }
+      });
       notifyListeners();
     }, onError: (e) {
       print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $e');
