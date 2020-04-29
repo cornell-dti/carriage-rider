@@ -1,6 +1,8 @@
 import 'dart:ui';
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'Login.dart';
 
 class Settings extends StatefulWidget {
@@ -296,6 +298,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     return SizedBox(
         width: double.maxFinite,
         height: 80,
@@ -315,7 +318,7 @@ class SignOutButton extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            googleSignIn.signOut();
+            authProvider.signOut();
             Navigator.pop(context);
             Navigator.pop(context);
           },
