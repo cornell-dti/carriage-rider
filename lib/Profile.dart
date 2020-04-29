@@ -6,7 +6,6 @@ import 'dart:core';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import 'Login.dart';
 import 'Rider.dart';
 
 import 'app_config.dart';

@@ -1,5 +1,4 @@
 import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Login.dart';
