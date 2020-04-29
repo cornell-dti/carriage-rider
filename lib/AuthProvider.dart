@@ -38,17 +38,14 @@ class AuthProvider with ChangeNotifier {
       'https://www.googleapis.com/auth/userinfo.profile',
     ]);
     userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
-      print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $newUser');
       if (newUser != null) {
         id = await tokenFromAccount(newUser).then((token) async {
-          print(token);
           return auth("http://192.168.1.19:3001", token, newUser.email);
         }).then((response) {
           Map<String, dynamic> json = jsonDecode(response);
           if (!json.containsKey('id')) {
             return null;
           }
-          print(json['id']);
           return json['id'];
         });
       } else {
