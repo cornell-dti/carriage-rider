@@ -12,12 +12,17 @@ import 'package:carriage_rider/Login.dart';
 void main(){
 MaterialApp(
     routes: {
-      '/': (context) => Home(),
+      '/': (context) => Home("61274c50-819f-11ea-8b9d-c3580ef31720"),
     }
   );
 }
 
 class Home extends StatelessWidget {
+
+  final String riderID;
+
+  Home(this.riderID, {Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final String headerName = "Hi " + name.split(" ")[0] + "!";
@@ -38,7 +43,7 @@ class Home extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Profile()));
+                    new MaterialPageRoute(builder: (context) => Profile(this.riderID)));
               },
             ),
             Divider(
