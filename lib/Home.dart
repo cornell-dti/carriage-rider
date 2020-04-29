@@ -1,3 +1,4 @@
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
-import 'package:carriage_rider/Login.dart';
+import 'package:provider/provider.dart';
 
 void main(){
 MaterialApp(
@@ -25,7 +26,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String headerName = "Hi " + name.split(" ")[0] + "!";
+    AuthProvider authProvider = Provider.of(context);
+    print('home');
+    final String headerName = "Hi " + authProvider.googleSignIn.currentUser.displayName.split(" ")[0] + "!";
     final subHeadingStyle = TextStyle(
         color: Colors.grey[700],
         fontWeight: FontWeight.w700,
