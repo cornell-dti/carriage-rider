@@ -13,16 +13,14 @@ import 'package:provider/provider.dart';
 void main(){
 MaterialApp(
     routes: {
-      '/': (context) => Home("61274c50-819f-11ea-8b9d-c3580ef31720"),
+      '/': (context) => Home(),
     }
   );
 }
 
 class Home extends StatelessWidget {
 
-  final String riderID;
-
-  Home(this.riderID, {Key key}) : super(key: key);
+  Home({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class Home extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Profile(this.riderID)));
+                    new MaterialPageRoute(builder: (context) => Profile()));
               },
             ),
             Divider(

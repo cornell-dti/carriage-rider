@@ -44,6 +44,6 @@ class Logic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
-    return authProvider.isAuthenticated ? Home(authProvider.id) : Login();
+    return authProvider.isAuthenticated ? Home() : Login();
   }
 }

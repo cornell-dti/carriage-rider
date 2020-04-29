@@ -46,7 +46,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                     child: InkWell(
                       child: Text("Cancel", style: cancelStyle),
                       onTap: () {
-                        Navigator.pop(context, new MaterialPageRoute(builder: (context) => Home("61274c50-819f-11ea-8b9d-c3580ef31720")));
+                        Navigator.pop(context, new MaterialPageRoute(builder: (context) => Home()));
                       },
                     ),
                   ),
