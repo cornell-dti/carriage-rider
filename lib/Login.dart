@@ -70,7 +70,6 @@ class _LoginState extends State<Login> {
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
-          id = (json['id'] != null) ? json['id'] : null;
           if (!json.containsKey('id')) {
             currentUser = null;
             id = null;
