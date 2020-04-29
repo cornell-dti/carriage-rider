@@ -29,3 +29,30 @@ Future<String> tokenFromAccount(GoogleSignInAccount account) async {
   });
 }
 
+class AuthProvider with ChangeNotifier {
+  Rider user;
+  StreamSubscription userAuthSub;
+
+  AuthProvider(String baseUrl) {
+    GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
+      'email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ]);
+
+    userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) {
+      print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $newUser');
+      notifyListeners();
+    }, onError: (e) {
+      print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $e');
+    });
+  }
+
+  @override
+  void dispose() {
+    if(userAuthSub != null) {
+      userAuthSub.cancel();
+      userAuthSub = null;
+    }
+    super.dispose();
+  }
+}
