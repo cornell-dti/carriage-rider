@@ -336,7 +336,7 @@ class SignOutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         width: double.maxFinite,
-        height: 80,
+        height: MediaQuery.of(context).size.height / 9,
         child: MaterialButton(
           color: Colors.white,
           child: Row(
