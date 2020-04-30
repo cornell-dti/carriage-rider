@@ -66,16 +66,17 @@ class _LoginState extends State<Login> {
       setCurrentUser(account);
       tokenFromAccount(currentUser).then((token) async {
         return await authenticationRequest(
-            AppConfig.of(context).baseUrl, token);
+            AppConfig.of(context).baseUrl, token, currentUser.email);
       }).then((response) {
         var json = jsonDecode(response);
         setState(() {
-          id = (json['id'] != null) ? json['id'] : null;
-          if (id = null) {
+          if (!json.containsKey('id')) {
             currentUser = null;
+            id = null;
+          } else {
+            id = json['id'];
           }
         });
-        print(json['id']);
         return id;
       });
     });
@@ -83,8 +84,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // add guard based on backend verification later
-    if (currentUser == null) {
+    if (id == null) {
       return Scaffold(
           body: Container(
               color: Colors.white,
