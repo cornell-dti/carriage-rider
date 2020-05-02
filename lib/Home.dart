@@ -163,7 +163,10 @@ class Home extends StatelessWidget {
                             color: Colors.black,
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
-                            label: Text('Request Ride'),
+                            label: Text('Request Ride',
+                            style: TextStyle(
+                              fontSize: 18
+                            )),
                           ),
                         ))
                   ],
