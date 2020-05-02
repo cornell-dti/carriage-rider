@@ -1,7 +1,8 @@
 import 'dart:ui';
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Login.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
   Settings({Key key}) : super(key: key);
@@ -13,6 +14,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 3;
@@ -67,7 +69,7 @@ class _SettingsState extends State<Settings> {
                           padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(
-                              imageUrl,
+                              authProvider.googleSignIn.currentUser.photoUrl,
                             ),
                             radius: _picRadius,
                           )),
@@ -81,7 +83,7 @@ class _SettingsState extends State<Settings> {
                       Row(
                           //crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(name,
+                            Text(authProvider.googleSignIn.currentUser.displayName,
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
@@ -95,7 +97,7 @@ class _SettingsState extends State<Settings> {
                         top: 25,
                       ),
                       Positioned(
-                        child: Text(email,
+                        child: Text(authProvider.googleSignIn.currentUser.email,
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).accentColor,
@@ -296,6 +298,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     return SizedBox(
         width: double.maxFinite,
         height: 80,
@@ -315,7 +318,7 @@ class SignOutButton extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            googleSignIn.signOut();
+            authProvider.signOut();
             Navigator.pop(context);
             Navigator.pop(context);
           },

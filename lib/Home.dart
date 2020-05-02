@@ -1,3 +1,4 @@
+import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
@@ -7,25 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
-import 'package:carriage_rider/Login.dart';
+import 'package:provider/provider.dart';
 
 void main(){
 MaterialApp(
     routes: {
-      '/': (context) => Home("61274c50-819f-11ea-8b9d-c3580ef31720"),
+      '/': (context) => Home(),
     }
   );
 }
 
 class Home extends StatelessWidget {
 
-  final String riderID;
-
-  Home(this.riderID, {Key key}) : super(key: key);
+  Home({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String headerName = "Hi " + name.split(" ")[0] + "!";
+    AuthProvider authProvider = Provider.of(context);
+    final String headerName = "Hi " + authProvider.googleSignIn.currentUser.displayName.split(" ")[0] + "!";
     final subHeadingStyle = TextStyle(
         color: Colors.grey[700],
         fontWeight: FontWeight.w700,
@@ -43,7 +43,7 @@ class Home extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Profile(this.riderID)));
+                    new MaterialPageRoute(builder: (context) => Profile()));
               },
             ),
             Divider(

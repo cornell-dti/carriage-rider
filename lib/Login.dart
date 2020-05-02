@@ -1,41 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'app_config.dart';
-import 'main_common.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:carriage_rider/Home.dart';
-
-
-String name;
-String email;
-String imageUrl;
-String riderID;
-
-GoogleSignIn googleSignIn = GoogleSignIn(
-  scopes: [
-    'email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-  ],
-);
-
-_handleSignIn() async {
-  try {
-    await googleSignIn.signIn();
-  } catch (error) {
-    print(error);
-  }
-}
-
-Future<String> tokenFromAccount(GoogleSignInAccount account) async {
-  GoogleSignInAuthentication auth;
-  try {
-    auth = await account.authentication;
-    print('okay');
-  } catch (error) {
-    return null;
-  }
-  return auth.idToken;
-}
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/AuthProvider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -43,81 +8,44 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  GoogleSignInAccount currentUser;
-  String id;
-
-  setCurrentUser(GoogleSignInAccount account) {
-    setState(() {
-      currentUser = account;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    currentUser = null;
-    id = null;
-    try {
-      googleSignIn.signInSilently();
-    } catch (error) {
-      googleSignIn.signIn();
-    }
-    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      setCurrentUser(account);
-      tokenFromAccount(currentUser).then((token) async {
-        return await authenticationRequest(
-            AppConfig.of(context).baseUrl, token, currentUser.email);
-      }).then((response) {
-        var json = jsonDecode(response);
-        setState(() {
-          if (!json.containsKey('id')) {
-            currentUser = null;
-            id = null;
-          } else {
-            id = json['id'];
-          }
-        });
-        return id;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (id == null) {
-      return Scaffold(
-          body: Container(
-              color: Colors.white,
-              child: Center(
-                  child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlutterLogo(size: 150),
-                  SizedBox(height: 50),
-                  SignInButton()
-                ],
-              ))));
-    } else {
-      assert(googleSignIn.currentUser.displayName != null);
-      assert(googleSignIn.currentUser.email != null);
-      assert(googleSignIn.currentUser.photoUrl != null);
-      name = googleSignIn.currentUser.displayName;
-      email = googleSignIn.currentUser.email;
-      imageUrl = googleSignIn.currentUser.photoUrl;
-      riderID = id;
-      return Home(riderID);
+    AuthProvider authProvider = Provider.of(context);
+    try {
+      authProvider.signInSilently();
+    } catch (e) {
+      print('User has not logged in previously, therefore, we should not proceed');
     }
+    return Scaffold(
+        body: Container(
+            color: Colors.white,
+            child: Center(
+                child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlutterLogo(size: 150),
+                SizedBox(height: 50),
+                SignInButton()
+              ],
+            ))));
   }
 }
 
 class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     return OutlineButton(
         splashColor: Colors.grey,
         onPressed: () {
-          _handleSignIn();
+          authProvider.signIn();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         highlightElevation: 0,
