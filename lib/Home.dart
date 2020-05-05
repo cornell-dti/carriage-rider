@@ -4,6 +4,7 @@ import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Settings.dart';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
@@ -79,6 +80,17 @@ class Home extends StatelessWidget {
               onTap: (){
                 Navigator.push(context, new MaterialPageRoute(builder:
                     (context) => Current()));
+              },
+            ),
+            Divider(
+              color: Colors.grey[500],
+            ),
+            ListTile(
+              leading: Icon(Icons.trending_up),
+              title: Text('Upcoming Ride'),
+              onTap: (){
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => Upcoming()));
               },
             )
           ],
