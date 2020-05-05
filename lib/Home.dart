@@ -48,7 +48,7 @@ class Home extends StatelessWidget {
             padding: EdgeInsets.all(5.0),
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.person),
+                leading: Icon(Icons.person, color: Colors.black),
                 title: sideBarText("Profile", Colors.black),
                 onTap: () {
                   Navigator.push(context,
@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: Icon(Icons.settings),
+                leading: Icon(Icons.settings, color: Colors.black),
                 title:  sideBarText("Settings", Colors.black),
                 onTap: () {
                   Navigator.push(context,
@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: Icon(Icons.notifications),
+                leading: Icon(Icons.notifications, color: Colors.black),
                 title: sideBarText("Notifications", Colors.black),
                 onTap: () {
                   Navigator.push(
@@ -83,7 +83,7 @@ class Home extends StatelessWidget {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: Icon(Icons.directions_car),
+                leading: Icon(Icons.directions_car, color: Colors.black),
                 title: sideBarText("Current Ride", Colors.black),
                 onTap: () {
                   Navigator.push(context,
