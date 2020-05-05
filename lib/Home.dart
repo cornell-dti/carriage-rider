@@ -1,5 +1,6 @@
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Current.dart';
+import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
@@ -91,6 +92,17 @@ class Home extends StatelessWidget {
               onTap: (){
                 Navigator.push(context, new MaterialPageRoute(builder:
                     (context) => Upcoming()));
+              },
+            ),
+            Divider(
+              color: Colors.grey[500],
+            ),
+            ListTile(
+              leading: Icon(Icons.history),
+              title: Text('Ride History'),
+              onTap: (){
+                Navigator.push(context, new MaterialPageRoute(builder:
+                    (context) => History()));
               },
             )
           ],
