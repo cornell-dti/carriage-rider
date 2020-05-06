@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthProvider>(
           create: (BuildContext context) {
-            return AuthProvider();
+            return AuthProvider(context);
           }
         )
       ],
