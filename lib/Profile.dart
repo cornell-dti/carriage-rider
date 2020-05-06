@@ -76,7 +76,7 @@ class _ProfileState extends State<Profile> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Profile',
-                        style: Theme.of(context).textTheme.headline),
+                        style: Theme.of(context).textTheme.headline5),
                   ),
                   Container(
                       decoration: BoxDecoration(

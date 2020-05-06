@@ -34,7 +34,7 @@ class _NotificationsState extends State<Notifications> {
             Padding(
               padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
               child: Text('Notifications',
-                  style: Theme.of(context).textTheme.headline),
+                  style: Theme.of(context).textTheme.headline5),
             ),
             Detail(),
             Container(

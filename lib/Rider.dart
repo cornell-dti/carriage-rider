@@ -58,7 +58,6 @@ class Rider {
         'pronouns': picture,
         'accessibilityNeeds': accessibilityNeeds,
         'hasWheelchair': hasWheelchair,
-        'hasWheelchair': hasWheelchair,
         'needsAssistant': needsAssistant,
         'description': description,
         'picture': picture,

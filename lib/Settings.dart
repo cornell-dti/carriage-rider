@@ -77,7 +77,7 @@ class _SettingsState extends State<Settings> {
                         padding:
                         EdgeInsets.only(left: 20.0, top: 5.0, bottom: 8.0),
                         child: Text('Settings',
-                            style: Theme.of(context).textTheme.headline),
+                            style: Theme.of(context).textTheme.headline5),
                       ),
                       Container(
                           decoration: BoxDecoration(
