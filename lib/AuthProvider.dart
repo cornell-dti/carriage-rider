@@ -34,7 +34,7 @@ class AuthProvider with ChangeNotifier {
   StreamSubscription _userAuthSub;
   GoogleSignIn googleSignIn;
 
-  AuthProvider(BuildContext context) {
+  AuthProvider(AppConfig config) {
     googleSignIn = GoogleSignIn(scopes: [
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -42,7 +42,7 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         id = await tokenFromAccount(newUser).then((token) async {
-          return auth(AppConfig.of(context).baseUrl, token, newUser.email);
+          return auth(config.baseUrl, token, newUser.email);
         }).then((response) {
           Map<String, dynamic> json = jsonDecode(response);
           if (!json.containsKey('id')) {
