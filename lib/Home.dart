@@ -9,6 +9,7 @@ import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -89,6 +90,22 @@ class Home extends StatelessWidget {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Current()));
                 },
+              ),
+              ListTile(
+                leading: Icon(Icons.trending_up, color: Colors.black),
+                title: sideBarText("Upcoming Ride", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => Upcoming()));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.history, color: Colors.black),
+                title: sideBarText("Ride History", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => Current()));
+                },
               )
             ],
           ),
@@ -164,9 +181,9 @@ class Home extends StatelessWidget {
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
                             label: Text('Request Ride',
-                            style: TextStyle(
-                              fontSize: 18
-                            )),
+                                style: TextStyle(
+                                    fontSize: 18
+                                )),
                           ),
                         ))
                   ],
