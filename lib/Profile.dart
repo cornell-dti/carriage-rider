@@ -7,11 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'Rider.dart';
-
 import 'app_config.dart';
 
 class Profile extends StatefulWidget {
-
   Profile({Key key}) : super(key: key);
 
   @override
@@ -19,7 +17,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   Future<Rider> fetchRider(String id) async {
     final response =
         await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
@@ -79,7 +76,7 @@ class _ProfileState extends State<Profile> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Profile',
-                        style: Theme.of(context).textTheme.headline),
+                        style: Theme.of(context).textTheme.headline5),
                   ),
                   Container(
                       decoration: BoxDecoration(
@@ -93,7 +90,8 @@ class _ProfileState extends State<Profile> {
                               spreadRadius: 1.0)
                         ],
                       ),
-                      child: Row(children: [
+                      child: SingleChildScrollView(
+                          child: Row(children: [
                         Padding(
                             padding: EdgeInsets.only(
                                 left: _picMarginLR,
@@ -107,7 +105,8 @@ class _ProfileState extends State<Profile> {
                                         bottom: _picDiameter * 0.05),
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        authProvider.googleSignIn.currentUser.photoUrl,
+                                        authProvider
+                                            .googleSignIn.currentUser.photoUrl,
                                       ),
                                       radius: _picRadius,
                                     )),
@@ -137,7 +136,10 @@ class _ProfileState extends State<Profile> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Text(snapshot.data.firstName + " " + snapshot.data.lastName,
+                                      Text(
+                                          snapshot.data.firstName +
+                                              " " +
+                                              snapshot.data.lastName,
                                           style: TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
@@ -158,7 +160,7 @@ class _ProfileState extends State<Profile> {
                                 )
                               ],
                             ))
-                      ])),
+                      ]))),
                   SizedBox(height: 6),
                   ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
                       [snapshot.data.email, phoneNumber]),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Login.dart';
 import 'Home.dart';
+import 'app_config.dart';
 
 void mainCommon() {
 
@@ -12,11 +13,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    AppConfig appConfig = AppConfig.of(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(
           create: (BuildContext context) {
-            return AuthProvider();
+            return AuthProvider(appConfig);
           }
         )
       ],
@@ -27,8 +29,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'SFPro',
           accentColor: Color.fromRGBO(60, 60, 67, 0.6),
           textTheme: TextTheme(
-            headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-            subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+            headline5: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            subtitle1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
           )),
       home: Logic(),
       debugShowCheckedModeBanner: false,

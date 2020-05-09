@@ -3,11 +3,43 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'size_config.dart';
+import 'dart:core';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'Rider.dart';
+import 'app_config.dart';
 
-class Current extends StatelessWidget {
+class Current extends StatefulWidget {
+
+  Current({Key key}) : super(key: key);
+
+  @override
+  _CurrentState createState() => _CurrentState();
+}
+
+class _CurrentState extends State<Current> {
+
+  Future<Rider> fetchRider(String id) async {
+    final response =
+        await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
+
+    if (response.statusCode == 200) {
+      return Rider.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load rider info');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of(context);
     SizeConfig().init(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -24,68 +56,88 @@ class Current extends StatelessWidget {
           onPressed: () => Navigator.pop(context, false),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.black),
-              child: Column(
+      body: Center(
+        child: FutureBuilder<Rider>(
+          future: fetchRider(authProvider.id),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              String phoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
+                  "-" +
+                  snapshot.data.phoneNumber.substring(3, 6) +
+                  "-" +
+                  snapshot.data.phoneNumber.substring(6, 10);
+              return Column(
                 children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.safeBlockHorizontal * 7,
-                          ),
-                          child: headerText("Current Ride", Colors.white, 35)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            flex: 1,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                  decoration: const BoxDecoration(color: Colors.white),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.black),
+                      child: Column(
                         children: <Widget>[
-                          Container(
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.safeBlockHorizontal * 7,
-                                left: SizeConfig.safeBlockHorizontal * 7,
-                                bottom: SizeConfig.safeBlockHorizontal * 3,
-                              ),
-                              child:
-                                  headerText("Ride Status", Colors.black, 24)),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.safeBlockHorizontal * 7,
+                                  ),
+                                  child: headerText(
+                                      "Current Ride", Colors.white, 35)),
+                            ],
+                          ),
                         ],
                       ),
-                      orderTimeline()
-                    ],
-                  )),
-            ),
-            flex: 8,
-          ),
-          Expanded(
-            child: profileInfo(context),
-            flex: 2,
-          ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-              child: SizedBox(
-                  width: double.maxFinite,
-                  height: 20,
-                  child: RepeatRideButton()),
-            ),
-            flex: 2,
-          ),
-        ],
+                    ),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      padding: EdgeInsets.only(
+                                        top: SizeConfig.safeBlockHorizontal * 7,
+                                        left:
+                                            SizeConfig.safeBlockHorizontal * 7,
+                                        bottom:
+                                            SizeConfig.safeBlockHorizontal * 3,
+                                      ),
+                                      child: headerText(
+                                          "Ride Status", Colors.black, 24)),
+                                ],
+                              ),
+                              orderTimeline()
+                            ],
+                          )),
+                    ),
+                    flex: 8,
+                  ),
+                  Expanded(
+                    child: profileInfo(context, phoneNumber),
+                    flex: 2,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: SizedBox(
+                          width: double.maxFinite,
+                          height: 20,
+                          child: RepeatRideButton()),
+                    ),
+                    flex: 2,
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }
@@ -112,7 +164,7 @@ class Current extends StatelessWidget {
     );
   }
 
-  Widget profileInfo(BuildContext context) {
+  Widget profileInfo(BuildContext context, String phoneNumber) {
     AuthProvider authProvider = Provider.of(context);
     return Container(
         decoration: const BoxDecoration(color: Colors.white),
@@ -166,7 +218,7 @@ class Current extends StatelessWidget {
                             Icon(Icons.phone),
                             SizedBox(width: 10),
                             Text(
-                              "+1 657-500-1311",
+                              phoneNumber,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontFamily: 'SFPro',

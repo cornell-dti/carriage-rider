@@ -3,6 +3,11 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:core';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'Rider.dart';
+import 'app_config.dart';
 
 class Settings extends StatefulWidget {
   Settings({Key key}) : super(key: key);
@@ -12,6 +17,22 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  Future<Rider> fetchRider(String id) async {
+    final response =
+        await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
+
+    if (response.statusCode == 200) {
+      return Rider.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load rider info');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of(context);
@@ -35,95 +56,124 @@ class _SettingsState extends State<Settings> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context, false),
-
         ),
       ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-          Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-          child: Text('Settings', style: Theme.of(context).textTheme.headline),
-        ),
-        Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(3),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(15, 0, 0, 0),
-                    offset: Offset(0, 4.0),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0)
-              ],
-            ),
-            child: Row(children: [
-              Padding(
-                  padding: EdgeInsets.only(
-                      left: _picMarginLR,
-                      right: _picMarginLR,
-                      top: _picMarginTB,
-                      bottom: _picMarginTB),
-                  child: Stack(
-                    children: [
+      body: Center(
+        child: SingleChildScrollView(
+          child: FutureBuilder<Rider>(
+            future: fetchRider(authProvider.id),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                String phoneNumber = "+1 " +
+                    snapshot.data.phoneNumber.substring(0, 3) +
+                    "-" +
+                    snapshot.data.phoneNumber.substring(3, 6) +
+                    "-" +
+                    snapshot.data.phoneNumber.substring(6, 10);
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(bottom: _picDiameter * 0.05),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              authProvider.googleSignIn.currentUser.photoUrl,
-                            ),
-                            radius: _picRadius,
-                          )),
-                    ],
-                  )),
-              Padding(
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: Stack(
-                    overflow: Overflow.visible,
-                    children: [
-                      Row(
-                          //crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(authProvider.googleSignIn.currentUser.displayName,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                )),
-                          ]),
-                      Positioned(
-                        child: Text("+1 657-500-1311",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).accentColor,
-                            )),
-                        top: 25,
+                        padding:
+                        EdgeInsets.only(left: 20.0, top: 5.0, bottom: 8.0),
+                        child: Text('Settings',
+                            style: Theme.of(context).textTheme.headline5),
                       ),
-                      Positioned(
-                        child: Text(authProvider.googleSignIn.currentUser.email,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).accentColor,
-                            )),
-                        top: 45,
-                      )
-                    ],
-                  )),
-              Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: IconButton(
-                        alignment: Alignment.topRight,
-                        icon: Icon(Icons.arrow_forward_ios),
-                        onPressed: () {},
-                      )))
-            ])),
-        SizedBox(height: 6),
-        LocationsInfo("Locations",
-            [Icons.person_outline, Icons.accessible],
-            ["Add Home", "Add Favorites"]),
-        SizedBox(height: 6),
-        PrivacyLegalInfo(),
-        SizedBox(height: 6),
-        SignOutButton()
-      ]),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromARGB(15, 0, 0, 0),
+                                  offset: Offset(0, 4.0),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 1.0)
+                            ],
+                          ),
+                          child: Row(children: [
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: _picMarginLR,
+                                    right: _picMarginLR,
+                                    top: _picMarginTB,
+                                    bottom: _picMarginTB),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: _picDiameter * 0.05),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            authProvider.googleSignIn.currentUser
+                                                .photoUrl,
+                                          ),
+                                          radius: _picRadius,
+                                        )),
+                                  ],
+                                )),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 30),
+                                child: Stack(
+                                  overflow: Overflow.visible,
+                                  children: [
+                                    Row(
+                                      //crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                              authProvider.googleSignIn
+                                                  .currentUser.displayName,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              )),
+                                        ]),
+                                    Positioned(
+                                      child: Text(phoneNumber,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).accentColor,
+                                          )),
+                                      top: 25,
+                                    ),
+                                    Positioned(
+                                      child: Text(
+                                          authProvider
+                                              .googleSignIn.currentUser.email,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).accentColor,
+                                          )),
+                                      top: 45,
+                                    )
+                                  ],
+                                )),
+                            Expanded(
+                                child: Padding(
+                                    padding: EdgeInsets.only(right: 20.0),
+                                    child: IconButton(
+                                      alignment: Alignment.topRight,
+                                      icon: Icon(Icons.arrow_forward_ios),
+                                      onPressed: () {},
+                                    )))
+                          ])),
+                      SizedBox(height: 6),
+                      LocationsInfo(
+                          "Locations",
+                          [Icons.person_outline, Icons.accessible],
+                          ["Add Home", "Add Favorites"]),
+                      SizedBox(height: 6),
+                      PrivacyLegalInfo(),
+                      SizedBox(height: 6),
+                      SignOutButton()
+                    ]);
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          ),
+        )
+      ),
     );
   }
 }
@@ -186,7 +236,7 @@ class _LocationsInfoState extends State<LocationsInfo> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
@@ -301,7 +351,7 @@ class SignOutButton extends StatelessWidget {
     AuthProvider authProvider = Provider.of(context);
     return SizedBox(
         width: double.maxFinite,
-        height: 80,
+        height: MediaQuery.of(context).size.height / 9,
         child: MaterialButton(
           color: Colors.white,
           child: Row(
