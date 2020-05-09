@@ -4,7 +4,6 @@ import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/Settings.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
