@@ -4,12 +4,12 @@ import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Settings.dart';
-import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -44,80 +44,9 @@ class Home extends StatelessWidget {
     }
 
     return Scaffold(
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.all(5.0),
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profile'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Profile()));
-              },
-            ),
-            Divider(
-              color: Colors.grey[500],
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Settings()));
-              },
-            ),
-            Divider(
-              color: Colors.grey[500],
-            ),
-            ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Notifications()));
-              },
-            ),
-            Divider(
-              color: Colors.grey[500],
-            ),
-            ListTile(
-              leading: Icon(Icons.directions_car),
-              title: Text('Current Ride'),
-              onTap: (){
-                Navigator.push(context, new MaterialPageRoute(builder:
-                    (context) => Current()));
-              },
-            ),
-            Divider(
-              color: Colors.grey[500],
-            ),
-            ListTile(
-              leading: Icon(Icons.trending_up),
-              title: Text('Upcoming Ride'),
-              onTap: (){
-                Navigator.push(context, new MaterialPageRoute(builder:
-                    (context) => Upcoming()));
-              },
-            )
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        title: Text(
-          headerName,
-          style:
-              TextStyle(color: Colors.black, fontSize: 30, fontFamily: 'SFPro'),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      body: Stack(
-        children: <Widget>[
-          ListView(
-            scrollDirection: Axis.vertical,
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.all(5.0),
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.person, color: Colors.black),
@@ -157,6 +86,22 @@ class Home extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.directions_car, color: Colors.black),
                 title: sideBarText("Current Ride", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => Current()));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.trending_up, color: Colors.black),
+                title: sideBarText("Upcoming Ride", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => Upcoming()));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.history, color: Colors.black),
+                title: sideBarText("Ride History", Colors.black),
                 onTap: () {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Current()));
@@ -236,9 +181,9 @@ class Home extends StatelessWidget {
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
                             label: Text('Request Ride',
-                            style: TextStyle(
-                              fontSize: 18
-                            )),
+                                style: TextStyle(
+                                    fontSize: 18
+                                )),
                           ),
                         ))
                   ],
