@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'SFPro',
           accentColor: Color.fromRGBO(60, 60, 67, 0.6),
           textTheme: TextTheme(
-            headline: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-            subhead: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+            headline5: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            subtitle1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
           )),
       home: Logic(),
       debugShowCheckedModeBanner: false,
