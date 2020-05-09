@@ -10,7 +10,7 @@ import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/Settings.dart';
 
 void main() {
   MaterialApp(routes: {
