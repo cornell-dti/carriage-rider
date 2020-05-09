@@ -25,28 +25,28 @@ class _UpcomingState extends State<Upcoming> {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    header('Upcoming Ride'),
+                    Header(header: 'Upcoming Ride'),
                     SizedBox(height: 10),
-                    subHeader('Ride Info', 'Confirmed'),
+                    SubHeader(subHeader1: 'Ride Info' , subHeader2: 'Confirmed'),
                     SizedBox(height: 20),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       child: Row(
                         children: <Widget>[
                           SizedBox(width: 20),
-                          rideTimeLine(),
+                          TimeLine(),
                           SizedBox(width: 20),
                           Expanded(
                             child: Container(
                               child: Column(
                                 children: <Widget>[
-                                  informationRow('Upson Hall', '124 Hoy Rd, Ithaca, NY 14850', 'Pickup Passenger 1', '3:15 PM'),
+                                  InformationRow(loc: 'Upson Hall', address: '124 Hoy Rd, Ithaca, NY 14850', action: 'Pickup Passenger 1', time: '3:15 PM'),
                                   SizedBox(height: 20),
-                                  informationRow('Gates Hall', '107 Hoy Rd, Ithaca, NY 14853', 'Pickup Passenger 2', '3:20 PM'),
+                                  InformationRow(loc: 'Gates Hall', address: '107 Hoy Rd, Ithaca, NY 14853', action: 'Pickup Passenger 2', time: '3:20 PM'),
                                   SizedBox(height: 20),
-                                  informationRow('Statler Hall', '109 Tower Rd, Ithaca, NY 14850', 'Dropoff Passenger 1', '3:25 PM'),
+                                  InformationRow(loc: 'Statler Hall', address: '109 Tower Rd, Ithaca, NY 14850', action: 'Dropoff Passenger 1', time: '3:25 PM'),
                                   SizedBox(height: 20),
-                                  informationRow('Rhodes Hall', '109 Tower Rd, Ithaca, NY 14850', 'Dropoff Passenger 2', '4:20 PM'),
+                                  InformationRow(loc: 'Rhodes Hall', address: '109 Tower Rd, Ithaca, NY 14850', action: 'Dropoff Passenger 2', time: '4:20 PM'),
                                 ],
                               ),
                             ),
@@ -56,25 +56,32 @@ class _UpcomingState extends State<Upcoming> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    divider(),
+                    CustomDivider(),
                     SizedBox(height: 15),
-                    contact(),
+                    Contact(),
                     SizedBox(height: 15),
-                    divider(),
+                    CustomDivider(),
                     SizedBox(height: 20),
-                    rideAction('Cancel Ride', Colors.red, Icons.not_interested),
+                    RideAction(rideAction: "Cancel Ride", color: Colors.red, icon: Icons.not_interested),
                     SizedBox(height: MediaQuery.of(context).size.height/8),
                   ],
                 )
               ],
             ),
-            editRide()
+            EditRide()
           ],
         )
     );
   }
+}
 
-  Widget header(String header) {
+class Header extends StatelessWidget {
+
+  const Header({Key key, this.header}) : super(key: key);
+  final String header;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Container(
@@ -89,8 +96,17 @@ class _UpcomingState extends State<Upcoming> {
       ],
     );
   }
+}
 
-  Widget subHeader(String subHeader1, subHeader2) {
+class SubHeader extends StatelessWidget {
+
+  const SubHeader({Key key, this.subHeader1, this.subHeader2}) : super(key: key);
+
+  final String subHeader1;
+  final String subHeader2;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 15),
       child: Row(
@@ -106,16 +122,28 @@ class _UpcomingState extends State<Upcoming> {
       ),
     );
   }
+}
 
-  Widget divider() {
+class CustomDivider extends StatelessWidget {
+
+  const CustomDivider({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 4,
       color: Colors.grey[200],
     );
   }
+}
 
-  Widget contact() {
+class Contact extends StatelessWidget {
+
+  const Contact({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 15),
       child: Row(
@@ -146,22 +174,14 @@ class _UpcomingState extends State<Upcoming> {
       ),
     );
   }
+}
 
-  Widget rideAction(String rideAction, Color color, IconData icon){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(icon, color: color),
-        SizedBox(width: 10),
-        Text(rideAction, style: TextStyle(color: color,
-            fontSize: 18,
-            fontFamily: 'SFPro'))
-      ],
-    );
-  }
+class EditRide extends StatelessWidget {
 
+  const EditRide({Key key}) : super(key: key);
 
-  Widget editRide() {
+  @override
+  Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -191,8 +211,33 @@ class _UpcomingState extends State<Upcoming> {
       ),
     );
   }
+}
 
-  Widget rideTimeLine() {
+class TimeLine extends StatelessWidget {
+
+  const TimeLine({Key key}) : super(key: key);
+
+  Widget locationCircle() {
+    return Container(
+      width: 18,
+      height: 18,
+      decoration: new BoxDecoration(
+        color: Colors.black,
+        shape: BoxShape.circle,
+        border: new Border.all(
+            color: Colors.white, width: 6.0, style: BorderStyle.solid),
+        boxShadow: [
+          new BoxShadow(
+            color: Colors.grey[900],
+            blurRadius: 5.0,
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: 18,
       child: Column(
@@ -233,27 +278,19 @@ class _UpcomingState extends State<Upcoming> {
       ),
     );
   }
+}
 
-  Widget locationCircle() {
-    return Container(
-      width: 18,
-      height: 18,
-      decoration: new BoxDecoration(
-        color: Colors.black,
-        shape: BoxShape.circle,
-        border: new Border.all(
-            color: Colors.white, width: 6.0, style: BorderStyle.solid),
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey[900],
-            blurRadius: 5.0,
-          )
-        ],
-      ),
-    );
-  }
+class InformationRow extends StatelessWidget {
 
-  Widget informationRow(String loc, String address, String pickup, String time){
+  const InformationRow({Key key, this.loc, this.address, this.action, this.time}) : super(key: key);
+
+  final String loc;
+  final String address;
+  final String action;
+  final String time;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -265,7 +302,7 @@ class _UpcomingState extends State<Upcoming> {
                     fontSize: 18,
                     fontFamily: 'SFPro')
             ),
-            Text(pickup,
+            Text(action,
                 style: TextStyle(color: Colors.grey,
                     fontSize: 13,
                     fontFamily: 'SFPro')
@@ -288,6 +325,29 @@ class _UpcomingState extends State<Upcoming> {
             )
           ],
         )
+      ],
+    );
+  }
+}
+
+class RideAction extends StatelessWidget {
+
+  const RideAction({Key key, this.rideAction, this.color, this.icon}) : super(key: key);
+
+  final String rideAction;
+  final Color color;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Icon(icon, color: color),
+        SizedBox(width: 10),
+        Text(rideAction, style: TextStyle(color: color,
+            fontSize: 18,
+            fontFamily: 'SFPro'))
       ],
     );
   }

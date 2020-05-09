@@ -1,15 +1,16 @@
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Current.dart';
+import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/Settings.dart';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/Settings.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -91,6 +92,9 @@ class Home extends StatelessWidget {
                       new MaterialPageRoute(builder: (context) => Current()));
                 },
               ),
+              Divider(
+                color: Colors.grey[500],
+              ),
               ListTile(
                 leading: Icon(Icons.trending_up, color: Colors.black),
                 title: sideBarText("Upcoming Ride", Colors.black),
@@ -99,12 +103,15 @@ class Home extends StatelessWidget {
                       new MaterialPageRoute(builder: (context) => Upcoming()));
                 },
               ),
+              Divider(
+                color: Colors.grey[500],
+              ),
               ListTile(
                 leading: Icon(Icons.history, color: Colors.black),
                 title: sideBarText("Ride History", Colors.black),
                 onTap: () {
                   Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Current()));
+                      new MaterialPageRoute(builder: (context) => History()));
                 },
               )
             ],
