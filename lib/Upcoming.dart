@@ -55,25 +55,28 @@ class _UpcomingState extends State<Upcoming> {
                     ),
                     SizedBox(height: 20),
                     Container(
+                      width: MediaQuery.of(context).size.width,
                       child: Row(
                         children: <Widget>[
                           SizedBox(width: 20),
                           rideTimeLine(),
                           SizedBox(width: 20),
-                          Container(
-                            height: 220,
-                            child: Column(
-                              children: <Widget>[
-                                informationRow('Upson Hall', '124 Hoy Rd, Ithaca, NY 14850', 'Pickup Aiden', '3:15 PM'),
-                                SizedBox(height: 20),
-                                informationRow('Gates Hall', '107 Hoy Rd, Ithaca, NY 14853', 'Pickup Aiden', '3:20 PM'),
-                                SizedBox(height: 20),
-                                informationRow('Statler Hall', '109 Tower Rd, Ithaca, NY 14850', 'Pickup Emma', '3:25 PM'),
-                                SizedBox(height: 20),
-                                informationRow('Rhodes Hall', '109 Tower Rd, Ithaca, NY 14850', 'Pickup Cory', '4:20 PM'),
-                              ],
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  informationRow('Upson Hall', '124 Hoy Rd, Ithaca, NY 14850', 'Pickup Passenger 1', '3:15 PM'),
+                                  SizedBox(height: 20),
+                                  informationRow('Gates Hall', '107 Hoy Rd, Ithaca, NY 14853', 'Pickup Passenger 2', '3:20 PM'),
+                                  SizedBox(height: 20),
+                                  informationRow('Statler Hall', '109 Tower Rd, Ithaca, NY 14850', 'Dropoff Passenger 1', '3:25 PM'),
+                                  SizedBox(height: 20),
+                                  informationRow('Rhodes Hall', '109 Tower Rd, Ithaca, NY 14850', 'Dropoff Passenger 2', '4:20 PM'),
+                                ],
+                              ),
                             ),
-                          )
+                          ),
+                          SizedBox(width: 20)
                         ],
                       ),
                     ),
@@ -170,6 +173,7 @@ class _UpcomingState extends State<Upcoming> {
 
   Widget rideTimeLine() {
     return Container(
+      width: 18,
       child: Column(
         children: <Widget>[
           Container(
@@ -240,7 +244,6 @@ class _UpcomingState extends State<Upcoming> {
                     fontSize: 18,
                     fontFamily: 'SFPro')
             ),
-            SizedBox(width: 150),
             Text(pickup,
                 style: TextStyle(color: Colors.grey,
                     fontSize: 13,
@@ -250,13 +253,13 @@ class _UpcomingState extends State<Upcoming> {
         ),
         SizedBox(height: 5.0),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(address,
                 style: TextStyle(color: Colors.grey,
                     fontSize: 12,
                     fontFamily: 'SFPro')
             ),
-            SizedBox(width: 100),
             Text(time,
                 style: TextStyle(color: Colors.grey,
                     fontSize: 12,
