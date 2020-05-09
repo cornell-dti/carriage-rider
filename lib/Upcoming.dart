@@ -62,16 +62,7 @@ class _UpcomingState extends State<Upcoming> {
                     SizedBox(height: 15),
                     divider(),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.not_interested, color: Colors.red),
-                        SizedBox(width: 10),
-                        Text('Cancel Ride', style: TextStyle(color: Colors.red,
-                            fontSize: 18,
-                            fontFamily: 'SFPro'))
-                      ],
-                    ),
+                    rideAction('Cancel Ride', Colors.red, Icons.not_interested),
                     SizedBox(height: MediaQuery.of(context).size.height/8),
                   ],
                 )
@@ -155,6 +146,20 @@ class _UpcomingState extends State<Upcoming> {
       ),
     );
   }
+
+  Widget rideAction(String rideAction, Color color, IconData icon){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Icon(icon, color: color),
+        SizedBox(width: 10),
+        Text(rideAction, style: TextStyle(color: color,
+            fontSize: 18,
+            fontFamily: 'SFPro'))
+      ],
+    );
+  }
+
 
   Widget editRide() {
     return Align(
