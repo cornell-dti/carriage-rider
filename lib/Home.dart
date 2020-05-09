@@ -91,6 +91,28 @@ class Home extends StatelessWidget {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Current()));
                 },
+              ),
+              Divider(
+                color: Colors.grey[500],
+              ),
+              ListTile(
+                leading: Icon(Icons.trending_up, color: Colors.black),
+                title: sideBarText("Upcoming Ride", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => Upcoming()));
+                },
+              ),
+              Divider(
+                color: Colors.grey[500],
+              ),
+              ListTile(
+                leading: Icon(Icons.history, color: Colors.black),
+                title: sideBarText("Ride History", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => History()));
+                },
               )
             ],
           ),
