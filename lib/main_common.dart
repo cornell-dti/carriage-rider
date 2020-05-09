@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Login.dart';
 import 'Home.dart';
+import 'app_config.dart';
 
 void mainCommon() {
 
@@ -12,11 +13,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    AppConfig appConfig = AppConfig.of(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(
           create: (BuildContext context) {
-            return AuthProvider();
+            return AuthProvider(appConfig);
           }
         )
       ],
