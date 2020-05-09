@@ -11,6 +11,7 @@ import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -188,9 +189,9 @@ class Home extends StatelessWidget {
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
                             label: Text('Request Ride',
-                            style: TextStyle(
-                              fontSize: 18
-                            )),
+                                style: TextStyle(
+                                    fontSize: 18
+                                )),
                           ),
                         ))
                   ],
