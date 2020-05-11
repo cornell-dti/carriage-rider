@@ -13,7 +13,7 @@ The **Driver App** branch can be found [here](https://github.com/cornell-dti/car
 **Current Contributors**
 * Bryan Graeser - Product Manager
 * Nina Xie - Product Manager
-* Christopher Hansen - Technical Project Manager
+* Christopher Hansen - Technical Product Manager
 * Jessie Wong - Software Developer
 * Tony Yang - Software Developer
 * Megan Chang - Designer
