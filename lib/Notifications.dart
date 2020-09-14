@@ -28,20 +28,22 @@ class _NotificationsState extends State<Notifications> {
           onPressed: () => Navigator.pop(context, false),
         ),
       ),
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-              child: Text('Notifications',
-                  style: Theme.of(context).textTheme.headline5),
-            ),
-            Detail(),
-            Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height / 5,
-            )
-          ]),
+      body: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                child: Text('Notifications',
+                    style: Theme.of(context).textTheme.headline5),
+              ),
+              Detail(),
+              Container(
+                color: Colors.white,
+                height: MediaQuery.of(context).size.height / 5,
+              )
+            ]),
+      )
     );
   }
 }
