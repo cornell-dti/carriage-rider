@@ -219,7 +219,7 @@ class _CurrentState extends State<Current> {
                             SizedBox(width: 10),
                             GestureDetector(
                               onTap: () =>
-                                  UrlLauncher.launch("tel://${phoneNumber}"),
+                                  UrlLauncher.launch("tel://$phoneNumber"),
                               child: Text(
                                 fPhoneNumber,
                                 style: TextStyle(
