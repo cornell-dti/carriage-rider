@@ -162,7 +162,7 @@ class Contact extends StatelessWidget {
                       Icon(Icons.phone, size: 15),
                       SizedBox(width: 7),
                       GestureDetector(
-                        onTap: () => UrlLauncher.launch("tel://21213123123"),
+                        onTap: () => UrlLauncher.launch("tel://13232315234"),
                         child: Text('+1 323-231-5234', style: TextStyle(color: Colors.grey[600])),
                       )
                     ],
