@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +15,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Schedule',
-          style:
-              TextStyle(color: Colors.black, fontSize: 20, fontFamily: 'SFPro'),
-        ),
+        title: PageTitle(title: 'Schedule'),
         backgroundColor: Colors.white,
         titleSpacing: 0.0,
         iconTheme: IconThemeData(color: Colors.black),

@@ -11,8 +11,7 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Schedule', style: TextStyle(
-              color: Colors.black, fontSize: 20, fontFamily: 'SFPro')),
+          title: PageTitle(title: 'Schedule'),
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -68,8 +67,7 @@ class _HistoryState extends State<History> {
                   ],
                 )
               ],
-            ),
-            EditRide()
+            )
           ],
         )
     );

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'size_config.dart';
@@ -41,11 +42,7 @@ class _CurrentState extends State<Current> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Schedule',
-          style:
-              TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
-        ),
+        title: PageTitle(title: 'Schedule'),
         backgroundColor: Colors.black,
         titleSpacing: 0.0,
         iconTheme: IconThemeData(color: Colors.white),
