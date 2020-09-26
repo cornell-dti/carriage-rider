@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 class RideHistory extends StatelessWidget {
+
+  int selectedHistoryCard = -1;
+
   @override
   Widget build(BuildContext context) {
 
     return Column(
       children: <Widget>[
         RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'OCT 18th 12:00 PM'),
-            infoRowWidget: InformationRow(start: 'Upson Hall', end: 'Uris Hall'),),
+            infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),),
         RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'FEB 29th 12:00 PM'),
-          infoRowWidget: InformationRow(start: 'Balch Hall', end: 'Gates Hall'),)
+          infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),)
       ],
     );
   }
@@ -71,6 +74,7 @@ class InformationRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
+            width: 100.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -100,6 +104,7 @@ class InformationRow extends StatelessWidget {
             ),
           ),
           Container(
+            width: 100.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
