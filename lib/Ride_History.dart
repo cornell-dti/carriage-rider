@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-class RideHistory extends StatelessWidget {
+class RideHistory extends StatefulWidget {
+  @override
+  _RideHistoryState createState() => _RideHistoryState();
+}
 
-  int selectedHistoryCard = -1;
-
+class _RideHistoryState extends State<RideHistory> {
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'OCT 18th 12:00 PM'),
-            infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),),
+          infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),),
         RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'FEB 29th 12:00 PM'),
           infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),)
       ],
