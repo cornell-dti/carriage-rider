@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'size_config.dart';
@@ -8,9 +9,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Rider.dart';
 import 'app_config.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class Current extends StatefulWidget {
-
   Current({Key key}) : super(key: key);
 
   @override
@@ -18,7 +19,6 @@ class Current extends StatefulWidget {
 }
 
 class _CurrentState extends State<Current> {
-
   Future<Rider> fetchRider(String id) async {
     final response =
         await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
@@ -42,11 +42,7 @@ class _CurrentState extends State<Current> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Schedule',
-          style:
-              TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
-        ),
+        title: PageTitle(title: 'Schedule'),
         backgroundColor: Colors.black,
         titleSpacing: 0.0,
         iconTheme: IconThemeData(color: Colors.white),
@@ -61,7 +57,8 @@ class _CurrentState extends State<Current> {
           future: fetchRider(authProvider.id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              String phoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
+              String phoneNumber = snapshot.data.phoneNumber;
+              String fPhoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
                   "-" +
                   snapshot.data.phoneNumber.substring(3, 6) +
                   "-" +
@@ -117,18 +114,18 @@ class _CurrentState extends State<Current> {
                     flex: 8,
                   ),
                   Expanded(
-                    child: profileInfo(context, phoneNumber),
-                    flex: 2,
+                    child: profileInfo(context, phoneNumber, fPhoneNumber),
+                    flex: 3,
                   ),
                   Expanded(
                     child: Container(
                       decoration: const BoxDecoration(color: Colors.white),
                       child: SizedBox(
                           width: double.maxFinite,
-                          height: 20,
+                          height: 10,
                           child: RepeatRideButton()),
                     ),
-                    flex: 2,
+                    flex: 1,
                   ),
                 ],
               );
@@ -164,7 +161,7 @@ class _CurrentState extends State<Current> {
     );
   }
 
-  Widget profileInfo(BuildContext context, String phoneNumber) {
+  Widget profileInfo(BuildContext context, String phoneNumber, String fPhoneNumber) {
     AuthProvider authProvider = Provider.of(context);
     return Container(
         decoration: const BoxDecoration(color: Colors.white),
@@ -217,12 +214,16 @@ class _CurrentState extends State<Current> {
                           children: <Widget>[
                             Icon(Icons.phone),
                             SizedBox(width: 10),
-                            Text(
-                              phoneNumber,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SFPro',
-                                fontSize: 15,
+                            GestureDetector(
+                              onTap: () =>
+                                  UrlLauncher.launch("tel://$phoneNumber"),
+                              child: Text(
+                                fPhoneNumber,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SFPro',
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
@@ -408,7 +409,7 @@ class RepeatRideButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       padding: EdgeInsets.only(
-        bottom: SizeConfig.safeBlockHorizontal * 7,
+        bottom: SizeConfig.safeBlockHorizontal * 6,
       ),
       color: Colors.white,
       child: Row(

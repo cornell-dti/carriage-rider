@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class UpcomingRide extends StatelessWidget {
   @override
@@ -152,7 +153,10 @@ class UpcomingRide extends StatelessWidget {
                               children: <Widget>[
                                 Icon(Icons.phone, size: 13.0,),
                                 SizedBox(width: 5.0),
-                                Text('+ 323-231-5234')
+                                GestureDetector(
+                                  onTap: () => UrlLauncher.launch("tel://13232315234"),
+                                  child: Text('+1 323-231-5234', style: TextStyle(color: Colors.grey[600])),
+                                )
                               ],
                             )
                           ],

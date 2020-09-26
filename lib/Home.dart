@@ -1,4 +1,5 @@
 import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/Confirmed_Ride.dart';
 import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
@@ -112,6 +113,17 @@ class Home extends StatelessWidget {
                 onTap: () {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => History()));
+                },
+              ),
+              Divider(
+                color: Colors.grey[500],
+              ),
+              ListTile(
+                leading: Icon(Icons.check, color: Colors.black),
+                title: sideBarText("Confirmed Ride", Colors.black),
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => ConfirmedRide()));
                 },
               )
             ],
