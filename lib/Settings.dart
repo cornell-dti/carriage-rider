@@ -30,6 +30,12 @@ class _SettingsState extends State<Settings> {
     double _picMarginTB = _picDiameter / 8;
 
     if (riderProvider.hasInfo()) {
+      String phoneNumber = riderProvider.info.phoneNumber;
+      String fPhoneNumber = phoneNumber.substring(0, 3) +
+          "-" +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
           title: PageTitle(title: 'Schedule'),
@@ -101,7 +107,7 @@ class _SettingsState extends State<Settings> {
                                         )),
                                   ]),
                               Positioned(
-                                child: Text(riderProvider.info.phoneNumber,
+                                child: Text(fPhoneNumber,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Theme.of(context).accentColor,

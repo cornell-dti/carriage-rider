@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:provider/provider.dart';
@@ -30,6 +31,12 @@ class _ProfileState extends State<Profile> {
     double _picBtnDiameter = _picDiameter * 0.39;
 
     if (riderProvider.hasInfo()) {
+      String phoneNumber = riderProvider.info.phoneNumber;
+      String fPhoneNumber = phoneNumber.substring(0, 3) +
+          "-" +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
           title: PageTitle(title: 'Schedule'),
@@ -116,7 +123,13 @@ class _ProfileState extends State<Profile> {
                                       )),
                                   IconButton(
                                     icon: Icon(Icons.edit, size: 20),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditProfile(riderProvider.info)));
+                                    },
                                   )
                                 ]),
                             Positioned(
@@ -133,7 +146,7 @@ class _ProfileState extends State<Profile> {
                   ]))),
               SizedBox(height: 6),
               ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
-                  [riderProvider.info.email, riderProvider.info.phoneNumber]),
+                  [riderProvider.info.email, fPhoneNumber]),
               SizedBox(height: 6),
               ProfileInfo("Personal Info", [
                 Icons.person_outline,
@@ -226,5 +239,121 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     })
               ],
             )));
+  }
+}
+
+class EditProfile extends StatefulWidget {
+  EditProfile(this.rider);
+
+  final Rider rider;
+
+  @override
+  _EditProfileState createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    String _firstName = widget.rider.firstName;
+    String _lastName = widget.rider.lastName;
+    String _phoneNumber = widget.rider.phoneNumber;
+    // TODO: implement build
+    return Scaffold(
+        body: Padding(
+      padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Edit Profile', style: Theme.of(context).textTheme.headline5),
+        SizedBox(height: 30),
+        Form(
+            key: _formKey,
+            autovalidate: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('First Name',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextFormField(
+                  decoration: InputDecoration(icon: Icon(Icons.person)),
+                  initialValue: _firstName,
+                  validator: (input) {
+                    if (input.isEmpty) {
+                      return 'Please enter your first name.';
+                    }
+                    return null;
+                  },
+                  onSaved: (input) {
+                    setState(() {
+                      _firstName = input;
+                    });
+                  },
+                ),
+                SizedBox(height: 30),
+                Text('Last Name',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextFormField(
+                  decoration: InputDecoration(icon: Icon(Icons.person)),
+                  initialValue: _lastName,
+                  validator: (input) {
+                    if (input.isEmpty) {
+                      return 'Please enter your last name.';
+                    }
+                    return null;
+                  },
+                  onSaved: (input) {
+                    setState(() {
+                      _lastName = input;
+                    });
+                  },
+                ),
+                SizedBox(height: 30),
+                Text('Phone Number',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextFormField(
+                  decoration: InputDecoration(icon: Icon(Icons.phone)),
+                  initialValue: _phoneNumber,
+                  keyboardType: TextInputType.number,
+                  validator: (input) {
+                    if (input.isEmpty) {
+                      return 'Please enter your phone number.';
+                    }
+                    return null;
+                  },
+                  onSaved: (input) {
+                    setState(() {
+                      _phoneNumber = input;
+                    });
+                  },
+                ),
+              ],
+            )),
+        SizedBox(height: 15),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          RaisedButton(
+            child: Text("Save"),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                riderProvider.updateRider(AppConfig.of(context),
+                    authProvider, _firstName, _lastName, _phoneNumber);
+                Navigator.pop(context);
+              }
+            },
+          ),
+          SizedBox(width: 30),
+          RaisedButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+        ])
+      ]),
+    ));
   }
 }

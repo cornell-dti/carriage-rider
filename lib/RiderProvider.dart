@@ -109,4 +109,26 @@ class RiderProvider with ChangeNotifier {
       }
     });
   }
+
+  Future<void> updateRider(AppConfig config, AuthProvider authProvider,
+      String firstName, String lastName, String phoneNumber) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+      }),
+    );
+    if (response.statusCode == 200) {
+      Map<String,dynamic> json = jsonDecode(response.body);
+      _setInfo(Rider.fromJson(
+          json, authProvider.googleSignIn.currentUser.photoUrl));
+    } else {
+      throw Exception('Failed to update driver.');
+    }
+  }
 }
