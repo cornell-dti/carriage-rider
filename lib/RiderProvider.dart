@@ -1,4 +1,10 @@
 import 'dart:core';
+import 'dart:convert';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/app_config.dart';
+import 'package:flutter/widgets.dart';
+import 'app_config.dart';
+import 'package:http/http.dart' as http;
 
 class Rider {
   final String id;
@@ -15,6 +21,7 @@ class Rider {
   final String picture;
   final String joinDate;
 
+  String fullName() => firstName + " " + lastName;
 
   Rider({
     this.id,
@@ -32,7 +39,7 @@ class Rider {
     this.joinDate,
   });
 
-  factory Rider.fromJson(Map<String, dynamic> json) {
+  factory Rider.fromJson(Map<String, dynamic> json, String photoUrl) {
     return Rider(
         id: json['id'],
         email: json['email'],
@@ -63,4 +70,43 @@ class Rider {
         'picture': picture,
         'joinDate': joinDate,
       };
+}
+
+class RiderProvider with ChangeNotifier {
+  Rider info;
+
+  bool hasInfo() => info != null;
+
+  final retryDelay = Duration(seconds: 20);
+
+  RiderProvider(AppConfig config, AuthProvider authProvider) {
+    void Function() callback;
+    callback = () {
+      if (authProvider.isAuthenticated) {
+        fetchRider(config, authProvider);
+      }
+    };
+    callback();
+    authProvider.addListener(callback);
+  }
+
+  void _setInfo(Rider info) {
+    this.info = info;
+    notifyListeners();
+  }
+
+  Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
+    await http
+        .get("${config.baseUrl}/riders/${authProvider.id}")
+        .then((response) async {
+      if (response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        _setInfo(Rider.fromJson(
+            json, authProvider.googleSignIn.currentUser.photoUrl));
+      } else {
+        await Future.delayed(retryDelay);
+        fetchRider(config, authProvider);
+      }
+    });
+  }
 }

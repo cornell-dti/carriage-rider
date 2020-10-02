@@ -5,31 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'size_config.dart';
 import 'dart:core';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'Rider.dart';
-import 'app_config.dart';
+import 'RiderProvider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class Current extends StatefulWidget {
-  Current({Key key}) : super(key: key);
 
   @override
   _CurrentState createState() => _CurrentState();
 }
 
 class _CurrentState extends State<Current> {
-  Future<Rider> fetchRider(String id) async {
-    final response =
-        await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
-
-    if (response.statusCode == 200) {
-      return Rider.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load rider info');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -37,37 +22,56 @@ class _CurrentState extends State<Current> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     SizeConfig().init(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: PageTitle(title: 'Schedule'),
-        backgroundColor: Colors.black,
-        titleSpacing: 0.0,
-        iconTheme: IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+    if (riderProvider.hasInfo()) {
+      String phoneNumber = riderProvider.info.phoneNumber;
+      String fPhoneNumber = phoneNumber.substring(0, 3) +
+          "-" +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6, 10);
+      return Scaffold(
+        appBar: AppBar(
+          title: PageTitle(title: 'Schedule'),
+          backgroundColor: Colors.black,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.white),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
+          ),
         ),
-      ),
-      body: Center(
-        child: FutureBuilder<Rider>(
-          future: fetchRider(authProvider.id),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              String phoneNumber = snapshot.data.phoneNumber;
-              String fPhoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
-                  "-" +
-                  snapshot.data.phoneNumber.substring(3, 6) +
-                  "-" +
-                  snapshot.data.phoneNumber.substring(6, 10);
-              return Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.black),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.black),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.only(
+                                left: SizeConfig.safeBlockHorizontal * 7,
+                              ),
+                              child:
+                              headerText("Current Ride", Colors.white, 35)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                flex: 1,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.white),
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -75,68 +79,41 @@ class _CurrentState extends State<Current> {
                             children: <Widget>[
                               Container(
                                   padding: EdgeInsets.only(
+                                    top: SizeConfig.safeBlockHorizontal * 7,
                                     left: SizeConfig.safeBlockHorizontal * 7,
+                                    bottom: SizeConfig.safeBlockHorizontal * 3,
                                   ),
                                   child: headerText(
-                                      "Current Ride", Colors.white, 35)),
+                                      "Ride Status", Colors.black, 24)),
                             ],
                           ),
+                          orderTimeline()
                         ],
-                      ),
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Container(
-                          decoration: const BoxDecoration(color: Colors.white),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                      padding: EdgeInsets.only(
-                                        top: SizeConfig.safeBlockHorizontal * 7,
-                                        left:
-                                            SizeConfig.safeBlockHorizontal * 7,
-                                        bottom:
-                                            SizeConfig.safeBlockHorizontal * 3,
-                                      ),
-                                      child: headerText(
-                                          "Ride Status", Colors.black, 24)),
-                                ],
-                              ),
-                              orderTimeline()
-                            ],
-                          )),
-                    ),
-                    flex: 8,
-                  ),
-                  Expanded(
-                    child: profileInfo(context, phoneNumber, fPhoneNumber),
-                    flex: 3,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: SizedBox(
-                          width: double.maxFinite,
-                          height: 10,
-                          child: RepeatRideButton()),
-                    ),
-                    flex: 1,
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return Center(child: CircularProgressIndicator());
-          },
+                      )),
+                ),
+                flex: 8,
+              ),
+              Expanded(
+                child: profileInfo(context, phoneNumber, fPhoneNumber),
+                flex: 3,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: SizedBox(
+                      width: double.maxFinite,
+                      height: 10,
+                      child: RepeatRideButton()),
+                ),
+                flex: 1,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SafeArea(child: Center(child: CircularProgressIndicator()));
+    }
   }
 
   Widget headerText(String text, Color color, double size) {
@@ -319,7 +296,7 @@ class _CurrentState extends State<Current> {
       children: <Widget>[
         Text('$title\n $subTile',
             style:
-                TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
+            TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
       ],
     );
   }
