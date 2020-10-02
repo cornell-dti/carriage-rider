@@ -9,7 +9,6 @@ import 'RiderProvider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class Current extends StatefulWidget {
-
   @override
   _CurrentState createState() => _CurrentState();
 }
@@ -34,7 +33,11 @@ class _CurrentState extends State<Current> {
           phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
+          title: Text(
+            'Schedule',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
+          ),
           backgroundColor: Colors.black,
           titleSpacing: 0.0,
           iconTheme: IconThemeData(color: Colors.white),
@@ -60,7 +63,7 @@ class _CurrentState extends State<Current> {
                                 left: SizeConfig.safeBlockHorizontal * 7,
                               ),
                               child:
-                              headerText("Current Ride", Colors.white, 35)),
+                                  headerText("Current Ride", Colors.white, 35)),
                         ],
                       ),
                     ],
@@ -138,7 +141,8 @@ class _CurrentState extends State<Current> {
     );
   }
 
-  Widget profileInfo(BuildContext context, String phoneNumber, String fPhoneNumber) {
+  Widget profileInfo(
+      BuildContext context, String phoneNumber, String fPhoneNumber) {
     AuthProvider authProvider = Provider.of(context);
     return Container(
         decoration: const BoxDecoration(color: Colors.white),
@@ -147,16 +151,13 @@ class _CurrentState extends State<Current> {
             infoDivider(),
             Container(
               padding: EdgeInsets.only(
-                top: SizeConfig.safeBlockHorizontal * 2,
-              ),
+                top: SizeConfig.safeBlockHorizontal * 4,
+              )
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 15),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.safeBlockHorizontal * 7,
-                    ),
-                  ),
                   SizedBox(
                       height: 50,
                       width: 50,
@@ -167,54 +168,36 @@ class _CurrentState extends State<Current> {
                         radius: 20,
                         backgroundColor: Colors.transparent,
                       )),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
+                  SizedBox(width: 15),
+                  Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          authProvider.googleSignIn.currentUser.displayName,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SFPro',
-                              fontSize: 15),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Icon(Icons.phone),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () =>
-                                  UrlLauncher.launch("tel://$phoneNumber"),
-                              child: Text(
-                                fPhoneNumber,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SFPro',
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        Text(authProvider.googleSignIn.currentUser.displayName,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'SFPro')),
+                        SizedBox(height: 5),
                         Container(
-                          padding: EdgeInsets.only(
-                            bottom: SizeConfig.safeBlockHorizontal * 5,
+                          child: Row(
+                            children: <Widget>[Text('CULift Van')],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
+                  SizedBox(width: MediaQuery.of(context).size.width / 4),
+                  GestureDetector(
+                      onTap: () => UrlLauncher.launch("tel://$phoneNumber"),
+                      child: Icon(Icons.phone, size: 25))
                 ],
               ),
+            ),
+            Container(
+                padding: EdgeInsets.only(
+                  bottom: SizeConfig.safeBlockHorizontal * 4,
+                )
             ),
             infoDivider(),
           ],
@@ -296,7 +279,7 @@ class _CurrentState extends State<Current> {
       children: <Widget>[
         Text('$title\n $subTile',
             style:
-            TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
+                TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
       ],
     );
   }
@@ -329,7 +312,7 @@ class _CurrentState extends State<Current> {
               coloredCircle(Colors.black),
               Container(
                 width: 3,
-                height: 160,
+                height: 200,
                 decoration: new BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.rectangle,
