@@ -1,7 +1,7 @@
 import 'package:carriage_rider/Account_Pronouns.dart';
-import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Home.dart';
+
+
 class AccountName extends StatefulWidget {
   @override
   _AccountNameState createState() => _AccountNameState();
@@ -22,7 +22,7 @@ class _AccountNameState extends State<AccountName> {
       decoration: InputDecoration(labelText: 'Last Name',),
     );
   }
-  
+
   final titleStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
