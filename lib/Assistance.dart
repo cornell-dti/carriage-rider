@@ -19,13 +19,6 @@ class _AssistanceState extends State<Assistance> {
     });
   }
 
-
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
   final questionStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w800,
@@ -39,46 +32,10 @@ class _AssistanceState extends State<Assistance> {
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
-                    onTap: () {
-                      Navigator.pop(context, new MaterialPageRoute(builder: (context) => RepeatRide()));
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 50.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.group_work),
-                ),
-                Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
-              ],
-            ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 60.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("Do you need any assistance? (optional)", style: questionStyle))
+                Flexible(child: Text("", style: questionStyle))
               ],
             ),
             SizedBox(height: 40),
