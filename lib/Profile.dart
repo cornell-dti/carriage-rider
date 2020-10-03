@@ -267,7 +267,7 @@ class _EditProfileState extends State<EditProfile> {
       padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('Edit Profile', style: Theme.of(context).textTheme.headline5),
-        SizedBox(height: 30),
+        SizedBox(height: 20),
         Form(
             key: _formKey,
             child: Column(
@@ -291,7 +291,7 @@ class _EditProfileState extends State<EditProfile> {
                     });
                   },
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Text('Last Name',
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -310,7 +310,7 @@ class _EditProfileState extends State<EditProfile> {
                     });
                   },
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Text('Phone Number',
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
