@@ -23,7 +23,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
 
   final titleStyle = TextStyle(
     color: Colors.black,
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w400,
     fontSize: 25,
   );
 

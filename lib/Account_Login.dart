@@ -10,9 +10,14 @@ class AccountLogin extends StatefulWidget {
 
 class _AccountLoginState extends State<AccountLogin> {
   final _formKey = GlobalKey<FormState>();
+  FocusNode focusNode = FocusNode();
+  TextEditingController controllerOne = TextEditingController();
+  TextEditingController controllerTwo = TextEditingController();
 
   Widget _buildEmailField() {
     return TextFormField(
+      controller: controllerOne,
+      focusNode: focusNode,
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'Email',
@@ -22,12 +27,21 @@ class _AccountLoginState extends State<AccountLogin> {
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
+      textInputAction: TextInputAction.next,
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
       style: TextStyle(color: Colors.white, fontSize: 15),
+      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
   }
 
   Widget _buildPasswordField() {
     return TextFormField(
+      controller: controllerTwo,
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Password',
@@ -38,6 +52,13 @@ class _AccountLoginState extends State<AccountLogin> {
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
+      textInputAction: TextInputAction.done,
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your password';
+        }
+        return null;
+      },
       style: TextStyle(color: Colors.white, fontSize: 15),
     );
   }
@@ -57,6 +78,7 @@ class _AccountLoginState extends State<AccountLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
         body: Container(
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),

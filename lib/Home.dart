@@ -194,14 +194,14 @@ class Home extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   new MaterialPageRoute(
-                                      builder: (context) => RequestRideLoc()));
+                                      builder: (context) => AccountLogin()));
                             },
                             elevation: 3.0,
                             color: Colors.black,
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
-                            label: Text('Request Ride',
-                                style: TextStyle(fontSize: 18)),
+                            label:
+                                Text('Sign In', style: TextStyle(fontSize: 18)),
                           ),
                         )),
                   ],

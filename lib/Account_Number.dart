@@ -7,12 +7,24 @@ class AccountNumber extends StatefulWidget {
 }
 
 class _AccountNumberState extends State<AccountNumber> {
-
   final _formKey = GlobalKey<FormState>();
+  FocusNode focusNode = FocusNode();
+  TextEditingController controllerOne = TextEditingController();
 
-  Widget _buildPhoneNumberField(){
+  Widget _buildPhoneNumberField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Phone Number',),
+      controller: controllerOne,
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        labelText: 'Phone Number',
+      ),
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your first name';
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.black, fontSize: 15),
     );
   }
 
@@ -25,6 +37,7 @@ class _AccountNumberState extends State<AccountNumber> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Container(
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
@@ -36,11 +49,11 @@ class _AccountNumberState extends State<AccountNumber> {
                   Flexible(
                     child: Text("And your phone number?", style: titleStyle),
                   )
-
                 ],
               ),
               SizedBox(height: 40.0),
               Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     _buildPhoneNumberField(),
@@ -56,10 +69,14 @@ class _AccountNumberState extends State<AccountNumber> {
                       child: ButtonTheme(
                         minWidth: MediaQuery.of(context).size.width * 0.8,
                         height: 45.0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
-                          onPressed: (){
-                            Navigator.push(context, new MaterialPageRoute(builder: (context) => Home()));
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => Home()));
                           },
                           elevation: 3.0,
                           color: Colors.black,
@@ -67,13 +84,10 @@ class _AccountNumberState extends State<AccountNumber> {
                           child: Text('Done'),
                         ),
                       ),
-                    )
-                ),
+                    )),
               )
             ],
           ),
-        )
-    );
-
+        ));
   }
 }
