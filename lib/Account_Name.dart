@@ -1,5 +1,9 @@
 import 'package:carriage_rider/Account_Pronouns.dart';
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'RiderProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/app_config.dart';
 
 class AccountName extends StatefulWidget {
   @override
@@ -9,12 +13,12 @@ class AccountName extends StatefulWidget {
 class _AccountNameState extends State<AccountName> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  TextEditingController controllerOne = TextEditingController();
-  TextEditingController controllerTwo = TextEditingController();
+  TextEditingController firstNameCtrl = TextEditingController();
+  TextEditingController lastNameCtrl = TextEditingController();
 
   Widget _buildFirstNameField() {
     return TextFormField(
-        controller: controllerOne,
+        controller: firstNameCtrl,
         focusNode: focusNode,
         decoration: InputDecoration(
           labelText: 'First Name',
@@ -36,7 +40,7 @@ class _AccountNameState extends State<AccountName> {
 
   Widget _buildLastNameField() {
     return TextFormField(
-        controller: controllerTwo,
+        controller: lastNameCtrl,
         decoration: InputDecoration(
           labelText: 'Last Name',
           labelStyle: TextStyle(color: Colors.black),
@@ -62,6 +66,8 @@ class _AccountNameState extends State<AccountName> {
 
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
@@ -110,6 +116,16 @@ class _AccountNameState extends State<AccountName> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              riderProvider.setNames(
+                                  AppConfig.of(context),
+                                  authProvider,
+                                  firstNameCtrl.text,
+                                  lastNameCtrl.text);
+                              Navigator.pop(context);
+                            }
+                            ;
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

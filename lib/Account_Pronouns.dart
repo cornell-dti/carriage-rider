@@ -1,5 +1,9 @@
 import 'package:carriage_rider/Account_Number.dart';
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'RiderProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/app_config.dart';
 
 class AccountPronouns extends StatefulWidget {
   @override
@@ -8,6 +12,12 @@ class AccountPronouns extends StatefulWidget {
 
 class _AccountPronounsState extends State<AccountPronouns> {
   int selectedRadio = 0;
+
+  String pronouns = "";
+
+  setPronouns(String pronoun) {
+    pronouns = pronoun;
+  }
 
   setSelectedRadio(int val) {
     setState(() {
@@ -29,6 +39,8 @@ class _AccountPronounsState extends State<AccountPronouns> {
 
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
@@ -58,6 +70,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
+                    setPronouns("They/Them/Theirs");
                   },
                 ),
                 RadioListTile(
@@ -67,6 +80,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
+                    setPronouns("She/Her/Hers");
                   },
                 ),
                 RadioListTile(
@@ -76,6 +90,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
+                    setPronouns("He/Him/His");
                   },
                 ),
                 RadioListTile(
@@ -85,6 +100,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
+                    setPronouns("Others");
                   },
                 ),
                 RadioListTile(
@@ -94,6 +110,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
+                    setPronouns("");
                   },
                 ),
               ],
@@ -110,6 +127,8 @@ class _AccountPronounsState extends State<AccountPronouns> {
                           borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: () {
+                          riderProvider.setPronouns(AppConfig.of(context),
+                              authProvider, pronouns);
                           Navigator.push(
                               context,
                               new MaterialPageRoute(

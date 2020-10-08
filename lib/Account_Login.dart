@@ -2,6 +2,10 @@ import 'package:carriage_rider/Account_Name.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:carriage_rider/AuthProvider.dart';
+import 'RiderProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/app_config.dart';
 
 class AccountLogin extends StatefulWidget {
   @override
@@ -11,12 +15,12 @@ class AccountLogin extends StatefulWidget {
 class _AccountLoginState extends State<AccountLogin> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  TextEditingController controllerOne = TextEditingController();
-  TextEditingController controllerTwo = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
+  TextEditingController passCtrl = TextEditingController();
 
   Widget _buildEmailField() {
     return TextFormField(
-      controller: controllerOne,
+      controller: emailCtrl,
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: 'Email',
@@ -41,7 +45,7 @@ class _AccountLoginState extends State<AccountLogin> {
 
   Widget _buildPasswordField() {
     return TextFormField(
-      controller: controllerTwo,
+      controller: passCtrl,
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Password',
@@ -77,6 +81,8 @@ class _AccountLoginState extends State<AccountLogin> {
 
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
@@ -146,6 +152,12 @@ class _AccountLoginState extends State<AccountLogin> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              riderProvider.setEmail(AppConfig.of(context),
+                                  authProvider, emailCtrl.text);
+                              Navigator.pop(context);
+                            };
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

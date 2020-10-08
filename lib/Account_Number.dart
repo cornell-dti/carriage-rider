@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'RiderProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/app_config.dart';
 
 class AccountNumber extends StatefulWidget {
   @override
@@ -9,15 +13,15 @@ class AccountNumber extends StatefulWidget {
 class _AccountNumberState extends State<AccountNumber> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  TextEditingController controllerOne = TextEditingController();
+  TextEditingController phoneCtrl = TextEditingController();
 
   Widget _buildPhoneNumberField() {
     return TextFormField(
-      controller: controllerOne,
+      controller: phoneCtrl,
       focusNode: focusNode,
       decoration: InputDecoration(
-        labelText: 'Phone Number',
-      ),
+          labelText: 'Phone Number',
+          labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your first name';
@@ -36,6 +40,8 @@ class _AccountNumberState extends State<AccountNumber> {
 
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
@@ -73,6 +79,14 @@ class _AccountNumberState extends State<AccountNumber> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              riderProvider.setPhone(
+                                  AppConfig.of(context),
+                                  authProvider,
+                                  phoneCtrl.text);
+                              Navigator.pop(context);
+                            };
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

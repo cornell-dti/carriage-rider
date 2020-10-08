@@ -48,9 +48,6 @@ class Rider {
         lastName: json['lastName'],
         pronouns: json['pronouns'],
         accessibilityNeeds: json['accessibilityNeeds'],
-        hasWheelchair: json['hasWheelchair'],
-        hasCrutches: json['hasCrutches'],
-        needsAssistant: json['needsAssistant'],
         description: json['description'],
         picture: json['picture'],
         joinDate: json['joinDate']);
@@ -64,8 +61,6 @@ class Rider {
         'lastName': lastName,
         'pronouns': picture,
         'accessibilityNeeds': accessibilityNeeds,
-        'hasWheelchair': hasWheelchair,
-        'needsAssistant': needsAssistant,
         'description': description,
         'picture': picture,
         'joinDate': joinDate,
@@ -93,6 +88,16 @@ class RiderProvider with ChangeNotifier {
   void _setInfo(Rider info) {
     this.info = info;
     notifyListeners();
+  }
+
+  void check(AuthProvider authProvider, response) {
+    if (response.statusCode == 200) {
+      Map<String,dynamic> json = jsonDecode(response.body);
+      _setInfo(Rider.fromJson(
+          json, authProvider.googleSignIn.currentUser.photoUrl));
+    } else {
+      throw Exception('Failed to update driver.');
+    }
   }
 
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
@@ -123,12 +128,63 @@ class RiderProvider with ChangeNotifier {
         'phoneNumber': phoneNumber,
       }),
     );
-    if (response.statusCode == 200) {
-      Map<String,dynamic> json = jsonDecode(response.body);
-      _setInfo(Rider.fromJson(
-          json, authProvider.googleSignIn.currentUser.photoUrl));
-    } else {
-      throw Exception('Failed to update driver.');
-    }
+    check(authProvider, response);
+  }
+
+  Future<void> setNames(AppConfig config, AuthProvider authProvider,
+      String firstName, String lastName) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'firstName': firstName,
+        'lastName': lastName,
+      }),
+    );
+    check(authProvider, response);
+  }
+
+  Future<void> setEmail(AppConfig config, AuthProvider authProvider,
+      String email) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+      }),
+    );
+    check(authProvider, response);
+  }
+
+  Future<void> setPronouns(AppConfig config, AuthProvider authProvider,
+      String pronouns) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'pronouns': pronouns,
+      }),
+    );
+    check(authProvider, response);
+  }
+
+  Future<void> setPhone(AppConfig config, AuthProvider authProvider,
+      String phoneNumber) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': phoneNumber,
+      }),
+    );
+    check(authProvider, response);
   }
 }
