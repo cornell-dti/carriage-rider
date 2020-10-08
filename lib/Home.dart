@@ -1,4 +1,4 @@
-import 'package:carriage_rider/Account_Login.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Confirmed_Ride.dart';
 import 'package:carriage_rider/Current.dart';
@@ -193,14 +193,14 @@ class Home extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   new MaterialPageRoute(
-                                      builder: (context) => AccountLogin()));
+                                      builder: (context) => RequestRideLoc()));
                             },
                             elevation: 3.0,
                             color: Colors.black,
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
-                            label:
-                                Text('Sign In', style: TextStyle(fontSize: 18)),
+                            label: Text('Request Ride',
+                                style: TextStyle(fontSize: 18)),
                           ),
                         )),
                   ],
