@@ -13,50 +13,9 @@ class AccountName extends StatefulWidget {
 class _AccountNameState extends State<AccountName> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  TextEditingController firstNameCtrl = TextEditingController();
-  TextEditingController lastNameCtrl = TextEditingController();
 
-  Widget _buildFirstNameField() {
-    return TextFormField(
-        controller: firstNameCtrl,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          labelText: 'First Name',
-          labelStyle: TextStyle(color: Colors.black),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
-        ),
-        textInputAction: TextInputAction.next,
-        validator: (input) {
-          if (input.isEmpty) {
-            return 'Please enter your first name';
-          }
-          return null;
-        },
-        style: TextStyle(color: Colors.black, fontSize: 15),
-        onFieldSubmitted: (value) => FocusScope.of(context).nextFocus());
-  }
-
-  Widget _buildLastNameField() {
-    return TextFormField(
-        controller: lastNameCtrl,
-        decoration: InputDecoration(
-          labelText: 'Last Name',
-          labelStyle: TextStyle(color: Colors.black),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
-        ),
-        textInputAction: TextInputAction.done,
-        validator: (input) {
-          if (input.isEmpty) {
-            return 'Please enter your last name';
-          }
-          return null;
-        },
-        style: TextStyle(color: Colors.black, fontSize: 15));
-  }
+  //TextEditingController firstNameCtrl = TextEditingController();
+  //TextEditingController lastNameCtrl = TextEditingController();
 
   final titleStyle = TextStyle(
     color: Colors.black,
@@ -68,6 +27,8 @@ class _AccountNameState extends State<AccountName> {
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
+    String _firstName = riderProvider.info.firstName;
+    String _lastName = riderProvider.info.lastName;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
@@ -89,9 +50,54 @@ class _AccountNameState extends State<AccountName> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    _buildFirstNameField(),
+                    TextFormField(
+                        initialValue: riderProvider.info.firstName,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          labelText: 'First Name',
+                          labelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Please enter your first name';
+                          }
+                          return null;
+                        },
+                        onSaved: (input) {
+                          setState(() {
+                            _lastName = input;
+                          });
+                        },
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                        onFieldSubmitted: (value) =>
+                            FocusScope.of(context).nextFocus()),
                     SizedBox(height: 20.0),
-                    _buildLastNameField(),
+                    TextFormField(
+                        initialValue: riderProvider.info.lastName,
+                        decoration: InputDecoration(
+                          labelText: 'Last Name',
+                          labelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        textInputAction: TextInputAction.done,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Please enter your last name';
+                          }
+                          return null;
+                        },
+                        onSaved: (input) {
+                          setState(() {
+                            _lastName = input;
+                          });
+                        },
+                        style: TextStyle(color: Colors.black, fontSize: 15)),
                     SizedBox(height: 10.0)
                   ],
                 ),
@@ -121,8 +127,8 @@ class _AccountNameState extends State<AccountName> {
                               riderProvider.setNames(
                                   AppConfig.of(context),
                                   authProvider,
-                                  firstNameCtrl.text,
-                                  lastNameCtrl.text);
+                                  _firstName,
+                                  _lastName);
                               Navigator.pop(context);
                             }
                             Navigator.push(

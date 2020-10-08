@@ -24,7 +24,7 @@ class _AccountNumberState extends State<AccountNumber> {
           labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your first name';
+          return 'Please enter your phone number';
         }
         return null;
       },
