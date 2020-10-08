@@ -86,7 +86,7 @@ class _AccountNumberState extends State<AccountNumber> {
                                   authProvider,
                                   phoneCtrl.text);
                               Navigator.pop(context);
-                            };
+                            }
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

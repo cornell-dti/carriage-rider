@@ -157,7 +157,7 @@ class _AccountLoginState extends State<AccountLogin> {
                               riderProvider.setEmail(AppConfig.of(context),
                                   authProvider, emailCtrl.text);
                               Navigator.pop(context);
-                            };
+                            }
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

@@ -125,7 +125,6 @@ class _AccountNameState extends State<AccountName> {
                                   lastNameCtrl.text);
                               Navigator.pop(context);
                             }
-                            ;
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(
