@@ -8,7 +8,6 @@ import 'dart:core';
 import 'RiderProvider.dart';
 
 class Settings extends StatefulWidget {
-
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -248,7 +247,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                         alignment: Alignment.topLeft,
                         child: Text(heading,
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                     ),
                     Expanded(
@@ -268,7 +267,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 16,
                     color: Theme.of(context).accentColor,
                   ),
                 ),
@@ -280,8 +279,9 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> headings = ["Privacy", "Legal"];
+    List<String> headings = ["Email Preferences", "Privacy", "Legal"];
     final List<String> subText = [
+      "Set what email you want to receive",
       "Choose what data you share with us",
       "Terms of service \& Privacy Policy"
     ];
