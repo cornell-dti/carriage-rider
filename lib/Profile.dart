@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Upcoming.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:provider/provider.dart';
 import 'RiderProvider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -14,9 +16,23 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  File _image;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future _getImage() async {
+    final pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   @override
@@ -86,8 +102,10 @@ class _ProfileState extends State<Profile> {
                                     bottom: _picDiameter * 0.05),
                                 child: CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                    authProvider
-                                        .googleSignIn.currentUser.photoUrl,
+                                    _image == null
+                                        ? authProvider
+                                            .googleSignIn.currentUser.photoUrl
+                                        : Image.file(_image),
                                   ),
                                   radius: _picRadius,
                                 )),
@@ -100,7 +118,9 @@ class _ProfileState extends State<Profile> {
                                       backgroundColor: Colors.black,
                                       child: Icon(Icons.add,
                                           size: _picBtnDiameter),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _getImage();
+                                      },
                                     ),
                                   ),
                                 ),
@@ -127,8 +147,8 @@ class _ProfileState extends State<Profile> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditProfile(riderProvider.info)));
+                                              builder: (context) => EditProfile(
+                                                  riderProvider.info)));
                                     },
                                   )
                                 ]),
@@ -339,8 +359,8 @@ class _EditProfileState extends State<EditProfile> {
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                riderProvider.updateRider(AppConfig.of(context),
-                    authProvider, _firstName, _lastName, _phoneNumber);
+                riderProvider.updateRider(AppConfig.of(context), authProvider,
+                    _firstName, _lastName, _phoneNumber);
                 Navigator.pop(context);
               }
             },
