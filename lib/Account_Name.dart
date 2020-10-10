@@ -124,11 +124,8 @@ class _AccountNameState extends State<AccountName> {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               _formKey.currentState.save();
-                              riderProvider.setNames(
-                                  AppConfig.of(context),
-                                  authProvider,
-                                  _firstName,
-                                  _lastName);
+                              riderProvider.setNames(AppConfig.of(context),
+                                  authProvider, _firstName, _lastName);
                               Navigator.pop(context);
                             }
                             Navigator.push(

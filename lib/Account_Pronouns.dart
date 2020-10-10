@@ -127,8 +127,8 @@ class _AccountPronounsState extends State<AccountPronouns> {
                           borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: () {
-                          riderProvider.setPronouns(AppConfig.of(context),
-                              authProvider, pronouns);
+                          riderProvider.setPronouns(
+                              AppConfig.of(context), authProvider, pronouns);
                           Navigator.push(
                               context,
                               new MaterialPageRoute(

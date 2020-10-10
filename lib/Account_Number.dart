@@ -81,10 +81,8 @@ class _AccountNumberState extends State<AccountNumber> {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               _formKey.currentState.save();
-                              riderProvider.setPhone(
-                                  AppConfig.of(context),
-                                  authProvider,
-                                  phoneCtrl.text);
+                              riderProvider.setPhone(AppConfig.of(context),
+                                  authProvider, phoneCtrl.text);
                               Navigator.pop(context);
                             }
                             Navigator.push(

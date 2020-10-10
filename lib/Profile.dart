@@ -276,6 +276,12 @@ class _EditProfileNameState extends State<EditProfileName> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
 
+  final cancelStyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w100,
+    fontSize: 15,
+  );
+
   final titleStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
@@ -295,6 +301,22 @@ class _EditProfileNameState extends State<EditProfileName> {
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    child: InkWell(
+                      child: Text("Cancel", style: cancelStyle),
+                      onTap: () {
+                        Navigator.pop(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => Profile()));
+                      },
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 50.0),
               Row(
                 children: <Widget>[
