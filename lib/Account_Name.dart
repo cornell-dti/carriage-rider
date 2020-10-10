@@ -69,7 +69,7 @@ class _AccountNameState extends State<AccountName> {
                         },
                         onSaved: (input) {
                           setState(() {
-                            _lastName = input;
+                            _firstName = input;
                           });
                         },
                         style: TextStyle(color: Colors.black, fontSize: 15),
