@@ -62,7 +62,7 @@ class _CurrentState extends State<Current> {
                                 left: SizeConfig.safeBlockHorizontal * 7,
                               ),
                               child:
-                                  headerText("Current Ride", Colors.white, 35)),
+                              headerText("Current Ride", Colors.white, 35)),
                         ],
                       ),
                     ],
@@ -149,9 +149,9 @@ class _CurrentState extends State<Current> {
           children: <Widget>[
             infoDivider(),
             Container(
-              padding: EdgeInsets.only(
-                top: SizeConfig.safeBlockHorizontal * 4,
-              )
+                padding: EdgeInsets.only(
+                  top: SizeConfig.safeBlockHorizontal * 4,
+                )
             ),
             Container(
               margin: EdgeInsets.only(left: 15),
@@ -278,7 +278,7 @@ class _CurrentState extends State<Current> {
       children: <Widget>[
         Text('$title\n $subTile',
             style:
-                TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
+            TextStyle(fontFamily: "regular", fontSize: 19, color: color)),
       ],
     );
   }
