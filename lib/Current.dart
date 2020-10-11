@@ -1,35 +1,18 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'size_config.dart';
 import 'dart:core';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'Rider.dart';
-import 'app_config.dart';
+import 'RiderProvider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class Current extends StatefulWidget {
-  Current({Key key}) : super(key: key);
-
   @override
   _CurrentState createState() => _CurrentState();
 }
 
 class _CurrentState extends State<Current> {
-  Future<Rider> fetchRider(String id) async {
-    final response =
-        await http.get(AppConfig.of(context).baseUrl + "/riders/" + id);
-
-    if (response.statusCode == 200) {
-      return Rider.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load rider info');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -37,37 +20,60 @@ class _CurrentState extends State<Current> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     SizeConfig().init(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: PageTitle(title: 'Schedule'),
-        backgroundColor: Colors.black,
-        titleSpacing: 0.0,
-        iconTheme: IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+    if (riderProvider.hasInfo()) {
+      String phoneNumber = riderProvider.info.phoneNumber;
+      String fPhoneNumber = phoneNumber.substring(0, 3) +
+          "-" +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6, 10);
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Schedule',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
+          ),
+          backgroundColor: Colors.black,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.white),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
+          ),
         ),
-      ),
-      body: Center(
-        child: FutureBuilder<Rider>(
-          future: fetchRider(authProvider.id),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              String phoneNumber = snapshot.data.phoneNumber;
-              String fPhoneNumber = snapshot.data.phoneNumber.substring(0, 3) +
-                  "-" +
-                  snapshot.data.phoneNumber.substring(3, 6) +
-                  "-" +
-                  snapshot.data.phoneNumber.substring(6, 10);
-              return Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.black),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.black),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.only(
+                                left: SizeConfig.safeBlockHorizontal * 7,
+                              ),
+                              child:
+                                  headerText("Current Ride", Colors.white, 35)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                flex: 1,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.white),
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -75,68 +81,41 @@ class _CurrentState extends State<Current> {
                             children: <Widget>[
                               Container(
                                   padding: EdgeInsets.only(
+                                    top: SizeConfig.safeBlockHorizontal * 7,
                                     left: SizeConfig.safeBlockHorizontal * 7,
+                                    bottom: SizeConfig.safeBlockHorizontal * 3,
                                   ),
                                   child: headerText(
-                                      "Current Ride", Colors.white, 35)),
+                                      "Ride Status", Colors.black, 24)),
                             ],
                           ),
+                          orderTimeline()
                         ],
-                      ),
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Container(
-                          decoration: const BoxDecoration(color: Colors.white),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                      padding: EdgeInsets.only(
-                                        top: SizeConfig.safeBlockHorizontal * 7,
-                                        left:
-                                            SizeConfig.safeBlockHorizontal * 7,
-                                        bottom:
-                                            SizeConfig.safeBlockHorizontal * 3,
-                                      ),
-                                      child: headerText(
-                                          "Ride Status", Colors.black, 24)),
-                                ],
-                              ),
-                              orderTimeline()
-                            ],
-                          )),
-                    ),
-                    flex: 8,
-                  ),
-                  Expanded(
-                    child: profileInfo(context, phoneNumber, fPhoneNumber),
-                    flex: 3,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: SizedBox(
-                          width: double.maxFinite,
-                          height: 10,
-                          child: RepeatRideButton()),
-                    ),
-                    flex: 1,
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return Center(child: CircularProgressIndicator());
-          },
+                      )),
+                ),
+                flex: 8,
+              ),
+              Expanded(
+                child: profileInfo(context, phoneNumber, fPhoneNumber),
+                flex: 3,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: SizedBox(
+                      width: double.maxFinite,
+                      height: 10,
+                      child: RepeatRideButton()),
+                ),
+                flex: 1,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SafeArea(child: Center(child: CircularProgressIndicator()));
+    }
   }
 
   Widget headerText(String text, Color color, double size) {
@@ -161,7 +140,8 @@ class _CurrentState extends State<Current> {
     );
   }
 
-  Widget profileInfo(BuildContext context, String phoneNumber, String fPhoneNumber) {
+  Widget profileInfo(
+      BuildContext context, String phoneNumber, String fPhoneNumber) {
     AuthProvider authProvider = Provider.of(context);
     return Container(
         decoration: const BoxDecoration(color: Colors.white),
@@ -170,16 +150,13 @@ class _CurrentState extends State<Current> {
             infoDivider(),
             Container(
               padding: EdgeInsets.only(
-                top: SizeConfig.safeBlockHorizontal * 2,
-              ),
+                top: SizeConfig.safeBlockHorizontal * 4,
+              )
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 15),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.safeBlockHorizontal * 7,
-                    ),
-                  ),
                   SizedBox(
                       height: 50,
                       width: 50,
@@ -190,54 +167,36 @@ class _CurrentState extends State<Current> {
                         radius: 20,
                         backgroundColor: Colors.transparent,
                       )),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
+                  SizedBox(width: 15),
+                  Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          authProvider.googleSignIn.currentUser.displayName,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SFPro',
-                              fontSize: 15),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Icon(Icons.phone),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () =>
-                                  UrlLauncher.launch("tel://$phoneNumber"),
-                              child: Text(
-                                fPhoneNumber,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SFPro',
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        Text(authProvider.googleSignIn.currentUser.displayName,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'SFPro')),
+                        SizedBox(height: 5),
                         Container(
-                          padding: EdgeInsets.only(
-                            bottom: SizeConfig.safeBlockHorizontal * 5,
+                          child: Row(
+                            children: <Widget>[Text('CULift Van')],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
+                  SizedBox(width: MediaQuery.of(context).size.width / 4),
+                  GestureDetector(
+                      onTap: () => UrlLauncher.launch("tel://$phoneNumber"),
+                      child: Icon(Icons.phone, size: 25))
                 ],
               ),
+            ),
+            Container(
+                padding: EdgeInsets.only(
+                  bottom: SizeConfig.safeBlockHorizontal * 4,
+                )
             ),
             infoDivider(),
           ],
@@ -352,7 +311,7 @@ class _CurrentState extends State<Current> {
               coloredCircle(Colors.black),
               Container(
                 width: 3,
-                height: 160,
+                height: 200,
                 decoration: new BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.rectangle,
