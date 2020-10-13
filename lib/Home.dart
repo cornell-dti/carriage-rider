@@ -1,10 +1,10 @@
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Confirmed_Ride.dart';
 import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
-import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
@@ -39,9 +39,7 @@ class Home extends StatelessWidget {
       return Text(
         text,
         textAlign: TextAlign.left,
-        style: TextStyle(
-            color: color,
-            fontFamily: 'SFPro'),
+        style: TextStyle(color: color, fontFamily: 'SFPro'),
       );
     }
 
@@ -63,7 +61,7 @@ class Home extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.settings, color: Colors.black),
-                title:  sideBarText("Settings", Colors.black),
+                title: sideBarText("Settings", Colors.black),
                 onTap: () {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Settings()));
@@ -122,8 +120,10 @@ class Home extends StatelessWidget {
                 leading: Icon(Icons.check, color: Colors.black),
                 title: sideBarText("Confirmed Ride", Colors.black),
                 onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => ConfirmedRide()));
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ConfirmedRide()));
                 },
               )
             ],
@@ -200,11 +200,9 @@ class Home extends StatelessWidget {
                             textColor: Colors.white,
                             icon: Icon(Icons.add),
                             label: Text('Request Ride',
-                                style: TextStyle(
-                                    fontSize: 18
-                                )),
+                                style: TextStyle(fontSize: 18)),
                           ),
-                        ))
+                        )),
                   ],
                 ),
               ),

@@ -6,7 +6,6 @@ class RideConfirmation extends StatefulWidget {
 }
 
 class _RideConfirmationState extends State<RideConfirmation> {
-
   final requestStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w700,
@@ -24,10 +23,8 @@ class _RideConfirmationState extends State<RideConfirmation> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(height: MediaQuery.of(context).size.height*0.2),
-          Image(
-            image: AssetImage('assets/images/RequestInProgress.png')
-          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+          Image(image: AssetImage('assets/images/RequestInProgress.png')),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -39,13 +36,15 @@ class _RideConfirmationState extends State<RideConfirmation> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('You\'ll be notified via in-app notification', style: descriptionStyle)
+              Text('You\'ll be notified via in-app notification',
+                  style: descriptionStyle)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('and email when your ride is confirmed', style: descriptionStyle)
+              Text('and email when your ride is confirmed',
+                  style: descriptionStyle)
             ],
           ),
           Expanded(
@@ -56,9 +55,10 @@ class _RideConfirmationState extends State<RideConfirmation> {
                   child: ButtonTheme(
                     minWidth: MediaQuery.of(context).size.width * 0.8,
                     height: 45.0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3)),
                     child: RaisedButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.popUntil(context, ModalRoute.withName('/'));
                       },
                       elevation: 3.0,
@@ -67,8 +67,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
                       child: Text('Done'),
                     ),
                   ),
-                )
-            ),
+                )),
           )
         ],
       ),
