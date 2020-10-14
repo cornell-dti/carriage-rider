@@ -41,7 +41,6 @@ class _RideHistoryState extends State<RideHistory> {
         fontSize: 22,
         height: 2);
 
-    final dateFormat = DateFormat("yyyy-MM-dd");
     return Column(
       children: <Widget>[
         ListView.builder(
