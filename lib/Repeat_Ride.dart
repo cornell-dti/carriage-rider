@@ -1,5 +1,6 @@
 import 'package:carriage_rider/Assistance.dart';
 import 'package:carriage_rider/Request_Ride_Time.dart';
+import 'package:carriage_rider/Review_Ride.dart';
 import 'package:flutter/material.dart';
 
 class RepeatRide extends StatefulWidget {
@@ -8,6 +9,7 @@ class RepeatRide extends StatefulWidget {
 }
 
 class _RepeatRideState extends State<RepeatRide> {
+  final _formKey = GlobalKey<FormState>();
 
   final cancelStyle = TextStyle(
     color: Colors.black,
@@ -26,17 +28,47 @@ class _RepeatRideState extends State<RepeatRide> {
     fontSize: 18,
   );
 
-  final descriptionStyle = TextStyle(
-    color: Colors.grey,
-    fontWeight: FontWeight.w100,
-    fontSize: 13
-  );
+  final descriptionStyle =
+      TextStyle(color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
+
+  Widget _buildPickupTimeField() {
+    return TextFormField(
+      decoration: InputDecoration(
+          labelText: 'Pickup Time',
+          hintText: 'Pickup Time',
+          labelStyle: TextStyle(color: Colors.black)),
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your pickup time';
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.black, fontSize: 15),
+    );
+  }
+
+  Widget _buildDropOTimeField() {
+    return TextFormField(
+      decoration: InputDecoration(
+          labelText: 'Drop-off Time',
+          hintText: 'Drop-off Time',
+          labelStyle: TextStyle(color: Colors.black)),
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your drop-off time';
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.black, fontSize: 15),
+    );
+  }
 
   final List<bool> isSelected = [false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
         child: Column(
@@ -48,7 +80,10 @@ class _RepeatRideState extends State<RepeatRide> {
                   child: InkWell(
                     child: Text("Cancel", style: cancelStyle),
                     onTap: () {
-                      Navigator.pop(context, new MaterialPageRoute(builder: (context) => RequestRideTime()));
+                      Navigator.pop(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => RequestRideTime()));
                     },
                   ),
                 ),
@@ -72,7 +107,8 @@ class _RepeatRideState extends State<RepeatRide> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
+                  child: Icon(Icons.brightness_1,
+                      color: Colors.grey[350], size: 12.0),
                 ),
                 Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
               ],
@@ -80,7 +116,9 @@ class _RepeatRideState extends State<RepeatRide> {
             SizedBox(height: 10.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("When do you want to repeat this ride?", style: questionStyle))
+                Flexible(
+                    child: Text("When do you want to repeat this ride?",
+                        style: questionStyle))
               ],
             ),
             SizedBox(height: 15),
@@ -91,31 +129,44 @@ class _RepeatRideState extends State<RepeatRide> {
               ],
             ),
             SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ToggleButtons(
-                  constraints: BoxConstraints.expand(width: 70, height: 60.0),
-                  color: Colors.grey,
-                  selectedColor: Colors.black,
-                  renderBorder: false,
-                  fillColor: Colors.white,
-                  splashColor: Colors.white,
-                  children: <Widget>[
-                    Text('M', style: toggleStyle),
-                    Text('T', style: toggleStyle),
-                    Text('W', style: toggleStyle),
-                    Text('Th', style: toggleStyle),
-                    Text('F', style: toggleStyle)
-                  ],
-                  onPressed: (int index){
-                    setState(() {
-                      isSelected[index] = !isSelected[index];
-                    });
-                  },
-                  isSelected: isSelected,
-                ),
-              ],
+            SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ToggleButtons(
+                    constraints: BoxConstraints.expand(width: 60, height: 60.0),
+                    color: Colors.grey,
+                    selectedColor: Colors.black,
+                    renderBorder: false,
+                    fillColor: Colors.white,
+                    splashColor: Colors.white,
+                    children: <Widget>[
+                      Text('M', style: toggleStyle),
+                      Text('T', style: toggleStyle),
+                      Text('W', style: toggleStyle),
+                      Text('Th', style: toggleStyle),
+                      Text('F', style: toggleStyle)
+                    ],
+                    onPressed: (int index) {
+                      setState(() {
+                        isSelected[index] = !isSelected[index];
+                      });
+                    },
+                    isSelected: isSelected,
+                  ),
+                ],
+              ),
+            ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10.0),
+                  _buildPickupTimeField(),
+                  SizedBox(height: 20.0),
+                  _buildDropOTimeField(),
+                ],
+              ),
             ),
             Expanded(
               child: Align(
@@ -125,10 +176,14 @@ class _RepeatRideState extends State<RepeatRide> {
                     child: ButtonTheme(
                       minWidth: MediaQuery.of(context).size.width * 0.8,
                       height: 45.0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
-                        onPressed: (){
-                          Navigator.push(context, new MaterialPageRoute(builder: (context) => Assistance()));
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => ReviewRide()));
                         },
                         elevation: 3.0,
                         color: Colors.black,
@@ -136,8 +191,7 @@ class _RepeatRideState extends State<RepeatRide> {
                         child: Text('Next'),
                       ),
                     ),
-                  )
-              ),
+                  )),
             )
           ],
         ),
