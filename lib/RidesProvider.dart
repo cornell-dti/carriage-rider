@@ -38,4 +38,30 @@ class PastRidesProvider with ChangeNotifier {
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
   }
+
+  Future<void> createRide(
+      AppConfig config,
+      AuthProvider authProvider,
+      String startLocation,
+      String endLocation,
+      String startTime,
+      String endTime) async {
+    final response = await http.post(
+      "${config.baseUrl}/rides/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'startLocation': startLocation,
+        'endLocation': endLocation,
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+    if (response.statusCode == 200) {
+
+    } else {
+      throw Exception('Failed to update rider.');
+    }
+  }
 }

@@ -1,8 +1,13 @@
 import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
+import 'package:carriage_rider/Ride.dart';
 
 class RequestRideLoc extends StatefulWidget {
+  final Ride ride;
+
+  RequestRideLoc({Key key, this.ride}) : super(key: key);
+
   @override
   _RequestRideLocState createState() => _RequestRideLocState();
 }
@@ -151,7 +156,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(
-                                    builder: (context) => RequestRideTime()));
+                                    builder: (context) =>
+                                        RequestRideTime(ride: widget.ride)));
+                            widget.ride.setFromLocation(fromCtrl.text);
+                            widget.ride.setToLocation(toCtrl.text);
                           },
                           elevation: 3.0,
                           color: Colors.black,

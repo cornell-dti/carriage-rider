@@ -92,7 +92,7 @@ class RiderProvider with ChangeNotifier {
         Rider.fromJson(json),
       );
     } else {
-      throw Exception('Failed to update driver.');
+      throw Exception('Failed to update rider.');
     }
   }
 

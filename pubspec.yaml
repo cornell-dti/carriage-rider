@@ -24,7 +24,7 @@ dependencies:
   http: ^0.12.0+2
   intl: ^0.16.1
   provider: ^4.0.5+1
-  url_launcher: ^5.0.2
+  url_launcher:
   image_picker: ^0.6.6+5
   flutter_datetime_picker: ^1.4.0
   humanize: ^0.3.0

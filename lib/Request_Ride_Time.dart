@@ -1,9 +1,13 @@
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Repeat_Ride.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:carriage_rider/Ride.dart';
 
 class RequestRideTime extends StatefulWidget {
+  final Ride ride;
+
+  RequestRideTime({Key key, this.ride}) : super(key: key);
+
   @override
   _RequestRideTimeState createState() => _RequestRideTimeState();
 }
@@ -14,11 +18,21 @@ class _RequestRideTimeState extends State<RequestRideTime> {
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
 
+  FocusNode focusNode = FocusNode();
+  TextEditingController dateCtrl = TextEditingController();
+  TextEditingController pickUpCtrl = TextEditingController();
+  TextEditingController dropOffCtrl = TextEditingController();
+
   Future<Null> selectPickUpTime(BuildContext context) async {
     _pickUpTime = await showTimePicker(
       context: context,
       initialTime: _pickUpTime,
     );
+    if (_pickUpTime != null) {
+      setState(() {
+        pickUpCtrl.text = "${_pickUpTime.format(context)}";
+      });
+    }
   }
 
   Future<Null> selectDropOffTime(BuildContext context) async {
@@ -26,6 +40,11 @@ class _RequestRideTimeState extends State<RequestRideTime> {
       context: context,
       initialTime: _dropOffTime,
     );
+    if (_dropOffTime != null) {
+      setState(() {
+        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+      });
+    }
   }
 
   final cancelStyle = TextStyle(
@@ -69,11 +88,13 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        dateCtrl.text = format("$selectedDate".split(' ')[0]);
       });
   }
 
   Widget _buildPickupTimeField() {
     return TextFormField(
+      controller: pickUpCtrl,
       decoration: InputDecoration(
           labelText: 'Pickup Time',
           hintText: 'Pickup Time',
@@ -91,6 +112,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
 
   Widget _buildDropOTimeField() {
     return TextFormField(
+      controller: dropOffCtrl,
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
           hintText: 'Drop-off Time',
@@ -196,6 +218,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      controller: dateCtrl,
                       decoration: InputDecoration(
                           labelText: 'Date',
                           hintText: 'Date',
@@ -228,15 +251,22 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
+                            widget.ride
+                                .setDate(format("$selectedDate".split(' ')[0]));
+                            widget.ride.setPickUpTime(
+                                "${_pickUpTime.format(context)}");
+                            widget.ride.setDropOffTime(
+                                "${_dropOffTime.format(context)}");
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(
-                                    builder: (context) => RepeatRide()));
+                                    builder: (context) =>
+                                        RepeatRide(ride: widget.ride)));
                           },
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text('Next'),
+                          child: Text("Next"),
                         ),
                       ),
                     )),
