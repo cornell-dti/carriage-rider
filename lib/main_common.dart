@@ -1,5 +1,6 @@
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/RiderProvider.dart';
+import 'package:carriage_rider/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Login.dart';
@@ -14,31 +15,43 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppConfig appConfig = AppConfig.of(context);
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
-            return AuthProvider(appConfig);
-          })
-        ],
-        child: ChangeNotifierProvider<RiderProvider>(
-            create: (BuildContext context) {
-              return RiderProvider(
-                  appConfig, Provider.of<AuthProvider>(context, listen: false));
-            },
-            child: MaterialApp(
-              title: 'Carriage Rider',
-              theme: ThemeData(
-                  primarySwatch: Colors.green,
-                  fontFamily: 'SFPro',
-                  accentColor: Color.fromRGBO(60, 60, 67, 0.6),
-                  textTheme: TextTheme(
-                    headline5:
-                        TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                    subtitle1:
-                        TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-                  )),
-              home: Logic(),
-              debugShowCheckedModeBanner: false,
-            )));
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
+          return AuthProvider(appConfig);
+        })
+      ],
+      child: ChangeNotifierProvider<RiderProvider>(
+        create: (BuildContext context) {
+          return RiderProvider(
+            appConfig,
+            Provider.of<AuthProvider>(context, listen: false),
+          );
+        },
+        child: ChangeNotifierProvider<PastRidesProvider>(
+          create: (BuildContext context) {
+            return PastRidesProvider(
+              appConfig,
+              Provider.of<AuthProvider>(context, listen: false),
+            );
+          },
+          child: MaterialApp(
+            title: 'Carriage Rider',
+            theme: ThemeData(
+                primarySwatch: Colors.green,
+                fontFamily: 'SFPro',
+                accentColor: Color.fromRGBO(60, 60, 67, 0.6),
+                textTheme: TextTheme(
+                  headline5:
+                      TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                  subtitle1:
+                      TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                )),
+            home: Logic(),
+            debugShowCheckedModeBanner: false,
+          ),
+        ),
+      ),
+    );
   }
 }
 

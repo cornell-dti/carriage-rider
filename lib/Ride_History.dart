@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/RidesProvider.dart';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/RideProvider.dart';
+import 'package:carriage_rider/app_config.dart';
+import 'package:intl/intl.dart';
+import 'package:humanize/humanize.dart' as humanize;
 
 class RideHistory extends StatefulWidget {
   @override
@@ -6,29 +13,98 @@ class RideHistory extends StatefulWidget {
 }
 
 class _RideHistoryState extends State<RideHistory> {
-  @override
-  Widget build(BuildContext context) {
+  Widget _emptyRideHist(BuildContext context) {
+    return Row(
+      children: <Widget>[Text("You have no ride history!")],
+    );
+  }
+
+  Widget _mainHist(BuildContext context, List<Ride> rides) {
+    final monthStyle = TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.2,
+        fontSize: 22,
+        height: 2);
+
+    final dayStyle = TextStyle(
+        color: Colors.grey[700],
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.2,
+        fontSize: 22,
+        height: 2);
+
+    final timeStyle = TextStyle(
+        color: Colors.grey[500],
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.2,
+        fontSize: 22,
+        height: 2);
+
     return Column(
       children: <Widget>[
-        RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'OCT 18th 12:00 PM'),
-          infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),),
-        RideHistoryCard(timeDateWidget: TimeDateHeader(timeDate: 'FEB 29th 12:00 PM'),
-          infoRowWidget: InformationRow(start: 'Location A', end: 'Location B'),)
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: rides.length,
+          itemBuilder: (BuildContext c, int index) => RideHistoryCard(
+            timeDateWidget: Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: RichText(
+                text: TextSpan(
+                    text:
+                        DateFormat('MMM').format(rides[index].startTime) + ' ',
+                    style: monthStyle,
+                    children: [
+                      TextSpan(
+                          text: humanize.ordinal(int.parse(DateFormat('d')
+                                  .format(rides[index].startTime))) +
+                              ' ',
+                          style: dayStyle),
+                      TextSpan(
+                          text: DateFormat('jm').format(rides[index].startTime),
+                          style: timeStyle)
+                    ]),
+              ),
+            ),
+            infoRowWidget: InformationRow(
+                start: rides[index].startLocation,
+                end: rides[index].endLocation),
+          ),
+        )
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    PastRidesProvider ridesProvider = Provider.of<PastRidesProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig appConfig = AppConfig.of(context);
+
+    return FutureBuilder<List<Ride>>(
+        future: ridesProvider.fetchRides(appConfig, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.length == 0) {
+              return _emptyRideHist(context);
+            } else {
+              return _mainHist(context, snapshot.data);
+            }
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
 }
 
-class TimeDateHeader extends StatelessWidget{
-
+class TimeDateHeader extends StatelessWidget {
   const TimeDateHeader({Key key, this.timeDate}) : super(key: key);
 
   final String timeDate;
 
-
   @override
   Widget build(BuildContext context) {
-
     final timeDateStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
@@ -46,11 +122,9 @@ class TimeDateHeader extends StatelessWidget{
       ],
     );
   }
-
 }
 
 class InformationRow extends StatelessWidget {
-
   const InformationRow({Key key, this.start, this.end}) : super(key: key);
 
   final start;
@@ -59,15 +133,15 @@ class InformationRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fromToStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w500,
-        fontSize: 12,
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w500,
+      fontSize: 12,
     );
 
     final infoStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        fontSize: 18,
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 18,
     );
     return Container(
       margin: EdgeInsets.only(left: 25, right: 25),
@@ -80,15 +154,11 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    Text('From', style: fromToStyle)
-                  ],
+                  children: <Widget>[Text('From', style: fromToStyle)],
                 ),
                 SizedBox(height: 2),
                 Row(
-                  children: <Widget>[
-                    Text(start, style: infoStyle)
-                  ],
+                  children: <Widget>[Text(start, style: infoStyle)],
                 )
               ],
             ),
@@ -97,9 +167,7 @@ class InformationRow extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    Icon(Icons.arrow_forward)
-                  ],
+                  children: <Widget>[Icon(Icons.arrow_forward)],
                 )
               ],
             ),
@@ -110,29 +178,24 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    Text('To', style: fromToStyle)
-                  ],
+                  children: <Widget>[Text('To', style: fromToStyle)],
                 ),
                 SizedBox(height: 5),
                 Row(
-                  children: <Widget>[
-                    Text(end, style: infoStyle)
-                  ],
+                  children: <Widget>[Text(end, style: infoStyle)],
                 )
               ],
             ),
           )
         ],
-
       ),
     );
   }
 }
 
 class RideHistoryCard extends StatelessWidget {
-
-  const RideHistoryCard({Key key, this.timeDateWidget, this.infoRowWidget}) : super(key: key);
+  const RideHistoryCard({Key key, this.timeDateWidget, this.infoRowWidget})
+      : super(key: key);
 
   final Widget timeDateWidget;
   final Widget infoRowWidget;
@@ -148,15 +211,11 @@ class RideHistoryCard extends StatelessWidget {
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              timeDateWidget,
-              infoRowWidget
-            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[timeDateWidget, infoRowWidget],
           ),
         ),
       ),
     );
   }
 }
-
-
