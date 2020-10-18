@@ -13,38 +13,39 @@ class Rider {
   final String firstName;
   final String lastName;
   final String pronouns;
-  final Map accessibilityNeeds;
+  final List accessibilityNeeds;
   final String description;
   final String picture;
   final String joinDate;
 
   String fullName() => firstName + " " + lastName;
 
-  Rider({
-    this.id,
-    this.email,
-    this.phoneNumber,
-    this.firstName,
-    this.lastName,
-    this.pronouns,
-    this.accessibilityNeeds,
-    this.description,
-    this.picture,
-    this.joinDate,
-  });
+  Rider(
+      this.id,
+      this.email,
+      this.phoneNumber,
+      this.firstName,
+      this.lastName,
+      this.pronouns,
+      this.accessibilityNeeds,
+      this.description,
+      this.picture,
+      this.joinDate);
 
-  factory Rider.fromJson(Map<String, dynamic> json, String photoUrl) {
+  factory Rider.fromJson(Map<String, dynamic> json) {
     return Rider(
-        id: json['id'],
-        email: json['email'],
-        phoneNumber: json['phoneNumber'],
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        pronouns: json['pronouns'],
-        accessibilityNeeds: json['accessibilityNeeds'],
-        description: json['description'],
-        picture: json['picture'],
-        joinDate: json['joinDate']);
+        json['id'],
+        json['email'],
+        json['phoneNumber'],
+        json['firstName'],
+        json['lastName'],
+        json['pronouns'],
+        List.from(
+          json['accessibility'],
+        ),
+        json['description'],
+        json['picture'],
+        json['joindate']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -88,7 +89,8 @@ class RiderProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(
-          Rider.fromJson(json, authProvider.googleSignIn.currentUser.photoUrl));
+        Rider.fromJson(json),
+      );
     } else {
       throw Exception('Failed to update driver.');
     }
@@ -100,8 +102,7 @@ class RiderProvider with ChangeNotifier {
         .then((response) async {
       if (response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
-        _setInfo(Rider.fromJson(
-            json, authProvider.googleSignIn.currentUser.photoUrl));
+        _setInfo(Rider.fromJson(json));
       } else {
         await Future.delayed(retryDelay);
         fetchRider(config, authProvider);
