@@ -77,7 +77,7 @@ class _RideHistoryState extends State<RideHistory> {
 
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    PastRidesProvider ridesProvider = Provider.of<PastRidesProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     AppConfig appConfig = AppConfig.of(context);
 

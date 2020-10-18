@@ -6,8 +6,8 @@ import 'package:carriage_rider/RideProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-class RidesProvider with ChangeNotifier {
-  RidesProvider(AppConfig config, AuthProvider authProvider) {
+class PastRidesProvider with ChangeNotifier {
+  PastRidesProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;
     callback = () {
       if (authProvider.isAuthenticated) {

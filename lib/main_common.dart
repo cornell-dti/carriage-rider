@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
             Provider.of<AuthProvider>(context, listen: false),
           );
         },
-        child: ChangeNotifierProvider<RidesProvider>(
+        child: ChangeNotifierProvider<PastRidesProvider>(
           create: (BuildContext context) {
-            return RidesProvider(
+            return PastRidesProvider(
               appConfig,
               Provider.of<AuthProvider>(context, listen: false),
             );
