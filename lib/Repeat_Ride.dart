@@ -21,6 +21,8 @@ class _RepeatRideState extends State<RepeatRide> {
   TextEditingController pickUpCtrl = TextEditingController();
   TextEditingController dropOffCtrl = TextEditingController();
 
+  String selectedDays = "";
+
   Future<Null> selectPickUpTime(BuildContext context) async {
     _pickUpTime = await showTimePicker(
       context: context,
@@ -45,6 +47,13 @@ class _RepeatRideState extends State<RepeatRide> {
     }
   }
 
+  @override
+  void initState() {
+    pickUpCtrl.text = widget.ride.pickUpTime;
+    dropOffCtrl.text = widget.ride.dropOffTime;
+    super.initState();
+  }
+
   final cancelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w100,
@@ -67,7 +76,6 @@ class _RepeatRideState extends State<RepeatRide> {
 
   Widget _buildPickupTimeField() {
     return TextFormField(
-      initialValue: widget.ride.pickUpTime,
       controller: pickUpCtrl,
       decoration: InputDecoration(
           labelText: 'Pickup Time',
@@ -86,7 +94,6 @@ class _RepeatRideState extends State<RepeatRide> {
 
   Widget _buildDropOffTimeField() {
     return TextFormField(
-      initialValue: widget.ride.dropOffTime,
       controller: dropOffCtrl,
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
@@ -106,9 +113,7 @@ class _RepeatRideState extends State<RepeatRide> {
   final List<bool> isSelected = [false, false, false, false, false];
   final List<String> days = ["M", "T", "W", "Th", "F"];
 
-  String selectedDays = "";
-
-  void setSelectedDays(String sDays) {
+  String setSelectedDays(String sDays) {
     sDays = "";
 
     for (int i = 0; i < isSelected.length; i++) {
@@ -117,6 +122,7 @@ class _RepeatRideState extends State<RepeatRide> {
       }
     }
     sDays = sDays.substring(0, sDays.length - 1);
+    return sDays;
   }
 
   @override
@@ -204,8 +210,8 @@ class _RepeatRideState extends State<RepeatRide> {
                     onPressed: (int index) {
                       setState(() {
                         isSelected[index] = !isSelected[index];
+                        selectedDays = setSelectedDays(selectedDays);
                       });
-                      setSelectedDays(selectedDays);
                     },
                     isSelected: isSelected,
                   ),
@@ -235,6 +241,9 @@ class _RepeatRideState extends State<RepeatRide> {
                           borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: () {
+                          widget.ride.setPickUpTime(pickUpCtrl.text);
+                          widget.ride.setDropOffTime(dropOffCtrl.text);
+                          widget.ride.setEvery(selectedDays);
                           Navigator.push(
                               context,
                               new MaterialPageRoute(

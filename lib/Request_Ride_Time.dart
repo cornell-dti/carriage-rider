@@ -14,11 +14,11 @@ class RequestRideTime extends StatefulWidget {
 
 class _RequestRideTimeState extends State<RequestRideTime> {
   final _formKey = GlobalKey<FormState>();
+  FocusNode focusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
 
-  FocusNode focusNode = FocusNode();
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController pickUpCtrl = TextEditingController();
   TextEditingController dropOffCtrl = TextEditingController();
@@ -43,6 +43,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     if (_dropOffTime != null) {
       setState(() {
         dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        print(dropOffCtrl.text);
       });
     }
   }
@@ -105,6 +106,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
         }
         return null;
       },
+      textInputAction: TextInputAction.next,
       onTap: () => selectPickUpTime(context),
       style: TextStyle(color: Colors.black, fontSize: 15),
     );
@@ -123,6 +125,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
         }
         return null;
       },
+      textInputAction: TextInputAction.done,
       onTap: () => selectDropOffTime(context),
       style: TextStyle(color: Colors.black, fontSize: 15),
     );
@@ -219,6 +222,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   children: <Widget>[
                     TextFormField(
                       controller: dateCtrl,
+                      focusNode: focusNode,
                       decoration: InputDecoration(
                           labelText: 'Date',
                           hintText: 'Date',
@@ -229,6 +233,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                         }
                         return null;
                       },
+                      textInputAction: TextInputAction.next,
                       onTap: () => _selectDate(context),
                       style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
@@ -251,12 +256,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
-                            widget.ride
-                                .setDate(format("$selectedDate".split(' ')[0]));
-                            widget.ride.setPickUpTime(
-                                "${_pickUpTime.format(context)}");
-                            widget.ride.setDropOffTime(
-                                "${_dropOffTime.format(context)}");
+                            widget.ride.setDate(dateCtrl.text);
+                            widget.ride.setPickUpTime(pickUpCtrl.text);
+                            widget.ride.setDropOffTime(dropOffCtrl.text);
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

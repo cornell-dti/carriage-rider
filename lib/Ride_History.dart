@@ -15,7 +15,9 @@ class RideHistory extends StatefulWidget {
 class _RideHistoryState extends State<RideHistory> {
   Widget _emptyRideHist(BuildContext context) {
     return Row(
-      children: <Widget>[Text("You have no ride history!")],
+      children: <Widget>[
+        SizedBox(width: 15),
+        Text("You have no ride history!")],
     );
   }
 

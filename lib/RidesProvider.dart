@@ -48,7 +48,7 @@ class PastRidesProvider with ChangeNotifier {
       String startTime,
       String endTime) async {
     final response = await http.post(
-      "${config.baseUrl}/rides/${authProvider.id}",
+      "${config.baseUrl}/rides",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

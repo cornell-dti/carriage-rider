@@ -177,7 +177,7 @@ class _ReviewRideState extends State<ReviewRide> {
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text('M W F', style: infoStyle)],
+              children: <Widget>[Text(widget.ride.every, style: infoStyle)],
             ),
             SizedBox(height: 15),
             Row(
