@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:carriage_rider/RiderProvider.dart';
+import 'package:http/http.dart' as http;
+
 
 class Ride {
   final String id;
