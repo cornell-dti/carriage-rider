@@ -42,6 +42,7 @@ class PastRidesProvider with ChangeNotifier {
   Future<void> createRide(
       AppConfig config,
       AuthProvider authProvider,
+      String id,
       String startLocation,
       String endLocation,
       String startTime,
@@ -52,6 +53,7 @@ class PastRidesProvider with ChangeNotifier {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
+        'id': id,
         'startLocation': startLocation,
         'endLocation': endLocation,
         'startTime': startTime,

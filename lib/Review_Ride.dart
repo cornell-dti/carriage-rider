@@ -39,6 +39,7 @@ class _ReviewRideState extends State<ReviewRide> {
   Widget build(BuildContext context) {
     PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
     AuthProvider authProvider = Provider.of(context);
+
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
@@ -205,6 +206,7 @@ class _ReviewRideState extends State<ReviewRide> {
                           rideProvider.createRide(
                               AppConfig.of(context),
                               authProvider,
+                              authProvider.id,
                               widget.ride.fromLocation,
                               widget.ride.toLocation,
                               widget.ride.pickUpTime,
