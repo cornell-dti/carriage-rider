@@ -149,7 +149,7 @@ class _RepeatRideState extends State<RepeatRide> {
                 ),
               ],
             ),
-            SizedBox(height: 50.0),
+            SizedBox(height: 30.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[

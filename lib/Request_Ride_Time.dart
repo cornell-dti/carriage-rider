@@ -135,7 +135,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               Row(
@@ -154,7 +154,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   ),
                 ],
               ),
-              SizedBox(height: 28.0),
+              SizedBox(height: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[

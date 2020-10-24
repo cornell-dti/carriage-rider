@@ -19,7 +19,6 @@ class RequestRideLoc extends StatefulWidget {
 
 class _RequestRideLocState extends State<RequestRideLoc> {
   final _formKey = GlobalKey<FormState>();
-  FocusNode focusNode = FocusNode();
   TextEditingController fromCtrl = TextEditingController();
   TextEditingController toCtrl = TextEditingController();
 
@@ -60,7 +59,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   ),
                 ],
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -95,15 +94,14 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   )
                 ],
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 20.0),
               Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
                     FromLocation(fromCtrl: fromCtrl),
-                    SizedBox(height: 30.0),
+                    SizedBox(height: 10.0),
                     ToLocation(toCtrl: toCtrl),
-                    SizedBox(height: 10.0)
                   ],
                 ),
               ),
@@ -155,7 +153,10 @@ class _FromLocationState extends State<FromLocation> {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.fromCtrl,
-          decoration: InputDecoration(labelText: 'From', hintText: 'From')),
+          decoration: InputDecoration(
+              labelText: 'From',
+              hintText: 'From',
+              labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);
       },
@@ -214,7 +215,10 @@ class _ToLocationState extends State<ToLocation> {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.toCtrl,
-          decoration: InputDecoration(labelText: 'To', hintText: 'To')),
+          decoration: InputDecoration(
+              labelText: 'To',
+              hintText: 'To',
+              labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);
       },
