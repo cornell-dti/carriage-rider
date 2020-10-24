@@ -2,6 +2,11 @@ import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
 import 'package:carriage_rider/Ride.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/LocationsProvider.dart';
+import 'package:carriage_rider/app_config.dart';
+import 'package:provider/provider.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
@@ -17,46 +22,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   FocusNode focusNode = FocusNode();
   TextEditingController fromCtrl = TextEditingController();
   TextEditingController toCtrl = TextEditingController();
-
-  Widget _buildFromField() {
-    return TextFormField(
-      controller: fromCtrl,
-      focusNode: focusNode,
-      decoration: InputDecoration(
-        labelText: 'From',
-        hintText: 'From',
-        labelStyle: TextStyle(color: Colors.black),
-      ),
-      textInputAction: TextInputAction.next,
-      validator: (input) {
-        if (input.isEmpty) {
-          return 'Please enter your location';
-        }
-        return null;
-      },
-      style: TextStyle(color: Colors.black, fontSize: 15),
-      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-    );
-  }
-
-  Widget _buildToField() {
-    return TextFormField(
-      controller: toCtrl,
-      decoration: InputDecoration(
-        labelText: 'To',
-        hintText: 'To',
-        labelStyle: TextStyle(color: Colors.black),
-      ),
-      textInputAction: TextInputAction.done,
-      validator: (input) {
-        if (input.isEmpty) {
-          return 'Please enter your destination';
-        }
-        return null;
-      },
-      style: TextStyle(color: Colors.black, fontSize: 15),
-    );
-  }
 
   final cancelStyle = TextStyle(
     color: Colors.black,
@@ -74,6 +39,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
         body: Container(
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
@@ -134,9 +100,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    _buildFromField(),
+                    FromLocation(fromCtrl: fromCtrl),
                     SizedBox(height: 30.0),
-                    _buildToField(),
+                    ToLocation(toCtrl: toCtrl),
                     SizedBox(height: 10.0)
                   ],
                 ),
@@ -172,5 +138,123 @@ class _RequestRideLocState extends State<RequestRideLoc> {
             ],
           ),
         ));
+  }
+}
+
+class FromLocation extends StatefulWidget {
+  final TextEditingController fromCtrl;
+
+  FromLocation({Key key, this.fromCtrl}) : super(key: key);
+
+  @override
+  _FromLocationState createState() => _FromLocationState();
+}
+
+class _FromLocationState extends State<FromLocation> {
+  Widget _fromField(BuildContext context, List<Location> locations) {
+    return TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+          controller: widget.fromCtrl,
+          decoration: InputDecoration(labelText: 'From', hintText: 'From')),
+      suggestionsCallback: (pattern) {
+        return LocationsProvider.getSuggestions(pattern, locations);
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        widget.fromCtrl.text = suggestion;
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please select a location';
+        }
+        return null;
+      },
+      onSaved: (value) => widget.fromCtrl.text = value,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig appConfig = AppConfig.of(context);
+
+    return FutureBuilder<List<Location>>(
+        future: locationsProvider.fetchLocations(appConfig, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _fromField(context, snapshot.data);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+}
+
+class ToLocation extends StatefulWidget {
+  final TextEditingController toCtrl;
+
+  ToLocation({Key key, this.toCtrl}) : super(key: key);
+
+  @override
+  _ToLocationState createState() => _ToLocationState();
+}
+
+class _ToLocationState extends State<ToLocation> {
+  Widget _toField(BuildContext context, List<Location> locations) {
+    return TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+          controller: widget.toCtrl,
+          decoration: InputDecoration(labelText: 'To', hintText: 'To')),
+      suggestionsCallback: (pattern) {
+        return LocationsProvider.getSuggestions(pattern, locations);
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        widget.toCtrl.text = suggestion;
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please select a location';
+        }
+        return null;
+      },
+      onSaved: (value) => widget.toCtrl.text = value,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig appConfig = AppConfig.of(context);
+
+    return FutureBuilder<List<Location>>(
+        future: locationsProvider.fetchLocations(appConfig, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _toField(context, snapshot.data);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }

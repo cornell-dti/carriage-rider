@@ -43,7 +43,6 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     if (_dropOffTime != null) {
       setState(() {
         dropOffCtrl.text = "${_dropOffTime.format(context)}";
-        print(dropOffCtrl.text);
       });
     }
   }

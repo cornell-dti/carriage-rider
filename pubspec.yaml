@@ -28,6 +28,7 @@ dependencies:
   image_picker: ^0.6.6+5
   flutter_datetime_picker: ^1.4.0
   humanize: ^0.3.0
+  flutter_typeahead: ^1.8.8
 
 dev_dependencies:
   flutter_test:

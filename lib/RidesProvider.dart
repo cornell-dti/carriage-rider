@@ -25,7 +25,6 @@ class PastRidesProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
-      print(rides);
       return rides;
     } else {
       throw Exception('Failed to load rides.');

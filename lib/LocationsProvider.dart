@@ -52,4 +52,10 @@ class LocationsProvider with ChangeNotifier {
         data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;
   }
+
+  static List<String> getSuggestions(String query, List<Location> locations) {
+    List<String> matches = locations.map((e) => e.name).toList();
+    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+    return matches;
+  }
 }
