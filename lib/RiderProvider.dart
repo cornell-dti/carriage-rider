@@ -47,7 +47,7 @@ class Rider {
         ),
         json['description'],
         json['picture'],
-        json['joindate'],
+        json['joinDate'],
         json['address']);
   }
 
