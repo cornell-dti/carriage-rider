@@ -169,6 +169,7 @@ class LocationsInfo extends StatelessWidget {
             Navigator.of(context).pop(controller.text);
           },
           child: const Text('Submit'),
+          textColor: Colors.black
         ),
       ],
     );
