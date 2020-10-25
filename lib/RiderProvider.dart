@@ -13,7 +13,7 @@ class Rider {
   final String firstName;
   final String lastName;
   final String pronouns;
-  final List accessibilityNeeds;
+  final List accessibility;
   final String description;
   final String picture;
   final String joinDate;
@@ -27,7 +27,7 @@ class Rider {
       this.firstName,
       this.lastName,
       this.pronouns,
-      this.accessibilityNeeds,
+      this.accessibility,
       this.description,
       this.picture,
       this.joinDate);
@@ -45,7 +45,7 @@ class Rider {
         ),
         json['description'],
         json['picture'],
-        json['joindate']);
+        json['joinDate']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -55,7 +55,7 @@ class Rider {
         'firstName': firstName,
         'lastName': lastName,
         'pronouns': picture,
-        'accessibilityNeeds': accessibilityNeeds,
+        'accessibility': accessibility,
         'description': description,
         'picture': picture,
         'joinDate': joinDate,
