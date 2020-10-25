@@ -45,7 +45,7 @@ class Rider {
         ),
         json['description'],
         json['picture'],
-        json['joindate']);
+        json['joinDate']);
   }
 
   Map<String, dynamic> toJson() => {
