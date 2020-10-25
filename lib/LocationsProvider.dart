@@ -42,7 +42,7 @@ class LocationsProvider with ChangeNotifier {
       List<Location> locations = _locationsFromJson(responseBody);
       return locations;
     } else {
-      throw Exception('Failed to load rides.');
+      throw Exception('Failed to load locations.');
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carriage_rider/RiderProvider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:carriage_rider/AuthProvider.dart';
@@ -40,8 +41,7 @@ class PastRidesProvider with ChangeNotifier {
 
   Future<void> createRide(
       AppConfig config,
-      AuthProvider authProvider,
-      String id,
+      RiderProvider riderProvider,
       String startLocation,
       String endLocation,
       String startTime,
@@ -51,18 +51,17 @@ class PastRidesProvider with ChangeNotifier {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'id': id,
+      body: jsonEncode(<String, dynamic>{
+        'rider': riderProvider.info,
         'startLocation': startLocation,
         'endLocation': endLocation,
         'startTime': startTime,
         'endTime': endTime,
       }),
     );
-    if (response.statusCode == 200) {
-
-    } else {
-      throw Exception('Failed to update rider.');
+    print(response);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create ride.');
     }
   }
 }

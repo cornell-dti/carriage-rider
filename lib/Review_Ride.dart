@@ -1,5 +1,6 @@
 import 'package:carriage_rider/Assistance.dart';
 import 'package:carriage_rider/Ride_Confirmation.dart';
+import 'package:carriage_rider/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class _ReviewRideState extends State<ReviewRide> {
   Widget build(BuildContext context) {
     PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
     AuthProvider authProvider = Provider.of(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -205,8 +207,7 @@ class _ReviewRideState extends State<ReviewRide> {
                         onPressed: () {
                           rideProvider.createRide(
                               AppConfig.of(context),
-                              authProvider,
-                              authProvider.id,
+                              riderProvider,
                               widget.ride.fromLocation,
                               widget.ride.toLocation,
                               widget.ride.pickUpTime,
