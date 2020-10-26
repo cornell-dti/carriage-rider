@@ -39,7 +39,6 @@ class _ReviewRideState extends State<ReviewRide> {
   @override
   Widget build(BuildContext context) {
     PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
 
     return Scaffold(
