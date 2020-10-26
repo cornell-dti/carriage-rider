@@ -4,7 +4,6 @@ import 'package:carriage_rider/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'RidesProvider.dart';
 
