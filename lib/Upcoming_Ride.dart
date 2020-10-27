@@ -1,281 +1,239 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-class UpcomingRide extends StatelessWidget {
+class UpcomingRide extends StatefulWidget {
+  @override
+  _UpcomingRideState createState() => _UpcomingRideState();
+}
+
+class _UpcomingRideState extends State<UpcomingRide> {
   @override
   Widget build(BuildContext context) {
-    final directionStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 12,
-        height: 2
-    );
-
-    final infoStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.2,
-        fontSize: 18,
-        height: 2
-    );
-
     final monthStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.2,
-        fontSize: 18,
-        height: 2
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.2,
+      fontSize: 22,
     );
 
     final dayStyle = TextStyle(
-        color: Colors.grey[700],
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 18,
-        height: 2
+      color: Colors.grey[700],
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.2,
+      fontSize: 22,
     );
 
     final timeStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.2,
-        fontSize: 17,
-        height: 2
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.2,
+      fontSize: 22,
     );
 
     final confirmationStyle = TextStyle(
-        color: Colors.green,
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 12,
-        height: 2
+      color: Colors.green,
+      fontWeight: FontWeight.w500,
+      fontSize: 12,
+    );
+
+    final requestedStyle = TextStyle(
+      color: Colors.orangeAccent,
+      fontWeight: FontWeight.w500,
+      fontSize: 12,
     );
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 17.0),
-      height: MediaQuery.of(context).size.height * 0.36,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 15.0),
-            width: MediaQuery.of(context).size.width*0.65,
-            height: MediaQuery.of(context).size.height,
-            child: Card(
-              elevation: 3.0,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 2.0),
-                          child: Text('OCT', style: monthStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 2.0, top: 1.0),
-                          child: Text('18th', style: dayStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 2.0, top: 3.0),
-                          child: Text('12:00 PM', style: timeStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Icon(Icons.touch_app),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('From', style: directionStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Uris Hall', style: infoStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('To', style: directionStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Cascadilla Hall', style: infoStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Ride Confirmed', style: confirmationStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Icon(Icons.person_pin, size: 38.0),
-                        ),
-                        SizedBox(width: 5.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Davea Butler', style: infoStyle),
-                            Row(
-                              children: <Widget>[
-                                Icon(Icons.phone, size: 13.0,),
-                                SizedBox(width: 5.0),
-                                GestureDetector(
-                                  onTap: () => UrlLauncher.launch("tel://13232315234"),
-                                  child: Text('+1 323-231-5234', style: TextStyle(color: Colors.grey[600])),
-                                )
-                              ],
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+          UpcomingRideCard(
+            rideStatus: Text('Ride Confirmed', style: confirmationStyle),
+            timeDateWidget: RichText(
+              text: TextSpan(text: 'OCT' + ' ', style: monthStyle, children: [
+                TextSpan(text: '31th' + ' ', style: dayStyle),
+                TextSpan(text: '10:00PM', style: timeStyle)
+              ]),
+            ),
+            rideInfoWidget: RideInfoWidget(
+              start: 'Uris Hall',
+              end: 'Cascadila Hall',
+            ),
+            driverInfoWidget: DriverInfoWidget(
+              driverName: 'Driver',
+              driverStatus: 'Confirmed',
             ),
           ),
           Container(
-            margin: EdgeInsets.only(right: 15.0),
-            width: MediaQuery.of(context).size.width*0.65,
-            height: MediaQuery.of(context).size.height,
-            child: Card(
-              elevation: 3.0,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 2.0),
-                          child: Text('NOV', style: monthStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 2.0, top: 1.0),
-                          child: Text('20th', style: dayStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 2.0, top: 3.0),
-                          child: Text('1:00 PM', style: timeStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Icon(Icons.touch_app),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('From', style: directionStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Balch Hall', style: infoStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('To', style: directionStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Statler Hall', style: infoStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Ride Confirmed', style: confirmationStyle)
-                        ],
-                      )
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Icon(Icons.person_pin, size: 38.0),
-                        ),
-                        SizedBox(width: 5.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('George Michael', style: infoStyle),
-                            Row(
-                              children: <Widget>[
-                                Icon(Icons.phone, size: 13.0,),
-                                SizedBox(width: 5.0),
-                                Text('+ 323-231-5234')
-                              ],
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+            margin: EdgeInsets.only(right: 17),
+            child: UpcomingRideCard(
+              rideStatus: Text('Ride Requested', style: requestedStyle),
+              timeDateWidget: RichText(
+                text: TextSpan(text: 'NOV' + ' ', style: monthStyle, children: [
+                  TextSpan(text: '26th' + ' ', style: dayStyle),
+                  TextSpan(text: '3:00PM', style: timeStyle)
+                ]),
+              ),
+              rideInfoWidget: RideInfoWidget(
+                start: 'Balch Hall',
+                end: 'Gates Hall',
+              ),
+              driverInfoWidget: DriverInfoWidget(
+                driverName: 'Driver',
+                driverStatus: 'TBD',
               ),
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class RideInfoWidget extends StatelessWidget {
+  const RideInfoWidget({Key key, this.start, this.end}) : super(key: key);
+
+  final start;
+  final end;
+
+  @override
+  Widget build(BuildContext context) {
+    final fromToStyle = TextStyle(
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w500,
+      fontSize: 12,
+    );
+
+    final infoStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+    );
+
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'From',
+            style: fromToStyle,
+          ),
+          Text(
+            start,
+            style: infoStyle,
+          ),
+          SizedBox(height: 7),
+          Text(
+            'To',
+            style: fromToStyle,
+          ),
+          Text(
+            end,
+            style: infoStyle,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DriverInfoWidget extends StatelessWidget {
+  const DriverInfoWidget({Key key, this.driverName, this.driverStatus})
+      : super(key: key);
+
+  final driverName;
+  final driverStatus;
+
+  @override
+  Widget build(BuildContext context) {
+    final driverToStyle = TextStyle(
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w500,
+      fontSize: 14,
+    );
+
+    final rideStatusStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+    );
+
+    return Row(
+      children: <Widget>[
+        Icon(Icons.phone),
+        SizedBox(
+          width: 10.0,
+        ),
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                driverName,
+                style: driverToStyle,
+              ),
+              Text(
+                driverStatus,
+                style: rideStatusStyle,
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class UpcomingRideCard extends StatelessWidget {
+  const UpcomingRideCard(
+      {Key key,
+      this.rideStatus,
+      this.timeDateWidget,
+      this.rideInfoWidget,
+      this.driverInfoWidget})
+      : super(key: key);
+
+  final Widget rideStatus;
+  final Widget timeDateWidget;
+  final Widget rideInfoWidget;
+  final Widget driverInfoWidget;
+//  final Widget driverInfoWidget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 17.0, bottom: 15.0),
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: Card(
+        elevation: 3.0,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, top: 22, bottom: 22),
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      rideStatus,
+                      SizedBox(height: 7),
+                      timeDateWidget,
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                rideInfoWidget,
+                SizedBox(
+                  height: 15,
+                ),
+                driverInfoWidget
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
