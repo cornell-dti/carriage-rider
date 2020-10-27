@@ -148,6 +148,7 @@ class Home extends StatelessWidget {
                       expandedHeight: 100,
                       collapsedHeight: 100,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      actions: [Container()],
                       flexibleSpace: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
