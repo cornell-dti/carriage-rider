@@ -1,5 +1,10 @@
 import 'dart:core';
 import 'package:carriage_rider/RiderProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:humanize/humanize.dart';
+import 'package:intl/intl.dart';
+
+import 'TextThemes.dart';
 
 class Ride {
   final String id;
@@ -28,6 +33,25 @@ class Ride {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       rider: Rider.fromJson(json['rider']),
+    );
+  }
+
+  Widget buildStartTime() {
+    return RichText(
+      text: TextSpan(
+          text: DateFormat('MMM').format(startTime).toUpperCase() + ' ',
+          style: TextThemes.monthStyle,
+          children: [
+            TextSpan(
+                text: ordinal(int.parse(DateFormat('d')
+                    .format(startTime))) +
+                    ' ',
+                style: TextThemes.dayStyle),
+            TextSpan(
+                text: DateFormat('jm').format(startTime),
+                style: TextThemes.timeStyle)
+          ]
+      ),
     );
   }
 }
