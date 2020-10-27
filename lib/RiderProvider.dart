@@ -14,6 +14,7 @@ class Rider {
   final String lastName;
   final String pronouns;
   final List accessibilityNeeds;
+  // ids of favorite locations
   final List<String> favoriteLocations;
   final String description;
   final String picture;

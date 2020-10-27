@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/Location.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,8 +31,7 @@ class _SettingsState extends State<Settings> {
     double _picMarginTB = _picDiameter / 8;
 
     if (riderProvider.hasInfo()) {
-      // String phoneNumber = riderProvider.info.phoneNumber;
-      String phoneNumber = "9199710670";
+      String phoneNumber = riderProvider.info.phoneNumber;
       String fPhoneNumber = phoneNumber.substring(0, 3) +
           "-" +
           phoneNumber.substring(3, 6) +
@@ -151,13 +151,13 @@ class _SettingsState extends State<Settings> {
 }
 
 class SelectionController<T> {
-  final List<String> options;
-  Set<String> selected;
+  final List<T> options;
+  Set<T> selected;
   SelectionController(this.options, this.selected);
 }
 
 class LocationsSelector extends StatefulWidget {
-  final SelectionController<String> controller;
+  final SelectionController<Location> controller;
 
   LocationsSelector(this.controller);
 
@@ -170,27 +170,31 @@ class LocationsSelector extends StatefulWidget {
 class LocationsSelectorState extends State<LocationsSelector> {
   @override
   Widget build(BuildContext context) {
-    List<String> options = widget.controller.options;
-    Set<String> selected = widget.controller.selected;
-    return ListView.separated(
-        itemCount: options.length,
-        itemBuilder: (context, index) {
-          String id = options[index];
-          String name = options[index];
-          return FlatButton(
-              color: selected.contains(id) ? Colors.grey : Colors.white,
+    List<Location> options = widget.controller.options;
+    Set<Location> selected = widget.controller.selected;
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: options.length,
+      itemBuilder: (context, index) {
+        Location location = options[index];
+        return SizedBox(
+          height: 80,
+          child: FlatButton(
+              color: selected.contains(location) ? Colors.grey : Colors.white,
               onPressed: () {
                 setState(() {
-                  if (selected.contains(id)) {
-                    selected.remove(id);
+                  if (selected.contains(location)) {
+                    selected.remove(location);
                   } else {
-                    selected.add(id);
+                    selected.add(location);
                   }
                 });
               },
-              child: Text(name));
-        },
-        separatorBuilder: (context, index) => Divider(color: Colors.black));
+              child: Text(location.name)),
+        );
+      },
+      // separatorBuilder: (context, index) => Divider(color: Colors.black)
+    );
   }
 }
 
@@ -219,21 +223,25 @@ class LocationsInfo extends StatelessWidget {
     );
   }
 
-  Widget _favoritesEditDialog(BuildContext context) {
+  Widget _favoritesEditDialog(
+      BuildContext context, Map<String, Location> locations) {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
-    Set<String> picked = Set<String>();
-    picked.add("hi");
-    final controller = SelectionController<String>(
-        ["hi", 'these', 'are', 'test', 'values'], picked);
+    Set<Location> picked = Set<Location>();
+    riderProvider.info.favoriteLocations.forEach((e) {
+      if (locations.containsKey(e)) picked.add(locations[e]);
+    });
+    final controller =
+        SelectionController<Location>(locations.values.toList(), picked);
+    // on pop, returns iterable of ids of selected locations
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, controller.selected);
+        Navigator.pop(context, controller.selected.map((e) => e.id));
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: PageTitle(title: 'Favorite Locations'),
+          title: PageTitle(title: 'Settings'),
           backgroundColor: Colors.white,
           titleSpacing: 0.0,
           iconTheme: IconThemeData(color: Colors.black),
@@ -267,13 +275,18 @@ class LocationsInfo extends StatelessWidget {
   void _editFavorites(BuildContext context) async {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
-
-    Set<String> res = await Navigator.push(
-        context, MaterialPageRoute(builder: _favoritesEditDialog));
+    Map<String, Location> locations =
+        locationsById(await fetchLocations(context));
+    List<String> res = (await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    _favoritesEditDialog(context, locations))))
+        .toList();
     assert(res != null);
 
     riderProvider.setFavoriteLocations(AppConfig.of(context),
-        Provider.of<AuthProvider>(context, listen: false), res.toList());
+        Provider.of<AuthProvider>(context, listen: false), res);
   }
 
   final String title;
