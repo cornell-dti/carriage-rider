@@ -13,28 +13,4 @@ class Ride {
       this.pickUpTime,
       this.dropOffTime,
       this.every});
-
-  void setFromLocation(String fLoc) {
-    this.fromLocation = fLoc;
-  }
-
-  void setToLocation(String tLoc) {
-    this.toLocation = tLoc;
-  }
-
-  void setDate(String date) {
-    this.date = date;
-  }
-
-  void setPickUpTime(String pTime) {
-    this.pickUpTime = pTime;
-  }
-
-  void setDropOffTime(String dTime) {
-    this.dropOffTime = dTime;
-  }
-
-  void setEvery(String every) {
-    this.every = every;
-  }
 }

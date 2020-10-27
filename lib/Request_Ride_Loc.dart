@@ -121,8 +121,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                                 new MaterialPageRoute(
                                     builder: (context) =>
                                         RequestRideTime(ride: widget.ride)));
-                            widget.ride.setFromLocation(fromCtrl.text);
-                            widget.ride.setToLocation(toCtrl.text);
+                            widget.ride.fromLocation = fromCtrl.text;
+                            widget.ride.toLocation = toCtrl.text;
                           },
                           elevation: 3.0,
                           color: Colors.black,
@@ -154,7 +154,6 @@ class _FromLocationState extends State<FromLocation> {
           controller: widget.fromCtrl,
           decoration: InputDecoration(
               labelText: 'From',
-              hintText: 'From',
               labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);
@@ -216,7 +215,6 @@ class _ToLocationState extends State<ToLocation> {
           controller: widget.toCtrl,
           decoration: InputDecoration(
               labelText: 'To',
-              hintText: 'To',
               labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);

@@ -97,7 +97,6 @@ class _RequestRideTimeState extends State<RequestRideTime> {
       controller: pickUpCtrl,
       decoration: InputDecoration(
           labelText: 'Pickup Time',
-          hintText: 'Pickup Time',
           labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
@@ -116,7 +115,6 @@ class _RequestRideTimeState extends State<RequestRideTime> {
       controller: dropOffCtrl,
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
-          hintText: 'Drop-off Time',
           labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
@@ -255,9 +253,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
-                            widget.ride.setDate(dateCtrl.text);
-                            widget.ride.setPickUpTime(pickUpCtrl.text);
-                            widget.ride.setDropOffTime(dropOffCtrl.text);
+                            widget.ride.date = dateCtrl.text;
+                            widget.ride.pickUpTime = pickUpCtrl.text;
+                            widget.ride.dropOffTime = dropOffCtrl.text;
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

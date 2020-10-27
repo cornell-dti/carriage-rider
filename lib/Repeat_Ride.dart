@@ -15,42 +15,62 @@ class RepeatRide extends StatefulWidget {
 class _RepeatRideState extends State<RepeatRide> {
   final _formKey = GlobalKey<FormState>();
 
-  TimeOfDay _pickUpTime = TimeOfDay.now();
-  TimeOfDay _dropOffTime = TimeOfDay.now();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
-  TextEditingController pickUpCtrl = TextEditingController();
-  TextEditingController dropOffCtrl = TextEditingController();
+  TextEditingController sDateCtrl = TextEditingController();
+  TextEditingController eDateCtrl = TextEditingController();
 
   String selectedDays = "";
 
-  Future<Null> selectPickUpTime(BuildContext context) async {
-    _pickUpTime = await showTimePicker(
-      context: context,
-      initialTime: _pickUpTime,
-    );
-    if (_pickUpTime != null) {
-      setState(() {
-        pickUpCtrl.text = "${_pickUpTime.format(context)}";
-      });
-    }
+  String format(String date) {
+    var dates = date.split('-');
+    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    return formatDate;
   }
 
-  Future<Null> selectDropOffTime(BuildContext context) async {
-    _dropOffTime = await showTimePicker(
+  _selectStartDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
       context: context,
-      initialTime: _dropOffTime,
+      initialDate: startDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light(),
+          child: child,
+        );
+      },
     );
-    if (_dropOffTime != null) {
+    if (picked != null && picked != startDate)
       setState(() {
-        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        startDate = picked;
+        sDateCtrl.text = format("$startDate".split(' ')[0]);
       });
-    }
+  }
+
+  _selectEndDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: endDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light(),
+          child: child,
+        );
+      },
+    );
+    if (picked != null && picked != endDate)
+      setState(() {
+        endDate = picked;
+        eDateCtrl.text = format("$endDate".split(' ')[0]);
+      });
   }
 
   @override
   void initState() {
-    pickUpCtrl.text = widget.ride.pickUpTime;
-    dropOffCtrl.text = widget.ride.dropOffTime;
     super.initState();
   }
 
@@ -76,36 +96,34 @@ class _RepeatRideState extends State<RepeatRide> {
 
   Widget _buildPickupTimeField() {
     return TextFormField(
-      controller: pickUpCtrl,
+      controller: sDateCtrl,
       decoration: InputDecoration(
-          labelText: 'Pickup Time',
-          hintText: 'Pickup Time',
+          labelText: 'Start Date',
           labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your pickup time';
+          return 'Please enter your start date';
         }
         return null;
       },
-      onTap: () => selectPickUpTime(context),
+      onTap: () => _selectStartDate(context),
       style: TextStyle(color: Colors.black, fontSize: 15),
     );
   }
 
   Widget _buildDropOffTimeField() {
     return TextFormField(
-      controller: dropOffCtrl,
+      controller: eDateCtrl,
       decoration: InputDecoration(
-          labelText: 'Drop-off Time',
-          hintText: 'Drop-off Time',
+          labelText: 'End Date',
           labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your drop-off time';
+          return 'Please enter your end date';
         }
         return null;
       },
-      onTap: () => selectDropOffTime(context),
+      onTap: () => _selectEndDate(context),
       style: TextStyle(color: Colors.black, fontSize: 15),
     );
   }
@@ -241,9 +259,9 @@ class _RepeatRideState extends State<RepeatRide> {
                           borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: () {
-                          widget.ride.setPickUpTime(pickUpCtrl.text);
-                          widget.ride.setDropOffTime(dropOffCtrl.text);
-                          widget.ride.setEvery(selectedDays);
+                          widget.ride.date = sDateCtrl.text;
+                          widget.ride.date = (eDateCtrl.text);
+                          widget.ride.every = selectedDays;                                                                                                                        ;
                           Navigator.push(
                               context,
                               new MaterialPageRoute(
