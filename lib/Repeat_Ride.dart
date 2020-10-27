@@ -261,7 +261,7 @@ class _RepeatRideState extends State<RepeatRide> {
                         onPressed: () {
                           widget.ride.date = sDateCtrl.text;
                           widget.ride.date = eDateCtrl.text;
-                          widget.ride.every = selectedDays;                                                                                                                        ;
+                          widget.ride.every = selectedDays;
                           Navigator.push(
                               context,
                               new MaterialPageRoute(
