@@ -30,7 +30,8 @@ class _SettingsState extends State<Settings> {
     double _picMarginTB = _picDiameter / 8;
 
     if (riderProvider.hasInfo()) {
-      String phoneNumber = riderProvider.info.phoneNumber;
+      // String phoneNumber = riderProvider.info.phoneNumber;
+      String phoneNumber = "9199710670";
       String fPhoneNumber = phoneNumber.substring(0, 3) +
           "-" +
           phoneNumber.substring(3, 6) +
@@ -149,6 +150,50 @@ class _SettingsState extends State<Settings> {
   }
 }
 
+class SelectionController<T> {
+  final List<String> options;
+  Set<String> selected;
+  SelectionController(this.options, this.selected);
+}
+
+class LocationsSelector extends StatefulWidget {
+  final SelectionController<String> controller;
+
+  LocationsSelector(this.controller);
+
+  @override
+  State<LocationsSelector> createState() {
+    return LocationsSelectorState();
+  }
+}
+
+class LocationsSelectorState extends State<LocationsSelector> {
+  @override
+  Widget build(BuildContext context) {
+    List<String> options = widget.controller.options;
+    Set<String> selected = widget.controller.selected;
+    return ListView.separated(
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          String id = options[index];
+          String name = options[index];
+          return FlatButton(
+              color: selected.contains(id) ? Colors.grey : Colors.white,
+              onPressed: () {
+                setState(() {
+                  if (selected.contains(id)) {
+                    selected.remove(id);
+                  } else {
+                    selected.add(id);
+                  }
+                });
+              },
+              child: Text(name));
+        },
+        separatorBuilder: (context, index) => Divider(color: Colors.black));
+  }
+}
+
 class LocationsInfo extends StatelessWidget {
   LocationsInfo(this.title);
 
@@ -165,13 +210,41 @@ class LocationsInfo extends StatelessWidget {
       ),
       actions: <Widget>[
         new FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop(controller.text);
-          },
-          child: const Text('Submit'),
-          textColor: Colors.black
-        ),
+            onPressed: () {
+              Navigator.of(context).pop(controller.text);
+            },
+            child: const Text('Submit'),
+            textColor: Colors.black),
       ],
+    );
+  }
+
+  Widget _favoritesEditDialog(BuildContext context) {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+    Set<String> picked = Set<String>();
+    picked.add("hi");
+    final controller = SelectionController<String>(
+        ["hi", 'these', 'are', 'test', 'values'], picked);
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, controller.selected);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: PageTitle(title: 'Favorite Locations'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.maybePop(context),
+          ),
+        ),
+        body: LocationsSelector(controller),
+      ),
     );
   }
 
@@ -191,8 +264,16 @@ class LocationsInfo extends StatelessWidget {
         Provider.of<AuthProvider>(context, listen: false), res);
   }
 
-  void _editFavorites(BuildContext context) {
-    // TODO: favorites editing
+  void _editFavorites(BuildContext context) async {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+
+    Set<String> res = await Navigator.push(
+        context, MaterialPageRoute(builder: _favoritesEditDialog));
+    assert(res != null);
+
+    riderProvider.setFavoriteLocations(AppConfig.of(context),
+        Provider.of<AuthProvider>(context, listen: false), res.toList());
   }
 
   final String title;
