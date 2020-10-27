@@ -17,6 +17,7 @@ class Rider {
   final String description;
   final String picture;
   final String joinDate;
+  final String address;
 
   String fullName() => firstName + " " + lastName;
 
@@ -30,7 +31,8 @@ class Rider {
       this.accessibilityNeeds,
       this.description,
       this.picture,
-      this.joinDate);
+      this.joinDate,
+      this.address);
 
   factory Rider.fromJson(Map<String, dynamic> json) {
     return Rider(
@@ -45,7 +47,8 @@ class Rider {
         ),
         json['description'],
         json['picture'],
-        json['joinDate']);
+        json['joinDate'],
+        json['address']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -110,76 +113,60 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  Future<void> updateRider(AppConfig config, AuthProvider authProvider,
+  Future<void> sendUpdate(AppConfig config, AuthProvider authProvider,
+      Map<String, String> changes) async {
+    final response = await http.put(
+      "${config.baseUrl}/riders/${authProvider.id}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(changes),
+    );
+    check(authProvider, response);
+  }
+
+  void updateRider(AppConfig config, AuthProvider authProvider,
       String firstName, String lastName, String phoneNumber) async {
-    final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'firstName': firstName,
-        'lastName': lastName,
-        'phoneNumber': phoneNumber,
-      }),
-    );
-    check(authProvider, response);
+    sendUpdate(config, authProvider, <String, String>{
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+    });
   }
 
-  Future<void> setNames(AppConfig config, AuthProvider authProvider,
-      String firstName, String lastName) async {
-    final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'firstName': firstName,
-        'lastName': lastName,
-      }),
-    );
-    check(authProvider, response);
+  void setNames(AppConfig config, AuthProvider authProvider, String firstName,
+      String lastName) async {
+    sendUpdate(config, authProvider, <String, String>{
+      'firstName': firstName,
+      'lastName': lastName,
+    });
   }
 
-  Future<void> setEmail(
+  void setEmail(
       AppConfig config, AuthProvider authProvider, String email) async {
-    final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-      }),
-    );
-    check(authProvider, response);
+    sendUpdate(config, authProvider, <String, String>{
+      'email': email,
+    });
   }
 
-  Future<void> setPronouns(
+  void setPronouns(
       AppConfig config, AuthProvider authProvider, String pronouns) async {
-    final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'pronouns': pronouns,
-      }),
-    );
-    check(authProvider, response);
+    sendUpdate(config, authProvider, <String, String>{
+      'pronouns': pronouns,
+    });
   }
 
-  Future<void> setPhone(
+  void setPhone(
       AppConfig config, AuthProvider authProvider, String phoneNumber) async {
-    final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'phoneNumber': phoneNumber,
-      }),
-    );
-    check(authProvider, response);
+    sendUpdate(config, authProvider, <String, String>{
+      'phoneNumber': phoneNumber,
+    });
+  }
+
+  void setAddress(
+      AppConfig config, AuthProvider authProvider, String address) async {
+    sendUpdate(config, authProvider, <String, String>{
+      'address': address,
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -134,10 +135,7 @@ class _SettingsState extends State<Settings> {
                               )))
                     ])),
                 SizedBox(height: 6),
-                LocationsInfo(
-                    "Locations",
-                    [Icons.person_outline, Icons.accessible],
-                    ["Add Home", "Add Favorites"]),
+                LocationsInfo("Locations"),
                 SizedBox(height: 6),
                 PrivacyLegalInfo(),
                 SizedBox(height: 6),
@@ -151,19 +149,55 @@ class _SettingsState extends State<Settings> {
   }
 }
 
-class LocationsInfo extends StatefulWidget {
-  LocationsInfo(this.title, this.icons, this.fields);
+class LocationsInfo extends StatelessWidget {
+  LocationsInfo(this.title);
+
+  Widget _addressEditDialog(BuildContext context) {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+    final controller = TextEditingController(text: riderProvider.info.address);
+    return new AlertDialog(
+      title: const Text('Home address'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[TextField(controller: controller)],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop(controller.text);
+          },
+          child: const Text('Submit'),
+          textColor: Colors.black
+        ),
+      ],
+    );
+  }
+
+  //
+  void _editAddress(BuildContext context) async {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+    String res = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _addressEditDialog(context);
+      },
+    );
+    if (res == null) return;
+
+    riderProvider.setAddress(AppConfig.of(context),
+        Provider.of<AuthProvider>(context, listen: false), res);
+  }
+
+  void _editFavorites(BuildContext context) {
+    // TODO: favorites editing
+  }
 
   final String title;
-  final List<IconData> icons;
-  final List<String> fields;
-
-  @override
-  _LocationsInfoState createState() => _LocationsInfoState();
-}
-
-class _LocationsInfoState extends State<LocationsInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text) {
+  Widget infoRow(BuildContext context, IconData icon, String text,
+      void Function() onEditPressed) {
     double paddingTB = 10;
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
@@ -182,7 +216,7 @@ class _LocationsInfoState extends State<LocationsInfo> {
             ),
             IconButton(
               icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
+              onPressed: onEditPressed,
             )
           ],
         ));
@@ -190,6 +224,7 @@ class _LocationsInfoState extends State<LocationsInfo> {
 
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -205,25 +240,24 @@ class _LocationsInfoState extends State<LocationsInfo> {
         child: Padding(
             padding: EdgeInsets.only(top: 24, left: 16, right: 16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(widget.title,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ListView.separated(
-                    padding: EdgeInsets.all(2),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: widget.icons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return infoRow(
-                          context, widget.icons[index], widget.fields[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(height: 0, color: Colors.black);
-                    })
-              ],
-            )));
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(title,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Column(children: [
+                        infoRow(
+                            context,
+                            Icons.person_outline,
+                            riderProvider.info.address,
+                            () => _editAddress(context)),
+                        Divider(height: 0, color: Colors.black),
+                        infoRow(context, Icons.accessible, "Add Favorites",
+                            () => _editFavorites(context))
+                      ]))
+                ])));
   }
 }
 
