@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/RidesProvider.dart';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/RideProvider.dart';
+import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart' as humanize;

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/RideProvider.dart';
+import 'package:carriage_rider/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
