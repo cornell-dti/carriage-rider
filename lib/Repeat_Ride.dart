@@ -260,7 +260,7 @@ class _RepeatRideState extends State<RepeatRide> {
                       child: RaisedButton(
                         onPressed: () {
                           widget.ride.date = sDateCtrl.text;
-                          widget.ride.date = (eDateCtrl.text);
+                          widget.ride.date = eDateCtrl.text;
                           widget.ride.every = selectedDays;                                                                                                                        ;
                           Navigator.push(
                               context,
