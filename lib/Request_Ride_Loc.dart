@@ -66,7 +66,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
+        body: SafeArea(
+            child: Container(
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
@@ -145,13 +146,15 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) =>
-                                        RequestRideTime(ride: widget.ride)));
-                            widget.ride.fromLocation = fromCtrl.text;
-                            widget.ride.toLocation = toCtrl.text;
+                            if (_formKey.currentState.validate()) {
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          RequestRideTime(ride: widget.ride)));
+                              widget.ride.fromLocation = fromCtrl.text;
+                              widget.ride.toLocation = toCtrl.text;
+                            }
                           },
                           elevation: 3.0,
                           color: Colors.black,
@@ -163,7 +166,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               )
             ],
           ),
-        ));
+        )));
   }
 }
 

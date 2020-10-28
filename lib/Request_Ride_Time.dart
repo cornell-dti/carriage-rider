@@ -79,8 +79,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     return TextFormField(
       controller: pickUpCtrl,
       decoration: InputDecoration(
-          labelText: 'Pickup Time',
-          labelStyle: TextStyle(color: Colors.black)),
+          labelText: 'Pickup Time', labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your pickup time';
@@ -124,7 +123,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel", style: RideRequestStyles.cancel(context)),
+                      child: Text("Cancel",
+                          style: RideRequestStyles.cancel(context)),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -163,7 +163,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride?", style: RideRequestStyles.question(context)),
+                  Text("When is this ride?",
+                      style: RideRequestStyles.question(context)),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -236,14 +237,16 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                             borderRadius: BorderRadius.circular(3)),
                         child: RaisedButton(
                           onPressed: () {
-                            widget.ride.date = dateCtrl.text;
-                            widget.ride.pickUpTime = pickUpCtrl.text;
-                            widget.ride.dropOffTime = dropOffCtrl.text;
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) =>
-                                        RepeatRide(ride: widget.ride)));
+                            if (_formKey.currentState.validate()) {
+                              widget.ride.date = dateCtrl.text;
+                              widget.ride.pickUpTime = pickUpCtrl.text;
+                              widget.ride.dropOffTime = dropOffCtrl.text;
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          RepeatRide(ride: widget.ride)));
+                            }
                           },
                           elevation: 3.0,
                           color: Colors.black,

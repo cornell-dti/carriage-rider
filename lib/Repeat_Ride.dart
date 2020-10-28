@@ -183,7 +183,8 @@ class _RepeatRideState extends State<RepeatRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('This ride repeats every:', style: RideRequestStyles.description(context)),
+                Text('This ride repeats every:',
+                    style: RideRequestStyles.description(context)),
               ],
             ),
             SizedBox(height: 10.0),
@@ -239,14 +240,16 @@ class _RepeatRideState extends State<RepeatRide> {
                           borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
                         onPressed: () {
-                          widget.ride.date = sDateCtrl.text;
-                          widget.ride.date = eDateCtrl.text;
-                          widget.ride.every = selectedDays;
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) =>
-                                      ReviewRide(ride: widget.ride)));
+                          if (_formKey.currentState.validate()) {
+                            widget.ride.date = sDateCtrl.text;
+                            widget.ride.date = eDateCtrl.text;
+                            widget.ride.every = selectedDays;
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) =>
+                                        ReviewRide(ride: widget.ride)));
+                          }
                         },
                         elevation: 3.0,
                         color: Colors.black,
