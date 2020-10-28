@@ -102,7 +102,7 @@ class PageTitle extends StatelessWidget {
     return Row(
       children: <Widget>[
         Container(
-          child: Text('Schedule',
+          child: Text(title,
               style: TextStyle(
                   color: Colors.black, fontSize: 20, fontFamily: 'SFPro')),
         )
@@ -203,7 +203,7 @@ class Contact extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: MediaQuery.of(context).size.width / 4 ),
+          SizedBox(width: MediaQuery.of(context).size.width / 4),
           GestureDetector(
               onTap: () => UrlLauncher.launch("tel://13232315234"),
               child: Icon(Icons.phone, size: 25))

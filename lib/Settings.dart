@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/Location.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -149,6 +150,54 @@ class _SettingsState extends State<Settings> {
   }
 }
 
+class SelectionController<T> {
+  final List<T> options;
+  Set<T> selected;
+  SelectionController(this.options, this.selected);
+}
+
+class LocationsSelector extends StatefulWidget {
+  final SelectionController<Location> controller;
+
+  LocationsSelector(this.controller);
+
+  @override
+  State<LocationsSelector> createState() {
+    return LocationsSelectorState();
+  }
+}
+
+class LocationsSelectorState extends State<LocationsSelector> {
+  @override
+  Widget build(BuildContext context) {
+    List<Location> options = widget.controller.options;
+    Set<Location> selected = widget.controller.selected;
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: options.length,
+      itemBuilder: (context, index) {
+        Location location = options[index];
+        return SizedBox(
+          height: 80,
+          child: FlatButton(
+              color: selected.contains(location) ? Colors.grey : Colors.white,
+              onPressed: () {
+                setState(() {
+                  if (selected.contains(location)) {
+                    selected.remove(location);
+                  } else {
+                    selected.add(location);
+                  }
+                });
+              },
+              child: Text(location.name)),
+        );
+      },
+      // separatorBuilder: (context, index) => Divider(color: Colors.black)
+    );
+  }
+}
+
 class LocationsInfo extends StatelessWidget {
   LocationsInfo(this.title);
 
@@ -165,13 +214,45 @@ class LocationsInfo extends StatelessWidget {
       ),
       actions: <Widget>[
         new FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop(controller.text);
-          },
-          child: const Text('Submit'),
-          textColor: Colors.black
-        ),
+            onPressed: () {
+              Navigator.of(context).pop(controller.text);
+            },
+            child: const Text('Submit'),
+            textColor: Colors.black),
       ],
+    );
+  }
+
+  Widget _favoritesEditDialog(
+      BuildContext context, Map<String, Location> locations) {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+    Set<Location> picked = Set<Location>();
+    riderProvider.info.favoriteLocations.forEach((e) {
+      if (locations.containsKey(e)) picked.add(locations[e]);
+    });
+    final controller =
+        SelectionController<Location>(locations.values.toList(), picked);
+    // on pop, returns iterable of ids of selected locations
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, controller.selected.map((e) => e.id));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: PageTitle(title: 'Settings'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.maybePop(context),
+          ),
+        ),
+        body: LocationsSelector(controller),
+      ),
     );
   }
 
@@ -191,8 +272,21 @@ class LocationsInfo extends StatelessWidget {
         Provider.of<AuthProvider>(context, listen: false), res);
   }
 
-  void _editFavorites(BuildContext context) {
-    // TODO: favorites editing
+  void _editFavorites(BuildContext context) async {
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
+    Map<String, Location> locations =
+        locationsById(await fetchLocations(context));
+    List<String> res = (await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    _favoritesEditDialog(context, locations))))
+        .toList();
+    assert(res != null);
+
+    riderProvider.setFavoriteLocations(AppConfig.of(context),
+        Provider.of<AuthProvider>(context, listen: false), res);
   }
 
   final String title;
