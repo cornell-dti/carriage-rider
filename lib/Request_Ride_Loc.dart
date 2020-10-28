@@ -8,6 +8,46 @@ import 'package:carriage_rider/LocationsProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
 
+class RideRequestStyles {
+  static TextStyle cancel(BuildContext context) {
+    return TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w100,
+      fontSize: 15,
+    );
+  }
+
+  static TextStyle question(BuildContext context) {
+    return TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w800,
+      fontSize: 25,
+    );
+  }
+
+  static TextStyle toggle(BuildContext context) {
+    return TextStyle(
+      fontWeight: FontWeight.w200,
+      fontSize: 15,
+    );
+  }
+
+  static TextStyle description(BuildContext context) {
+    return TextStyle(
+        color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
+  }
+
+  static TextStyle label(BuildContext context) {
+    return TextStyle(
+        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
+  }
+
+  static TextStyle info(BuildContext context) {
+    return TextStyle(
+        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
+  }
+}
+
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
 
@@ -22,18 +62,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   TextEditingController fromCtrl = TextEditingController();
   TextEditingController toCtrl = TextEditingController();
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +75,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel", style: cancelStyle),
+                      child: Text("Cancel",
+                          style: RideRequestStyles.cancel(context)),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -88,8 +117,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child:
-                        Text("Where do you want to go?", style: questionStyle),
+                    child: Text("Where do you want to go?",
+                        style: RideRequestStyles.question(context)),
                   )
                 ],
               ),

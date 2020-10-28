@@ -6,6 +6,7 @@ import 'package:carriage_rider/Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'RidesProvider.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class ReviewRide extends StatefulWidget {
   final Ride ride;
@@ -17,24 +18,6 @@ class ReviewRide extends StatefulWidget {
 }
 
 class _ReviewRideState extends State<ReviewRide> {
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
-  );
-
-  final labelStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-
-  final infoStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
-
   @override
   Widget build(BuildContext context) {
     PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
@@ -50,7 +33,8 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
+                    child: Text("Cancel",
+                        style: RideRequestStyles.cancel(context)),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -87,13 +71,15 @@ class _ReviewRideState extends State<ReviewRide> {
             SizedBox(height: 10.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("Review your ride", style: questionStyle))
+                Flexible(
+                    child: Text("Review your ride",
+                        style: RideRequestStyles.question(context)))
               ],
             ),
             SizedBox(height: 30),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[Text('From', style: labelStyle)]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Text('From', style: RideRequestStyles.label(context))
+            ]),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -102,13 +88,15 @@ class _ReviewRideState extends State<ReviewRide> {
                     widget.ride.fromLocation != null
                         ? widget.ride.fromLocation
                         : "",
-                    style: infoStyle)
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text('To', style: labelStyle)],
+              children: <Widget>[
+                Text('To', style: RideRequestStyles.label(context))
+              ],
             ),
             SizedBox(height: 5),
             Row(
@@ -118,20 +106,22 @@ class _ReviewRideState extends State<ReviewRide> {
                     widget.ride.toLocation != null
                         ? widget.ride.toLocation
                         : "",
-                    style: infoStyle)
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text('Date', style: labelStyle)],
+              children: <Widget>[
+                Text('Date', style: RideRequestStyles.label(context))
+              ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(widget.ride.date != null ? widget.ride.date : "",
-                    style: infoStyle)
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
@@ -142,13 +132,14 @@ class _ReviewRideState extends State<ReviewRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Pickup Time', style: labelStyle),
+                      Text('Pickup Time',
+                          style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
                       Text(
                           widget.ride.pickUpTime != null
                               ? widget.ride.pickUpTime
                               : "",
-                          style: infoStyle)
+                          style: RideRequestStyles.info(context))
                     ],
                   ),
                 ),
@@ -157,13 +148,14 @@ class _ReviewRideState extends State<ReviewRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Drop-off Time', style: labelStyle),
+                      Text('Drop-off Time',
+                          style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
                       Text(
                           widget.ride.dropOffTime != null
                               ? widget.ride.dropOffTime
                               : "",
-                          style: infoStyle)
+                          style: RideRequestStyles.info(context))
                     ],
                   ),
                 )
@@ -172,24 +164,31 @@ class _ReviewRideState extends State<ReviewRide> {
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text('Every', style: labelStyle)],
-            ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text(widget.ride.every, style: infoStyle)],
-            ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Accessibility Request', style: labelStyle)
+                Text('Every', style: RideRequestStyles.label(context))
               ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[Text('Wheelchair', style: infoStyle)],
+              children: <Widget>[
+                Text(widget.ride.every, style: RideRequestStyles.info(context))
+              ],
+            ),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text('Accessibility Request',
+                    style: RideRequestStyles.label(context))
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text('Wheelchair', style: RideRequestStyles.info(context))
+              ],
             ),
             Expanded(
               child: Align(

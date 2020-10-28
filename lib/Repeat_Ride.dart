@@ -2,6 +2,7 @@ import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:carriage_rider/Review_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class RepeatRide extends StatefulWidget {
   final Ride ride;
@@ -74,32 +75,11 @@ class _RepeatRideState extends State<RepeatRide> {
     super.initState();
   }
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
-  );
-
-  final toggleStyle = TextStyle(
-    fontWeight: FontWeight.w200,
-    fontSize: 18,
-  );
-
-  final descriptionStyle =
-      TextStyle(color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
-
   Widget _buildPickupTimeField() {
     return TextFormField(
       controller: sDateCtrl,
       decoration: InputDecoration(
-          labelText: 'Start Date',
-          labelStyle: TextStyle(color: Colors.black)),
+          labelText: 'Start Date', labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your start date';
@@ -115,8 +95,7 @@ class _RepeatRideState extends State<RepeatRide> {
     return TextFormField(
       controller: eDateCtrl,
       decoration: InputDecoration(
-          labelText: 'End Date',
-          labelStyle: TextStyle(color: Colors.black)),
+          labelText: 'End Date', labelStyle: TextStyle(color: Colors.black)),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your end date';
@@ -156,7 +135,8 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
+                    child: Text("Cancel",
+                        style: RideRequestStyles.cancel(context)),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -196,14 +176,14 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Flexible(
                     child: Text("When do you want to repeat this ride?",
-                        style: questionStyle))
+                        style: RideRequestStyles.question(context)))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('This ride repeats every:', style: descriptionStyle),
+                Text('This ride repeats every:', style: RideRequestStyles.description(context)),
               ],
             ),
             SizedBox(height: 10.0),
@@ -219,11 +199,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: toggleStyle),
-                      Text('T', style: toggleStyle),
-                      Text('W', style: toggleStyle),
-                      Text('Th', style: toggleStyle),
-                      Text('F', style: toggleStyle)
+                      Text('M', style: RideRequestStyles.toggle(context)),
+                      Text('T', style: RideRequestStyles.toggle(context)),
+                      Text('W', style: RideRequestStyles.toggle(context)),
+                      Text('Th', style: RideRequestStyles.toggle(context)),
+                      Text('F', style: RideRequestStyles.toggle(context))
                     ],
                     onPressed: (int index) {
                       setState(() {

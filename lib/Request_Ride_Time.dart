@@ -47,23 +47,6 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     }
   }
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
-  );
-
-  final toggleStyle = TextStyle(
-    fontWeight: FontWeight.w200,
-    fontSize: 15,
-  );
-
   final List<bool> isSelected = [true, false];
 
   String format(String date) {
@@ -141,7 +124,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel", style: cancelStyle),
+                      child: Text("Cancel", style: RideRequestStyles.cancel(context)),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -180,7 +163,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride?", style: questionStyle),
+                  Text("When is this ride?", style: RideRequestStyles.question(context)),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -194,8 +177,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                     fillColor: Colors.grey[100],
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('Repeat', style: toggleStyle),
-                      Text('Once', style: toggleStyle)
+                      Text('Repeat', style: RideRequestStyles.toggle(context)),
+                      Text('Once', style: RideRequestStyles.toggle(context))
                     ],
                     onPressed: (int index) {
                       setState(() {
