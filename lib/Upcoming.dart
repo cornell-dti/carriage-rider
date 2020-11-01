@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:humanize/humanize.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:http/http.dart' as http;
+import 'Ride.dart';
+import 'app_config.dart';
+
+Color grey = Color(0xFF9B9B9B);
 
 class Upcoming extends StatefulWidget {
+  Upcoming(this.ride);
+  final Ride ride;
   @override
   _UpcomingState createState() => _UpcomingState();
 }
@@ -10,85 +19,65 @@ class _UpcomingState extends State<Upcoming> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            ListView(
-              scrollDirection: Axis.vertical,
-              children: <Widget>[
-                Column(
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Header(header: 'Upcoming Ride'),
-                    SizedBox(height: 10),
-                    SubHeader(subHeader1: 'Ride Info', subHeader2: 'Confirmed'),
-                    SizedBox(height: 20),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 20),
-                          TimeLine(),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: <Widget>[
-                                  InformationRow(
-                                      loc: 'Upson Hall',
-                                      address: '124 Hoy Rd, Ithaca, NY 14850',
-                                      action: 'Pickup Passenger 1',
-                                      time: '3:15 PM'),
-                                  SizedBox(height: 20),
-                                  InformationRow(
-                                      loc: 'Gates Hall',
-                                      address: '107 Hoy Rd, Ithaca, NY 14853',
-                                      action: 'Pickup Passenger 2',
-                                      time: '3:20 PM'),
-                                  SizedBox(height: 20),
-                                  InformationRow(
-                                      loc: 'Statler Hall',
-                                      address: '109 Tower Rd, Ithaca, NY 14850',
-                                      action: 'Dropoff Passenger 1',
-                                      time: '3:25 PM'),
-                                  SizedBox(height: 20),
-                                  InformationRow(
-                                      loc: 'Rhodes Hall',
-                                      address: '109 Tower Rd, Ithaca, NY 14850',
-                                      action: 'Dropoff Passenger 2',
-                                      time: '4:20 PM'),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20)
-                        ],
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 8.0, top: 16),
+                        child: Row(
+                            children: [
+                              Icon(Icons.arrow_back_ios, color: Colors.black),
+                              Text('Schedule', style: TextStyle(fontSize: 17))
+                            ]
+                        ),
                       ),
                     ),
-                    SizedBox(height: 30),
-                    CustomDivider(),
-                    SizedBox(height: 15),
-                    Contact(),
-                    SizedBox(height: 15),
-                    CustomDivider(),
-                    SizedBox(height: 20),
-                    RideAction(
-                        rideAction: "Cancel Ride",
-                        color: Colors.red,
-                        icon: Icons.not_interested),
-                    SizedBox(height: MediaQuery.of(context).size.height / 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 16),
+                      child: Text(DateFormat('MMM').format(widget.ride.startTime).toUpperCase() +
+                          ' ' + ordinal(int.parse(DateFormat('d').format(widget.ride.startTime))) +
+                          ' ' + DateFormat('jm').format(widget.ride.startTime),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontFamily: 'SFProDisplay',
+                              fontWeight: FontWeight.bold,
+                          )
+                      ),
+                    ),
+
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 32),
+                          Contact(),
+                          SizedBox(height: 60),
+                          TimeLine(widget.ride),
+                          SizedBox(height: 70),
+                          RideAction(
+                              text: "Cancel Ride",
+                              color: Colors.red,
+                              icon: Icons.close,
+                              action: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CancelRidePage(widget.ride)))
+                          ),
+                          SizedBox(height: 20),
+                          EditRide(),
+                        ],
+                      ),
+                    )
                   ],
-                )
-              ],
-            ),
-            EditRide()
-          ],
+                ),
+              ),
+
+            ],
+          ),
         ));
   }
 }
@@ -182,31 +171,71 @@ class Contact extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(left: 15),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.account_circle, size: 50),
+          Icon(Icons.account_circle, size: 64, color: grey),
           SizedBox(width: 15),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Davea Butler',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'SFPro')),
-                SizedBox(height: 5),
-                Container(
-                  child: Row(
-                    children: <Widget>[Text('CULift Van')],
-                  ),
-                )
+                Text('Driver TBD',
+                  style: TextStyle(
+                      color: grey,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: grey,
+                                blurRadius: 2,
+                                spreadRadius: 0
+                            )
+                          ]
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.phone, size: 16),
+                        color: grey,
+                        onPressed: () => UrlLauncher.launch("tel://13232315234"),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: grey,
+                                blurRadius: 2,
+                                spreadRadius: 0
+                            )
+                          ]
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.warning, size: 16),
+                        color: grey,
+                        onPressed: () {
+                          //TODO: add action on press
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          SizedBox(width: MediaQuery.of(context).size.width / 4 ),
-          GestureDetector(
-              onTap: () => UrlLauncher.launch("tel://13232315234"),
-              child: Icon(Icons.phone, size: 25))
         ],
       ),
     );
@@ -223,7 +252,16 @@ class EditRide extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 8,
-        color: Colors.white,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  spreadRadius: 5,
+                  blurRadius: 11,
+                  color: Colors.black.withOpacity(0.11)
+              )
+            ]
+        ),
         child: Stack(
           children: <Widget>[
             Align(
@@ -238,8 +276,10 @@ class EditRide extends StatelessWidget {
                     elevation: 3.0,
                     color: Colors.black,
                     textColor: Colors.white,
-                    icon: Icon(Icons.mode_edit),
-                    label: Text('Edit Ride')),
+                    icon: Icon(Icons.edit),
+                    label: Text('Edit Ride', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)
+                    )
+                ),
               ),
             )
           ],
@@ -249,66 +289,103 @@ class EditRide extends StatelessWidget {
   }
 }
 
-class TimeLine extends StatelessWidget {
-  const TimeLine({Key key}) : super(key: key);
+class TimeLineRow extends StatelessWidget {
+  TimeLineRow({this.text, this.infoWidget});
+  final String text;
+  final Widget infoWidget;
+  final double width = 26;
 
   Widget locationCircle() {
     return Container(
-      width: 18,
-      height: 18,
-      decoration: new BoxDecoration(
-        color: Colors.black,
-        shape: BoxShape.circle,
-        border: new Border.all(
-            color: Colors.white, width: 6.0, style: BorderStyle.solid),
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey[900],
-            blurRadius: 5.0,
-          )
-        ],
+      width: width,
+      height: width,
+      child: Icon(Icons.circle, size: 8, color: grey),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+                color: grey,
+                blurRadius: 2,
+                spreadRadius: 0
+            )
+          ]
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 18,
-      child: Column(
+    return Row(
+        children: [
+          locationCircle(),
+          SizedBox(width: 16),
+          text == null ? infoWidget : Text(text, style: TextStyle(fontSize: 16, color: grey))
+        ]
+    );
+  }
+}
+
+class TimeLine extends StatelessWidget {
+  TimeLine(this.ride);
+  final double width = 26;
+  final Ride ride;
+
+  @override
+  Widget build(BuildContext context) {
+    double lineWidth = 4;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Stack(
         children: <Widget>[
+          //TODO: figure out how to not hard code this?
           Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        margin: EdgeInsets.only(left: 6),
-                        width: 4,
-                        height: 200,
-                        color: Colors.black,
-                      ),
-                      locationCircle(),
-                      Positioned(
-                        top: 60,
-                        child: locationCircle(),
-                      ),
-                      Positioned(
-                        top: 120,
-                        child: locationCircle(),
-                      ),
-                      Positioned(
-                        top: 182,
-                        child: locationCircle(),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+            width: 4,
+            height: 250,
+            color: Color(0xFFECEBED),
           ),
+          Column(
+              children: [
+                TimeLineRow(text: 'Your driver is on the way.'),
+                SizedBox(height: 32),
+                TimeLineRow(text: 'Driver has arrived.'),
+                SizedBox(height: 32),
+                TimeLineRow(
+                    infoWidget: Expanded(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 8,
+                                    spreadRadius: 0,
+                                    color: Colors.black.withOpacity(0.15)
+                                )
+                              ]
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(ride.startLocation, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D))),
+                                  //TODO: change to address
+                                  Text(ride.startLocation, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D).withOpacity(0.5))),
+                                  SizedBox(height: 16),
+                                  Text('Estimated pick up time: ', style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+                                ]
+                            ),
+                          )
+                      ),
+                    )
+                ),
+                SizedBox(height: 32),
+                TimeLineRow(text: 'Arrived!')
+              ]
+          ),
+
+
         ],
       ),
     );
@@ -359,23 +436,147 @@ class InformationRow extends StatelessWidget {
 }
 
 class RideAction extends StatelessWidget {
-  const RideAction({Key key, this.rideAction, this.color, this.icon})
+  const RideAction({Key key, this.text, this.color, this.icon, this.action})
       : super(key: key);
-
-  final String rideAction;
+  final String text;
   final Color color;
   final IconData icon;
+  final Function action;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(icon, color: color),
-        SizedBox(width: 10),
-        Text(rideAction,
-            style: TextStyle(color: color, fontSize: 18, fontFamily: 'SFPro'))
-      ],
+    return GestureDetector(
+      onTap: () {
+        action();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(icon, color: color),
+          SizedBox(width: 10),
+          Text(text,
+              style: TextStyle(color: color, fontSize: 18, fontFamily: 'SFPro'))
+        ],
+      ),
+    );
+  }
+}
+
+class CancelRidePage extends StatefulWidget {
+  CancelRidePage(this.ride);
+  final Ride ride;
+
+  @override
+  _CancelRidePageState createState() => _CancelRidePageState();
+}
+
+class _CancelRidePageState extends State<CancelRidePage> {
+  bool cancelRepeating;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      cancelRepeating  = false;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                      child: Text('Cancel', style: TextStyle(fontSize: 17)),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      }
+                  ),
+                  SizedBox(height: 32),
+                  Text('Are you sure you want to cancel this ride?',
+                      style: TextStyle(fontSize: 32, fontFamily: 'SFProDisplay', fontWeight: FontWeight.w500)),
+                  CheckboxListTile(
+                    activeColor: grey,
+                    controlAffinity: ListTileControlAffinity.leading,
+                      value: cancelRepeating,
+                      onChanged: (bool newValue) {
+                        setState(() {
+                          cancelRepeating = newValue;
+                        });
+                      },
+                      title: Text('Cancel all repeating rides', style: TextStyle(fontSize: 18, color: grey, fontWeight: FontWeight.normal))
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18),
+                    child: Container(
+                      width: double.infinity,
+
+                      child: FlatButton(
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          child: Text('Cancel Ride', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)
+                          ),
+                        ),
+                        onPressed: () async {
+                          http.Response response = await http.delete(AppConfig.of(context).baseUrl + '/rides/${widget.ride.id}',
+                              headers: <String, String>{
+                                'Content-Type': 'application/json; charset=UTF-8',
+                              }
+                          );
+                          if (response.statusCode == 200) {
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CancelConfirmation()));
+                          }
+                        },
+                      ),
+                    ),
+                  )
+                ]
+            ),
+          ),
+        )
+    );
+  }
+}
+
+class CancelConfirmation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: Column(
+                children: [
+                  SizedBox(height: 176),
+                  Image.asset('assets/images/cancel_ride_confirmed.png'),
+                  SizedBox(height: 32),
+                  Center(child: Text('Your ride is cancelled!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.all(34),
+                    child: Container(
+                      width: double.infinity,
+                      child: FlatButton(
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          child: Text('Done', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)
+                          ),
+                        ),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  )
+                ]
+            )
+        )
     );
   }
 }

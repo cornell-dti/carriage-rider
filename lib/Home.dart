@@ -13,6 +13,8 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
 
+import 'Ride.dart';
+
 void main() {
   MaterialApp(routes: {
     '/': (context) => Home(),
@@ -106,7 +108,16 @@ class Home extends StatelessWidget {
                   title: sideBarText("Upcoming Ride", Colors.black),
                   onTap: () {
                     Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => Upcoming()));
+                        //TODO: remove temporary ride
+                        new MaterialPageRoute(builder: (context) => Upcoming(
+                            Ride(
+                              type: 'active',
+                              startLocation: 'Uris Hall',
+                              endLocation: 'Cascadilla Hall',
+                              startTime: DateTime(2020, 10, 18, 12, 0),
+                              endTime: DateTime(2020, 10, 18, 12, 15),
+                            )
+                        )));
                   },
                 ),
                 Divider(
