@@ -94,7 +94,7 @@ class Ride {
   }
 
   Widget buildSummary(BuildContext context) {
-    Rider rider = Provider.of<RiderProvider>(context).info;
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     final labelStyle = TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w300,
@@ -202,7 +202,7 @@ class Ride {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(rider.accessibilityStr(), style: infoStyle)
+            Text(riderProvider.hasInfo() ? riderProvider.info.accessibilityStr() : '', style: infoStyle)
           ],
         ),
       ]
