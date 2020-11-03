@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-import 'package:http/http.dart' as http;
+import 'Cancel_Ride.dart';
 import 'Ride.dart';
-import 'app_config.dart';
+import 'TextThemes.dart';
 
 Color grey = Color(0xFF9B9B9B);
 
-class Upcoming extends StatefulWidget {
-  Upcoming(this.ride);
+class UpcomingRidePage extends StatefulWidget {
+  UpcomingRidePage(this.ride);
   final Ride ride;
   @override
-  _UpcomingState createState() => _UpcomingState();
+  _UpcomingRidePageState createState() => _UpcomingRidePageState();
 }
 
-class _UpcomingState extends State<Upcoming> {
+class _UpcomingRidePageState extends State<UpcomingRidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -353,31 +353,7 @@ class TimeLine extends StatelessWidget {
                 SizedBox(height: 32),
                 TimeLineRow(
                     infoWidget: Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 8,
-                                    spreadRadius: 0,
-                                    color: Colors.black.withOpacity(0.15)
-                                )
-                              ]
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(ride.startLocation, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D))),
-                                  //TODO: change to address
-                                  Text(ride.startLocation, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D).withOpacity(0.5))),
-                                  SizedBox(height: 16),
-                                  Text('Estimated pick up time: ', style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-                                ]
-                            ),
-                          )
-                      ),
+                      child: ride.buildLocationsCard(context)
                     )
                 ),
                 SizedBox(height: 32),
@@ -462,121 +438,96 @@ class RideAction extends StatelessWidget {
   }
 }
 
-class CancelRidePage extends StatefulWidget {
-  CancelRidePage(this.ride);
+class UpcomingRideCard extends StatelessWidget {
+  UpcomingRideCard(this.ride);
   final Ride ride;
 
-  @override
-  _CancelRidePageState createState() => _CancelRidePageState();
-}
+  final confirmationStyle = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 10,
+  );
 
-class _CancelRidePageState extends State<CancelRidePage> {
-  bool cancelRepeating;
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      cancelRepeating  = false;
-    });
-  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => UpcomingRidePage(ride))
+        );
+      },
+      child: Container(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+        child: Card(
+          elevation: 3.0,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                      child: Text('Cancel', style: TextStyle(fontSize: 17)),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      }
-                  ),
-                  SizedBox(height: 32),
-                  Text('Are you sure you want to cancel this ride?',
-                      style: TextStyle(fontSize: 32, fontFamily: 'SFProDisplay', fontWeight: FontWeight.w500)),
-                  CheckboxListTile(
-                    activeColor: grey,
-                    controlAffinity: ListTileControlAffinity.leading,
-                      value: cancelRepeating,
-                      onChanged: (bool newValue) {
-                        setState(() {
-                          cancelRepeating = newValue;
-                        });
-                      },
-                      title: Text('Cancel all repeating rides', style: TextStyle(fontSize: 18, color: grey, fontWeight: FontWeight.normal))
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 18),
-                    child: Container(
-                      width: double.infinity,
-
-                      child: FlatButton(
-                        color: Colors.black,
-                        textColor: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          child: Text('Cancel Ride', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)
-                          ),
+                children: <Widget>[
+                  ride.type == 'active' ? Text('Ride Confirmed', style: confirmationStyle.copyWith(color: Color(0xFF4CAF50))) :
+                  Text('Ride Requested', style: confirmationStyle.copyWith(color: Color(0xFFFF9800))),
+                  SizedBox(height: 4),
+                  ride.buildStartTime(),
+                  SizedBox(height: 16),
+                  Text('From', style: TextThemes.directionStyle),
+                  Text(ride.startLocation, style: TextThemes.rideInfoStyle),
+                  SizedBox(height: 8),
+                  Text('To', style: TextThemes.directionStyle),
+                  Text(ride.endLocation, style: TextThemes.rideInfoStyle),
+                  SizedBox(height: 16),
+                  Row(
+                    children: <Widget>[
+                      GestureDetector(
+                        //TODO: replace temp phone number
+                        onTap: () => UrlLauncher.launch("tel://13232315234"),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(width: 0.5, color: Colors.black.withOpacity(0.25))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Icon(Icons.phone, size: 20, color: Color(0xFF9B9B9B)),
+                            )
                         ),
-                        onPressed: () async {
-                          http.Response response = await http.delete(AppConfig.of(context).baseUrl + '/rides/${widget.ride.id}',
-                              headers: <String, String>{
-                                'Content-Type': 'application/json; charset=UTF-8',
-                              }
-                          );
-                          if (response.statusCode == 200) {
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CancelConfirmation()));
-                          }
-                        },
                       ),
-                    ),
+                      SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Driver', style: TextStyle(fontSize: 11)),
+                          Text(ride.type == 'active' ? 'Confirmed' : 'TBD', style: TextThemes.rideInfoStyle)
+                        ],
+                      )
+                    ],
                   )
                 ]
             ),
           ),
-        )
+        ),
+      ),
     );
   }
 }
-
-class CancelConfirmation extends StatelessWidget {
+class UpcomingRides extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: Column(
-                children: [
-                  SizedBox(height: 176),
-                  Image.asset('assets/images/cancel_ride_confirmed.png'),
-                  SizedBox(height: 32),
-                  Center(child: Text('Your ride is cancelled!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.all(34),
-                    child: Container(
-                      width: double.infinity,
-                      child: FlatButton(
-                        color: Colors.black,
-                        textColor: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          child: Text('Done', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)
-                          ),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                  )
-                ]
-            )
-        )
+    return SingleChildScrollView(
+      child: Row(
+        children: <Widget>[
+          //TODO: remove temporary data
+          UpcomingRideCard(
+              Ride(
+                type: 'active',
+                startLocation: 'Uris Hall',
+                startAddress: '100 Carriage Way, Ithaca, NY 14850',
+                endLocation: 'Cascadilla Hall',
+                endAddress: '101 DTI St, Ithaca, NY 14850',
+                startTime: DateTime(2020, 10, 18, 13, 0),
+                endTime: DateTime(2020, 10, 18, 13, 15),
+              )
+          )
+        ],
+      ),
     );
   }
 }

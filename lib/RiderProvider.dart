@@ -21,6 +21,11 @@ class Rider {
 
   String fullName() => firstName + " " + lastName;
 
+  String accessibilityStr() {
+    String all = accessibilityNeeds.join(', ');
+    return all == '' ? 'None' : all;
+  }
+
   Rider(
       this.id,
       this.email,
