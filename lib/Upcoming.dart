@@ -1,3 +1,4 @@
+import 'package:carriage_rider/MeasureSize.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
@@ -44,10 +45,10 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           ' ' + ordinal(int.parse(DateFormat('d').format(widget.ride.startTime))) +
                           ' ' + DateFormat('jm').format(widget.ride.startTime),
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 30,
-                              fontFamily: 'SFProDisplay',
-                              fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold,
                           )
                       ),
                     ),
@@ -290,15 +291,15 @@ class EditRide extends StatelessWidget {
 }
 
 class TimeLineRow extends StatelessWidget {
-  TimeLineRow({this.text, this.infoWidget});
+  TimeLineRow({this.text, this.infoWidget, this.decorationWidth});
   final String text;
   final Widget infoWidget;
-  final double width = 26;
+  final double decorationWidth;
 
   Widget locationCircle() {
     return Container(
-      width: width,
-      height: width,
+      width: decorationWidth,
+      height: decorationWidth,
       child: Icon(Icons.circle, size: 8, color: grey),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -326,47 +327,95 @@ class TimeLineRow extends StatelessWidget {
   }
 }
 
-class TimeLine extends StatelessWidget {
+class TimeLine extends StatefulWidget {
   TimeLine(this.ride);
-  final double width = 26;
   final Ride ride;
+
+  @override
+  _TimeLineState createState() => _TimeLineState();
+}
+
+class _TimeLineState extends State<TimeLine> {
+  double width = 26;
+  double timelineHeight;
+Widget line;
 
   @override
   Widget build(BuildContext context) {
     double lineWidth = 4;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Stack(
-        children: <Widget>[
-          //TODO: figure out how to not hard code this?
-          Container(
-            margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
-            width: 4,
-            height: 250,
-            color: Color(0xFFECEBED),
-          ),
-          Column(
-              children: [
-                TimeLineRow(text: 'Your driver is on the way.'),
-                SizedBox(height: 32),
-                TimeLineRow(text: 'Driver has arrived.'),
-                SizedBox(height: 32),
-                TimeLineRow(
-                    infoWidget: Expanded(
-                      child: ride.buildLocationsCard(context)
+    GlobalKey firstRowKey = GlobalKey();
+    GlobalKey lastRowKey = GlobalKey();
+
+    double getFirstRowPos() {
+      RenderBox firstRowBox = firstRowKey.currentContext.findRenderObject();
+      return firstRowBox.localToGlobal(Offset.zero).dy;
+    }
+
+    double getLastRowPos() {
+      RenderBox lastRowBox = lastRowKey.currentContext.findRenderObject();
+      return lastRowBox.localToGlobal(Offset.zero).dy;
+    }
+
+    Widget buildLine() {
+      return timelineHeight != null && firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null ? Container(
+        margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color(0xFFECEBED),
+      ) : CircularProgressIndicator();
+    }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Stack(
+          children: <Widget>[
+            line == null ? CircularProgressIndicator() : line,
+            MeasureSize(
+              onChange: (size) {
+                setState(() {
+                  timelineHeight = size.height;
+                  line = buildLine();
+                });
+              },
+              child: Column(
+                  children: [
+                    Container(
+                      key: firstRowKey,
+                      child: TimeLineRow(
+                          text: 'Your driver is on the way.',
+                          decorationWidth: width
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                    TimeLineRow(
+                        text: 'Driver has arrived.',
+                        decorationWidth: width
+                    ),
+                    SizedBox(height: 32),
+                    TimeLineRow(
+                        infoWidget: Expanded(
+                            child: widget.ride.buildLocationsCard(context)
+                        ),
+                        decorationWidth: width
+                    ),
+                    SizedBox(height: 32),
+                    Container(
+                      key: lastRowKey,
+                      child: TimeLineRow(
+                          text: 'Arrived!',
+                          decorationWidth: width
+                      ),
                     )
-                ),
-                SizedBox(height: 32),
-                TimeLineRow(text: 'Arrived!')
-              ]
-          ),
-
-
-        ],
-      ),
-    );
+                  ]
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
-}
+
 
 class InformationRow extends StatelessWidget {
   const InformationRow(
