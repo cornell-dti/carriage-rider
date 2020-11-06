@@ -41,31 +41,41 @@ class _HelpState extends State<Help> {
               color: Colors.white,
               height: MediaQuery.of(context).size.height,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  notificationRow(context, Icons.info_outline, "Using the app"),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // add information when designs update
-                      ]),
-                  InkWell(
-                      child: notificationRow(
-                          context, Icons.library_books, "CULift Guidelines"),
-                      onTap: () => UrlLauncher.launch(
-                          'https://sds.cornell.edu/accommodations-services/transportation/culift-guidelines')),
-                  notificationRow(context, Icons.mail_outline, "Contact Us"),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        infoText(context, 'Student Disability Services:'),
-                        infoText(context, '607-254-4545, culift@cornell.edu'),
-                        SizedBox(height: 20),
-                        //This information is from Bryan
-                        infoText(context,
-                            'Questions about scheduled rides can be made by calling the CULift dispatcher at: (607) 254-8293 or '
-                                'by emailing culift@cornell.edu before 3:45pm or (for night rides) by calling (607) 229-6010 '
-                                'after 3:45pm'),
-                      ]),
+                  Padding(
+                      padding: EdgeInsets.only(top: 20, left: 18, bottom: 5),
+                      child: Expanded(
+                        child: Text(
+                          'Contact CULift',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(top: 10, left: 18, bottom: 5),
+                      child: Flexible(
+                        child: Text(
+                          'Did your driver miss your ride? Or need any immediate '
+                          'assistance? Contact CULift for help',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )),
+                  infoRow(
+                      context, Icons.phone, "###-###-####", _launchPhoneURL),
+                  Padding(
+                    padding: EdgeInsets.only(left: 18),
+                    child: Divider(
+                      height: 0,
+                      color: Colors.black,
+                    ),
+                  ),
+                  infoRow(context, Icons.mail_outline, "culift@cornell.edu",
+                      _launchMailURL),
                 ],
               ),
             )
@@ -73,33 +83,51 @@ class _HelpState extends State<Help> {
         ));
   }
 
-  Widget infoText(BuildContext context, String text) {
-    return Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: Flexible(
-            child: Text(text,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    color: Colors.black, fontSize: 15, fontFamily: 'SFPro'))));
+  void _launchPhoneURL() async {
+    String number = "13232315234";
+    String url = "tel://$number";
+    if (await UrlLauncher.canLaunch(url)) {
+      await UrlLauncher.launch(url);
+    } else {
+      print('Could not launch $url');
+    }
   }
 
-  Widget notificationRow(BuildContext context, IconData icon, String text) {
+  void _launchMailURL() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'culift@cornell.edu',
+    );
+
+    String url = params.toString();
+    if (await UrlLauncher.canLaunch(url)) {
+      await UrlLauncher.launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  Widget infoRow(BuildContext context, IconData icon, String text,
+      void Function() onPressed) {
     return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 5, left: 5),
+        padding: EdgeInsets.only(left: 18),
         child: Row(
           children: <Widget>[
-            CircleAvatar(
-              radius: 30,
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-              child: Icon(icon),
-            ),
+            Icon(icon),
+            SizedBox(width: 19),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(fontSize: 20, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.grey[500],
+                ),
               ),
             ),
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: onPressed,
+            )
           ],
         ));
   }
