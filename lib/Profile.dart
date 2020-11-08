@@ -39,7 +39,10 @@ class _ProfileState extends State<Profile> {
 
   void _editNumber(BuildContext context) {}
 
-  void _editPronouns(BuildContext context) {}
+  void _editPronouns(BuildContext context) {
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => ProfilePronouns()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,22 +175,27 @@ class _ProfileState extends State<Profile> {
                         ))
                   ]))),
               SizedBox(height: 6),
-              ProfileInfo(
-                  "Account Info",
-                  [Icons.mail_outline, Icons.phone],
-                  [riderProvider.info.email, fPhoneNumber],
-                  [() => _editEmail(context), () => _editNumber(context)]),
+              ProfileInfo("Account Info", [
+                Icons.mail_outline,
+                Icons.phone
+              ], [
+                riderProvider.info.email,
+                fPhoneNumber == null ? "Add your number" : fPhoneNumber
+              ], [
+                () => _editEmail(context),
+                () => _editNumber(context)
+              ]),
               SizedBox(height: 6),
               ProfileInfo("Personal Info", [
                 Icons.person_outline,
-                Icons.accessible
               ], [
-                riderProvider.info.pronouns,
-                "Any accessiblility assistance?"
+                riderProvider.info.pronouns == null
+                    ? "How should we address you?"
+                    : riderProvider.info.pronouns
               ], [
                 () => _editPronouns(context)
               ]),
-              SizedBox(height: 6),
+              SizedBox(height: 40),
             ],
           )),
         ),
@@ -434,5 +442,165 @@ class _EditProfileNameState extends State<EditProfileName> {
             ],
           ),
         ));
+  }
+}
+
+class ProfilePronouns extends StatefulWidget {
+  @override
+  _ProfilePronounsState createState() => _ProfilePronounsState();
+}
+
+class _ProfilePronounsState extends State<ProfilePronouns> {
+  int selectedRadio = 0;
+
+  String pronouns = "";
+
+  setPronouns(String pronoun) {
+    pronouns = pronoun;
+  }
+
+  setSelectedRadio(int val) {
+    setState(() {
+      selectedRadio = val;
+    });
+  }
+
+  final cancelStyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w100,
+    fontSize: 15,
+  );
+
+  final titleStyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+    fontSize: 25,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: InkWell(
+                    child: Text("Cancel", style: cancelStyle),
+                    onTap: () {
+                      Navigator.pop(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => Profile()));
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 50.0),
+            Row(
+              children: <Widget>[
+                Flexible(child: Text("Share your pronouns", style: titleStyle))
+              ],
+            ),
+            SizedBox(height: 15.0),
+            Row(children: <Widget>[
+              Flexible(
+                  child: Text(
+                      "Help us get better at addressing you by selecting your pronouns",
+                      style: TextStyle(fontSize: 15, color: Colors.grey)))
+            ]),
+            SizedBox(height: 40),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                RadioListTile(
+                  title: Text("They/Them/Theirs"),
+                  value: 1,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.black,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    setPronouns("They/Them/Theirs");
+                  },
+                ),
+                RadioListTile(
+                  title: Text("She/Her/Hers"),
+                  value: 2,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.black,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    setPronouns("She/Her/Hers");
+                  },
+                ),
+                RadioListTile(
+                  title: Text("He/Him/His"),
+                  value: 3,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.black,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    setPronouns("He/Him/His");
+                  },
+                ),
+                RadioListTile(
+                  title: Text("Others"),
+                  value: 4,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.black,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    setPronouns("Others");
+                  },
+                ),
+                RadioListTile(
+                  title: Text("Prefer not to say"),
+                  value: 5,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.black,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    setPronouns("");
+                  },
+                ),
+              ],
+            ),
+            Expanded(
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: ButtonTheme(
+                      minWidth: MediaQuery.of(context).size.width * 0.8,
+                      height: 45.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
+                      child: RaisedButton(
+                        onPressed: () {
+                          riderProvider.setPronouns(
+                              AppConfig.of(context), authProvider, pronouns);
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => Profile()));
+                        },
+                        elevation: 3.0,
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        child: Text('Done'),
+                      ),
+                    ),
+                  )),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
