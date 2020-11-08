@@ -35,6 +35,12 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  void _editEmail(BuildContext context) {}
+
+  void _editNumber(BuildContext context) {}
+
+  void _editPronouns(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
@@ -166,8 +172,11 @@ class _ProfileState extends State<Profile> {
                         ))
                   ]))),
               SizedBox(height: 6),
-              ProfileInfo("Account Info", [Icons.mail_outline, Icons.phone],
-                  [riderProvider.info.email, fPhoneNumber]),
+              ProfileInfo(
+                  "Account Info",
+                  [Icons.mail_outline, Icons.phone],
+                  [riderProvider.info.email, fPhoneNumber],
+                  [() => _editEmail(context), () => _editNumber(context)]),
               SizedBox(height: 6),
               ProfileInfo("Personal Info", [
                 Icons.person_outline,
@@ -175,6 +184,8 @@ class _ProfileState extends State<Profile> {
               ], [
                 riderProvider.info.pronouns,
                 "Any accessiblility assistance?"
+              ], [
+                () => _editPronouns(context)
               ]),
               SizedBox(height: 6),
             ],
@@ -188,18 +199,20 @@ class _ProfileState extends State<Profile> {
 }
 
 class ProfileInfo extends StatefulWidget {
-  ProfileInfo(this.title, this.icons, this.fields);
+  ProfileInfo(this.title, this.icons, this.fields, this.callback);
 
   final String title;
   final List<IconData> icons;
   final List<String> fields;
+  final List<Function> callback;
 
   @override
   _ProfileInfoState createState() => _ProfileInfoState();
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text) {
+  Widget infoRow(BuildContext context, IconData icon, String text,
+      void Function() onEditPressed) {
     double paddingTB = 10;
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
@@ -218,7 +231,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
             ),
             IconButton(
               icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {},
+              onPressed: onEditPressed,
             )
           ],
         ));
@@ -252,8 +265,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: widget.icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return infoRow(
-                          context, widget.icons[index], widget.fields[index]);
+                      return infoRow(context, widget.icons[index],
+                          widget.fields[index], widget.callback[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(height: 0, color: Colors.black);
