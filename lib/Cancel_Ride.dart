@@ -42,6 +42,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
                       style: TextStyle(color: Colors.black, fontSize: 32, fontFamily: 'SFProDisplay', fontWeight: FontWeight.w500)),
                   SizedBox(height: 32),
                   widget.ride.buildSummary(context),
+                  SizedBox(height: 32),
                   CheckboxListTile(
                       activeColor: Color(0xFFA8A8A8),
                       controlAffinity: ListTileControlAffinity.leading,

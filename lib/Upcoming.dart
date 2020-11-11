@@ -567,8 +567,8 @@ class UpcomingRides extends StatelessWidget {
           UpcomingRideCard(
               Ride(
                 type: 'active',
-                startLocation: 'Uris Hall',
-                startAddress: '100 Carriage Way, Ithaca, NY 14850',
+                startLocation: 'Cornell University',
+                startAddress: '100 Carriage Way',
                 endLocation: 'Cascadilla Hall',
                 endAddress: '101 DTI St, Ithaca, NY 14850',
                 startTime: DateTime(2020, 10, 18, 13, 0),
