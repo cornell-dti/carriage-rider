@@ -300,7 +300,7 @@ class TimeLineRow extends StatelessWidget {
     return Container(
       width: decorationWidth,
       height: decorationWidth,
-      child: Icon(Icons.circle, size: 8, color: grey),
+      child: Icon(Icons.circle, size: 9.75, color: grey),
       decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
