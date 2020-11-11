@@ -14,6 +14,8 @@ class Rider {
   final String lastName;
   final String pronouns;
   final List accessibilityNeeds;
+  // ids of favorite locations
+  final List<String> favoriteLocations;
   final String description;
   final String picture;
   final String joinDate;
@@ -34,6 +36,7 @@ class Rider {
       this.lastName,
       this.pronouns,
       this.accessibilityNeeds,
+      this.favoriteLocations,
       this.description,
       this.picture,
       this.joinDate,
@@ -50,6 +53,7 @@ class Rider {
         List.from(
           json['accessibility'],
         ),
+        List.from(json['favoriteLocations']),
         json['description'],
         json['picture'],
         json['joinDate'],
@@ -119,7 +123,7 @@ class RiderProvider with ChangeNotifier {
   }
 
   Future<void> sendUpdate(AppConfig config, AuthProvider authProvider,
-      Map<String, String> changes) async {
+      Map<String, dynamic> changes) async {
     final response = await http.put(
       "${config.baseUrl}/riders/${authProvider.id}",
       headers: <String, String>{
@@ -172,6 +176,13 @@ class RiderProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider, String address) async {
     sendUpdate(config, authProvider, <String, String>{
       'address': address,
+    });
+  }
+
+  void setFavoriteLocations(AppConfig config, AuthProvider authProvider,
+      List<String> favoriteLocations) async {
+    sendUpdate(config, authProvider, <String, dynamic>{
+      'favoriteLocations': favoriteLocations,
     });
   }
 }

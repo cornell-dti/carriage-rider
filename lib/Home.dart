@@ -11,6 +11,7 @@ import 'package:carriage_rider/Ride_History.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
+import 'package:carriage_rider/Help.dart';
 
 import 'Ride.dart';
 
@@ -143,6 +144,17 @@ class Home extends StatelessWidget {
                         context,
                         new MaterialPageRoute(
                             builder: (context) => ConfirmedRide()));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.help_outline, color: Colors.black),
+                  title: sideBarText('Help', Colors.black),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => Help()));
                   },
                 )
               ],

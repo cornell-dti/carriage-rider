@@ -92,7 +92,7 @@ class PageTitle extends StatelessWidget {
     return Row(
       children: <Widget>[
         Container(
-          child: Text('Schedule',
+          child: Text(title,
               style: TextStyle(
                   color: Colors.black, fontSize: 20, fontFamily: 'SFPro')),
         )
