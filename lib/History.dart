@@ -34,7 +34,8 @@ class _HistoryState extends State<History> {
                       child: Row(
                         children: <Widget>[
                           SizedBox(width: 20),
-                          TimeLine(),
+                          //TODO: uncomment once we connect to a ride
+                          // TimeLine(),
                           SizedBox(width: 20),
                           Expanded(
                             child: Container(
@@ -62,7 +63,7 @@ class _HistoryState extends State<History> {
                     SizedBox(height: 15),
                     CustomDivider(),
                     SizedBox(height: 20),
-                    RideAction(rideAction: "Repeat Ride", color: Colors.black, icon: Icons.repeat),
+                    RideAction(text: "Repeat Ride", color: Colors.black, icon: Icons.repeat),
                     SizedBox(height: MediaQuery.of(context).size.height/8),
                   ],
                 )
