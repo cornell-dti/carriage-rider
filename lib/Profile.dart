@@ -9,6 +9,7 @@ import 'dart:core';
 import 'package:provider/provider.dart';
 import 'RiderProvider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_verification_code/flutter_verification_code.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -37,7 +38,10 @@ class _ProfileState extends State<Profile> {
 
   void _editEmail(BuildContext context) {}
 
-  void _editNumber(BuildContext context) {}
+  void _editNumber(BuildContext context) {
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => ProfileNumber()));
+  }
 
   void _editPronouns(BuildContext context) {
     Navigator.push(context,
@@ -48,7 +52,10 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
-    double _width = MediaQuery.of(context).size.width;
+    double _width = MediaQuery
+        .of(context)
+        .size
+        .width;
     double _picDiameter = _width * 0.27;
     double _picRadius = _picDiameter / 2;
     double _picMarginLR = _picDiameter / 6.25;
@@ -77,127 +84,137 @@ class _ProfileState extends State<Profile> {
         body: Center(
           child: SingleChildScrollView(
               child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-                child: Text('Your Profile',
-                    style: Theme.of(context).textTheme.headline5),
-              ),
-              Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(3),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromARGB(15, 0, 0, 0),
-                          offset: Offset(0, 4.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 1.0)
-                    ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 24.0, top: 10.0, bottom: 8.0),
+                    child: Text('Your Profile',
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline5),
                   ),
-                  child: SingleChildScrollView(
-                      child: Row(children: [
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: _picMarginLR,
-                            right: _picMarginLR,
-                            top: _picMarginTB,
-                            bottom: _picMarginTB),
-                        child: Stack(
-                          children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(15, 0, 0, 0),
+                              offset: Offset(0, 4.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 1.0)
+                        ],
+                      ),
+                      child: SingleChildScrollView(
+                          child: Row(children: [
                             Padding(
                                 padding: EdgeInsets.only(
-                                    bottom: _picDiameter * 0.05),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    _image == null
-                                        ? authProvider
-                                            .googleSignIn.currentUser.photoUrl
-                                        : Image.file(_image),
-                                  ),
-                                  radius: _picRadius,
+                                    left: _picMarginLR,
+                                    right: _picMarginLR,
+                                    top: _picMarginTB,
+                                    bottom: _picMarginTB),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: _picDiameter * 0.05),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            _image == null
+                                                ? authProvider
+                                                .googleSignIn.currentUser
+                                                .photoUrl
+                                                : Image.file(_image),
+                                          ),
+                                          radius: _picRadius,
+                                        )),
+                                    Positioned(
+                                        child: Container(
+                                          height: _picBtnDiameter,
+                                          width: _picBtnDiameter,
+                                          child: FittedBox(
+                                            child: FloatingActionButton(
+                                              backgroundColor: Colors.black,
+                                              child: Icon(Icons.add,
+                                                  size: _picBtnDiameter),
+                                              onPressed: () {
+                                                _getImage();
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        left: _picDiameter * 0.61,
+                                        top: _picDiameter * 0.66)
+                                  ],
                                 )),
-                            Positioned(
-                                child: Container(
-                                  height: _picBtnDiameter,
-                                  width: _picBtnDiameter,
-                                  child: FittedBox(
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.black,
-                                      child: Icon(Icons.add,
-                                          size: _picBtnDiameter),
-                                      onPressed: () {
-                                        _getImage();
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                left: _picDiameter * 0.61,
-                                top: _picDiameter * 0.66)
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(bottom: 30),
-                        child: Stack(
-                          overflow: Overflow.visible,
-                          children: [
-                            Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(riderProvider.info.fullName(),
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  IconButton(
-                                    icon: Icon(Icons.edit, size: 20),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditProfileName(
-                                                      riderProvider.info)));
-                                    },
-                                  )
-                                ]),
-                            Positioned(
-                              child:
-                                  Text("Joined " + riderProvider.info.joinDate,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).accentColor,
-                                      )),
-                              top: 45,
-                            )
-                          ],
-                        ))
-                  ]))),
-              SizedBox(height: 6),
-              ProfileInfo("Account Info", [
-                Icons.mail_outline,
-                Icons.phone
-              ], [
-                riderProvider.info.email,
-                fPhoneNumber == null ? "Add your number" : fPhoneNumber
-              ], [
-                () => _editEmail(context),
-                () => _editNumber(context)
-              ]),
-              SizedBox(height: 6),
-              ProfileInfo("Personal Info", [
-                Icons.person_outline,
-              ], [
-                riderProvider.info.pronouns == null
-                    ? "How should we address you?"
-                    : riderProvider.info.pronouns
-              ], [
-                () => _editPronouns(context)
-              ]),
-              SizedBox(height: 40),
-            ],
-          )),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 30),
+                                child: Stack(
+                                  overflow: Overflow.visible,
+                                  children: [
+                                    Row(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .center,
+                                        children: [
+                                          Text(riderProvider.info.fullName(),
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          IconButton(
+                                            icon: Icon(Icons.edit, size: 20),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditProfileName(
+                                                              riderProvider
+                                                                  .info)));
+                                            },
+                                          )
+                                        ]),
+                                    Positioned(
+                                      child:
+                                      Text("Joined " +
+                                          riderProvider.info.joinDate,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme
+                                                .of(context)
+                                                .accentColor,
+                                          )),
+                                      top: 45,
+                                    )
+                                  ],
+                                ))
+                          ]))),
+                  SizedBox(height: 6),
+                  ProfileInfo("Account Info", [
+                    Icons.mail_outline,
+                    Icons.phone
+                  ], [
+                    riderProvider.info.email,
+                    fPhoneNumber == null ? "Add your number" : fPhoneNumber
+                  ], [
+                        () => _editEmail(context),
+                        () => _editNumber(context)
+                  ]),
+                  SizedBox(height: 6),
+                  ProfileInfo("Personal Info", [
+                    Icons.person_outline,
+                  ], [
+                    riderProvider.info.pronouns == null
+                        ? "How should we address you?"
+                        : riderProvider.info.pronouns
+                  ], [
+                        () => _editPronouns(context)
+                  ]),
+                  SizedBox(height: 120),
+                ],
+              )),
         ),
       );
     } else {
@@ -233,7 +250,9 @@ class _ProfileInfoState extends State<ProfileInfo> {
                 text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: Theme.of(context).accentColor,
+                  color: Theme
+                      .of(context)
+                      .accentColor,
                 ),
               ),
             ),
@@ -266,7 +285,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
               children: <Widget>[
                 Text(widget.title,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
@@ -343,7 +362,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                 children: <Widget>[
                   Flexible(
                     child:
-                        Text("How should we address you?", style: titleStyle),
+                    Text("How should we address you?", style: titleStyle),
                   )
                 ],
               ),
@@ -410,7 +429,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                     child: Text(
                         'By continuing, I accept the Terms of Services and Privacy Policies',
                         style:
-                            TextStyle(fontSize: 10, color: Colors.grey[500])))
+                        TextStyle(fontSize: 10, color: Colors.grey[500])))
               ]),
               Expanded(
                 child: Align(
@@ -418,7 +437,10 @@ class _EditProfileNameState extends State<EditProfileName> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: ButtonTheme(
-                        minWidth: MediaQuery.of(context).size.width * 0.8,
+                        minWidth: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.8,
                         height: 45.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3)),
@@ -577,7 +599,10 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.8,
+                      minWidth: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.8,
                       height: 45.0,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(3)),
@@ -602,5 +627,262 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
         ),
       ),
     );
+  }
+}
+
+class ProfileNumber extends StatefulWidget {
+  ProfileNumber({Key key}) : super(key: key);
+
+  @override
+  _ProfileNumberState createState() => _ProfileNumberState();
+}
+
+class _ProfileNumberState extends State<ProfileNumber> {
+  final _formKey = GlobalKey<FormState>();
+  FocusNode focusNode = FocusNode();
+  TextEditingController currentCtrl = TextEditingController();
+  TextEditingController newCtrl = TextEditingController();
+
+  Widget _currentNumberField() {
+    return Container(
+        margin: EdgeInsets.all(20),
+        child: TextFormField(
+          keyboardType: TextInputType.number,
+          controller: currentCtrl,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+              labelText: 'Current Phone Number',
+              labelStyle: TextStyle(color: Colors.grey),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              enabledBorder: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder()),
+          textInputAction: TextInputAction.next,
+          validator: (input) {
+            if (input.isEmpty) {
+              return 'Please enter your current phone number';
+            }
+            return null;
+          },
+          style: TextStyle(color: Colors.black, fontSize: 15),
+          onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
+        ));
+  }
+
+  Widget _newNumberField() {
+    return Container(
+        margin: EdgeInsets.all(20),
+        child: TextFormField(
+          keyboardType: TextInputType.number,
+          controller: newCtrl,
+          decoration: InputDecoration(
+              labelText: 'New Phone Number',
+              labelStyle: TextStyle(color: Colors.grey),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              enabledBorder: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder()),
+          textInputAction: TextInputAction.done,
+          validator: (input) {
+            if (input.isEmpty) {
+              return 'Please enter your new phone number';
+            }
+            return null;
+          },
+          style: TextStyle(color: Colors.black, fontSize: 15),
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: PageTitle(title: 'Profile'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ),
+        body: SafeArea(
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          child: Padding(
+                            padding:
+                            EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                            child: Text('Your Number',
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headline5),
+                          ),
+                        )),
+                    Container(
+                      color: Colors.white,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 2,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.all(20),
+                              child: Text(
+                                  "For security, please enter your current phone number and then then number you want to change it to.",
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                            SizedBox(height: 10.0),
+                            _currentNumberField(),
+                            _newNumberField(),
+                            SizedBox(height: 10.0)
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 80),
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Center(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: 30,
+                                  ),
+                                  child: Text(
+                                      "By continuing, you may receive a SMS for verification. Message and data rates apply.",
+                                      style: TextStyle(
+                                          fontSize: 13, fontWeight: FontWeight
+                                          .bold)),
+                                )))),
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 35.0),
+                            child: ButtonTheme(
+                              minWidth: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.8,
+                              height: 45.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: RaisedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) =>
+                                                NumberVerify()));
+                                  }
+                                },
+                                elevation: 3.0,
+                                color: Colors.black,
+                                textColor: Colors.white,
+                                child: Text('Verify New Number'),
+                              ),
+                            ),
+                          )),
+                    )
+                  ]),
+            )));
+  }
+}
+
+class NumberVerify extends StatefulWidget {
+  NumberVerify({Key key}) : super(key: key);
+
+  @override
+  _NumberVerifyState createState() => _NumberVerifyState();
+}
+
+class _NumberVerifyState extends State<NumberVerify> {
+  bool _onEditing = true;
+  String _code;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: PageTitle(title: 'Profile'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ),
+        body: SafeArea(
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          child: Padding(
+                            padding:
+                            EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                            child: Text('Your Number',
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headline5),
+                          ),
+                        )),
+                    Expanded(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: <Widget>[
+                                VerificationCode(
+                                  keyboardType: TextInputType.number,
+                                  length: 4,
+                                  autofocus: false,
+                                  underlineColor: Colors.green,
+                                  onCompleted: (String value) {
+                                    setState(() {
+                                      _code = value;
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) => Profile()));
+                                  },
+                                  onEditing: (bool value) {
+                                    setState(() {
+                                      _onEditing = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                    ),
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(height: 20)),
+                    )
+                  ]),
+            )));
   }
 }
