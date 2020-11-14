@@ -825,6 +825,11 @@ class _NumberVerifyState extends State<NumberVerify> {
                                 new MaterialPageRoute(
                                     builder: (context) => Profile()));
                           },
+                          onEditing: (bool value) {
+                            setState(() {
+                              
+                            });
+                          },
                         ),
                       ],
                     ),
