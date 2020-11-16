@@ -414,7 +414,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                     child: Text(
                         'By continuing, I accept the Terms of Services and Privacy Policies',
                         style:
-                            TextStyle(fontSize: 10, color: Colors.grey[500])))
+                            TextStyle(fontSize: 13, color: Colors.grey[500])))
               ]),
               Expanded(
                 child: Align(
