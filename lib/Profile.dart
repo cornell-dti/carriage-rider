@@ -589,10 +589,7 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
                         onPressed: () {
                           riderProvider.setPronouns(
                               AppConfig.of(context), authProvider, pronouns);
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => Profile()));
+                          Navigator.pop(context, false);
                         },
                         elevation: 3.0,
                         color: Colors.black,
@@ -750,11 +747,12 @@ class _ProfileNumberState extends State<ProfileNumber> {
                           child: RaisedButton(
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     new MaterialPageRoute(
                                         builder: (context) => NumberVerify()));
                               }
+
                             },
                             elevation: 3.0,
                             color: Colors.black,
@@ -820,15 +818,14 @@ class _NumberVerifyState extends State<NumberVerify> {
                           autofocus: false,
                           underlineColor: Colors.green,
                           onCompleted: (String value) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 new MaterialPageRoute(
                                     builder: (context) => Profile()));
+                            Navigator.pop(context, false);
                           },
                           onEditing: (bool value) {
-                            setState(() {
-                              
-                            });
+                            setState(() {});
                           },
                         ),
                       ],
