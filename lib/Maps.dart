@@ -53,15 +53,15 @@ class ShowPickupDestinationMapState extends State<ShowPickupDestinationMap> {
     });
   }
 
-  LatLngBounds _bounds() {
-    double minLong = min(widget.pickup.longitude, widget.dest.longitude);
-    double maxLong = min(widget.pickup.longitude, widget.dest.longitude);
-    double minLat = min(widget.pickup.latitude, widget.dest.latitude);
-    double maxLat = max(widget.pickup.latitude, widget.dest.latitude);
+  // LatLngBounds _bounds() {
+  //   double minLong = min(widget.pickup.longitude, widget.dest.longitude);
+  //   double maxLong = min(widget.pickup.longitude, widget.dest.longitude);
+  //   double minLat = min(widget.pickup.latitude, widget.dest.latitude);
+  //   double maxLat = max(widget.pickup.latitude, widget.dest.latitude);
 
-    return LatLngBounds(
-        southwest: LatLng(minLat, minLong), northeast: LatLng(maxLat, maxLong));
-  }
+  //   return LatLngBounds(
+  //       southwest: LatLng(minLat, minLong), northeast: LatLng(maxLat, maxLong));
+  // }
 
   @override
   Widget build(BuildContext context) {
