@@ -750,9 +750,8 @@ class _ProfileNumberState extends State<ProfileNumber> {
                                 Navigator.pushReplacement(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) => NumberVerify()));
+                                        builder: (context) => NumberVerify(number: newCtrl.text)));
                               }
-
                             },
                             elevation: 3.0,
                             color: Colors.black,
@@ -768,7 +767,9 @@ class _ProfileNumberState extends State<ProfileNumber> {
 }
 
 class NumberVerify extends StatefulWidget {
-  NumberVerify({Key key}) : super(key: key);
+  final String number;
+
+  NumberVerify({Key key, this.number}) : super(key: key);
 
   @override
   _NumberVerifyState createState() => _NumberVerifyState();
@@ -777,6 +778,8 @@ class NumberVerify extends StatefulWidget {
 class _NumberVerifyState extends State<NumberVerify> {
   @override
   Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -818,6 +821,8 @@ class _NumberVerifyState extends State<NumberVerify> {
                           autofocus: false,
                           underlineColor: Colors.green,
                           onCompleted: (String value) {
+                            riderProvider.setPhone(AppConfig.of(context),
+                                authProvider, widget.number);
                             Navigator.pushReplacement(
                                 context,
                                 new MaterialPageRoute(
