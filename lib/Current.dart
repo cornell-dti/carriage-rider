@@ -1,7 +1,12 @@
+import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 
 class Current extends StatefulWidget {
+  Current(this.ride);
+
+  final Ride ride;
+
   @override
   _CurrentState createState() => _CurrentState();
 }
@@ -31,50 +36,19 @@ class _CurrentState extends State<Current> {
                   BackgroundHeader(
                       widget: Text("Current Ride",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontFamily: 'SFPro',
-                              fontWeight: FontWeight.bold,))),
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontFamily: 'SFPro',
+                            fontWeight: FontWeight.bold,
+                          ))),
                   BackgroundHeader(
                     widget: SizedBox(height: 10),
                   ),
-                  SizedBox(height: 15),
-                  SubHeader(subHeader1: 'Ride Info', subHeader2: 'Confirmed'),
                   SizedBox(height: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                InformationRow(
-                                    loc: 'Upson Hall',
-                                    address: '109 Tower Rd, Ithaca, NY 14850',
-                                    action: 'Pickup',
-                                    time: '3:15 PM'),
-                                SizedBox(height: 20),
-                                InformationRow(
-                                    loc: 'Gates Hall',
-                                    address: '107 Hoy Rd, Ithaca, NY 14850',
-                                    action: 'Dropoff',
-                                    time: '3:20 PM'),
-                                SizedBox(height: 20)
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20)
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  CustomDivider(),
-                  SizedBox(height: 15),
-                  Contact(),
-                  SizedBox(height: 15),
+                  Contact(color: Colors.black),
+                  SizedBox(height: 20),
+                  TimeLine(widget.ride, true),
+                  SizedBox(height: 20),
                   CustomDivider(),
                   SizedBox(height: 20),
                   RideAction(
@@ -100,10 +74,9 @@ class BackgroundHeader extends StatelessWidget {
       color: Colors.black,
       child: Row(
         children: <Widget>[
-         Expanded(child: Padding(
-           padding: EdgeInsets.only(left: 10),
-           child: widget
-         )),
+          Expanded(
+              child:
+                  Padding(padding: EdgeInsets.only(left: 10), child: widget)),
         ],
       ),
     );

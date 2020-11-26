@@ -58,9 +58,9 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          Contact(),
+                          Contact(color: Colors.grey),
                           SizedBox(height: 60),
-                          TimeLine(widget.ride),
+                          TimeLine(widget.ride, false),
                           SizedBox(height: 70),
                           RideAction(
                               text: "Cancel Ride",
@@ -165,7 +165,8 @@ class CustomDivider extends StatelessWidget {
 }
 
 class Contact extends StatelessWidget {
-  const Contact({Key key}) : super(key: key);
+  final Color color;
+  const Contact({Key key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +183,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Text('Driver TBD',
                   style: TextStyle(
-                      color: grey,
+                      color: color,
                       fontSize: 20,
                       fontWeight: FontWeight.w700),
                 ),
@@ -205,7 +206,7 @@ class Contact extends StatelessWidget {
                       ),
                       child: IconButton(
                         icon: Icon(Icons.phone, size: 16),
-                        color: grey,
+                        color: color,
                         onPressed: () => UrlLauncher.launch("tel://13232315234"),
                       ),
                     ),
@@ -226,7 +227,7 @@ class Contact extends StatelessWidget {
                       ),
                       child: IconButton(
                         icon: Icon(Icons.warning, size: 16),
-                        color: grey,
+                        color: color,
                         onPressed: () {
                           //TODO: add action on press
                         },
@@ -328,8 +329,9 @@ class TimeLineRow extends StatelessWidget {
 }
 
 class TimeLine extends StatefulWidget {
-  TimeLine(this.ride);
+  TimeLine(this.ride, this.isIcon);
   final Ride ride;
+  final bool isIcon;
 
   @override
   _TimeLineState createState() => _TimeLineState();
@@ -395,7 +397,7 @@ Widget line;
                     SizedBox(height: 32),
                     TimeLineRow(
                         infoWidget: Expanded(
-                            child: widget.ride.buildLocationsCard(context)
+                            child: widget.ride.buildLocationsCard(context, widget.isIcon)
                         ),
                         decorationWidth: width
                     ),

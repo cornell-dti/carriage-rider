@@ -18,17 +18,16 @@ class Ride {
   final DateTime endTime;
   final Rider rider;
 
-  Ride({
-    this.id,
-    this.type,
-    this.startLocation,
-    this.startAddress,
-    this.endLocation,
-    this.endAddress,
-    this.rider,
-    this.endTime,
-    this.startTime
-  });
+  Ride(
+      {this.id,
+      this.type,
+      this.startLocation,
+      this.startAddress,
+      this.endLocation,
+      this.endAddress,
+      this.rider,
+      this.endTime,
+      this.startTime});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
@@ -51,162 +50,159 @@ class Ride {
           style: TextThemes.monthStyle,
           children: [
             TextSpan(
-                text: ordinal(int.parse(DateFormat('d')
-                    .format(startTime))) +
-                    ' ',
+                text:
+                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: TextThemes.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
                 style: TextThemes.timeStyle)
-          ]
-      ),
+          ]),
     );
   }
 
-  Widget buildLocationsCard(BuildContext context) {
+  Widget buildLocationsCard(BuildContext context, bool isIcon) {
     return Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 8,
-                  spreadRadius: 0,
-                  color: Colors.black.withOpacity(0.15)
-              )
-            ]
-        ),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              blurRadius: 8,
+              spreadRadius: 0,
+              color: Colors.black.withOpacity(0.15))
+        ]),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(startLocation, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D))),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                    child: Text(startAddress, style: TextStyle(fontSize: 15, color: Color(0xFF1A051D).withOpacity(0.5)))
-                ),
-                SizedBox(height: 16),
-                Text('Estimated pick up time: ' + DateFormat('jm').format(startTime), style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-              ]
-          ),
-        )
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(startLocation,
+                style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                child:
+                    isIcon == true ? cardIconInfo(context) : cardInfo(context)),
+            SizedBox(height: 16),
+            Text(
+                'Estimated pick up time: ' + DateFormat('jm').format(startTime),
+                style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+          ]),
+        ));
+  }
+
+  Widget cardIconInfo(BuildContext context) {
+    return Row(
+      children: [
+        Text(startAddress,
+            style: TextStyle(
+                fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
+        SizedBox(width: 10),
+        Icon(Icons.location_on),
+      ],
+    );
+  }
+
+  Widget cardInfo(BuildContext context) {
+    return Row(
+      children: [
+        Text(startAddress,
+            style: TextStyle(
+                fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
+      ],
     );
   }
 
   Widget buildSummary(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     final labelStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w300,
-        fontSize: 11
-    );
+        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
 
     final infoStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-        fontSize: 16
-    );
-    return Column(
-      children: [
-        Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text('From', style: labelStyle)
-            ]
-        ),
-        SizedBox(height: 8),
-        Row(
+        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
+    return Column(children: [
+      Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(startLocation, style: infoStyle)
-          ],
-        ),
-        SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('To', style: labelStyle)
-          ],
-        ),
-        SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(endLocation, style: infoStyle)
-          ],
-        ),
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('Date', style: labelStyle)
-          ],
-        ),
-        SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(DateFormat('yMd').format(startTime), style: infoStyle)
-          ],
-        ),
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Pickup Time', style: labelStyle),
-                  SizedBox(height: 5),
-                  Text(DateFormat('jm').format(startTime), style: infoStyle)
-                ],
-              ),
+          children: <Widget>[Text('From', style: labelStyle)]),
+      SizedBox(height: 8),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text(startLocation, style: infoStyle)],
+      ),
+      SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text('To', style: labelStyle)],
+      ),
+      SizedBox(height: 8),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text(endLocation, style: infoStyle)],
+      ),
+      SizedBox(height: 15),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text('Date', style: labelStyle)],
+      ),
+      SizedBox(height: 5),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(DateFormat('yMd').format(startTime), style: infoStyle)
+        ],
+      ),
+      SizedBox(height: 15),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Pickup Time', style: labelStyle),
+                SizedBox(height: 5),
+                Text(DateFormat('jm').format(startTime), style: infoStyle)
+              ],
             ),
-            SizedBox(width: 30),
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Drop-off Time', style: labelStyle),
-                  SizedBox(height: 5),
-                  Text(DateFormat('jm').format(endTime), style: infoStyle)
-                ],
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('Every', style: labelStyle)
-          ],
-        ),
-        SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            //TODO: change to have repeating rides info
-            Text('M W F', style: infoStyle)
-          ],
-        ),
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('Accessibility Request', style: labelStyle)
-          ],
-        ),
-        SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(riderProvider.hasInfo() ? riderProvider.info.accessibilityStr() : '', style: infoStyle)
-          ],
-        ),
-      ]
-    );
+          ),
+          SizedBox(width: 30),
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Drop-off Time', style: labelStyle),
+                SizedBox(height: 5),
+                Text(DateFormat('jm').format(endTime), style: infoStyle)
+              ],
+            ),
+          )
+        ],
+      ),
+      SizedBox(height: 15),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text('Every', style: labelStyle)],
+      ),
+      SizedBox(height: 5),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          //TODO: change to have repeating rides info
+          Text('M W F', style: infoStyle)
+        ],
+      ),
+      SizedBox(height: 15),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[Text('Accessibility Request', style: labelStyle)],
+      ),
+      SizedBox(height: 5),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+              riderProvider.hasInfo()
+                  ? riderProvider.info.accessibilityStr()
+                  : '',
+              style: infoStyle)
+        ],
+      ),
+    ]);
   }
 }
 

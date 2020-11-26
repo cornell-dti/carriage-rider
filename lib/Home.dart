@@ -95,7 +95,16 @@ class Home extends StatelessWidget {
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
-                            builder: (context) => Current()));
+                            builder: (context) => Current(Ride(
+                                  type: 'active',
+                                  startLocation: 'Uris Hall',
+                                  startAddress:
+                                      '100 Carriage Way, Ithaca, NY 14850',
+                                  endLocation: 'Cascadilla Hall',
+                                  endAddress: '101 DTI St, Ithaca, NY 14850',
+                                  startTime: DateTime(2020, 10, 18, 13, 0),
+                                  endTime: DateTime(2020, 10, 18, 13, 15),
+                                ))));
                   },
                 ),
                 Divider(
