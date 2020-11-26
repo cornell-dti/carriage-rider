@@ -51,12 +51,35 @@ class _CurrentState extends State<Current> {
                   SizedBox(height: 30),
                   CustomDivider(),
                   SizedBox(height: 20),
+                  widget.ride.recurring
+                      ? NoRecurringRide()
+                      : SizedBox(height: 20),
                   SizedBox(height: MediaQuery.of(context).size.height / 8),
                 ],
               ),
             )
           ],
         )));
+  }
+}
+
+class NoRecurringRide extends StatelessWidget {
+  const NoRecurringRide({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  "This is not a repeating ride.",
+                  style: TextStyle(color: grey, fontWeight: FontWeight.bold, fontSize: 15),
+                ))),
+      ],
+    ));
   }
 }
 

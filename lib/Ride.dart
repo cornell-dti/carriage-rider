@@ -20,6 +20,7 @@ class Ride {
   final Rider rider;
   final bool recurring;
   final List<DateTime> recurringDays;
+  final bool deleted;
 
   Ride(
       {this.id,
@@ -33,7 +34,8 @@ class Ride {
       this.endTime,
       this.startTime,
       this.recurring,
-      this.recurringDays});
+      this.recurringDays,
+      this.deleted});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
@@ -49,6 +51,7 @@ class Ride {
       rider: Rider.fromJson(json['rider']),
       recurring: json['recurring'],
       recurringDays: List.from(json['recurringDays']),
+      deleted: json['deleted'],
     );
   }
 
