@@ -14,9 +14,12 @@ class Ride {
   final String startAddress;
   final String endLocation;
   final String endAddress;
+  final DateTime endDate;
   final DateTime startTime;
   final DateTime endTime;
   final Rider rider;
+  final bool recurring;
+  final List<DateTime> recurringDays;
 
   Ride(
       {this.id,
@@ -26,8 +29,11 @@ class Ride {
       this.endLocation,
       this.endAddress,
       this.rider,
+      this.endDate,
       this.endTime,
-      this.startTime});
+      this.startTime,
+      this.recurring,
+      this.recurringDays});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
@@ -38,8 +44,11 @@ class Ride {
       endLocation: json['endLocation']['name'],
       endAddress: json['endLocation']['address'],
       startTime: DateTime.parse(json['startTime']),
+      endDate: DateTime.parse(json['endDate']),
       endTime: DateTime.parse(json['endTime']),
       rider: Rider.fromJson(json['rider']),
+      recurring: json['recurring'],
+      recurringDays: List.from(json['recurringDays']),
     );
   }
 
