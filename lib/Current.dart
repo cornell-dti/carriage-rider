@@ -62,7 +62,9 @@ class _CurrentState extends State<Current> {
                   SizedBox(height: 30),
                   CustomDivider(),
                   SizedBox(height: 20),
-                  widget.ride.recurring ? RecurringRide(widget.ride) : NoRecurringRide(),
+                  widget.ride.recurring
+                      ? RecurringRide(widget.ride)
+                      : NoRecurringRide(),
                   SizedBox(height: MediaQuery.of(context).size.height / 8),
                 ],
               ),
@@ -77,8 +79,16 @@ class NoRecurringRide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Row(
+    return Container(child: NoRecurringText());
+  }
+}
+
+class NoRecurringText extends StatelessWidget {
+  const NoRecurringText({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
       children: <Widget>[
         Expanded(
             child: Padding(
@@ -89,12 +99,13 @@ class NoRecurringRide extends StatelessWidget {
                       color: grey, fontWeight: FontWeight.bold, fontSize: 15),
                 ))),
       ],
-    ));
+    );
   }
 }
 
 class RecurringRide extends StatefulWidget {
   RecurringRide(this.ride);
+
   final Ride ride;
 
   @override
@@ -102,7 +113,6 @@ class RecurringRide extends StatefulWidget {
 }
 
 class _RecurringRideState extends State<RecurringRide> {
-
   @override
   Widget build(BuildContext context) {
     String repeatedDays = "";
@@ -119,53 +129,15 @@ class _RecurringRideState extends State<RecurringRide> {
         children: [
           Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      'From',
-                      style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      DateFormat('M').format(widget.ride.startTime) + '/' + DateFormat('d').format(widget.ride.startTime) + '/'
-                          + DateFormat('y').format(widget.ride.startTime),
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  )
-                ],
-              ),
+              StartDate(ride: widget.ride),
               SizedBox(
                 width: 20,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(' ', style: TextStyle(color: Colors.black, fontSize: 14)),
-                  Text(
-                    '~',
-                    style: TextStyle(color: Colors.black, fontSize: 20),
-                  )
-                ],
-              ),
+              DateDivider(),
               SizedBox(
                 width: 20,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('To', style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold)),
-                  Text(
-                    DateFormat('M').format(widget.ride.endDate) + '/' + DateFormat('d').format(widget.ride.endDate) + '/'
-                    + DateFormat('y').format(widget.ride.endDate),
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  )
-                ],
-              ),
+              EndDate(ride: widget.ride)
             ],
           ),
           SizedBox(height: 15),
@@ -184,7 +156,90 @@ class _RecurringRideState extends State<RecurringRide> {
       ),
     );
   }
+}
 
+class DateDivider extends StatelessWidget {
+  const DateDivider({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(' ', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text(
+          '~',
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        )
+      ],
+    );
+  }
+}
+
+class StartDate extends StatelessWidget {
+  const StartDate({Key key, this.ride}) : super(key: key);
+  final Ride ride;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              'From',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              DateFormat('M').format(ride.startTime) +
+                  '/' +
+                  DateFormat('d').format(ride.startTime) +
+                  '/' +
+                  DateFormat('y').format(ride.startTime),
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class EndDate extends StatelessWidget {
+  const EndDate({Key key, this.ride}) : super(key: key);
+  final Ride ride;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('To',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold)),
+          Text(
+            DateFormat('M').format(ride.endDate) +
+                '/' +
+                DateFormat('d').format(ride.endDate) +
+                '/' +
+                DateFormat('y').format(ride.endDate),
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class BackgroundHeader extends StatelessWidget {
