@@ -19,7 +19,7 @@ class Ride {
   final DateTime endTime;
   final Rider rider;
   final bool recurring;
-  final List<DateTime> recurringDays;
+  final List<int> recurringDays;
   final bool deleted;
 
   Ride(

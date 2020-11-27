@@ -104,7 +104,9 @@ class Home extends StatelessWidget {
                                   endAddress: '101 DTI St, Ithaca, NY 14850',
                                   startTime: DateTime(2020, 10, 18, 13, 0),
                                   endTime: DateTime(2020, 10, 18, 13, 15),
+                                  endDate: DateTime(2020, 12, 10),
                                   recurring: true,
+                                  recurringDays: [0, 3, 4]
                                 ))));
                   },
                 ),
