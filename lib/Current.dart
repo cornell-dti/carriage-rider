@@ -1,6 +1,7 @@
 import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Map days = {
   0: 'Sunday',
@@ -131,7 +132,8 @@ class _RecurringRideState extends State<RecurringRide> {
                   Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      '02/16/2020',
+                      DateFormat('M').format(widget.ride.startTime) + '/' + DateFormat('d').format(widget.ride.startTime) + '/'
+                          + DateFormat('y').format(widget.ride.startTime),
                       style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   )
@@ -158,7 +160,8 @@ class _RecurringRideState extends State<RecurringRide> {
                 children: <Widget>[
                   Text('To', style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold)),
                   Text(
-                    '05/16/2020',
+                    DateFormat('M').format(widget.ride.endDate) + '/' + DateFormat('d').format(widget.ride.endDate) + '/'
+                    + DateFormat('y').format(widget.ride.endDate),
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   )
                 ],
