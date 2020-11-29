@@ -1,7 +1,7 @@
 import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/RideObject.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/LocationsProvider.dart';

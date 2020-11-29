@@ -2,7 +2,7 @@ import 'package:carriage_rider/Assistance.dart';
 import 'package:carriage_rider/Ride_Confirmation.dart';
 import 'package:carriage_rider/RiderProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/RideObject.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'RidesProvider.dart';
