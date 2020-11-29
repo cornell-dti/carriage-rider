@@ -5,6 +5,7 @@ import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
+import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
@@ -12,8 +13,7 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:carriage_rider/Help.dart';
-
-import 'Ride.dart';
+import 'RideObject.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -95,20 +95,18 @@ class Home extends StatelessWidget {
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
-                            builder: (context) =>
-                                Current(Ride(
-                                    type: 'active',
-                                    startLocation: 'Uris Hall',
-                                    startAddress:
+                            builder: (context) => Current(Ride(
+                                type: 'active',
+                                startLocation: 'Uris Hall',
+                                startAddress:
                                     '100 Carriage Way, Ithaca, NY 14850',
-                                    endLocation: 'Cascadilla Hall',
-                                    endAddress: '101 DTI St, Ithaca, NY 14850',
-                                    startTime: DateTime(2020, 10, 18, 13, 0),
-                                    endTime: DateTime(2020, 10, 18, 13, 15),
-                                    endDate: DateTime(2020, 12, 10),
-                                    recurring: true,
-                                    recurringDays: [0, 3, 4]
-                                ))));
+                                endLocation: 'Cascadilla Hall',
+                                endAddress: '101 DTI St, Ithaca, NY 14850',
+                                startTime: DateTime(2020, 10, 18, 13, 0),
+                                endTime: DateTime(2020, 10, 18, 13, 15),
+                                endDate: DateTime(2020, 12, 10),
+                                recurring: true,
+                                recurringDays: [0, 3, 4]))));
                   },
                 ),
                 Divider(
@@ -122,12 +120,11 @@ class Home extends StatelessWidget {
                         context,
                         //TODO: remove temporary ride
                         new MaterialPageRoute(
-                            builder: (context) =>
-                                UpcomingRidePage(Ride(
+                            builder: (context) => UpcomingRidePage(Ride(
                                   type: 'active',
                                   startLocation: 'Uris Hall',
                                   startAddress:
-                                  '100 Carriage Way, Ithaca, NY 14850',
+                                      '100 Carriage Way, Ithaca, NY 14850',
                                   endLocation: 'Cascadilla Hall',
                                   endAddress: '101 DTI St, Ithaca, NY 14850',
                                   startTime: DateTime(2020, 10, 18, 13, 0),
@@ -142,23 +139,21 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.history, color: Colors.black),
                   title: sideBarText("Ride History", Colors.black),
                   onTap: () {
-                    Navigator.push(context,
-                        new MaterialPageRoute(builder: (context)
-                    =>
-                        History(Ride(
-                            type: 'active',
-                            startLocation: 'Uris Hall',
-                            startAddress:
-                            '100 Carriage Way, Ithaca, NY 14850',
-                            endLocation: 'Cascadilla Hall',
-                            endAddress: '101 DTI St, Ithaca, NY 14850',
-                            startTime: DateTime(2020, 10, 18, 13, 0),
-                            endTime: DateTime(2020, 10, 18, 13, 15),
-                            endDate: DateTime(2020, 12, 10),
-                            recurring: false,
-                            recurringDays: [0, 3, 4]
-                        ))
-                    ));
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => History(Ride(
+                                type: 'active',
+                                startLocation: 'Uris Hall',
+                                startAddress:
+                                    '100 Carriage Way, Ithaca, NY 14850',
+                                endLocation: 'Cascadilla Hall',
+                                endAddress: '101 DTI St, Ithaca, NY 14850',
+                                startTime: DateTime(2020, 10, 18, 13, 0),
+                                endTime: DateTime(2020, 10, 18, 13, 15),
+                                endDate: DateTime(2020, 12, 10),
+                                recurring: false,
+                                recurringDays: [0, 3, 4]))));
                   },
                 ),
                 Divider(
@@ -198,9 +193,7 @@ class Home extends StatelessWidget {
                   pinned: true,
                   expandedHeight: 100,
                   collapsedHeight: 100,
-                  backgroundColor: Theme
-                      .of(context)
-                      .scaffoldBackgroundColor,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   actions: [Container()],
                   flexibleSpace: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,71 +232,56 @@ class Home extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   sliver: SliverList(
                       delegate: SliverChildListDelegate(
-                        [
-                          Text(
-                            'Current Ride',
-                            style: subHeadingStyle,
-                          ),
-                          SizedBox(height: 12),
-                          CurrentRide(),
-                          SizedBox(height: 35),
-                          Row(children: [
-                            Text(
-                              'Upcoming Rides',
-                              style: subHeadingStyle,
-                            ),
-                            Spacer(),
-                            Text('See More', style: seeMoreStyle),
-                            Icon(Icons.arrow_forward, size: 16)
-                          ]),
-                          SizedBox(height: 12),
-                          UpcomingRides(),
-                          SizedBox(height: 35),
-                          Row(children: [
-                            Text(
-                              'Ride History',
-                              style: subHeadingStyle,
-                            ),
-                            Spacer(),
-                            Text('See More', style: seeMoreStyle),
-                            Icon(Icons.arrow_forward, size: 16)
-                          ]),
-                          RideHistory(),
-                          SizedBox(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 8,
-                          )
-                        ],
-                      )),
+                    [
+                      Text(
+                        'Current Ride',
+                        style: subHeadingStyle,
+                      ),
+                      SizedBox(height: 12),
+                      CurrentRide(),
+                      SizedBox(height: 35),
+                      Row(children: [
+                        Text(
+                          'Upcoming Rides',
+                          style: subHeadingStyle,
+                        ),
+                        Spacer(),
+                        Text('See More', style: seeMoreStyle),
+                        Icon(Icons.arrow_forward, size: 16)
+                      ]),
+                      SizedBox(height: 12),
+                      UpcomingRides(),
+                      SizedBox(height: 35),
+                      Row(children: [
+                        Text(
+                          'Ride History',
+                          style: subHeadingStyle,
+                        ),
+                        Spacer(),
+                        Text('See More', style: seeMoreStyle),
+                        Icon(Icons.arrow_forward, size: 16)
+                      ]),
+                      RideHistory(),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 8,
+                      )
+                    ],
+                  )),
                 ),
               ]),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 8,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 8,
                   color: Colors.white,
                   child: Stack(
                     children: <Widget>[
                       Align(
                           alignment: Alignment.center,
                           child: ButtonTheme(
-                            minWidth: MediaQuery
-                                .of(context)
-                                .size
-                                .width * 0.8,
+                            minWidth: MediaQuery.of(context).size.width * 0.8,
                             height: 45.0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(3)),
@@ -312,8 +290,8 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestRideLoc()));
+                                        builder: (context) => RequestRideLoc(
+                                            ride: new RideObject())));
                               },
                               elevation: 3.0,
                               color: Colors.black,

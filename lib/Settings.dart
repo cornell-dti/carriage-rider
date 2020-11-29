@@ -101,8 +101,7 @@ class _SettingsState extends State<Settings> {
                                   //crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                        authProvider.googleSignIn.currentUser
-                                            .displayName,
+                                        riderProvider.info.fullName(),
                                         style: TextStyle(
                                           fontSize: 20,
                                         )),
