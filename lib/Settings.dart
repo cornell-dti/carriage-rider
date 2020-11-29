@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
                       Padding(
                           padding: EdgeInsets.only(bottom: 30),
                           child: Stack(
-                            overflow: Overflow.visible,
+                            clipBehavior: Clip.none,
                             children: [
                               Row(
                                   //crossAxisAlignment: CrossAxisAlignment.end,

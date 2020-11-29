@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/RideObject.dart';
 
 class RequestRideTime extends StatefulWidget {
-  final Ride ride;
+  final RideObject ride;
 
   RequestRideTime({Key key, this.ride}) : super(key: key);
 

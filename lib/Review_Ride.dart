@@ -9,7 +9,7 @@ import 'RidesProvider.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class ReviewRide extends StatefulWidget {
-  final Ride ride;
+  final RideObject ride;
 
   ReviewRide({Key key, this.ride}) : super(key: key);
 

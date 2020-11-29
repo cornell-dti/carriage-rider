@@ -5,7 +5,7 @@ import 'package:carriage_rider/RideObject.dart';
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class RepeatRide extends StatefulWidget {
-  final Ride ride;
+  final RideObject ride;
 
   RepeatRide({Key key, this.ride}) : super(key: key);
 

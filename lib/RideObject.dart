@@ -1,4 +1,4 @@
-class Ride {
+class RideObject {
   String fromLocation;
   String toLocation;
   String date;
@@ -6,7 +6,7 @@ class Ride {
   String dropOffTime;
   String every;
 
-  Ride(
+  RideObject(
       {this.fromLocation,
       this.toLocation,
       this.date,

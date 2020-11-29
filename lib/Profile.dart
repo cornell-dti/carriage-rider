@@ -144,7 +144,7 @@ class _ProfileState extends State<Profile> {
                     Padding(
                         padding: EdgeInsets.only(bottom: 30),
                         child: Stack(
-                          overflow: Overflow.visible,
+                          clipBehavior: Clip.none,
                           children: [
                             Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

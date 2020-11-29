@@ -49,7 +49,7 @@ class RideRequestStyles {
 }
 
 class RequestRideLoc extends StatefulWidget {
-  final Ride ride;
+  final RideObject ride;
 
   RequestRideLoc({Key key, this.ride}) : super(key: key);
 

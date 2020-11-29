@@ -67,7 +67,7 @@ class Rider {
         'firstName': firstName,
         'lastName': lastName,
         'pronouns': picture,
-        'accessibility': accessibility,
+        'accessibility': accessibilityNeeds,
         'description': description,
         'picture': picture,
         'joinDate': joinDate,
