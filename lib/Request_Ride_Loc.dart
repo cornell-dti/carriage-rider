@@ -88,37 +88,73 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   ),
                 ],
               ),
-              SizedBox(height: 30.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.location_on),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1,
-                        color: Colors.grey[350], size: 12.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1,
-                        color: Colors.grey[350], size: 12.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1,
-                        color: Colors.grey[350], size: 12.0),
-                  ),
-                  Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
-                ],
-              ),
-              SizedBox(height: 10.0),
+              SizedBox(height: 20.0),
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Where do you want to go?",
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: new Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        child: Divider(
+                          color: Colors.black,
+                          height: 50,
+                          thickness: 5,
+                        )),
+                  ),
+                  Expanded(
+                    child: new Container(
+                        child: Divider(
+                      color: Colors.grey[350],
+                      height: 50,
+                      thickness: 5,
+                    )),
+                  ),
+                  Expanded(
+                    child: new Container(
+                        margin: const EdgeInsets.only(right: 10.0),
+                        child: Divider(
+                          color: Colors.grey[350],
+                          height: 50,
+                          thickness: 5,
+                        )),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: new Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      child: Icon(Icons.location_on),
+                    ),
+                  ),
+                  Expanded(
+                    child: new Container(
+                      child: Icon(Icons.web_asset, color: Colors.grey[350]),
+                    ),
+                  ),
+                  Expanded(
+                    child: new Container(
+                      margin: const EdgeInsets.only(right: 10.0),
+                      child: Icon(Icons.check, color: Colors.grey[350]),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Set your pickup and dropoff location",
                         style: RideRequestStyles.question(context)),
                   )
                 ],
@@ -185,8 +221,10 @@ class _FromLocationState extends State<FromLocation> {
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.fromCtrl,
           decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
               labelText: 'From',
-              labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
+              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+              focusedBorder: OutlineInputBorder())),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);
       },
@@ -246,8 +284,10 @@ class _ToLocationState extends State<ToLocation> {
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.toCtrl,
           decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
               labelText: 'To',
-              labelStyle: TextStyle(color: Colors.black, fontSize: 15))),
+              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+              focusedBorder: OutlineInputBorder())),
       suggestionsCallback: (pattern) {
         return LocationsProvider.getSuggestions(pattern, locations);
       },
@@ -289,5 +329,26 @@ class _ToLocationState extends State<ToLocation> {
           }
           return Center(child: CircularProgressIndicator());
         });
+  }
+}
+
+class HorizontalLine extends CustomPainter {
+  Paint _paint;
+
+  HorizontalLine(Color color) {
+    _paint = Paint()
+      ..color = color
+      ..strokeWidth = 7
+      ..strokeCap = StrokeCap.round;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawLine(Offset(-90.0, 0.0), Offset(90.0, 0.0), _paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
