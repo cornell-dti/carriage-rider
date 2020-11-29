@@ -8,19 +8,19 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   @override
   void initState() {
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     try {
       authProvider.signInSilently();
     } catch (e) {
-      print('User has not logged in previously, therefore, we should not proceed');
+      print(
+          'User has not logged in previously, therefore, we should not proceed');
     }
     return Scaffold(
         body: Container(
@@ -40,7 +40,7 @@ class _LoginState extends State<Login> {
 
 class SignInButton extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     return OutlineButton(
         splashColor: Colors.grey,

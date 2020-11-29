@@ -9,7 +9,7 @@ import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
 
 class RideRequestStyles {
-  static TextStyle cancel(BuildContext context) {
+  static TextStyle cancel(context) {
     return TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w100,
@@ -17,7 +17,7 @@ class RideRequestStyles {
     );
   }
 
-  static TextStyle question(BuildContext context) {
+  static TextStyle question(context) {
     return TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w800,
@@ -25,24 +25,24 @@ class RideRequestStyles {
     );
   }
 
-  static TextStyle toggle(BuildContext context) {
+  static TextStyle toggle(context) {
     return TextStyle(
       fontWeight: FontWeight.w200,
       fontSize: 15,
     );
   }
 
-  static TextStyle description(BuildContext context) {
+  static TextStyle description(context) {
     return TextStyle(
         color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
   }
 
-  static TextStyle label(BuildContext context) {
+  static TextStyle label(context) {
     return TextStyle(
         color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
   }
 
-  static TextStyle info(BuildContext context) {
+  static TextStyle info(context) {
     return TextStyle(
         color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
   }
@@ -63,7 +63,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   TextEditingController toCtrl = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -180,7 +180,7 @@ class FromLocation extends StatefulWidget {
 }
 
 class _FromLocationState extends State<FromLocation> {
-  Widget _fromField(BuildContext context, List<Location> locations) {
+  Widget _fromField(context, List<Location> locations) {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.fromCtrl,
@@ -212,7 +212,7 @@ class _FromLocationState extends State<FromLocation> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
     AuthProvider authProvider = Provider.of(context);
@@ -241,7 +241,7 @@ class ToLocation extends StatefulWidget {
 }
 
 class _ToLocationState extends State<ToLocation> {
-  Widget _toField(BuildContext context, List<Location> locations) {
+  Widget _toField(context, List<Location> locations) {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.toCtrl,
@@ -273,7 +273,7 @@ class _ToLocationState extends State<ToLocation> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
     AuthProvider authProvider = Provider.of(context);
