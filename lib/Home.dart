@@ -8,11 +8,13 @@ import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
-import 'package:carriage_rider/Upcoming_Ride.dart';
 import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:carriage_rider/RideObject.dart';
+import 'package:carriage_rider/Help.dart';
+
+import 'Ride.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -25,16 +27,16 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: change to get name from rider provider
     AuthProvider authProvider = Provider.of(context);
     final String headerName = "Hi " +
         authProvider.googleSignIn.currentUser.displayName.split(" ")[0] +
-        "!";
+        "! ☀";
+
     final subHeadingStyle = TextStyle(
-        color: Colors.grey[700],
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.3,
-        fontSize: 20,
-        height: 2);
+        color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 20);
+
+    final seeMoreStyle = TextStyle(fontSize: 14, color: Color(0xFF181818));
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -45,170 +47,241 @@ class Home extends StatelessWidget {
     }
 
     return Scaffold(
-        endDrawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.all(5.0),
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.person, color: Colors.black),
-                title: sideBarText("Profile", Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Profile()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.settings, color: Colors.black),
-                title: sideBarText("Settings", Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Settings()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.notifications, color: Colors.black),
-                title: sideBarText("Notifications", Colors.black),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => Notifications()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.directions_car, color: Colors.black),
-                title: sideBarText("Current Ride", Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Current()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.trending_up, color: Colors.black),
-                title: sideBarText("Upcoming Ride", Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Upcoming()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.history, color: Colors.black),
-                title: sideBarText("Ride History", Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => History()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.check, color: Colors.black),
-                title: sideBarText("Confirmed Ride", Colors.black),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => ConfirmedRide()));
-                },
-              )
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          title: Text(
-            headerName,
-            style: TextStyle(
-                color: Colors.black, fontSize: 30, fontFamily: 'SFPro'),
-          ),
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-        ),
-        body: Stack(
-          children: <Widget>[
-            ListView(
-              scrollDirection: Axis.vertical,
+        endDrawer: SafeArea(
+          child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.all(5.0),
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-                  child: Text(
-                    'Next Ride',
-                    style: subHeadingStyle,
-                  ),
+                ListTile(
+                  leading: Icon(Icons.person, color: Colors.black),
+                  title: sideBarText("Profile", Colors.black),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => Profile()));
+                  },
                 ),
-                CurrentRide(),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-                  child: Text(
-                    'Upcoming Rides',
-                    style: subHeadingStyle,
-                  ),
+                Divider(
+                  color: Colors.grey[500],
                 ),
-                UpcomingRide(),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 17.0, bottom: 15.0),
-                  child: Text(
-                    'Ride History',
-                    style: subHeadingStyle,
-                  ),
+                ListTile(
+                  leading: Icon(Icons.settings, color: Colors.black),
+                  title: sideBarText("Settings", Colors.black),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => Settings()));
+                  },
                 ),
-                RideHistory(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 8,
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.notifications, color: Colors.black),
+                  title: sideBarText("Notifications", Colors.black),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => Notifications()));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.directions_car, color: Colors.black),
+                  title: sideBarText("Current Ride", Colors.black),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => Current()));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.trending_up, color: Colors.black),
+                  title: sideBarText("Upcoming Ride", Colors.black),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        //TODO: remove temporary ride
+                        new MaterialPageRoute(
+                            builder: (context) => UpcomingRidePage(Ride(
+                                  type: 'active',
+                                  startLocation: 'Uris Hall',
+                                  startAddress:
+                                      '100 Carriage Way, Ithaca, NY 14850',
+                                  endLocation: 'Cascadilla Hall',
+                                  endAddress: '101 DTI St, Ithaca, NY 14850',
+                                  startTime: DateTime(2020, 10, 18, 13, 0),
+                                  endTime: DateTime(2020, 10, 18, 13, 15),
+                                ))));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.history, color: Colors.black),
+                  title: sideBarText("Ride History", Colors.black),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => History()));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.check, color: Colors.black),
+                  title: sideBarText("Confirmed Ride", Colors.black),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => ConfirmedRide()));
+                  },
+                ),
+                Divider(
+                  color: Colors.grey[500],
+                ),
+                ListTile(
+                  leading: Icon(Icons.help_outline, color: Colors.black),
+                  title: sideBarText('Help', Colors.black),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => Help()));
+                  },
                 )
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 8,
-                color: Colors.white,
-                child: Stack(
-                  children: <Widget>[
-                    Align(
-                        alignment: Alignment.center,
-                        child: ButtonTheme(
-                          minWidth: MediaQuery.of(context).size.width * 0.8,
-                          height: 45.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3)),
-                          child: RaisedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => RequestRideLoc(ride: new Ride(),)));
-                            },
-                            elevation: 3.0,
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            icon: Icon(Icons.add),
-                            label: Text('Request Ride',
-                                style: TextStyle(fontSize: 18)),
+          ),
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              CustomScrollView(slivers: [
+                SliverAppBar(
+                  elevation: 11,
+                  pinned: true,
+                  expandedHeight: 100,
+                  collapsedHeight: 100,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  actions: [Container()],
+                  flexibleSpace: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, bottom: 23),
+                            child: Text(
+                              headerName,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 30,
+                                  fontFamily: 'SFPro',
+                                  fontWeight: FontWeight.w700),
+                            ),
                           ),
-                        )),
-                  ],
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 23),
+                            child: Builder(builder: (BuildContext context) {
+                              return IconButton(
+                                  icon: Icon(Icons.menu, color: Colors.black),
+                                  onPressed: () =>
+                                      Scaffold.of(context).openEndDrawer());
+                            }),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate(
+                    [
+                      Text(
+                        'Current Ride',
+                        style: subHeadingStyle,
+                      ),
+                      SizedBox(height: 12),
+                      CurrentRide(),
+                      SizedBox(height: 35),
+                      Row(children: [
+                        Text(
+                          'Upcoming Rides',
+                          style: subHeadingStyle,
+                        ),
+                        Spacer(),
+                        Text('See More', style: seeMoreStyle),
+                        Icon(Icons.arrow_forward, size: 16)
+                      ]),
+                      SizedBox(height: 12),
+                      UpcomingRides(),
+                      SizedBox(height: 35),
+                      Row(children: [
+                        Text(
+                          'Ride History',
+                          style: subHeadingStyle,
+                        ),
+                        Spacer(),
+                        Text('See More', style: seeMoreStyle),
+                        Icon(Icons.arrow_forward, size: 16)
+                      ]),
+                      RideHistory(),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 8,
+                      )
+                    ],
+                  )),
+                ),
+              ]),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 8,
+                  color: Colors.white,
+                  child: Stack(
+                    children: <Widget>[
+                      Align(
+                          alignment: Alignment.center,
+                          child: ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.8,
+                            height: 45.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            child: RaisedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            RequestRideLoc()));
+                              },
+                              elevation: 3.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              icon: Icon(Icons.add),
+                              label: Text('Request Ride',
+                                  style: TextStyle(fontSize: 18)),
+                            ),
+                          )),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }

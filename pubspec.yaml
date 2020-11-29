@@ -29,6 +29,7 @@ dependencies:
   flutter_datetime_picker: ^1.4.0
   humanize: ^0.3.0
   flutter_typeahead: ^1.8.8
+  flutter_verification_code: ^0.2.1
 
 dev_dependencies:
   flutter_test:
@@ -41,6 +42,9 @@ flutter:
     - family: SFPro
       fonts:
         - asset: fonts/SF-Pro-Text-Medium.ttf
+    - family: SFProDisplay
+      fonts:
+        - asset: fonts/SF-Pro-Display.ttf
   assets:
     - assets/images/
 
@@ -49,8 +53,3 @@ flutter_icons:
   android: true
   image_path_ios: "assets/images/logo_rider.png"
   image_path_android: "assets/images/logo_rider.png"
-
-
-
-
-

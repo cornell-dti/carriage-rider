@@ -21,7 +21,6 @@ class CurrentRide extends StatelessWidget {
     );
 
     return Container(
-      margin: EdgeInsets.only(left: 17.0, right: 17.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3.0), boxShadow: [
         BoxShadow(color: Colors.grey[500], blurRadius: 3.0)
@@ -50,7 +49,7 @@ class CurrentRide extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('Your driver will arrive in 2 mintues',
+                        Text('Your driver will arrive in 2 minutes',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],

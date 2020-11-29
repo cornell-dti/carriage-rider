@@ -68,7 +68,7 @@ class _ConfirmedRideState extends State<ConfirmedRide> {
                     CustomDivider(),
                     SizedBox(height: 20),
                     RideAction(
-                        rideAction: "Cancel Ride",
+                        text: "Cancel Ride",
                         color: Colors.red,
                         icon: Icons.clear),
                     SizedBox(height: MediaQuery.of(context).size.height / 8),
