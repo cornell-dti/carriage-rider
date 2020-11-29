@@ -1,6 +1,7 @@
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/RiderProvider.dart';
 import 'package:carriage_rider/RidesProvider.dart';
+import 'package:carriage_rider/LocationsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Login.dart';
@@ -34,20 +35,28 @@ class MyApp extends StatelessWidget {
               Provider.of<AuthProvider>(context, listen: false),
             );
           },
-          child: MaterialApp(
-            title: 'Carriage Rider',
-            theme: ThemeData(
-                primarySwatch: Colors.grey,
-                fontFamily: 'SFPro',
-                accentColor: Color.fromRGBO(60, 60, 67, 0.6),
-                textTheme: TextTheme(
-                  headline5:
-                      TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                  subtitle1:
-                      TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-                )),
-            home: Logic(),
-            debugShowCheckedModeBanner: false,
+          child: ChangeNotifierProvider<LocationsProvider>(
+            create: (BuildContext context) {
+              return LocationsProvider(
+                appConfig,
+                Provider.of<AuthProvider>(context, listen: false),
+              );
+            },
+            child: MaterialApp(
+              title: 'Carriage Rider',
+              theme: ThemeData(
+                  primarySwatch: Colors.green,
+                  fontFamily: 'SFPro',
+                  accentColor: Color.fromRGBO(60, 60, 67, 0.6),
+                  textTheme: TextTheme(
+                    headline5:
+                        TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                    subtitle1:
+                        TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                  )),
+              home: Logic(),
+              debugShowCheckedModeBanner: false,
+            ),
           ),
         ),
       ),

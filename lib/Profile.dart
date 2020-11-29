@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Future _getImage() async {
-    final pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -144,7 +144,7 @@ class _ProfileState extends State<Profile> {
                     Padding(
                         padding: EdgeInsets.only(bottom: 30),
                         child: Stack(
-                          overflow: Overflow.visible,
+                          clipBehavior: Clip.none,
                           children: [
                             Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

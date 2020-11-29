@@ -5,6 +5,7 @@ import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
+import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Ride_History.dart';
@@ -12,8 +13,7 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:carriage_rider/Help.dart';
-
-import 'Ride.dart';
+import 'RideObject.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -108,15 +108,15 @@ class Home extends StatelessWidget {
                         //TODO: remove temporary ride
                         new MaterialPageRoute(
                             builder: (context) => UpcomingRidePage(Ride(
-                                  type: 'active',
-                                  startLocation: 'Uris Hall',
-                                  startAddress:
-                                      '100 Carriage Way, Ithaca, NY 14850',
-                                  endLocation: 'Cascadilla Hall',
-                                  endAddress: '101 DTI St, Ithaca, NY 14850',
-                                  startTime: DateTime(2020, 10, 18, 13, 0),
-                                  endTime: DateTime(2020, 10, 18, 13, 15),
-                                ))));
+                              type: 'active',
+                              startLocation: 'Uris Hall',
+                              startAddress:
+                              '100 Carriage Way, Ithaca, NY 14850',
+                              endLocation: 'Cascadilla Hall',
+                              endAddress: '101 DTI St, Ithaca, NY 14850',
+                              startTime: DateTime(2020, 10, 18, 13, 0),
+                              endTime: DateTime(2020, 10, 18, 13, 15),
+                            ))));
                   },
                 ),
                 Divider(
@@ -265,7 +265,7 @@ class Home extends StatelessWidget {
                                     context,
                                     new MaterialPageRoute(
                                         builder: (context) =>
-                                            RequestRideLoc()));
+                                            RequestRideLoc(ride: new RideObject())));
                               },
                               elevation: 3.0,
                               color: Colors.black,

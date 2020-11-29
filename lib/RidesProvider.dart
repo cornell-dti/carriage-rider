@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carriage_rider/RiderProvider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:carriage_rider/AuthProvider.dart';
@@ -25,7 +26,6 @@ class PastRidesProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
-      print(rides);
       return rides;
     } else {
       throw Exception('Failed to load rides.');
@@ -37,5 +37,31 @@ class PastRidesProvider with ChangeNotifier {
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
+  }
+
+  Future<void> createRide(
+      AppConfig config,
+      RiderProvider riderProvider,
+      String startLocation,
+      String endLocation,
+      String startTime,
+      String endTime) async {
+    final response = await http.post(
+      "${config.baseUrl}/rides",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'rider': riderProvider.info,
+        'startLocation': startLocation,
+        'endLocation': endLocation,
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+    print(response);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create ride.');
+    }
   }
 }
