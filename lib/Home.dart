@@ -92,8 +92,21 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.directions_car, color: Colors.black),
                   title: sideBarText("Current Ride", Colors.black),
                   onTap: () {
-                    Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => Current()));
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => Current(Ride(
+                                type: 'active',
+                                startLocation: 'Uris Hall',
+                                startAddress:
+                                    '100 Carriage Way, Ithaca, NY 14850',
+                                endLocation: 'Cascadilla Hall',
+                                endAddress: '101 DTI St, Ithaca, NY 14850',
+                                startTime: DateTime(2020, 10, 18, 13, 0),
+                                endTime: DateTime(2020, 10, 18, 13, 15),
+                                endDate: DateTime(2020, 12, 10),
+                                recurring: true,
+                                recurringDays: [0, 3, 4]))));
                   },
                 ),
                 Divider(
@@ -108,15 +121,15 @@ class Home extends StatelessWidget {
                         //TODO: remove temporary ride
                         new MaterialPageRoute(
                             builder: (context) => UpcomingRidePage(Ride(
-                              type: 'active',
-                              startLocation: 'Uris Hall',
-                              startAddress:
-                              '100 Carriage Way, Ithaca, NY 14850',
-                              endLocation: 'Cascadilla Hall',
-                              endAddress: '101 DTI St, Ithaca, NY 14850',
-                              startTime: DateTime(2020, 10, 18, 13, 0),
-                              endTime: DateTime(2020, 10, 18, 13, 15),
-                            ))));
+                                  type: 'active',
+                                  startLocation: 'Uris Hall',
+                                  startAddress:
+                                      '100 Carriage Way, Ithaca, NY 14850',
+                                  endLocation: 'Cascadilla Hall',
+                                  endAddress: '101 DTI St, Ithaca, NY 14850',
+                                  startTime: DateTime(2020, 10, 18, 13, 0),
+                                  endTime: DateTime(2020, 10, 18, 13, 15),
+                                ))));
                   },
                 ),
                 Divider(
@@ -126,8 +139,21 @@ class Home extends StatelessWidget {
                   leading: Icon(Icons.history, color: Colors.black),
                   title: sideBarText("Ride History", Colors.black),
                   onTap: () {
-                    Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => History()));
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => History(Ride(
+                                type: 'active',
+                                startLocation: 'Uris Hall',
+                                startAddress:
+                                    '100 Carriage Way, Ithaca, NY 14850',
+                                endLocation: 'Cascadilla Hall',
+                                endAddress: '101 DTI St, Ithaca, NY 14850',
+                                startTime: DateTime(2020, 10, 18, 13, 0),
+                                endTime: DateTime(2020, 10, 18, 13, 15),
+                                endDate: DateTime(2020, 12, 10),
+                                recurring: false,
+                                recurringDays: [0, 3, 4]))));
                   },
                 ),
                 Divider(
@@ -264,8 +290,8 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestRideLoc(ride: new RideObject())));
+                                        builder: (context) => RequestRideLoc(
+                                            ride: new RideObject())));
                               },
                               elevation: 3.0,
                               color: Colors.black,
