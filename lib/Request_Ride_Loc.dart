@@ -27,7 +27,6 @@ class RideRequestStyles {
 
   static TextStyle toggle(BuildContext context) {
     return TextStyle(
-      fontWeight: FontWeight.w200,
       fontSize: 15,
     );
   }
@@ -383,7 +382,7 @@ class FlowBack extends StatelessWidget {
                     minWidth: MediaQuery.of(context).size.width * 0.1,
                     height: 50.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
+                        borderRadius: BorderRadius.circular(10)),
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -395,6 +394,28 @@ class FlowBack extends StatelessWidget {
                   ),
                 ],
               ))),
+    );
+  }
+}
+
+class FlowBackDuo extends StatelessWidget {
+  const FlowBackDuo({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonTheme(
+      minWidth: MediaQuery.of(context).size.width * 0.1,
+      height: 50.0,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      child: RaisedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        elevation: 2.0,
+        color: Colors.white,
+        child: Icon(Icons.arrow_back_ios),
+      ),
     );
   }
 }
@@ -528,26 +549,13 @@ class _RequestFromLocState extends State<RequestFromLoc> {
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),
                         child: Row(children: <Widget>[
-                          ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.1,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3)),
-                            child: RaisedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              elevation: 2.0,
-                              color: Colors.white,
-                              child: Icon(Icons.arrow_back_ios),
-                            ),
-                          ),
+                          FlowBackDuo(),
                           SizedBox(width: 50),
                           ButtonTheme(
                             minWidth: MediaQuery.of(context).size.width * 0.6,
                             height: 50.0,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3)),
+                                borderRadius: BorderRadius.circular(10)),
                             child: RaisedButton(
                               onPressed: () {
                                 Navigator.push(

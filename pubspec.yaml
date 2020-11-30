@@ -30,6 +30,7 @@ dependencies:
   humanize: ^0.3.0
   flutter_typeahead: ^1.8.8
   flutter_verification_code: ^0.2.1
+  customtogglebuttons: ^0.0.5
 
 dev_dependencies:
   flutter_test:

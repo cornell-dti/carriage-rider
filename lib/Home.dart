@@ -1,4 +1,4 @@
-import 'package:carriage_rider/Request_Ride_Loc.dart';
+import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Confirmed_Ride.dart';
 import 'package:carriage_rider/Current.dart';
@@ -290,7 +290,7 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) => RequestRideLoc(
+                                        builder: (context) => RequestRideTime(
                                             ride: new RideObject())));
                               },
                               elevation: 3.0,

@@ -90,8 +90,7 @@ class _ReviewRideState extends State<ReviewRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('End Date',
-                          style: RideRequestStyles.label(context)),
+                      Text('End Date', style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
                       Text("", style: RideRequestStyles.info(context))
                     ],
@@ -161,34 +160,38 @@ class _ReviewRideState extends State<ReviewRide> {
               child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.8,
-                      height: 45.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      child: RaisedButton(
-                        onPressed: () {
-                          rideProvider.createRide(
-                              AppConfig.of(context),
-                              riderProvider,
-                              widget.ride.fromLocation,
-                              widget.ride.toLocation,
-                              widget.ride.pickUpTime,
-                              widget.ride.dropOffTime);
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => RideConfirmation()));
-                        },
-                        elevation: 3.0,
-                        color: Colors.black,
-                        textColor: Colors.white,
-                        child: Text('Send Request'),
-                      ),
-                    ),
-                  )),
-            )
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Row(children: <Widget>[
+                        FlowBackDuo(),
+                        SizedBox(width: 40),
+                        ButtonTheme(
+                          minWidth: MediaQuery.of(context).size.width * 0.65,
+                          height: 50.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: RaisedButton(
+                            onPressed: () {
+                              rideProvider.createRide(
+                                  AppConfig.of(context),
+                                  riderProvider,
+                                  widget.ride.fromLocation,
+                                  widget.ride.toLocation,
+                                  widget.ride.pickUpTime,
+                                  widget.ride.dropOffTime);
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          RideConfirmation()));
+                            },
+                            elevation: 2.0,
+                            color: Colors.black,
+                            textColor: Colors.white,
+                            child: Text("Send Request"),
+                          ),
+                        ),
+                      ]))),
+            ),
           ],
         ),
       ),
