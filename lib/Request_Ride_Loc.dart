@@ -1,4 +1,4 @@
-import 'package:carriage_rider/Request_Ride_Time.dart';
+//import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
 import 'package:carriage_rider/RideObject.dart';
@@ -71,23 +71,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    child: InkWell(
-                      child: Text("Cancel",
-                          style: RideRequestStyles.cancel(context)),
-                      onTap: () {
-                        Navigator.pop(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => Home()));
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              FlowCancel(),
               SizedBox(height: 20.0),
               Row(
                 children: <Widget>[
@@ -97,59 +81,14 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: new Container(
-                        margin: const EdgeInsets.only(left: 10.0),
-                        child: Divider(
-                          color: Colors.black,
-                          height: 50,
-                          thickness: 5,
-                        )),
-                  ),
-                  Expanded(
-                    child: new Container(
-                        child: Divider(
-                      color: Colors.grey[350],
-                      height: 50,
-                      thickness: 5,
-                    )),
-                  ),
-                  Expanded(
-                    child: new Container(
-                        margin: const EdgeInsets.only(right: 10.0),
-                        child: Divider(
-                          color: Colors.grey[350],
-                          height: 50,
-                          thickness: 5,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: new Container(
-                      margin: const EdgeInsets.only(left: 10.0),
-                      child: Icon(Icons.location_on),
-                    ),
-                  ),
-                  Expanded(
-                    child: new Container(
-                      child: Icon(Icons.web_asset, color: Colors.grey[350]),
-                    ),
-                  ),
-                  Expanded(
-                    child: new Container(
-                      margin: const EdgeInsets.only(right: 10.0),
-                      child: Icon(Icons.check, color: Colors.grey[350]),
-                    ),
-                  ),
-                ],
-              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
@@ -164,9 +103,428 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    FromLocation(fromCtrl: fromCtrl),
-                    SizedBox(height: 10.0),
-                    ToLocation(toCtrl: toCtrl),
+                    LocationInput(ctrl: fromCtrl, label: 'From'),
+                    SizedBox(height: 30.0),
+                    LocationInput(ctrl: toCtrl, label: 'To'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )));
+  }
+}
+
+class LocationInput extends StatefulWidget {
+  final TextEditingController ctrl;
+  final RideObject ride;
+  final String label;
+
+  LocationInput({Key key, this.ctrl, this.ride, this.label}) : super(key: key);
+
+  @override
+  _LocationInputState createState() => _LocationInputState();
+}
+
+class _LocationInputState extends State<LocationInput> {
+  Widget _locationInputField(BuildContext context) {
+    return Container(
+        child: TextFormField(
+      controller: widget.ctrl,
+      onTap: () => Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LocationRequestSelection(
+                    ride: widget.ride,
+                    page: RequestFromLoc(ride: widget.ride),
+                  ))),
+      decoration: InputDecoration(
+          labelText: widget.label,
+          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+          floatingLabelBehavior: FloatingLabelBehavior.never),
+      textInputAction: TextInputAction.next,
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your current phone number';
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.black, fontSize: 17),
+      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _locationInputField(context);
+  }
+}
+
+class LocationField extends StatefulWidget {
+  final TextEditingController ctrl;
+  final bool filled;
+  final String label;
+  final Function navigator;
+
+  LocationField({Key key, this.ctrl, this.filled, this.label, this.navigator})
+      : super(key: key);
+
+  @override
+  _LocationFieldState createState() => _LocationFieldState();
+}
+
+class _LocationFieldState extends State<LocationField> {
+  Widget _locationField(BuildContext context, List<Location> locations) {
+    return TypeAheadFormField(
+        textFieldConfiguration: TextFieldConfiguration(
+            controller: widget.ctrl,
+            decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                labelText: widget.label,
+                labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+                focusedBorder: OutlineInputBorder())),
+        suggestionsCallback: (pattern) {
+          return LocationsProvider.getSuggestions(pattern, locations);
+        },
+        itemBuilder: (context, suggestion) {
+          return ListTile(
+            title: Text(suggestion),
+          );
+        },
+        transitionBuilder: (context, suggestionsBox, controller) {
+          return suggestionsBox;
+        },
+        onSuggestionSelected: (suggestion) {
+          widget.ctrl.text = suggestion;
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please select a location';
+          }
+          return null;
+        },
+        onSaved: (value) => widget.ctrl.text = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig appConfig = AppConfig.of(context);
+
+    return FutureBuilder<List<Location>>(
+        future: locationsProvider.fetchLocations(appConfig, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _locationField(context, snapshot.data);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+}
+
+class TabBarTop extends StatefulWidget {
+  final Color colorOne;
+  final Color colorTwo;
+  final Color colorThree;
+
+  TabBarTop({Key key, this.colorOne, this.colorTwo, this.colorThree})
+      : super(key: key);
+
+  @override
+  _TabBarTopState createState() => _TabBarTopState();
+}
+
+class _TabBarTopState extends State<TabBarTop> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(left: 10.0),
+              child: Divider(
+                color: widget.colorOne,
+                height: 50,
+                thickness: 5,
+              )),
+        ),
+        Expanded(
+          child: new Container(
+              child: Divider(
+            color: widget.colorTwo,
+            height: 50,
+            thickness: 5,
+          )),
+        ),
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(right: 10.0),
+              child: Divider(
+                color: widget.colorThree,
+                height: 50,
+                thickness: 5,
+              )),
+        ),
+      ],
+    );
+  }
+}
+
+class TabBarBot extends StatefulWidget {
+  final Color colorOne;
+  final Color colorTwo;
+  final Color colorThree;
+
+  TabBarBot({Key key, this.colorOne, this.colorTwo, this.colorThree})
+      : super(key: key);
+
+  @override
+  _TabBarBotState createState() => _TabBarBotState();
+}
+
+class _TabBarBotState extends State<TabBarBot> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: new Container(
+            transform: Matrix4.translationValues(0.0, -15.0, 0.0),
+            margin: const EdgeInsets.only(left: 10.0),
+            child: Icon(Icons.location_on, color: widget.colorOne),
+          ),
+        ),
+        Expanded(
+          child: new Container(
+            transform: Matrix4.translationValues(0.0, -15.0, 0.0),
+            child: Icon(Icons.web_asset, color: widget.colorTwo),
+          ),
+        ),
+        Expanded(
+          child: new Container(
+            transform: Matrix4.translationValues(0.0, -15.0, 0.0),
+            margin: const EdgeInsets.only(right: 10.0),
+            child: Icon(Icons.check, color: widget.colorThree),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FlowCancel extends StatelessWidget {
+  const FlowCancel({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: InkWell(
+            child: Text("Cancel", style: RideRequestStyles.cancel(context)),
+            onTap: () {
+              Navigator.pushReplacement(
+                  context, new MaterialPageRoute(builder: (context) => Home()));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FlowBack extends StatelessWidget {
+  const FlowBack({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Row(
+                children: <Widget>[
+                  ButtonTheme(
+                    minWidth: MediaQuery.of(context).size.width * 0.1,
+                    height: 50.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3)),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      elevation: 2.0,
+                      color: Colors.white,
+                      child: Icon(Icons.arrow_back_ios),
+                    ),
+                  ),
+                ],
+              ))),
+    );
+  }
+}
+
+class LocationRequestSelection extends StatefulWidget {
+  final RideObject ride;
+  final Widget page;
+
+  LocationRequestSelection({Key key, this.ride, this.page}) : super(key: key);
+
+  @override
+  _LocationRequestSelectionState createState() =>
+      _LocationRequestSelectionState();
+}
+
+class _LocationRequestSelectionState extends State<LocationRequestSelection> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Where do you want to be picked up? (1/3)",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 40.0),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ButtonTheme(
+                      minWidth: MediaQuery.of(context).size.width * 0.4,
+                      height: 50.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => widget.page));
+                        },
+                        elevation: 3.0,
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        child: Text('Campus',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    SizedBox(width: 30.0),
+                    ButtonTheme(
+                      minWidth: MediaQuery.of(context).size.width * 0.4,
+                      height: 50.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      child: RaisedButton(
+                        onPressed: () {},
+                        elevation: 3.0,
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        child: Text('Off-Campus',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ]),
+              FlowBack()
+            ],
+          ),
+        )));
+  }
+}
+
+class RequestFromLoc extends StatefulWidget {
+  final RideObject ride;
+
+  RequestFromLoc({Key key, this.ride}) : super(key: key);
+
+  @override
+  _RequestFromLocState createState() => _RequestFromLocState();
+}
+
+class _RequestFromLocState extends State<RequestFromLoc> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController fromCtrl = TextEditingController();
+
+  bool filled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Where do you want to be picked up? (2/3)",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    LocationField(ctrl: fromCtrl, label: 'From'),
                   ],
                 ),
               ),
@@ -174,181 +532,26 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: ButtonTheme(
-                        minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
-                        child: RaisedButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) =>
-                                          RequestRideTime(ride: widget.ride)));
-                              widget.ride.fromLocation = fromCtrl.text;
-                              widget.ride.toLocation = toCtrl.text;
-                            }
-                          },
-                          elevation: 3.0,
-                          color: Colors.black,
-                          textColor: Colors.white,
-                          child: Text('Next'),
-                        ),
-                      ),
-                    )),
-              )
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Row(children: <Widget>[
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.1,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              elevation: 2.0,
+                              color: Colors.white,
+                              child: Icon(Icons.arrow_back_ios),
+                            ),
+                          ),
+                        ]))),
+              ),
             ],
           ),
         )));
-  }
-}
-
-class FromLocation extends StatefulWidget {
-  final TextEditingController fromCtrl;
-
-  FromLocation({Key key, this.fromCtrl}) : super(key: key);
-
-  @override
-  _FromLocationState createState() => _FromLocationState();
-}
-
-class _FromLocationState extends State<FromLocation> {
-  Widget _fromField(BuildContext context, List<Location> locations) {
-    return TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-          controller: widget.fromCtrl,
-          decoration: InputDecoration(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelText: 'From',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-              focusedBorder: OutlineInputBorder())),
-      suggestionsCallback: (pattern) {
-        return LocationsProvider.getSuggestions(pattern, locations);
-      },
-      itemBuilder: (context, suggestion) {
-        return ListTile(
-          title: Text(suggestion),
-        );
-      },
-      transitionBuilder: (context, suggestionsBox, controller) {
-        return suggestionsBox;
-      },
-      onSuggestionSelected: (suggestion) {
-        widget.fromCtrl.text = suggestion;
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please select a location';
-        }
-        return null;
-      },
-      onSaved: (value) => widget.fromCtrl.text = value,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _fromField(context, snapshot.data);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(child: CircularProgressIndicator());
-        });
-  }
-}
-
-class ToLocation extends StatefulWidget {
-  final TextEditingController toCtrl;
-
-  ToLocation({Key key, this.toCtrl}) : super(key: key);
-
-  @override
-  _ToLocationState createState() => _ToLocationState();
-}
-
-class _ToLocationState extends State<ToLocation> {
-  Widget _toField(BuildContext context, List<Location> locations) {
-    return TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-          controller: widget.toCtrl,
-          decoration: InputDecoration(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelText: 'To',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-              focusedBorder: OutlineInputBorder())),
-      suggestionsCallback: (pattern) {
-        return LocationsProvider.getSuggestions(pattern, locations);
-      },
-      itemBuilder: (context, suggestion) {
-        return ListTile(
-          title: Text(suggestion),
-        );
-      },
-      transitionBuilder: (context, suggestionsBox, controller) {
-        return suggestionsBox;
-      },
-      onSuggestionSelected: (suggestion) {
-        widget.toCtrl.text = suggestion;
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please select a location';
-        }
-        return null;
-      },
-      onSaved: (value) => widget.toCtrl.text = value,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _toField(context, snapshot.data);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(child: CircularProgressIndicator());
-        });
-  }
-}
-
-class HorizontalLine extends CustomPainter {
-  Paint _paint;
-
-  HorizontalLine(Color color) {
-    _paint = Paint()
-      ..color = color
-      ..strokeWidth = 7
-      ..strokeCap = StrokeCap.round;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawLine(Offset(-90.0, 0.0), Offset(90.0, 0.0), _paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
