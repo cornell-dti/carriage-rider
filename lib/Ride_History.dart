@@ -13,15 +13,16 @@ class RideHistory extends StatefulWidget {
 }
 
 class _RideHistoryState extends State<RideHistory> {
-  Widget _emptyRideHist(BuildContext context) {
+  Widget _emptyRideHist(context) {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
-        Text("You have no ride history!")],
+        Text("You have no ride history!")
+      ],
     );
   }
 
-  Widget _mainHist(BuildContext context, List<Ride> rides) {
+  Widget _mainHist(context, List<Ride> rides) {
     final monthStyle = TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w700,
@@ -48,7 +49,7 @@ class _RideHistoryState extends State<RideHistory> {
         ListView.builder(
           shrinkWrap: true,
           itemCount: rides.length,
-          itemBuilder: (BuildContext c, int index) => RideHistoryCard(
+          itemBuilder: (c, int index) => RideHistoryCard(
             timeDateWidget: Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: RichText(
@@ -78,7 +79,7 @@ class _RideHistoryState extends State<RideHistory> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     PastRidesProvider ridesProvider = Provider.of<PastRidesProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     AppConfig appConfig = AppConfig.of(context);
@@ -106,7 +107,7 @@ class TimeDateHeader extends StatelessWidget {
   final String timeDate;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     final timeDateStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
@@ -133,7 +134,7 @@ class InformationRow extends StatelessWidget {
   final end;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     final fromToStyle = TextStyle(
       color: Colors.grey[500],
       fontWeight: FontWeight.w500,
@@ -203,7 +204,7 @@ class RideHistoryCard extends StatelessWidget {
   final Widget infoRowWidget;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Container(
       margin: EdgeInsets.only(left: 17.0, right: 17.0, bottom: 15.0),
       width: MediaQuery.of(context).size.width,

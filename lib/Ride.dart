@@ -72,7 +72,7 @@ class Ride {
     );
   }
 
-  Widget buildLocationsCard(BuildContext context, bool isIcon) {
+  Widget buildLocationsCard(context, bool isIcon) {
     return Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
@@ -98,7 +98,7 @@ class Ride {
         ));
   }
 
-  Widget cardIconInfo(BuildContext context) {
+  Widget cardIconInfo(context) {
     return Row(
       children: [
         Text(startAddress,
@@ -110,7 +110,7 @@ class Ride {
     );
   }
 
-  Widget cardInfo(BuildContext context) {
+  Widget cardInfo(context) {
     return Row(
       children: [
         Text(startAddress,
@@ -120,7 +120,7 @@ class Ride {
     );
   }
 
-  Widget buildSummary(BuildContext context) {
+  Widget buildSummary(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     final labelStyle = TextStyle(
         color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);

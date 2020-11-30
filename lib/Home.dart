@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
   Home({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     //TODO: change to get name from rider provider
     AuthProvider authProvider = Provider.of(context);
     final String headerName = "Hi " +
@@ -216,7 +216,7 @@ class Home extends StatelessWidget {
                           Spacer(),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 23),
-                            child: Builder(builder: (BuildContext context) {
+                            child: Builder(builder: (context) {
                               return IconButton(
                                   icon: Icon(Icons.menu, color: Colors.black),
                                   onPressed: () =>

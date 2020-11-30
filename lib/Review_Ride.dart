@@ -19,7 +19,7 @@ class ReviewRide extends StatefulWidget {
 
 class _ReviewRideState extends State<ReviewRide> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
 
