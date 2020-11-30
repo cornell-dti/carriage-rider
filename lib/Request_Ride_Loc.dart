@@ -1,4 +1,4 @@
-//import 'package:carriage_rider/Request_Ride_Time.dart';
+import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/Home.dart';
 import 'package:carriage_rider/RideObject.dart';
@@ -297,23 +297,50 @@ class _TabBarBotState extends State<TabBarBot> {
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
             margin: const EdgeInsets.only(left: 10.0),
-            child: Icon(Icons.location_on, color: widget.colorOne),
+            child: Icon(Icons.location_on_outlined,
+                color: widget.colorOne, size: 30),
           ),
         ),
         Expanded(
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
-            child: Icon(Icons.web_asset, color: widget.colorTwo),
+            child: Icon(Icons.web_asset, color: widget.colorTwo, size: 30),
           ),
         ),
         Expanded(
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
             margin: const EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.check, color: widget.colorThree),
+            child: Icon(Icons.check, color: widget.colorThree, size: 30),
           ),
         ),
       ],
+    );
+  }
+}
+
+class SelectionButton extends StatelessWidget {
+  final Widget page;
+  final String text;
+  const SelectionButton({Key key, this.page, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonTheme(
+      minWidth: MediaQuery.of(context).size.width * 0.4,
+      height: 50.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: RaisedButton(
+        onPressed: () {
+          Navigator.push(context,
+              new MaterialPageRoute(builder: (context) => page));
+        },
+        elevation: 3.0,
+        color: Colors.white,
+        textColor: Colors.black,
+        child: Text(text,
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+      ),
     );
   }
 }
@@ -424,42 +451,9 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.4,
-                      height: 50.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => widget.page));
-                        },
-                        elevation: 3.0,
-                        color: Colors.white,
-                        textColor: Colors.black,
-                        child: Text('Campus',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
+                    SelectionButton(page: widget.page, text: 'Campus'),
                     SizedBox(width: 30.0),
-                    ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.4,
-                      height: 50.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      child: RaisedButton(
-                        onPressed: () {},
-                        elevation: 3.0,
-                        color: Colors.white,
-                        textColor: Colors.black,
-                        child: Text('Off-Campus',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
+                    SelectionButton(page: widget.page, text: 'Off-Campus')
                   ]),
               FlowBack()
             ],
@@ -546,6 +540,26 @@ class _RequestFromLocState extends State<RequestFromLoc> {
                               elevation: 2.0,
                               color: Colors.white,
                               child: Icon(Icons.arrow_back_ios),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.6,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            RequestRideTime()));
+                              },
+                              elevation: 2.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              child: Text("Next"),
                             ),
                           ),
                         ]))),

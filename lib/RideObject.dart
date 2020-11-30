@@ -1,7 +1,8 @@
 class RideObject {
   String fromLocation;
   String toLocation;
-  String date;
+  String startDate;
+  String endDate;
   String pickUpTime;
   String dropOffTime;
   String every;
@@ -9,11 +10,11 @@ class RideObject {
   List<int> recurringDays;
   bool deleted;
 
-
   RideObject(
       {this.fromLocation,
       this.toLocation,
-      this.date,
+      this.startDate,
+      this.endDate,
       this.pickUpTime,
       this.dropOffTime,
       this.every,

@@ -1,5 +1,5 @@
 import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/Repeat_Ride.dart';
+import 'package:carriage_rider/Review_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/RideObject.dart';
 
@@ -13,6 +13,69 @@ class RequestRideTime extends StatefulWidget {
 }
 
 class _RequestRideTimeState extends State<RequestRideTime> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Date & Time",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.green,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Is this a repeating ride? (1/2)",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 40.0),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SelectionButton(
+                      text: 'Yes',
+                    ),
+                    SizedBox(width: 30.0),
+                    SelectionButton(text: 'No', page: RequestRideNoRepeat())
+                  ]),
+              FlowBack()
+            ],
+          ),
+        )));
+  }
+}
+
+class RequestRideNoRepeat extends StatefulWidget {
+  final RideObject ride;
+
+  RequestRideNoRepeat({Key key, this.ride}) : super(key: key);
+
+  @override
+  _RequestRideNoRepeatState createState() => _RequestRideNoRepeatState();
+}
+
+class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
@@ -79,7 +142,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     return TextFormField(
       controller: pickUpCtrl,
       decoration: InputDecoration(
-          labelText: 'Pickup Time', labelStyle: TextStyle(color: Colors.black)),
+          labelText: 'Pickup Time',
+          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+          floatingLabelBehavior: FloatingLabelBehavior.never),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your pickup time';
@@ -97,7 +162,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
       controller: dropOffCtrl,
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
-          labelStyle: TextStyle(color: Colors.black)),
+          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+          floatingLabelBehavior: FloatingLabelBehavior.never),
       validator: (input) {
         if (input.isEmpty) {
           return 'Please enter your drop-off time';
@@ -118,83 +184,37 @@ class _RequestRideTimeState extends State<RequestRideTime> {
           margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    child: InkWell(
-                      child: Text("Cancel",
-                          style: RideRequestStyles.cancel(context)),
-                      onTap: () {
-                        Navigator.pop(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => RequestRideLoc()));
-                      },
-                    ),
-                  ),
+                  Flexible(
+                    child: Text("Date & Time",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.green,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Text("When is this ride? (2/2)",
+                      style: RideRequestStyles.question(context)),
                 ],
               ),
               SizedBox(height: 30.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1, size: 12.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.calendar_today),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1,
-                        color: Colors.grey[350], size: 12.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(Icons.brightness_1,
-                        color: Colors.grey[350], size: 12.0),
-                  ),
-                  Icon(Icons.brightness_1, color: Colors.grey[350], size: 12.0),
-                ],
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                children: <Widget>[
-                  Text("When is this ride?",
-                      style: RideRequestStyles.question(context)),
-                ],
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  ToggleButtons(
-                    color: Colors.grey,
-                    selectedColor: Colors.black,
-                    renderBorder: false,
-                    fillColor: Colors.grey[100],
-                    splashColor: Colors.white,
-                    children: <Widget>[
-                      Text('Repeat', style: RideRequestStyles.toggle(context)),
-                      Text('Once', style: RideRequestStyles.toggle(context))
-                    ],
-                    onPressed: (int index) {
-                      setState(() {
-                        for (int buttonIndex = 0;
-                            buttonIndex < isSelected.length;
-                            buttonIndex++)
-                          if (buttonIndex == index) {
-                            isSelected[buttonIndex] = true;
-                          } else {
-                            isSelected[buttonIndex] = false;
-                          }
-                      });
-                    },
-                    isSelected: isSelected,
-                  ),
+                  Text("Date & Time",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
               ),
               Form(
@@ -205,9 +225,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                       controller: dateCtrl,
                       focusNode: focusNode,
                       decoration: InputDecoration(
-                          labelText: 'Date',
-                          hintText: 'Date',
-                          labelStyle: TextStyle(color: Colors.black)),
+                          labelStyle:
+                              TextStyle(color: Colors.grey, fontSize: 17),
+                          floatingLabelBehavior: FloatingLabelBehavior.never),
                       validator: (input) {
                         if (input.isEmpty) {
                           return 'Please enter the date';
@@ -228,34 +248,51 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               Expanded(
                 child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: ButtonTheme(
-                        minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
-                        child: RaisedButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              widget.ride.date = dateCtrl.text;
-                              widget.ride.pickUpTime = pickUpCtrl.text;
-                              widget.ride.dropOffTime = dropOffCtrl.text;
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) =>
-                                          RepeatRide(ride: widget.ride)));
-                            }
-                          },
-                          elevation: 3.0,
-                          color: Colors.black,
-                          textColor: Colors.white,
-                          child: Text("Next"),
-                        ),
-                      ),
-                    )),
-              )
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Row(children: <Widget>[
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.1,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              elevation: 2.0,
+                              color: Colors.white,
+                              child: Icon(Icons.arrow_back_ios),
+                            ),
+                          ),
+                          SizedBox(width: 40),
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.65,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) =>
+                                              ReviewRide(ride: widget.ride)));
+                                  widget.ride.startDate = dateCtrl.text;
+                                  widget.ride.endDate = dateCtrl.text;
+                                  widget.ride.pickUpTime = pickUpCtrl.text;
+                                  widget.ride.dropOffTime = dropOffCtrl.text;
+                                }
+                              },
+                              elevation: 2.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              child: Text("Set Date & Time"),
+                            ),
+                          ),
+                        ]))),
+              ),
             ],
           ),
         ));

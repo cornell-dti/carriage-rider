@@ -241,8 +241,8 @@ class _RepeatRideState extends State<RepeatRide> {
                       child: RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            widget.ride.date = sDateCtrl.text;
-                            widget.ride.date = eDateCtrl.text;
+                            widget.ride.startDate = sDateCtrl.text;
+                            widget.ride.endDate = eDateCtrl.text;
                             widget.ride.every = selectedDays;
                             Navigator.push(
                                 context,

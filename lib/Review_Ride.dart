@@ -1,4 +1,3 @@
-import 'package:carriage_rider/Assistance.dart';
 import 'package:carriage_rider/Ride_Confirmation.dart';
 import 'package:carriage_rider/RiderProvider.dart';
 import 'package:flutter/material.dart';
@@ -28,54 +27,24 @@ class _ReviewRideState extends State<ReviewRide> {
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: InkWell(
-                    child: Text("Cancel",
-                        style: RideRequestStyles.cancel(context)),
-                    onTap: () {
-                      Navigator.pop(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => Assistance()));
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(Icons.brightness_1, size: 12.0),
-                ),
-                Icon(Icons.check),
-              ],
-            ),
-            SizedBox(height: 10.0),
+            FlowCancel(),
+            SizedBox(height: 20.0),
             Row(
               children: <Widget>[
                 Flexible(
-                    child: Text("Review your ride",
-                        style: RideRequestStyles.question(context)))
+                  child: Text("Review",
+                      style: RideRequestStyles.question(context)),
+                )
               ],
             ),
+            TabBarTop(
+                colorOne: Colors.black,
+                colorTwo: Colors.black,
+                colorThree: Colors.black),
+            TabBarBot(
+                colorOne: Colors.green,
+                colorTwo: Colors.green,
+                colorThree: Colors.black),
             SizedBox(height: 30),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
               Text('From', style: RideRequestStyles.label(context))
@@ -84,11 +53,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                    widget.ride.fromLocation != null
-                        ? widget.ride.fromLocation
-                        : "",
-                    style: RideRequestStyles.info(context))
+                Text("", style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
@@ -102,26 +67,36 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                    widget.ride.toLocation != null
-                        ? widget.ride.toLocation
-                        : "",
-                    style: RideRequestStyles.info(context))
+                Text("", style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Date', style: RideRequestStyles.label(context))
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(widget.ride.date != null ? widget.ride.date : "",
-                    style: RideRequestStyles.info(context))
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Start Date',
+                          style: RideRequestStyles.label(context)),
+                      SizedBox(height: 5),
+                      Text("", style: RideRequestStyles.info(context))
+                    ],
+                  ),
+                ),
+                SizedBox(width: 30),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('End Date',
+                          style: RideRequestStyles.label(context)),
+                      SizedBox(height: 5),
+                      Text("", style: RideRequestStyles.info(context))
+                    ],
+                  ),
+                )
               ],
             ),
             SizedBox(height: 15),
@@ -135,11 +110,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Pickup Time',
                           style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
-                      Text(
-                          widget.ride.pickUpTime != null
-                              ? widget.ride.pickUpTime
-                              : "",
-                          style: RideRequestStyles.info(context))
+                      Text("", style: RideRequestStyles.info(context))
                     ],
                   ),
                 ),
@@ -151,11 +122,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Drop-off Time',
                           style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
-                      Text(
-                          widget.ride.dropOffTime != null
-                              ? widget.ride.dropOffTime
-                              : "",
-                          style: RideRequestStyles.info(context))
+                      Text("", style: RideRequestStyles.info(context))
                     ],
                   ),
                 )
@@ -172,7 +139,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(widget.ride.every, style: RideRequestStyles.info(context))
+                Text("", style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
