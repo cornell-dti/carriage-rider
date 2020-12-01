@@ -25,7 +25,8 @@ class _ProfileState extends State<Profile> {
   }
 
   Future _getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -36,20 +37,20 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  void _editEmail(BuildContext context) {}
+  void _editEmail(context) {}
 
-  void _editNumber(BuildContext context) {
+  void _editNumber(context) {
     Navigator.push(
         context, new MaterialPageRoute(builder: (context) => ProfileNumber()));
   }
 
-  void _editPronouns(BuildContext context) {
+  void _editPronouns(context) {
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => ProfilePronouns()));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     double _width = MediaQuery.of(context).size.width;
@@ -223,8 +224,8 @@ class ProfileInfo extends StatefulWidget {
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
-  Widget infoRow(BuildContext context, IconData icon, String text,
-      void Function() onEditPressed) {
+  Widget infoRow(
+      context, IconData icon, String text, void Function() onEditPressed) {
     double paddingTB = 10;
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
@@ -250,7 +251,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -276,11 +277,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: widget.icons.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (context, int index) {
                       return infoRow(context, widget.icons[index],
                           widget.fields[index], widget.callback[index]);
                     },
-                    separatorBuilder: (BuildContext context, int index) {
+                    separatorBuilder: (context, int index) {
                       return Divider(height: 0, color: Colors.black);
                     })
               ],
@@ -314,7 +315,7 @@ class _EditProfileNameState extends State<EditProfileName> {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     String _firstName = widget.rider.firstName;
@@ -482,7 +483,7 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     return Scaffold(
@@ -668,7 +669,7 @@ class _ProfileNumberState extends State<ProfileNumber> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     //RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     //AuthProvider authProvider = Provider.of(context);
     return Scaffold(
@@ -750,7 +751,8 @@ class _ProfileNumberState extends State<ProfileNumber> {
                                 Navigator.pushReplacement(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) => NumberVerify(number: newCtrl.text)));
+                                        builder: (context) => NumberVerify(
+                                            number: newCtrl.text)));
                               }
                             },
                             elevation: 3.0,
@@ -777,7 +779,7 @@ class NumberVerify extends StatefulWidget {
 
 class _NumberVerifyState extends State<NumberVerify> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     return Scaffold(

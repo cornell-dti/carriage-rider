@@ -8,7 +8,7 @@ import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
 
 class RideRequestStyles {
-  static TextStyle cancel(BuildContext context) {
+  static TextStyle cancel(context) {
     return TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w100,
@@ -16,7 +16,7 @@ class RideRequestStyles {
     );
   }
 
-  static TextStyle question(BuildContext context) {
+  static TextStyle question(context) {
     return TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w800,
@@ -24,23 +24,23 @@ class RideRequestStyles {
     );
   }
 
-  static TextStyle toggle(BuildContext context) {
+  static TextStyle toggle(context) {
     return TextStyle(
       fontSize: 15,
     );
   }
 
-  static TextStyle description(BuildContext context) {
+  static TextStyle description(context) {
     return TextStyle(
         color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
   }
 
-  static TextStyle label(BuildContext context) {
+  static TextStyle label(context) {
     return TextStyle(
         color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
   }
 
-  static TextStyle info(BuildContext context) {
+  static TextStyle info(context) {
     return TextStyle(
         color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
   }
@@ -61,7 +61,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   TextEditingController toCtrl = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -102,9 +102,18 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 child: Column(
                   children: <Widget>[
                     LocationInput(
-                        ctrl: fromCtrl, label: 'From', ride: widget.ride, finished: false,),
+                      ctrl: fromCtrl,
+                      label: 'From',
+                      ride: widget.ride,
+                      finished: false,
+                    ),
                     SizedBox(height: 30.0),
-                    LocationInput(ctrl: toCtrl, label: 'To', ride: widget.ride, finished: true,),
+                    LocationInput(
+                      ctrl: toCtrl,
+                      label: 'To',
+                      ride: widget.ride,
+                      finished: true,
+                    ),
                   ],
                 ),
               ),
@@ -302,81 +311,89 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-              margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-              child: Column(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
                 children: <Widget>[
-                  FlowCancel(),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text("Location",
-                            style: RideRequestStyles.question(context)),
-                      )
-                    ],
-                  ),
-                  TabBarTop(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  TabBarBot(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text("Review your pickup and dropoff location",
-                            style: RideRequestStyles.question(context)),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        LocationInput(
-                            ctrl: fromCtrl, label: 'From', ride: widget.ride, finished: false),
-                        SizedBox(height: 30.0),
-                        LocationInput(ctrl: toCtrl, label: 'To', ride: widget.ride, finished: true),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: Row(children: <Widget>[
-                              FlowBackDuo(),
-                              SizedBox(width: 50),
-                              ButtonTheme(
-                                minWidth: MediaQuery.of(context).size.width * 0.6,
-                                height: 50.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) => RequestRideTime(ride: widget.ride)));
-                                    }
-                                  },
-                                  elevation: 2.0,
-                                  color: Colors.black,
-                                  textColor: Colors.white,
-                                  child: Text("Set Location"),
-                                ),
-                              ),
-                            ]))),
-                  ),
+                  Flexible(
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
                 ],
               ),
-            )));
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Review your pickup and dropoff location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    LocationInput(
+                        ctrl: fromCtrl,
+                        label: 'From',
+                        ride: widget.ride,
+                        finished: false),
+                    SizedBox(height: 30.0),
+                    LocationInput(
+                        ctrl: toCtrl,
+                        label: 'To',
+                        ride: widget.ride,
+                        finished: true),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Row(children: <Widget>[
+                          FlowBackDuo(),
+                          SizedBox(width: 50),
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.6,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) => RequestRideTime(
+                                              ride: widget.ride)));
+                                }
+                              },
+                              elevation: 2.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              child: Text("Set Location"),
+                            ),
+                          ),
+                        ]))),
+              ),
+            ],
+          ),
+        )));
   }
 }
 
@@ -386,7 +403,8 @@ class LocationInput extends StatefulWidget {
   final String label;
   final bool finished;
 
-  LocationInput({Key key, this.ctrl, this.ride, this.label, this.finished}) : super(key: key);
+  LocationInput({Key key, this.ctrl, this.ride, this.label, this.finished})
+      : super(key: key);
 
   @override
   _LocationInputState createState() => _LocationInputState();
@@ -406,7 +424,9 @@ class _LocationInputState extends State<LocationInput> {
                         ride: widget.ride,
                         ctrl: widget.ctrl,
                         label: widget.label,
-                        page: widget.finished ? RequestRideLocConfirm(ride: widget.ride) : RequestRideLoc(ride: widget.ride) ),
+                        page: widget.finished
+                            ? RequestRideLocConfirm(ride: widget.ride)
+                            : RequestRideLoc(ride: widget.ride)),
                   ))),
       decoration: InputDecoration(
           labelText: widget.label,
@@ -477,7 +497,7 @@ class _LocationFieldState extends State<LocationField> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
     AuthProvider authProvider = Provider.of(context);

@@ -13,30 +13,30 @@ void mainCommon() {}
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AppConfig appConfig = AppConfig.of(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(create: (BuildContext context) {
+        ChangeNotifierProvider<AuthProvider>(create: (context) {
           return AuthProvider(appConfig);
         })
       ],
       child: ChangeNotifierProvider<RiderProvider>(
-        create: (BuildContext context) {
+        create: (context) {
           return RiderProvider(
             appConfig,
             Provider.of<AuthProvider>(context, listen: false),
           );
         },
         child: ChangeNotifierProvider<PastRidesProvider>(
-          create: (BuildContext context) {
+          create: (context) {
             return PastRidesProvider(
               appConfig,
               Provider.of<AuthProvider>(context, listen: false),
             );
           },
           child: ChangeNotifierProvider<LocationsProvider>(
-            create: (BuildContext context) {
+            create: (context) {
               return LocationsProvider(
                 appConfig,
                 Provider.of<AuthProvider>(context, listen: false),
@@ -68,7 +68,7 @@ class Logic extends StatelessWidget {
   Logic({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     return authProvider.isAuthenticated ? Home() : Login();
   }
