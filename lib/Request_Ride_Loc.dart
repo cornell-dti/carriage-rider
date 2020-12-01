@@ -102,9 +102,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    LocationInput(ctrl: fromCtrl, label: 'From'),
+                    LocationInput(
+                        ctrl: fromCtrl, label: 'From', ride: widget.ride, finished: false,),
                     SizedBox(height: 30.0),
-                    LocationInput(ctrl: toCtrl, label: 'To'),
+                    LocationInput(ctrl: toCtrl, label: 'To', ride: widget.ride, finished: true,),
                   ],
                 ),
               ),
@@ -114,12 +115,279 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   }
 }
 
+class LocationRequestSelection extends StatefulWidget {
+  final RideObject ride;
+  final Widget page;
+
+  LocationRequestSelection({Key key, this.ride, this.page}) : super(key: key);
+
+  @override
+  _LocationRequestSelectionState createState() =>
+      _LocationRequestSelectionState();
+}
+
+class _LocationRequestSelectionState extends State<LocationRequestSelection> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Where do you want to be picked up? (1/3)",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 40.0),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SelectionButton(
+                      page: widget.page,
+                      text: 'Campus',
+                      repeatPage: false,
+                    ),
+                    SizedBox(width: 30.0),
+                    SelectionButton(
+                      page: widget.page,
+                      text: 'Off-Campus',
+                      repeatPage: false,
+                    )
+                  ]),
+              FlowBack()
+            ],
+          ),
+        )));
+  }
+}
+
+class RequestLoc extends StatefulWidget {
+  final RideObject ride;
+  final TextEditingController ctrl;
+  final String label;
+  final Widget page;
+
+  RequestLoc({Key key, this.ride, this.ctrl, this.label, this.page})
+      : super(key: key);
+
+  @override
+  _RequestLocState createState() => _RequestLocState();
+}
+
+class _RequestLocState extends State<RequestLoc> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Location",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text("Where do you want to be picked up? (2/3)",
+                        style: RideRequestStyles.question(context)),
+                  )
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    LocationField(ctrl: widget.ctrl, label: widget.label),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Row(children: <Widget>[
+                          FlowBackDuo(),
+                          SizedBox(width: 50),
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.6,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) => widget.page));
+                                }
+                              },
+                              elevation: 2.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              child: Text("Next"),
+                            ),
+                          ),
+                        ]))),
+              ),
+            ],
+          ),
+        )));
+  }
+}
+
+class RequestRideLocConfirm extends StatefulWidget {
+  final RideObject ride;
+
+  RequestRideLocConfirm({Key key, this.ride}) : super(key: key);
+
+  @override
+  _RequestRideLocConfirmState createState() => _RequestRideLocConfirmState();
+}
+
+class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController fromCtrl = TextEditingController();
+  TextEditingController toCtrl = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+              margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+              child: Column(
+                children: <Widget>[
+                  FlowCancel(),
+                  SizedBox(height: 20.0),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text("Location",
+                            style: RideRequestStyles.question(context)),
+                      )
+                    ],
+                  ),
+                  TabBarTop(
+                      colorOne: Colors.black,
+                      colorTwo: Colors.grey[350],
+                      colorThree: Colors.grey[350]),
+                  TabBarBot(
+                      colorOne: Colors.black,
+                      colorTwo: Colors.grey[350],
+                      colorThree: Colors.grey[350]),
+                  SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text("Review your pickup and dropoff location",
+                            style: RideRequestStyles.question(context)),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 20.0),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        LocationInput(
+                            ctrl: fromCtrl, label: 'From', ride: widget.ride, finished: false),
+                        SizedBox(height: 30.0),
+                        LocationInput(ctrl: toCtrl, label: 'To', ride: widget.ride, finished: true),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: Row(children: <Widget>[
+                              FlowBackDuo(),
+                              SizedBox(width: 50),
+                              ButtonTheme(
+                                minWidth: MediaQuery.of(context).size.width * 0.6,
+                                height: 50.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: RaisedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      Navigator.push(
+                                          context,
+                                          new MaterialPageRoute(
+                                              builder: (context) => RequestRideTime(ride: widget.ride)));
+                                    }
+                                  },
+                                  elevation: 2.0,
+                                  color: Colors.black,
+                                  textColor: Colors.white,
+                                  child: Text("Set Location"),
+                                ),
+                              ),
+                            ]))),
+                  ),
+                ],
+              ),
+            )));
+  }
+}
+
 class LocationInput extends StatefulWidget {
   final TextEditingController ctrl;
   final RideObject ride;
   final String label;
+  final bool finished;
 
-  LocationInput({Key key, this.ctrl, this.ride, this.label}) : super(key: key);
+  LocationInput({Key key, this.ctrl, this.ride, this.label, this.finished}) : super(key: key);
 
   @override
   _LocationInputState createState() => _LocationInputState();
@@ -135,7 +403,11 @@ class _LocationInputState extends State<LocationInput> {
           new MaterialPageRoute(
               builder: (context) => LocationRequestSelection(
                     ride: widget.ride,
-                    page: RequestFromLoc(ride: widget.ride),
+                    page: RequestLoc(
+                        ride: widget.ride,
+                        ctrl: widget.ctrl,
+                        label: widget.label,
+                        page: widget.finished ? RequestRideLocConfirm(ride: widget.ride) : RequestRideLoc(ride: widget.ride) ),
                   ))),
       decoration: InputDecoration(
           labelText: widget.label,
@@ -222,6 +494,114 @@ class _LocationFieldState extends State<LocationField> {
           }
           return Center(child: CircularProgressIndicator());
         });
+  }
+}
+
+class SelectionButton extends StatelessWidget {
+  final Widget page;
+  final String text;
+  final bool repeatPage;
+  final GestureTapCallback onPressed;
+
+  const SelectionButton(
+      {Key key, this.page, this.text, this.repeatPage, this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: ButtonTheme(
+        minWidth: MediaQuery.of(context).size.width * 0.4,
+        height: 50.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.push(
+                context, new MaterialPageRoute(builder: (context) => page));
+          },
+          elevation: 3.0,
+          color: Colors.white,
+          textColor: Colors.black,
+          child: Text(text,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+        ),
+      ),
+      onPressed: onPressed,
+    );
+  }
+}
+
+class FlowCancel extends StatelessWidget {
+  const FlowCancel({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: InkWell(
+            child: Text("Cancel", style: RideRequestStyles.cancel(context)),
+            onTap: () {
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FlowBack extends StatelessWidget {
+  const FlowBack({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Row(
+                children: <Widget>[
+                  ButtonTheme(
+                    minWidth: MediaQuery.of(context).size.width * 0.1,
+                    height: 50.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      elevation: 2.0,
+                      color: Colors.white,
+                      child: Icon(Icons.arrow_back_ios),
+                    ),
+                  ),
+                ],
+              ))),
+    );
+  }
+}
+
+class FlowBackDuo extends StatelessWidget {
+  const FlowBackDuo({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonTheme(
+      minWidth: MediaQuery.of(context).size.width * 0.1,
+      height: 50.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: RaisedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        elevation: 2.0,
+        color: Colors.white,
+        child: Icon(Icons.arrow_back_ios),
+      ),
+    );
   }
 }
 
@@ -315,265 +695,5 @@ class _TabBarBotState extends State<TabBarBot> {
         ),
       ],
     );
-  }
-}
-
-class SelectionButton extends StatelessWidget {
-  final Widget page;
-  final String text;
-  const SelectionButton({Key key, this.page, this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.4,
-      height: 50.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => page));
-        },
-        elevation: 3.0,
-        color: Colors.white,
-        textColor: Colors.black,
-        child: Text(text,
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-      ),
-    );
-  }
-}
-
-class FlowCancel extends StatelessWidget {
-  const FlowCancel({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          child: InkWell(
-            child: Text("Cancel", style: RideRequestStyles.cancel(context)),
-            onTap: () {
-              Navigator.pushReplacement(
-                  context, new MaterialPageRoute(builder: (context) => Home()));
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class FlowBack extends StatelessWidget {
-  const FlowBack({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Row(
-                children: <Widget>[
-                  ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width * 0.1,
-                    height: 50.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      elevation: 2.0,
-                      color: Colors.white,
-                      child: Icon(Icons.arrow_back_ios),
-                    ),
-                  ),
-                ],
-              ))),
-    );
-  }
-}
-
-class FlowBackDuo extends StatelessWidget {
-  const FlowBackDuo({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.1,
-      height: 50.0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)),
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        elevation: 2.0,
-        color: Colors.white,
-        child: Icon(Icons.arrow_back_ios),
-      ),
-    );
-  }
-}
-
-class LocationRequestSelection extends StatefulWidget {
-  final RideObject ride;
-  final Widget page;
-
-  LocationRequestSelection({Key key, this.ride, this.page}) : super(key: key);
-
-  @override
-  _LocationRequestSelectionState createState() =>
-      _LocationRequestSelectionState();
-}
-
-class _LocationRequestSelectionState extends State<LocationRequestSelection> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text("Location",
-                        style: RideRequestStyles.question(context)),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text("Where do you want to be picked up? (1/3)",
-                        style: RideRequestStyles.question(context)),
-                  )
-                ],
-              ),
-              SizedBox(height: 40.0),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SelectionButton(page: widget.page, text: 'Campus'),
-                    SizedBox(width: 30.0),
-                    SelectionButton(page: widget.page, text: 'Off-Campus')
-                  ]),
-              FlowBack()
-            ],
-          ),
-        )));
-  }
-}
-
-class RequestFromLoc extends StatefulWidget {
-  final RideObject ride;
-
-  RequestFromLoc({Key key, this.ride}) : super(key: key);
-
-  @override
-  _RequestFromLocState createState() => _RequestFromLocState();
-}
-
-class _RequestFromLocState extends State<RequestFromLoc> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController fromCtrl = TextEditingController();
-
-  bool filled = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text("Location",
-                        style: RideRequestStyles.question(context)),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text("Where do you want to be picked up? (2/3)",
-                        style: RideRequestStyles.question(context)),
-                  )
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    LocationField(ctrl: fromCtrl, label: 'From'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(width: 50),
-                          ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.6,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: RaisedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestRideTime()));
-                              },
-                              elevation: 2.0,
-                              color: Colors.black,
-                              textColor: Colors.white,
-                              child: Text("Next"),
-                            ),
-                          ),
-                        ]))),
-              ),
-            ],
-          ),
-        )));
   }
 }

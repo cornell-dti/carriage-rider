@@ -56,10 +56,14 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   children: <Widget>[
                     SelectionButton(
                         text: 'Yes',
+                        repeatPage: true,
+                        onPressed: () => widget.ride.recurring = true,
                         page: RequestRideRepeat(ride: widget.ride)),
                     SizedBox(width: 30.0),
                     SelectionButton(
                         text: 'No',
+                        repeatPage: true,
+                        onPressed: () => widget.ride.recurring = false,
                         page: RequestRideNoRepeat(ride: widget.ride))
                   ]),
               FlowBack()
