@@ -176,8 +176,12 @@ class _ReviewRideState extends State<ReviewRide> {
                                   riderProvider,
                                   widget.ride.fromLocation,
                                   widget.ride.toLocation,
+                                  widget.ride.startDate,
+                                  widget.ride.endDate,
                                   widget.ride.pickUpTime,
-                                  widget.ride.dropOffTime);
+                                  widget.ride.dropOffTime,
+                                  widget.ride.recurring,
+                                  widget.ride.recurringDays);
                               Navigator.push(
                                   context,
                                   new MaterialPageRoute(

@@ -45,7 +45,11 @@ class PastRidesProvider with ChangeNotifier {
       String startLocation,
       String endLocation,
       String startTime,
-      String endTime) async {
+      String endTime,
+      String startDate,
+      String endDate,
+      bool recurring,
+      List<int> recurringDays) async {
     final response = await http.post(
       "${config.baseUrl}/rides",
       headers: <String, String>{
@@ -55,8 +59,12 @@ class PastRidesProvider with ChangeNotifier {
         'rider': riderProvider.info,
         'startLocation': startLocation,
         'endLocation': endLocation,
+        'startDate': startDate,
+        'endDate': endDate,
         'startTime': startTime,
         'endTime': endTime,
+        'recurring': recurring,
+        'recurringDays': recurringDays
       }),
     );
     print(response);
