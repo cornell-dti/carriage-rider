@@ -411,8 +411,20 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
 
   final List<bool> isSelected = [false, false, false, false, false];
   final List<String> days = ["M", "T", "W", "Th", "F"];
+  final List<int> dayList = [1, 2, 3, 4, 5];
 
   String selectedDays = "";
+  List<int> recurringDays = [];
+
+  List<int> setRecurringDays(List<int> rDays) {
+    rDays = [];
+    for (int i = 0; i < isSelected.length; i++) {
+      if (isSelected[i]) {
+        rDays.add(dayList[i]);
+      }
+    }
+    return rDays;
+  }
 
   String setSelectedDays(String sDays) {
     sDays = "";
@@ -563,6 +575,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                       setState(() {
                         isSelected[index] = !isSelected[index];
                         selectedDays = setSelectedDays(selectedDays);
+                        recurringDays = setRecurringDays(recurringDays);
                       });
                     },
                     isSelected: isSelected,)
@@ -594,6 +607,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                   widget.ride.pickUpTime = pickUpCtrl.text;
                                   widget.ride.dropOffTime = dropOffCtrl.text;
                                   widget.ride.every = selectedDays;
+                                  widget.ride.recurringDays = recurringDays;
                                 }
                               },
                               elevation: 2.0,
