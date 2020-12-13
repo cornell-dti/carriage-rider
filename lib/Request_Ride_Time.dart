@@ -1,5 +1,6 @@
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/Review_Ride.dart';
+import 'package:carriage_rider/TextThemes.dart';
 import 'package:customtogglebuttons/customtogglebuttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/RideObject.dart';
@@ -29,7 +30,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Date & Time",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -46,7 +47,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Is this a repeating ride? (1/2)",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -197,7 +198,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Date & Time",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -213,7 +214,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
               Row(
                 children: <Widget>[
                   Text("When is this ride? (2/2)",
-                      style: RideRequestStyles.question(context)),
+                      style: TextThemes.question),
                 ],
               ),
               SizedBox(height: 30.0),
@@ -452,7 +453,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Date & Time",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -468,7 +469,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               Row(
                 children: <Widget>[
                   Text("When is this ride? (2/2)",
-                      style: RideRequestStyles.question(context)),
+                      style: TextThemes.question),
                 ],
               ),
               SizedBox(height: 30.0),
@@ -565,11 +566,11 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                     fillColor: Colors.black,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: RideRequestStyles.toggle(context)),
-                      Text('T', style: RideRequestStyles.toggle(context)),
-                      Text('W', style: RideRequestStyles.toggle(context)),
-                      Text('Th', style: RideRequestStyles.toggle(context)),
-                      Text('F', style: RideRequestStyles.toggle(context))
+                      Text('M', style: TextThemes.toggle),
+                      Text('T', style: TextThemes.toggle),
+                      Text('W', style: TextThemes.toggle),
+                      Text('Th', style: TextThemes.toggle),
+                      Text('F', style: TextThemes.toggle)
                     ],
                     onPressed: (int index) {
                       setState(() {

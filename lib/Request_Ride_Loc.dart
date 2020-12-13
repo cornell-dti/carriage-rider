@@ -6,45 +6,7 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/LocationsProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
-
-class RideRequestStyles {
-  static TextStyle cancel(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w100,
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle question(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w800,
-      fontSize: 25,
-    );
-  }
-
-  static TextStyle toggle(context) {
-    return TextStyle(
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle description(context) {
-    return TextStyle(
-        color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
-  }
-
-  static TextStyle label(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-  }
-
-  static TextStyle info(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
-  }
-}
+import 'TextThemes.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final RideObject ride;
@@ -75,7 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -92,7 +54,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Set your pickup and dropoff location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -102,17 +64,19 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 child: Column(
                   children: <Widget>[
                     LocationInput(
-                      ctrl: fromCtrl,
+                      fromCtrl: fromCtrl,
                       label: 'From',
                       ride: widget.ride,
                       finished: false,
+                      isToLocation: false,
                     ),
                     SizedBox(height: 30.0),
                     LocationInput(
-                      ctrl: toCtrl,
+                      toCtrl: toCtrl,
                       label: 'To',
                       ride: widget.ride,
                       finished: true,
+                      isToLocation: true,
                     ),
                   ],
                 ),
@@ -150,7 +114,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -167,7 +131,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Where do you want to be picked up? (1/3)",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -196,11 +160,13 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
 
 class RequestLoc extends StatefulWidget {
   final RideObject ride;
-  final TextEditingController ctrl;
+  final TextEditingController fromCtrl;
+  final TextEditingController toCtrl;
+  final bool isToLocation;
   final String label;
   final Widget page;
 
-  RequestLoc({Key key, this.ride, this.ctrl, this.label, this.page})
+  RequestLoc({Key key, this.ride, this.fromCtrl, this.toCtrl, this.isToLocation, this.label, this.page})
       : super(key: key);
 
   @override
@@ -225,7 +191,7 @@ class _RequestLocState extends State<RequestLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -242,7 +208,7 @@ class _RequestLocState extends State<RequestLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Where do you want to be picked up? (2/3)",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -251,7 +217,7 @@ class _RequestLocState extends State<RequestLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    LocationField(ctrl: widget.ctrl, label: widget.label),
+                    LocationField(ctrl: widget.isToLocation ? widget.toCtrl : widget.fromCtrl, label: widget.label),
                   ],
                 ),
               ),
@@ -292,9 +258,12 @@ class _RequestLocState extends State<RequestLoc> {
 }
 
 class RequestRideLocConfirm extends StatefulWidget {
+  final TextEditingController fromCtrl;
+  final TextEditingController toCtrl;
   final RideObject ride;
 
-  RequestRideLocConfirm({Key key, this.ride}) : super(key: key);
+  RequestRideLocConfirm({Key key, this.ride, this.fromCtrl, this.toCtrl})
+      : super(key: key);
 
   @override
   _RequestRideLocConfirmState createState() => _RequestRideLocConfirmState();
@@ -302,8 +271,6 @@ class RequestRideLocConfirm extends StatefulWidget {
 
 class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController fromCtrl = TextEditingController();
-  TextEditingController toCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +287,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -337,7 +304,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Review your pickup and dropoff location",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
@@ -347,16 +314,19 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                 child: Column(
                   children: <Widget>[
                     LocationInput(
-                        ctrl: fromCtrl,
-                        label: 'From',
-                        ride: widget.ride,
-                        finished: false),
+                      fromCtrl: widget.fromCtrl,
+                      label: 'From',
+                      ride: widget.ride,
+                      finished: false,
+                      isToLocation: false,
+                    ),
                     SizedBox(height: 30.0),
                     LocationInput(
-                        ctrl: toCtrl,
+                        toCtrl: widget.toCtrl,
                         label: 'To',
                         ride: widget.ride,
-                        finished: true),
+                        finished: true,
+                        isToLocation: true),
                   ],
                 ),
               ),
@@ -398,12 +368,21 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
 }
 
 class LocationInput extends StatefulWidget {
-  final TextEditingController ctrl;
+  final TextEditingController fromCtrl;
+  final TextEditingController toCtrl;
   final RideObject ride;
   final String label;
   final bool finished;
+  final bool isToLocation;
 
-  LocationInput({Key key, this.ctrl, this.ride, this.label, this.finished})
+  LocationInput(
+      {Key key,
+      this.fromCtrl,
+      this.toCtrl,
+      this.ride,
+      this.label,
+      this.finished,
+      this.isToLocation})
       : super(key: key);
 
   @override
@@ -414,7 +393,7 @@ class _LocationInputState extends State<LocationInput> {
   Widget _locationInputField(BuildContext context) {
     return Container(
         child: TextFormField(
-      controller: widget.ctrl,
+      controller: widget.isToLocation ? widget.toCtrl : widget.fromCtrl,
       onTap: () => Navigator.push(
           context,
           new MaterialPageRoute(
@@ -422,10 +401,16 @@ class _LocationInputState extends State<LocationInput> {
                     ride: widget.ride,
                     page: RequestLoc(
                         ride: widget.ride,
-                        ctrl: widget.ctrl,
+                        fromCtrl: widget.fromCtrl,
+                        toCtrl: widget.toCtrl,
                         label: widget.label,
+                        isToLocation: widget.isToLocation,
                         page: widget.finished
-                            ? RequestRideLocConfirm(ride: widget.ride)
+                            ? RequestRideLocConfirm(
+                                ride: widget.ride,
+                          fromCtrl: widget.fromCtrl,
+                          toCtrl: widget.toCtrl,
+                              )
                             : RequestRideLoc(ride: widget.ride)),
                   ))),
       decoration: InputDecoration(
@@ -435,7 +420,7 @@ class _LocationInputState extends State<LocationInput> {
       textInputAction: TextInputAction.next,
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your current phone number';
+          return 'Please enter your location';
         }
         return null;
       },
@@ -560,7 +545,7 @@ class FlowCancel extends StatelessWidget {
       children: <Widget>[
         Container(
           child: InkWell(
-            child: Text("Cancel", style: RideRequestStyles.cancel(context)),
+            child: Text("Cancel", style: TextThemes.cancel),
             onTap: () {
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
