@@ -54,7 +54,9 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text("", style: TextThemes.info)
+                Text(widget.ride.fromLocation != null
+                    ? widget.ride.fromLocation
+                    : "", style: TextThemes.info)
               ],
             ),
             SizedBox(height: 15),
@@ -68,7 +70,9 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text("", style: TextThemes.info)
+                Text(widget.ride.toLocation != null
+                    ? widget.ride.toLocation
+                    : "", style: TextThemes.info)
               ],
             ),
             SizedBox(height: 15),
@@ -82,7 +86,9 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Start Date',
                           style: TextThemes.label),
                       SizedBox(height: 5),
-                      Text("", style: TextThemes.info)
+                      Text(widget.ride.startDate != null
+                          ? widget.ride.startDate
+                          : "", style: TextThemes.info)
                     ],
                   ),
                 ),
@@ -93,7 +99,9 @@ class _ReviewRideState extends State<ReviewRide> {
                     children: <Widget>[
                       Text('End Date', style: TextThemes.label),
                       SizedBox(height: 5),
-                      Text("", style: TextThemes.info)
+                      Text(widget.ride.endDate != null
+                          ? widget.ride.endDate
+                          : "", style: TextThemes.info)
                     ],
                   ),
                 )
@@ -110,7 +118,9 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Pickup Time',
                           style: TextThemes.label),
                       SizedBox(height: 5),
-                      Text("", style: TextThemes.info)
+                      Text(widget.ride.pickUpTime != null
+                          ? widget.ride.pickUpTime
+                          : "", style: TextThemes.info)
                     ],
                   ),
                 ),
@@ -122,7 +132,9 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Drop-off Time',
                           style: TextThemes.label),
                       SizedBox(height: 5),
-                      Text("", style: TextThemes.info)
+                      Text(widget.ride.dropOffTime != null
+                          ? widget.ride.dropOffTime
+                          : "", style: TextThemes.info)
                     ],
                   ),
                 )
@@ -139,7 +151,9 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text("", style: TextThemes.info)
+                Text(widget.ride.every != null
+                    ? widget.ride.every
+                    : "No Recurring Days", style: TextThemes.info)
               ],
             ),
             SizedBox(height: 15),

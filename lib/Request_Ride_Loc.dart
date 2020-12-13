@@ -272,6 +272,7 @@ class RequestRideLocConfirm extends StatefulWidget {
 
 class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
   final _formKey = GlobalKey<FormState>();
+  double width = 26;
 
   @override
   Widget build(BuildContext context) {
@@ -352,6 +353,9 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                                       new MaterialPageRoute(
                                           builder: (context) => RequestRideTime(
                                               ride: widget.ride)));
+                                  widget.ride.fromLocation = fromCtrl.text;
+                                  widget.ride.toLocation = toCtrl.text;
+                                  fromCtrl.clear(); toCtrl.clear();
                                 }
                               },
                               elevation: 2.0,
@@ -365,6 +369,25 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
             ],
           ),
         )));
+  }
+
+  Widget locationCircle(Color color1, Color color2) {
+    return Container(
+      width: width,
+      height: width,
+      child: Icon(Icons.circle, size: 9.75, color: color1),
+      decoration: BoxDecoration(
+          color: color2,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+                color: color1,
+                blurRadius: 2,
+                spreadRadius: 0
+            )
+          ]
+      ),
+    );
   }
 }
 
@@ -548,6 +571,7 @@ class FlowCancel extends StatelessWidget {
           child: InkWell(
             child: Text("Cancel", style: TextThemes.cancel),
             onTap: () {
+              fromCtrl.clear(); toCtrl.clear();
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
