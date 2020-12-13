@@ -8,6 +8,9 @@ import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
 import 'TextThemes.dart';
 
+TextEditingController fromCtrl = TextEditingController();
+TextEditingController toCtrl = TextEditingController();
+
 class RequestRideLoc extends StatefulWidget {
   final RideObject ride;
 
@@ -19,8 +22,6 @@ class RequestRideLoc extends StatefulWidget {
 
 class _RequestRideLocState extends State<RequestRideLoc> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController fromCtrl = TextEditingController();
-  TextEditingController toCtrl = TextEditingController();
 
   @override
   Widget build(context) {
@@ -217,7 +218,7 @@ class _RequestLocState extends State<RequestLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    LocationField(ctrl: widget.isToLocation ? widget.toCtrl : widget.fromCtrl, label: widget.label),
+                    LocationField(ctrl: widget.isToLocation ? toCtrl : fromCtrl, label: widget.label),
                   ],
                 ),
               ),
@@ -314,7 +315,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                 child: Column(
                   children: <Widget>[
                     LocationInput(
-                      fromCtrl: widget.fromCtrl,
+                      fromCtrl: fromCtrl,
                       label: 'From',
                       ride: widget.ride,
                       finished: false,
@@ -322,7 +323,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                     ),
                     SizedBox(height: 30.0),
                     LocationInput(
-                        toCtrl: widget.toCtrl,
+                        toCtrl: toCtrl,
                         label: 'To',
                         ride: widget.ride,
                         finished: true,
@@ -393,7 +394,7 @@ class _LocationInputState extends State<LocationInput> {
   Widget _locationInputField(BuildContext context) {
     return Container(
         child: TextFormField(
-      controller: widget.isToLocation ? widget.toCtrl : widget.fromCtrl,
+      controller: widget.isToLocation ? toCtrl : fromCtrl,
       onTap: () => Navigator.push(
           context,
           new MaterialPageRoute(
@@ -401,14 +402,14 @@ class _LocationInputState extends State<LocationInput> {
                     ride: widget.ride,
                     page: RequestLoc(
                         ride: widget.ride,
-                        fromCtrl: widget.fromCtrl,
+                        fromCtrl: fromCtrl,
                         toCtrl: widget.toCtrl,
                         label: widget.label,
                         isToLocation: widget.isToLocation,
                         page: widget.finished
                             ? RequestRideLocConfirm(
                                 ride: widget.ride,
-                          fromCtrl: widget.fromCtrl,
+                          fromCtrl: fromCtrl,
                           toCtrl: widget.toCtrl,
                               )
                             : RequestRideLoc(ride: widget.ride)),
