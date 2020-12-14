@@ -21,6 +21,10 @@ class Ride {
   final bool recurring;
   final List<int> recurringDays;
   final bool deleted;
+  final String requestedEndTime;
+  final String status;
+  final bool late;
+  final Map<String, dynamic> driver;
 
   Ride(
       {this.id,
@@ -35,24 +39,36 @@ class Ride {
       this.startTime,
       this.recurring,
       this.recurringDays,
-      this.deleted});
+      this.deleted,
+      this.requestedEndTime,
+      this.status,
+      this.late,
+      this.driver});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-      id: json['id'],
-      type: json['type'],
-      startLocation: json['startLocation']['name'],
-      startAddress: json['startLocation']['address'],
-      endLocation: json['endLocation']['name'],
-      endAddress: json['endLocation']['address'],
-      startTime: DateTime.parse(json['startTime']),
-      endDate: DateTime.parse(json['endDate']),
-      endTime: DateTime.parse(json['endTime']),
-      rider: Rider.fromJson(json['rider']),
-      recurring: json['recurring'],
-      recurringDays: List.from(json['recurringDays']),
-      deleted: json['deleted'],
-    );
+        id: json['id'],
+        type: json['type'],
+        startLocation: json['startLocation']['name'],
+        startAddress: json['startLocation']['address'],
+        endLocation: json['endLocation']['name'],
+        endAddress: json['endLocation']['address'],
+        startTime: DateTime.parse(json['startTime']),
+        endDate: json['endDate'] == null
+            ? DateTime.now()
+            : DateTime.parse(json['endDate']),
+        endTime: DateTime.parse(json['endTime']),
+        rider: Rider.fromJson(json['rider']),
+        recurring: json['recurring'] == null ? false : json['recurring'],
+        recurringDays: json['recurringDays'] == null
+            ? []
+            : List.from(json['recurringDays']),
+        deleted: json['deleted'] == null ? false : json['deleted'],
+        requestedEndTime:
+            json['requestedEndTime'] == null ? '' : json['requestedEndTime'],
+        status: json['status'],
+        late: json['late'],
+        driver: json['driver'] == null ? false : json['driver']);
   }
 
   Widget buildStartTime() {
