@@ -54,7 +54,9 @@ class Ride {
         endLocation: json['endLocation']['name'],
         endAddress: json['endLocation']['address'],
         startTime: DateTime.parse(json['startTime']),
-        endDate: json['endDate'] == null ? '' : DateTime.parse(json['endDate']),
+        endDate: json['endDate'] == null
+            ? DateTime.now()
+            : DateTime.parse(json['endDate']),
         endTime: DateTime.parse(json['endTime']),
         rider: Rider.fromJson(json['rider']),
         recurring: json['recurring'] == null ? false : json['recurring'],

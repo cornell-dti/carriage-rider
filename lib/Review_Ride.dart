@@ -20,7 +20,7 @@ class ReviewRide extends StatefulWidget {
 class _ReviewRideState extends State<ReviewRide> {
   @override
   Widget build(context) {
-    PastRidesProvider rideProvider = Provider.of<PastRidesProvider>(context);
+    RidesProvider rideProvider = Provider.of<RidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
 
     return Scaffold(

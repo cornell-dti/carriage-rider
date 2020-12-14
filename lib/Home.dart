@@ -250,7 +250,7 @@ class Home extends StatelessWidget {
                         Icon(Icons.arrow_forward, size: 16)
                       ]),
                       SizedBox(height: 12),
-                      UpcomingRides(),
+                      Container(height: 225, child: UpcomingRide()),
                       SizedBox(height: 35),
                       Row(children: [
                         Text(
