@@ -596,25 +596,3 @@ class UpcomingRideCard extends StatelessWidget {
     );
   }
 }
-
-//class UpcomingRides extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return SingleChildScrollView(
-//      child: Row(
-//        children: <Widget>[
-//          //TODO: remove temporary data
-//          UpcomingRideCard(Ride(
-//            type: 'active',
-//            startLocation: 'Cornell University',
-//            startAddress: '100 Carriage Way',
-//            endLocation: 'Cascadilla Hall',
-//            endAddress: '101 DTI St, Ithaca, NY 14850',
-//            startTime: DateTime(2020, 10, 18, 13, 0),
-//            endTime: DateTime(2020, 10, 18, 13, 15),
-//          ))
-//        ],
-//      ),
-//    );
-//  }
-//}
