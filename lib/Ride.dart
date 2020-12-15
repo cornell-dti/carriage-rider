@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'TextThemes.dart';
 
-//The type for a ride.
+//Model for a ride.
 class Ride {
   //The ride's id in the backend.
   final String id;

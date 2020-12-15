@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'app_config.dart';
 
-//The type for a location.
+//Model for a location.
 class Location {
   //The id of a location
   final String id;

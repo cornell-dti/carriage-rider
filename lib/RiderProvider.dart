@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'app_config.dart';
 import 'package:http/http.dart' as http;
 
-//The type for a rider.
+//Model for a rider.
 class Rider {
   //The id of a rider.
   final String id;
@@ -107,8 +107,7 @@ class RiderProvider with ChangeNotifier {
   //Instance of a rider.
   Rider info;
 
-  //Checks whether a rider exists.
-  //Returns true if info is not null and false otherwise.
+  //Checks whether a rider exists. Returns true if info is not null and false otherwise.
   bool hasInfo() => info != null;
 
   //The delay involved with fetching a rider if the fetch previously fails.
