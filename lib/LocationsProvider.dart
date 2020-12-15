@@ -5,9 +5,13 @@ import 'app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+//The type for a location.
 class Location {
+  //The UUID of a location
   final String id;
+  //The name of a location
   final String name;
+  //The address of a location
   final String address;
 
   Location({
@@ -16,12 +20,14 @@ class Location {
     this.address,
   });
 
+  //Creates a location from JSON representation.
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
         id: json['id'], name: json['name'], address: json['address']);
   }
 }
 
+//Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
   LocationsProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;
@@ -34,6 +40,7 @@ class LocationsProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+  //Fetches all the locations from the backend.
   Future<List<Location>> fetchLocations(
       AppConfig config, AuthProvider authProvider) async {
     final response = await http.get('${config.baseUrl}/locations');
@@ -46,6 +53,7 @@ class LocationsProvider with ChangeNotifier {
     }
   }
 
+  //Decodes [json] of locations into a list representation of the locations.
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)["data"];
     List<Location> res =
@@ -53,6 +61,7 @@ class LocationsProvider with ChangeNotifier {
     return res;
   }
 
+  //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
   static List<String> getSuggestions(String query, List<Location> locations) {
     List<String> matches = locations.map((e) => e.name).toList();
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));

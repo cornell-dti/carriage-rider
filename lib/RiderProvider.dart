@@ -6,23 +6,48 @@ import 'package:flutter/widgets.dart';
 import 'app_config.dart';
 import 'package:http/http.dart' as http;
 
+//The type for a rider.
 class Rider {
+  //The id of a rider.
   final String id;
+
+  //The email of a rider.
   final String email;
+
+  //The phone number of a rider in the format of ##########.
   final String phoneNumber;
+
+  //The first name of a rider
   final String firstName;
+
+  //The last name of a rider.
   final String lastName;
+
+  //The personal pronouns of a rider.
   final String pronouns;
+
+  //The accessibility needs of a rider as a list.
   final List accessibilityNeeds;
-  // ids of favorite locations
+
+  //The ids of favorite locations.
   final List<String> favoriteLocations;
+
+  //The description of a rider's disability, needs, etc.
   final String description;
+
+  //The photo url of a rider's profile picture.
   final String picture;
+
+  //The ISO 8601 formatted UTC date of a rider's join date
   final String joinDate;
+
+  //The local address of a rider.
   final String address;
 
+  //Creates a string representing a rider's full name from it's first name and last name
   String fullName() => firstName + " " + lastName;
 
+  //Converts a rider's list of accessibility needs into a string representation
   String accessibilityStr() {
     String all = accessibilityNeeds.join(', ');
     return all == '' ? 'None' : all;
@@ -42,6 +67,7 @@ class Rider {
       this.joinDate,
       this.address);
 
+  //Creates a Rider from JSON representation.
   factory Rider.fromJson(Map<String, dynamic> json) {
     return Rider(
         json['id'],
@@ -60,6 +86,7 @@ class Rider {
         json['address']);
   }
 
+  //Converts a Rider instance into a map.
   Map<String, dynamic> toJson() => {
         'id': id,
         'email': email,
@@ -74,11 +101,16 @@ class Rider {
       };
 }
 
+//Manage the state of a rider with ChangeNotifier
 class RiderProvider with ChangeNotifier {
+
+  //Instance of a rider.
   Rider info;
 
+  //Checks whether a rider and it's information exists.
   bool hasInfo() => info != null;
 
+  //The delay involved with fetching a rider if the fetch previously fails.
   final retryDelay = Duration(seconds: 20);
 
   RiderProvider(AppConfig config, AuthProvider authProvider) {
@@ -92,11 +124,13 @@ class RiderProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+  //Assigns info to the rider instance.
   void _setInfo(Rider info) {
     this.info = info;
     notifyListeners();
   }
 
+  //Checks whether a rider's information was updated successfully.
   void check(AuthProvider authProvider, response) {
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -108,6 +142,7 @@ class RiderProvider with ChangeNotifier {
     }
   }
 
+  //Fetches the rider with the authProvider's id from the backend.
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
     await http
         .get("${config.baseUrl}/riders/${authProvider.id}")
@@ -122,6 +157,8 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+
+  //Sends a HTTP PUT request to update the rider fields specified in the map [changes].
   Future<void> sendUpdate(AppConfig config, AuthProvider authProvider,
       Map<String, dynamic> changes) async {
     final response = await http.put(
@@ -134,6 +171,7 @@ class RiderProvider with ChangeNotifier {
     check(authProvider, response);
   }
 
+  //Updates the logged in rider's first name, last name, and phone number.
   void updateRider(AppConfig config, AuthProvider authProvider,
       String firstName, String lastName, String phoneNumber) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -143,6 +181,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the the logged in rider's first and last name.
   void setNames(AppConfig config, AuthProvider authProvider, String firstName,
       String lastName) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -151,6 +190,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the logged in rider's email.
   void setEmail(
       AppConfig config, AuthProvider authProvider, String email) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -158,6 +198,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the logged in rider's personal pronouns.
   void setPronouns(
       AppConfig config, AuthProvider authProvider, String pronouns) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -165,6 +206,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the logged in rider's phone number.
   void setPhone(
       AppConfig config, AuthProvider authProvider, String phoneNumber) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -172,6 +214,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the logged in rider's local address.
   void setAddress(
       AppConfig config, AuthProvider authProvider, String address) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -179,6 +222,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
+  //Updates the logged in rider's favorite locations.
   void setFavoriteLocations(AppConfig config, AuthProvider authProvider,
       List<String> favoriteLocations) async {
     sendUpdate(config, authProvider, <String, dynamic>{
