@@ -104,90 +104,6 @@ class Home extends StatelessWidget {
                         color: Colors.grey[500],
                       ),
                       ListTile(
-                        leading: Icon(Icons.directions_car, color: Colors.black),
-                        title: sideBarText("Current Ride", Colors.black),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => Current(Ride(
-                                      type: 'active',
-                                      startLocation: 'Uris Hall',
-                                      startAddress:
-                                      '100 Carriage Way, Ithaca, NY 14850',
-                                      endLocation: 'Cascadilla Hall',
-                                      endAddress: '101 DTI St, Ithaca, NY 14850',
-                                      startTime: DateTime(2020, 10, 18, 13, 0),
-                                      endTime: DateTime(2020, 10, 18, 13, 15),
-                                      endDate: DateTime(2020, 12, 10),
-                                      recurring: true,
-                                      recurringDays: [0, 3, 4]))));
-                        },
-                      ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.trending_up, color: Colors.black),
-                        title: sideBarText("Upcoming Ride", Colors.black),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              //TODO: remove temporary ride
-                              new MaterialPageRoute(
-                                  builder: (context) => UpcomingRidePage(Ride(
-                                    type: 'active',
-                                    startLocation: 'Uris Hall',
-                                    startAddress:
-                                    '100 Carriage Way, Ithaca, NY 14850',
-                                    endLocation: 'Cascadilla Hall',
-                                    endAddress: '101 DTI St, Ithaca, NY 14850',
-                                    startTime: DateTime(2020, 10, 18, 13, 0),
-                                    endTime: DateTime(2020, 10, 18, 13, 15),
-                                  ))));
-                        },
-                      ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.history, color: Colors.black),
-                        title: sideBarText("Ride History", Colors.black),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => History(Ride(
-                                      type: 'active',
-                                      startLocation: 'Uris Hall',
-                                      startAddress:
-                                      '100 Carriage Way, Ithaca, NY 14850',
-                                      endLocation: 'Cascadilla Hall',
-                                      endAddress: '101 DTI St, Ithaca, NY 14850',
-                                      startTime: DateTime(2020, 10, 18, 13, 0),
-                                      endTime: DateTime(2020, 10, 18, 13, 15),
-                                      endDate: DateTime(2020, 12, 10),
-                                      recurring: false,
-                                      recurringDays: [0, 3, 4]))));
-                        },
-                      ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.check, color: Colors.black),
-                        title: sideBarText("Confirmed Ride", Colors.black),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => ConfirmedRide()));
-                        },
-                      ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                      ListTile(
                         leading: Icon(Icons.help_outline, color: Colors.black),
                         title: sideBarText('Help', Colors.black),
                         onTap: () {
@@ -243,47 +159,75 @@ class Home extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        sliver: SliverList(
-                            delegate: SliverChildListDelegate(
-                              [
-                                Text(
-                                  'Current Ride',
-                                  style: subHeadingStyle,
+                      SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Current Ride',
+                                      style: subHeadingStyle,
+                                    ),
+                                    SizedBox(height: 12),
+                                    CurrentRide(),
+                                  ]
                                 ),
-                                SizedBox(height: 12),
-                                CurrentRide(),
-                                SizedBox(height: 35),
-                                Row(children: [
+                              ),
+                              SizedBox(height: 35),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(children: [
                                   Text(
                                     'Upcoming Rides',
                                     style: subHeadingStyle,
                                   ),
                                   Spacer(),
-                                  Text('See More', style: seeMoreStyle),
-                                  Icon(Icons.arrow_forward, size: 16)
+                                  GestureDetector(
+                                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpcomingSeeMore())),
+                                      child: Row(
+                                          children: [
+                                            Text('See More', style: seeMoreStyle),
+                                            SizedBox(width: 4),
+                                            Icon(Icons.arrow_forward, size: 16)
+                                          ]
+                                      )
+                                  )
                                 ]),
-                                SizedBox(height: 12),
-                                UpcomingRide(),
-                                SizedBox(height: 35),
-                                Row(children: [
+                              ),
+                              SizedBox(height: 12),
+                              UpcomingRides(),
+                              SizedBox(height: 36),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(children: [
                                   Text(
                                     'Ride History',
                                     style: subHeadingStyle,
                                   ),
                                   Spacer(),
-                                  Text('See More', style: seeMoreStyle),
-                                  Icon(Icons.arrow_forward, size: 16)
+                                  GestureDetector(
+                                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistorySeeMore())),
+                                      child: Row(
+                                          children: [
+                                            Text('See More', style: seeMoreStyle),
+                                            SizedBox(width: 4),
+                                            Icon(Icons.arrow_forward, size: 16)
+                                          ]
+                                      )
+                                  )
                                 ]),
-                                SizedBox(height: 12),
-                                RideHistory(),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height / 8,
-                                )
-                              ],
-                            )),
+                              ),
+                              SizedBox(height: 12),
+                              RideHistory(),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height / 8,
+                              )
+                            ],
+                          )
                       ),
                     ]),
                     Align(
@@ -323,7 +267,8 @@ class Home extends StatelessWidget {
                     ),
                   ],
                 ),
-              ));
+              )
+          );
         }
     );
   }

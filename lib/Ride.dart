@@ -1,89 +1,97 @@
 import 'dart:core';
 import 'package:carriage_rider/RiderProvider.dart';
+import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import 'TextThemes.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'CarriageTheme.dart';
 
 class Ride {
   final String id;
   final String type;
+  final Rider rider;
+  final String status;
+
   final String startLocation;
   final String startAddress;
   final String endLocation;
   final String endAddress;
-  final DateTime endDate;
+
   final DateTime startTime;
-  final DateTime endTime;
-  final Rider rider;
+  final DateTime requestedEndTime;
+
   final bool recurring;
   final List<int> recurringDays;
   final bool deleted;
-  final String requestedEndTime;
-  final String status;
   final bool late;
+  final List<String> edits;
+  final DateTime endDate;
+
   final Map<String, dynamic> driver;
 
   Ride(
       {this.id,
-      this.type,
-      this.startLocation,
-      this.startAddress,
-      this.endLocation,
-      this.endAddress,
-      this.rider,
-      this.endDate,
-      this.endTime,
-      this.startTime,
-      this.recurring,
-      this.recurringDays,
-      this.deleted,
-      this.requestedEndTime,
-      this.status,
-      this.late,
-      this.driver});
+        this.type,
+        this.rider,
+        this.status,
+
+        this.startLocation,
+        this.startAddress,
+        this.endLocation,
+        this.endAddress,
+
+        this.startTime,
+        this.requestedEndTime,
+
+        this.recurring,
+        this.recurringDays,
+        this.deleted,
+        this.late,
+        this.edits,
+        this.endDate,
+        this.driver
+      });
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-        id: json['id'],
-        type: json['type'],
-        startLocation: json['startLocation']['name'],
-        startAddress: json['startLocation']['address'],
-        endLocation: json['endLocation']['name'],
-        endAddress: json['endLocation']['address'],
-        startTime: DateTime.parse(json['startTime']),
-        endDate: json['endDate'] == null
-            ? null
-            : DateTime.parse(json['endDate']),
-        endTime: DateTime.parse(json['endTime']),
-        rider: Rider.fromJson(json['rider']),
-        recurring: json['recurring'] == null ? false : json['recurring'],
-        recurringDays: json['recurringDays'] == null
-            ? []
-            : List.from(json['recurringDays']),
-        deleted: json['deleted'] == null ? false : json['deleted'],
-        requestedEndTime:
-            json['requestedEndTime'] == null ? '' : json['requestedEndTime'],
-        status: json['status'],
-        late: json['late'],
-        driver: json['driver'] == null ? null : json['driver']);
+      id: json['id'],
+      type: json['type'],
+      rider: Rider.fromJson(json['rider']),
+      status: json['status'],
+
+      startLocation: json['startLocation']['name'],
+      startAddress: json['startLocation']['address'],
+      endLocation: json['endLocation']['name'],
+      endAddress: json['endLocation']['address'],
+
+      startTime: DateTime.parse(json['startTime']),
+      requestedEndTime: json['requestedEndTime'] == null ? null : DateTime.parse(json['requestedEndTime']),
+
+      recurring: json['recurring'] == null ? false : json['recurring'],
+      recurringDays: json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
+      deleted: json['deleted'] == null ? false : json['deleted'],
+      late: json['late'],
+      driver: json['driver'] == null ? null : json['driver'],
+      edits: json['edits'] == null ? [] : List.from(json['edits']),
+      endDate: json['endDate'] == null ? null : DateTime.parse(json['endDate']),
+    );
   }
 
   Widget buildStartTime() {
     return RichText(
       text: TextSpan(
           text: DateFormat('MMM').format(startTime).toUpperCase() + ' ',
-          style: TextThemes.monthStyle,
+          style: CarriageTheme.monthStyle,
           children: [
             TextSpan(
                 text:
-                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
-                style: TextThemes.dayStyle),
+                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
-                style: TextThemes.timeStyle)
+                style: CarriageTheme.timeStyle)
           ]),
     );
   }
@@ -99,13 +107,13 @@ class Ride {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(startLocation,
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child:
-                    isIcon == true ? cardIconInfo(context) : cardInfo(context)),
+                isIcon == true ? cardIconInfo(context) : cardInfo(context)),
             SizedBox(height: 16),
             Text(
                 'Estimated pick up time: ' + DateFormat('jm').format(startTime),
@@ -195,7 +203,7 @@ class Ride {
               children: <Widget>[
                 Text('Drop-off Time', style: labelStyle),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(endTime), style: infoStyle)
+                Text(DateFormat('jm').format(requestedEndTime), style: infoStyle)
               ],
             ),
           )
@@ -239,4 +247,84 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
   if (x == null) return null;
   if (parse == null) return x;
   return parse(x);
+}
+
+class RideCard extends StatelessWidget {
+  RideCard(this.ride, {@required this.showConfirmation, @required this.showCallDriver, @required this.showArrow});
+  final Ride ride;
+  final bool showConfirmation;
+  final bool showCallDriver;
+  final bool showArrow;
+
+  final confirmationStyle = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 10,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => UpcomingRidePage(ride))
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(2),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+        decoration: CarriageTheme.cardDecoration,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            children: [
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    showConfirmation ?
+                    (ride.type == 'active' ? Text('Ride Confirmed', style: confirmationStyle.copyWith(color: Color(0xFF4CAF50))) :
+                    Text('Ride Requested', style: confirmationStyle.copyWith(color: Color(0xFFFF9800)))) : Container(),
+                    SizedBox(height: 4),
+                    ride.buildStartTime(),
+                    SizedBox(height: 16),
+                    Text('From', style: CarriageTheme.directionStyle),
+                    Text(ride.startLocation, style: CarriageTheme.rideInfoStyle),
+                    SizedBox(height: 8),
+                    Text('To', style: CarriageTheme.directionStyle),
+                    Text(ride.endLocation, style: CarriageTheme.rideInfoStyle),
+                    SizedBox(height: 16),
+                    showCallDriver ? Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          //TODO: replace temp phone number
+                          onTap: () => UrlLauncher.launch("tel://13232315234"),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(width: 0.5, color: Colors.black.withOpacity(0.25))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Icon(Icons.phone, size: 20, color: Color(0xFF9B9B9B)),
+                              )
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Driver', style: TextStyle(fontSize: 11)),
+                            Text(ride.type == 'active' ? 'Confirmed' : 'TBD', style: CarriageTheme.rideInfoStyle)
+                          ],
+                        )
+                      ],
+                    ) : Container()
+                  ]
+              ),
+              showArrow ? Spacer() : Container(),
+              showArrow ? Icon(Icons.chevron_right, size: 28) : Container()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

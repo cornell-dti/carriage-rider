@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart';
+import 'PopButton.dart';
 import 'Ride.dart';
 import 'Current.dart';
 
@@ -192,3 +193,68 @@ class _RecurringRideHistoryState extends State<RecurringRideHistory> {
     );
   }
 }
+
+class HistorySeeMore extends StatefulWidget {
+  @override
+  _HistorySeeMoreState createState() => _HistorySeeMoreState();
+}
+
+class _HistorySeeMoreState extends State<HistorySeeMore> {
+  List<Ride> rides = [
+    Ride(
+        type: 'active',
+        startLocation: 'Uris Hall',
+        startAddress:
+        '100 Carriage Way, Ithaca, NY 14850',
+        endLocation: 'Cascadilla Hall',
+        endAddress: '101 DTI St, Ithaca, NY 14850',
+        startTime: DateTime(2020, 10, 18, 13, 0),
+        requestedEndTime: DateTime(2020, 10, 18, 13, 15),
+        endDate: DateTime(2020, 12, 10),
+        recurring: true,
+        recurringDays: [0, 3, 4]
+    )
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: PopButton(context, 'Schedule'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: Text('Ride History', style: Theme.of(context).textTheme.headline1),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: rides.length,
+                            itemBuilder: (context, index) {
+                              return RideCard(
+                                rides[index],
+                                showConfirmation: false,
+                                showCallDriver: false,
+                                showArrow: true,
+                              );
+                            }
+                        ),
+                      ),
+                    )
+                  ]
+              ),
+            )
+        )
+    );
+  }
+}
+

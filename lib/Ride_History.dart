@@ -44,34 +44,10 @@ class _RideHistoryState extends State<RideHistory> {
         fontSize: 22,
         height: 2);
 
-    return ListView.builder(
+    return ListView(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: rides.length,
-      itemBuilder: (c, int index) => RideHistoryCard(
-        timeDateWidget: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: RichText(
-            text: TextSpan(
-                text:
-                    DateFormat('MMM').format(rides[index].startTime) + ' ',
-                style: monthStyle,
-                children: [
-                  TextSpan(
-                      text: humanize.ordinal(int.parse(DateFormat('d')
-                              .format(rides[index].startTime))) +
-                          ' ',
-                      style: dayStyle),
-                  TextSpan(
-                      text: DateFormat('jm').format(rides[index].startTime),
-                      style: timeStyle)
-                ]),
-          ),
-        ),
-        infoRowWidget: InformationRow(
-            start: rides[index].startLocation,
-            end: rides[index].endLocation),
-      ),
+      children: rides.map((ride) => RideCard(ride, showConfirmation: false, showCallDriver: false, showArrow: false,)).toList()
     );
   }
 
