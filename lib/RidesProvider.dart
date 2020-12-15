@@ -76,7 +76,7 @@ class RidesProvider with ChangeNotifier {
   }
 
   //Creates a ride in the backend by an HTTP post request with the fields:
-  // [startLocation], [endLocation], [startTime], and [endTime].
+  //[startLocation], [endLocation], [startTime], and [endTime].
   Future<void> createRide(
       AppConfig config,
       RiderProvider riderProvider,

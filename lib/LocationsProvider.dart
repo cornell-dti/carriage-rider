@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 //The type for a location.
 class Location {
-  //The UUID of a location
+  //The id of a location
   final String id;
   //The name of a location
   final String name;
@@ -40,7 +40,7 @@ class LocationsProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
-  //Fetches all the locations from the backend.
+  //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
   Future<List<Location>> fetchLocations(
       AppConfig config, AuthProvider authProvider) async {
     final response = await http.get('${config.baseUrl}/locations');
@@ -53,7 +53,7 @@ class LocationsProvider with ChangeNotifier {
     }
   }
 
-  //Decodes [json] of locations into a list representation of the locations.
+  //Decodes the string [json] of locations into a list representation of the locations.
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)["data"];
     List<Location> res =

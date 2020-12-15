@@ -4,19 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'app_config.dart';
 
+//The type for a location.
 class Location {
+  //The id of a location
   final String id;
+  //The name of a location
   final String name;
+  //The address of a location
   final String address;
 
   Location({@required this.id, this.name, this.address});
 
+  //Creates a location from JSON representation.
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
         id: json['id'], name: json['name'], address: json['address']);
   }
 }
 
+//Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
 Future<List<Location>> fetchLocations(BuildContext context) async {
   final response = await http.get(AppConfig.of(context).baseUrl + '/locations');
   if (response.statusCode == 200) {
@@ -30,6 +36,7 @@ Future<List<Location>> fetchLocations(BuildContext context) async {
   }
 }
 
+//Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
 Map<String, Location> locationsById(List<Location> locations) {
   Map<String, Location> res = {};
   locations.forEach((element) {

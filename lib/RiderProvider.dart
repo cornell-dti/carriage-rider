@@ -107,7 +107,8 @@ class RiderProvider with ChangeNotifier {
   //Instance of a rider.
   Rider info;
 
-  //Checks whether a rider and it's information exists.
+  //Checks whether a rider exists.
+  //Returns true if info is not null and false otherwise.
   bool hasInfo() => info != null;
 
   //The delay involved with fetching a rider if the fetch previously fails.
@@ -130,7 +131,8 @@ class RiderProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //Checks whether a rider's information was updated successfully.
+  //Checks whether a rider's information was updated successfully
+  //and throws an exception if rider is not updated.
   void check(AuthProvider authProvider, response) {
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -142,7 +144,8 @@ class RiderProvider with ChangeNotifier {
     }
   }
 
-  //Fetches the rider with the authProvider's id from the backend.
+  //Fetches the rider with the authProvider's id from the backend
+  //by using the baseUrl of [config] and id from [authProvider].
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
     await http
         .get("${config.baseUrl}/riders/${authProvider.id}")
@@ -171,7 +174,7 @@ class RiderProvider with ChangeNotifier {
     check(authProvider, response);
   }
 
-  //Updates the logged in rider's first name, last name, and phone number.
+  //Updates the logged in rider's first name [firstName], last name [lastName], and phone number [phoneNumber].
   void updateRider(AppConfig config, AuthProvider authProvider,
       String firstName, String lastName, String phoneNumber) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -181,7 +184,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the the logged in rider's first and last name.
+  //Updates the the logged in rider's first [firstName] and last name [lastName].
   void setNames(AppConfig config, AuthProvider authProvider, String firstName,
       String lastName) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -190,7 +193,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the logged in rider's email.
+  //Updates the logged in rider's email [email].
   void setEmail(
       AppConfig config, AuthProvider authProvider, String email) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -198,7 +201,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the logged in rider's personal pronouns.
+  //Updates the logged in rider's personal pronouns [pronouns].
   void setPronouns(
       AppConfig config, AuthProvider authProvider, String pronouns) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -206,7 +209,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the logged in rider's phone number.
+  //Updates the logged in rider's phone number [phoneNumber].
   void setPhone(
       AppConfig config, AuthProvider authProvider, String phoneNumber) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -214,7 +217,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the logged in rider's local address.
+  //Updates the logged in rider's local address [address].
   void setAddress(
       AppConfig config, AuthProvider authProvider, String address) async {
     sendUpdate(config, authProvider, <String, String>{
@@ -222,7 +225,7 @@ class RiderProvider with ChangeNotifier {
     });
   }
 
-  //Updates the logged in rider's favorite locations.
+  //Updates the logged in rider's favorite locations [favoriteLocations].
   void setFavoriteLocations(AppConfig config, AuthProvider authProvider,
       List<String> favoriteLocations) async {
     sendUpdate(config, authProvider, <String, dynamic>{

@@ -108,6 +108,7 @@ class Ride {
   }
 
   //Widget displaying a custom built card with information about a ride's start location and start time.
+  //[isIcon] determines whether the card needs an icon.
   Widget buildLocationsCard(context, bool isIcon) {
     return Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -147,7 +148,7 @@ class Ride {
     );
   }
 
-  //Widget displaying the start address of a ride along for a card.
+  //Widget displaying the start address of a ride without an icon for a card.
   Widget cardInfo(context) {
     return Row(
       children: [
