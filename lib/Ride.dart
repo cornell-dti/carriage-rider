@@ -9,27 +9,27 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'CarriageTheme.dart';
 
 class Ride {
-  final String id;
-  final String type;
-  final Rider rider;
-  final String status;
+  String id;
+  String type;
+  Rider rider;
+  String status;
 
-  final String startLocation;
-  final String startAddress;
-  final String endLocation;
-  final String endAddress;
+  String startLocation;
+  String startAddress;
+  String endLocation;
+  String endAddress;
 
-  final DateTime startTime;
-  final DateTime requestedEndTime;
+  DateTime startTime;
+  DateTime requestedEndTime;
 
-  final bool recurring;
-  final List<int> recurringDays;
-  final bool deleted;
-  final bool late;
-  final List<String> edits;
-  final DateTime endDate;
+  bool recurring;
+  List<int> recurringDays;
+  bool deleted;
+  bool late;
+  List<String> edits;
+  DateTime endDate;
 
-  final Map<String, dynamic> driver;
+  Map<String, dynamic> driver;
 
   Ride(
       {this.id,
@@ -79,6 +79,9 @@ class Ride {
     );
   }
 
+  String toString() {
+    return 'Ride from $startLocation to $endLocation, ${DateFormat().format(startTime)} to ${DateFormat().format(requestedEndTime)}';
+  }
   Widget buildStartTime() {
     return RichText(
       text: TextSpan(
@@ -250,11 +253,12 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
 }
 
 class RideCard extends StatelessWidget {
-  RideCard(this.ride, {@required this.showConfirmation, @required this.showCallDriver, @required this.showArrow});
+  RideCard(this.ride, {@required this.showConfirmation, @required this.showCallDriver, @required this.showArrow, this.parentRideID});
   final Ride ride;
   final bool showConfirmation;
   final bool showCallDriver;
   final bool showArrow;
+  final String parentRideID;
 
   final confirmationStyle = TextStyle(
     fontWeight: FontWeight.w500,
@@ -266,7 +270,7 @@ class RideCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => UpcomingRidePage(ride))
+            new MaterialPageRoute(builder: (context) => UpcomingRidePage(ride, parentRideID: parentRideID))
         );
       },
       child: Container(

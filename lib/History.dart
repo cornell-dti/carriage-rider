@@ -234,7 +234,7 @@ class _HistorySeeMoreState extends State<HistorySeeMore> {
                     Container(
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
                         child: ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),

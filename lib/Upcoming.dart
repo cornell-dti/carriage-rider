@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carriage_rider/MeasureSize.dart';
 import 'package:carriage_rider/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,9 @@ import 'app_config.dart';
 Color grey = Color(0xFF9B9B9B);
 
 class UpcomingRidePage extends StatefulWidget {
-  UpcomingRidePage(this.ride);
+  UpcomingRidePage(this.ride, {this.parentRideID});
   final Ride ride;
+  final String parentRideID;
   @override
   _UpcomingRidePageState createState() => _UpcomingRidePageState();
 }
@@ -268,7 +271,9 @@ class EditRide extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3)),
                 child: RaisedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      //TODO: navigate to edit flow
+                    },
                     elevation: 3.0,
                     color: Colors.black,
                     textColor: Colors.white,
@@ -523,7 +528,6 @@ class UpcomingRides extends StatelessWidget {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
-
     if (upcomingRides.length == 0) {
       return _emptyUpcomingRides(context);
     } else {
@@ -532,35 +536,9 @@ class UpcomingRides extends StatelessWidget {
   }
 }
 
-class FutureRide {
-  FutureRide(this.parentRide, this.startTime, this.endTime);
-  Ride parentRide;
-  DateTime startTime;
-  DateTime endTime;
-}
-
-class UpcomingSeeMore extends StatefulWidget {
-  @override
-  _UpcomingSeeMoreState createState() => _UpcomingSeeMoreState();
-}
-
-class _UpcomingSeeMoreState extends State<UpcomingSeeMore> {
-  List<Ride> rides = [
-    Ride(
-        type: 'active',
-        startLocation: 'Cornell University',
-        startAddress: '100 Carriage Way',
-        endLocation: 'Cascadilla Hall',
-        endAddress: '101 DTI St, Ithaca, NY 14850',
-        startTime: DateTime(2020, 10, 18, 13, 0),
-        requestedEndTime: DateTime(2020, 10, 18, 13, 15),
-        recurring: true,
-        recurringDays: [0, 1, 2],
-        endDate: DateTime(2020, 12, 21),
-        deleted: false,
-        edits: []
-    ),
-  ];
+class FutureRidesGenerator {
+  FutureRidesGenerator(this.originalRides);
+  List<Ride> originalRides;
 
   int daysUntilWeekday(DateTime start, int weekday) {
     int startWeekday = start.weekday;
@@ -575,34 +553,99 @@ class _UpcomingSeeMoreState extends State<UpcomingSeeMore> {
     return start.add(Duration(days: daysUntil));
   }
 
-  List<Ride> generateFutureRides(Ride originalRide) {
-    Map<String, Ride> rideMap;
-    for (Ride ride in rides) {
-      rideMap[ride.id] = ride;
-    }
+  bool ridesEqualTimeLoc(Ride ride, Ride futureRide) {
+    return (
+        ride.startTime.isAtSameMomentAs(futureRide.startTime)
+            && ride.requestedEndTime.isAtSameMomentAs(futureRide.requestedEndTime)
+            && ride.startLocation == futureRide.startLocation
+            && ride.endLocation == futureRide.endLocation
+    );
+  }
+
+  bool wasDeleted(Ride futureRide, List<Ride> deletedRides) {
+    return deletedRides.where((deletedRide) => ridesEqualTimeLoc(deletedRide, futureRide)).isNotEmpty;
+  }
+
+  List<Ride> generateFutureRides() {
     List<Ride> allRides = [];
-    for (Ride originalRide in rides) {
-      if (!originalRide.deleted) {
+    Map<String, Ride> originalRidesByID = Map();
+    Map<Ride, String> futureRideParentIDs = Map();
+
+    for (Ride originalRide in originalRides) {
+      originalRidesByID[originalRide.id] = originalRide;
+    }
+    for (Ride originalRide in originalRides) {
+      // add one time rides
+      if (!originalRide.deleted && !originalRide.recurring) {
         allRides.add(originalRide);
       }
       // Mon=1 Tues=2 Wed=3 Thurs=4 Fri=5
       if (originalRide.recurring) {
-        List<Ride> editedInstances = originalRide.edits.map((id) => rideMap[id]);
-        // get deleted rides
-        List<String> deletedInstanceIDs = [];
-
-        // find the date of the first recurring ride
-        DateTime futureRideStartTime;
-
+        Duration rideDuration = originalRide.requestedEndTime.difference(originalRide.startTime);
+        List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride.deleted).toList();
         List<int> days = originalRide.recurringDays;
-        int dayIndex;
 
-        // generate repetitions of the ride, excluding the updates
+        // find first occurrence
+        int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(originalRide.startTime, day)).reduce(min);
+        DateTime rideStart = originalRide.startTime.add(Duration(days: daysUntilFirstOccurrence));
+        int dayIndex = days.indexOf(rideStart.weekday);
+
+        // generate instances of recurring rides
+        while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
+          // create the new ride and keep track of its parent
+          Ride rideInstance = Ride(
+              id: CarriageTheme.generatedRideID,
+              startLocation: originalRide.startLocation,
+              endLocation: originalRide.endLocation,
+              startTime: rideStart,
+              requestedEndTime: rideStart.add(rideDuration)
+          );
+          futureRideParentIDs[rideInstance] = originalRide.id;
+
+          // if all ride info is equal to a deleted ride, don't add it because it was edited
+          if (!wasDeleted(rideInstance, deletedInstances) && rideInstance.startTime.isAfter(DateTime.now())) {
+            allRides.add(rideInstance);
+          }
+
+          // find the next occurrence
+          dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
+          int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
+          rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
+        }
       }
     }
+    return allRides;
   }
+
+  ListView buildList() {
+    List<Ride> allRides = generateFutureRides();
+    List<Ride> futureRides = allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList();
+    return ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: futureRides.length,
+        itemBuilder: (context, index) {
+          return RideCard(
+            futureRides[index],
+            showConfirmation: true,
+            showCallDriver: false,
+            showArrow: true,
+          );
+        },
+      separatorBuilder: (context, index) {
+          return SizedBox(height: 16);
+      },
+    );
+  }
+}
+
+class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    List<Ride> originalRides = ridesProvider.upcomingRides;
+    FutureRidesGenerator ridesGenerator = FutureRidesGenerator(originalRides);
+
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -623,19 +666,7 @@ class _UpcomingSeeMoreState extends State<UpcomingSeeMore> {
                         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: rides.length,
-                              itemBuilder: (context, index) {
-                                return RideCard(
-                                  rides[index],
-                                  showConfirmation: true,
-                                  showCallDriver: false,
-                                  showArrow: true,
-                                );
-                              }
-                          ),
+                          child: ridesGenerator.buildList(),
                         ),
                       ),
                     )

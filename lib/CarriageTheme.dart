@@ -43,4 +43,6 @@ class CarriageTheme {
         )
       ]
   );
+
+  static final String generatedRideID = 'INSTANCE';
 }

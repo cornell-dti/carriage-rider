@@ -185,6 +185,7 @@ class Home extends StatelessWidget {
                                     style: subHeadingStyle,
                                   ),
                                   Spacer(),
+                                  ridesProvider.upcomingRides.isNotEmpty ?
                                   GestureDetector(
                                       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpcomingSeeMore())),
                                       child: Row(
@@ -194,7 +195,7 @@ class Home extends StatelessWidget {
                                             Icon(Icons.arrow_forward, size: 16)
                                           ]
                                       )
-                                  )
+                                  ) : Container()
                                 ]),
                               ),
                               SizedBox(height: 12),
@@ -208,6 +209,7 @@ class Home extends StatelessWidget {
                                     style: subHeadingStyle,
                                   ),
                                   Spacer(),
+                                  ridesProvider.pastRides.isNotEmpty ?
                                   GestureDetector(
                                       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistorySeeMore())),
                                       child: Row(
@@ -217,7 +219,7 @@ class Home extends StatelessWidget {
                                             Icon(Icons.arrow_forward, size: 16)
                                           ]
                                       )
-                                  )
+                                  ) : Container()
                                 ]),
                               ),
                               SizedBox(height: 12),
