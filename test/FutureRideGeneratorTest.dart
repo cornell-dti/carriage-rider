@@ -17,6 +17,8 @@ void main() {
     status: 'not_started',
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
+    startAddress: '123 Carriage Way',
+    endAddress: '123 Carriage Ln',
     startTime: DateTime(2020, 10, 18, 13, 0),
     requestedEndTime: DateTime(2020, 10, 18, 13, 15),
   );
@@ -27,6 +29,8 @@ void main() {
     status: 'not_started',
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
+    startAddress: '123 Carriage Way',
+    endAddress: '123 Carriage Ln',
     startTime: DateTime(2020, 10, 18, 13, 0),
     requestedEndTime: DateTime(2020, 10, 18, 13, 15),
   );
@@ -119,6 +123,30 @@ void main() {
     recurringDays: [],
     deleted: false,
     edits: [],
+  );
+
+  Ride urisCascStartAddress = Ride(
+    id: 'urisCascCopy',
+    type: 'past',
+    status: 'not_started',
+    startLocation: 'Uris Hall',
+    endLocation: 'Cascadilla Hall',
+    startAddress: '321 Carriage Way',
+    endAddress: '123 Carriage Ln',
+    startTime: DateTime(2020, 10, 18, 13, 0),
+    requestedEndTime: DateTime(2020, 10, 18, 13, 15),
+  );
+
+  Ride urisCascEndAddress = Ride(
+    id: 'urisCascCopy',
+    type: 'past',
+    status: 'not_started',
+    startLocation: 'Uris Hall',
+    endLocation: 'Cascadilla Hall',
+    startAddress: '123 Carriage Way',
+    endAddress: '321 Carriage Ln',
+    startTime: DateTime(2020, 10, 18, 13, 0),
+    requestedEndTime: DateTime(2020, 10, 18, 13, 15),
   );
 
   List<Ride> testRides = [
@@ -219,6 +247,12 @@ void main() {
     test('rides with end location different are not equal', () {
       expect(generator.ridesEqualTimeLoc(urisCasc, urisBalch), false);
     });
+    test('rides with start address different are not equal', () {
+      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascStartAddress), false);
+    });
+    test('rides with end address different are not equal', () {
+      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascEndAddress), false);
+    });
   });
 
   group('wasDeleted tests', () {
@@ -250,7 +284,7 @@ void main() {
   });
 
   group ('generate rides tests', () {
-    test('first list', () {
+    test('list including single ride and recurring ride with edits is generated correctly', () {
       expect(rideListsEqual(generator.generateFutureRides(), expectedGeneratedRides), true);
     });
 

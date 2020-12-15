@@ -7,12 +7,10 @@ import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-import 'AuthProvider.dart';
 import 'Cancel_Ride.dart';
 import 'Ride.dart';
 import 'CarriageTheme.dart';
 import 'PopButton.dart';
-import 'app_config.dart';
 
 Color grey = Color(0xFF9B9B9B);
 
@@ -559,6 +557,8 @@ class FutureRidesGenerator {
             && ride.requestedEndTime.isAtSameMomentAs(futureRide.requestedEndTime)
             && ride.startLocation == futureRide.startLocation
             && ride.endLocation == futureRide.endLocation
+            && ride.startAddress == futureRide.startAddress
+            && ride.endAddress == futureRide.endAddress
     );
   }
 
@@ -596,7 +596,9 @@ class FutureRidesGenerator {
           Ride rideInstance = Ride(
               id: CarriageTheme.generatedRideID,
               startLocation: originalRide.startLocation,
+              startAddress: originalRide.startAddress,
               endLocation: originalRide.endLocation,
+              endAddress: originalRide.endAddress,
               startTime: rideStart,
               requestedEndTime: rideStart.add(rideDuration)
           );

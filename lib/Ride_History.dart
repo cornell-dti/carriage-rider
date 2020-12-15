@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/RidesProvider.dart';
-import 'package:carriage_rider/AuthProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Ride.dart';
-import 'package:carriage_rider/app_config.dart';
-import 'package:intl/intl.dart';
-import 'package:humanize/humanize.dart' as humanize;
 
 class RideHistory extends StatefulWidget {
   @override
@@ -23,27 +19,6 @@ class _RideHistoryState extends State<RideHistory> {
   }
 
   Widget _mainHist(List<Ride> rides) {
-    final monthStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.2,
-        fontSize: 22,
-        height: 2);
-
-    final dayStyle = TextStyle(
-        color: Colors.grey[700],
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 22,
-        height: 2);
-
-    final timeStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.2,
-        fontSize: 22,
-        height: 2);
-
     return ListView(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,

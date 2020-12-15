@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:carriage_rider/RiderProvider.dart';
-import 'package:provider/provider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:carriage_rider/AuthProvider.dart';

@@ -1,11 +1,8 @@
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Confirmed_Ride.dart';
-import 'package:carriage_rider/Current.dart';
 import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
-import 'package:carriage_rider/Ride.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/material.dart';
