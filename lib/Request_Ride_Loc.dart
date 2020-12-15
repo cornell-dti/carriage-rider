@@ -37,8 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location",
-                        style: TextThemes.question),
+                    child: Text("Location", style: TextThemes.question),
                   )
                 ],
               ),
@@ -114,8 +113,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location",
-                        style: TextThemes.question),
+                    child: Text("Location", style: TextThemes.question),
                   )
                 ],
               ),
@@ -167,7 +165,14 @@ class RequestLoc extends StatefulWidget {
   final String label;
   final Widget page;
 
-  RequestLoc({Key key, this.ride, this.fromCtrl, this.toCtrl, this.isToLocation, this.label, this.page})
+  RequestLoc(
+      {Key key,
+      this.ride,
+      this.fromCtrl,
+      this.toCtrl,
+      this.isToLocation,
+      this.label,
+      this.page})
       : super(key: key);
 
   @override
@@ -191,8 +196,7 @@ class _RequestLocState extends State<RequestLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location",
-                        style: TextThemes.question),
+                    child: Text("Location", style: TextThemes.question),
                   )
                 ],
               ),
@@ -218,7 +222,9 @@ class _RequestLocState extends State<RequestLoc> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    LocationField(ctrl: widget.isToLocation ? toCtrl : fromCtrl, label: widget.label),
+                    LocationField(
+                        ctrl: widget.isToLocation ? toCtrl : fromCtrl,
+                        label: widget.label),
                   ],
                 ),
               ),
@@ -272,7 +278,6 @@ class RequestRideLocConfirm extends StatefulWidget {
 
 class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
   final _formKey = GlobalKey<FormState>();
-  double width = 26;
 
   @override
   Widget build(BuildContext context) {
@@ -288,8 +293,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location",
-                        style: TextThemes.question),
+                    child: Text("Location", style: TextThemes.question),
                   )
                 ],
               ),
@@ -355,7 +359,8 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                                               ride: widget.ride)));
                                   widget.ride.fromLocation = fromCtrl.text;
                                   widget.ride.toLocation = toCtrl.text;
-                                  fromCtrl.clear(); toCtrl.clear();
+                                  fromCtrl.clear();
+                                  toCtrl.clear();
                                 }
                               },
                               elevation: 2.0,
@@ -369,25 +374,6 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
             ],
           ),
         )));
-  }
-
-  Widget locationCircle(Color color1, Color color2) {
-    return Container(
-      width: width,
-      height: width,
-      child: Icon(Icons.circle, size: 9.75, color: color1),
-      decoration: BoxDecoration(
-          color: color2,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-                color: color1,
-                blurRadius: 2,
-                spreadRadius: 0
-            )
-          ]
-      ),
-    );
   }
 }
 
@@ -432,8 +418,8 @@ class _LocationInputState extends State<LocationInput> {
                         page: widget.finished
                             ? RequestRideLocConfirm(
                                 ride: widget.ride,
-                          fromCtrl: fromCtrl,
-                          toCtrl: widget.toCtrl,
+                                fromCtrl: fromCtrl,
+                                toCtrl: widget.toCtrl,
                               )
                             : RequestRideLoc(ride: widget.ride)),
                   ))),
@@ -571,7 +557,8 @@ class FlowCancel extends StatelessWidget {
           child: InkWell(
             child: Text("Cancel", style: TextThemes.cancel),
             onTap: () {
-              fromCtrl.clear(); toCtrl.clear();
+              fromCtrl.clear();
+              toCtrl.clear();
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
@@ -634,7 +621,7 @@ class FlowBackDuo extends StatelessWidget {
   }
 }
 
-class TabBarTop extends StatefulWidget {
+class TabBarTop extends StatelessWidget {
   final Color colorOne;
   final Color colorTwo;
   final Color colorThree;
@@ -642,11 +629,6 @@ class TabBarTop extends StatefulWidget {
   TabBarTop({Key key, this.colorOne, this.colorTwo, this.colorThree})
       : super(key: key);
 
-  @override
-  _TabBarTopState createState() => _TabBarTopState();
-}
-
-class _TabBarTopState extends State<TabBarTop> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -656,7 +638,7 @@ class _TabBarTopState extends State<TabBarTop> {
           child: new Container(
               margin: const EdgeInsets.only(left: 10.0),
               child: Divider(
-                color: widget.colorOne,
+                color: colorOne,
                 height: 50,
                 thickness: 5,
               )),
@@ -664,7 +646,7 @@ class _TabBarTopState extends State<TabBarTop> {
         Expanded(
           child: new Container(
               child: Divider(
-            color: widget.colorTwo,
+            color: colorTwo,
             height: 50,
             thickness: 5,
           )),
@@ -673,7 +655,7 @@ class _TabBarTopState extends State<TabBarTop> {
           child: new Container(
               margin: const EdgeInsets.only(right: 10.0),
               child: Divider(
-                color: widget.colorThree,
+                color: colorThree,
                 height: 50,
                 thickness: 5,
               )),
@@ -683,7 +665,7 @@ class _TabBarTopState extends State<TabBarTop> {
   }
 }
 
-class TabBarBot extends StatefulWidget {
+class TabBarBot extends StatelessWidget {
   final Color colorOne;
   final Color colorTwo;
   final Color colorThree;
@@ -691,11 +673,6 @@ class TabBarBot extends StatefulWidget {
   TabBarBot({Key key, this.colorOne, this.colorTwo, this.colorThree})
       : super(key: key);
 
-  @override
-  _TabBarBotState createState() => _TabBarBotState();
-}
-
-class _TabBarBotState extends State<TabBarBot> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -706,20 +683,20 @@ class _TabBarBotState extends State<TabBarBot> {
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
             margin: const EdgeInsets.only(left: 10.0),
             child: Icon(Icons.location_on_outlined,
-                color: widget.colorOne, size: 30),
+                color: colorOne, size: 30),
           ),
         ),
         Expanded(
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
-            child: Icon(Icons.web_asset, color: widget.colorTwo, size: 30),
+            child: Icon(Icons.web_asset, color: colorTwo, size: 30),
           ),
         ),
         Expanded(
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
             margin: const EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.check, color: widget.colorThree, size: 30),
+            child: Icon(Icons.check, color: colorThree, size: 30),
           ),
         ),
       ],
