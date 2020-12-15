@@ -80,12 +80,12 @@ class _RideHistoryState extends State<RideHistory> {
 
   @override
   Widget build(context) {
-    PastRidesProvider ridesProvider = Provider.of<PastRidesProvider>(context);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchRides(appConfig, authProvider),
+        future: ridesProvider.fetchPastRides(appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.length == 0) {
