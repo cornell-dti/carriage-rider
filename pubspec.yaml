@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  google_sign_in: ^4.4.4
+  google_sign_in:
   http: ^0.12.0+2
   intl: ^0.16.1
   provider: ^4.0.5+1
@@ -30,7 +30,7 @@ dependencies:
   humanize: ^0.3.0
   flutter_typeahead: ^1.8.8
   flutter_verification_code: ^0.2.1
-  customtogglebuttons: ^0.0.5
+  customtogglebuttons:
 
 dev_dependencies:
   flutter_test:
