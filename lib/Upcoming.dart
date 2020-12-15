@@ -475,7 +475,7 @@ class UpcomingRide extends StatefulWidget {
 }
 
 class _UpcomingRideState extends State<UpcomingRide> {
-  Widget _emptyUpcomingRides(context) {
+  Widget _emptyUpcomingRides() {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
@@ -484,36 +484,23 @@ class _UpcomingRideState extends State<UpcomingRide> {
     );
   }
 
-  Widget _mainUpcoming(context, List<Ride> rides) {
-    return Expanded(
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemCount: rides.length,
-          itemBuilder: (c, int index) => UpcomingRideCard(rides[index])),
+  Widget _mainUpcoming(List<Ride> rides) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+          children: rides.map((ride) => UpcomingRideCard(ride)).toList())
     );
   }
 
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchUpcomingRides(appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.length == 0) {
-              return _emptyUpcomingRides(context);
-            } else {
-              return _mainUpcoming(context, snapshot.data);
-            }
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+    List<Ride> upcomingRides = ridesProvider.upcomingRides;
+    if (upcomingRides.length == 0) {
+      return _emptyUpcomingRides();
+    } else {
+      return _mainUpcoming(upcomingRides);
+    }
   }
 }
 

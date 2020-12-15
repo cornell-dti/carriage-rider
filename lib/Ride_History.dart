@@ -13,7 +13,7 @@ class RideHistory extends StatefulWidget {
 }
 
 class _RideHistoryState extends State<RideHistory> {
-  Widget _emptyRideHist(context) {
+  Widget _emptyRideHist() {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
@@ -22,7 +22,7 @@ class _RideHistoryState extends State<RideHistory> {
     );
   }
 
-  Widget _mainHist(context, List<Ride> rides) {
+  Widget _mainHist(List<Ride> rides) {
     final monthStyle = TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w700,
@@ -44,60 +44,46 @@ class _RideHistoryState extends State<RideHistory> {
         fontSize: 22,
         height: 2);
 
-    return Column(
-      children: <Widget>[
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: rides.length,
-          itemBuilder: (c, int index) => RideHistoryCard(
-            timeDateWidget: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: RichText(
-                text: TextSpan(
-                    text:
-                        DateFormat('MMM').format(rides[index].startTime) + ' ',
-                    style: monthStyle,
-                    children: [
-                      TextSpan(
-                          text: humanize.ordinal(int.parse(DateFormat('d')
-                                  .format(rides[index].startTime))) +
-                              ' ',
-                          style: dayStyle),
-                      TextSpan(
-                          text: DateFormat('jm').format(rides[index].startTime),
-                          style: timeStyle)
-                    ]),
-              ),
-            ),
-            infoRowWidget: InformationRow(
-                start: rides[index].startLocation,
-                end: rides[index].endLocation),
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: rides.length,
+      itemBuilder: (c, int index) => RideHistoryCard(
+        timeDateWidget: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: RichText(
+            text: TextSpan(
+                text:
+                    DateFormat('MMM').format(rides[index].startTime) + ' ',
+                style: monthStyle,
+                children: [
+                  TextSpan(
+                      text: humanize.ordinal(int.parse(DateFormat('d')
+                              .format(rides[index].startTime))) +
+                          ' ',
+                      style: dayStyle),
+                  TextSpan(
+                      text: DateFormat('jm').format(rides[index].startTime),
+                      style: timeStyle)
+                ]),
           ),
-        )
-      ],
+        ),
+        infoRowWidget: InformationRow(
+            start: rides[index].startLocation,
+            end: rides[index].endLocation),
+      ),
     );
   }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchPastRides(appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.length == 0) {
-              return _emptyRideHist(context);
-            } else {
-              return _mainHist(context, snapshot.data);
-            }
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+    List<Ride> pastRides = ridesProvider.pastRides;
+    if (pastRides.length == 0) {
+      return _emptyRideHist();
+    } else {
+      return _mainHist(pastRides);
+    }
   }
 }
 

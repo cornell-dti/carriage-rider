@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:carriage_rider/RiderProvider.dart';
+import 'package:provider/provider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:carriage_rider/AuthProvider.dart';
@@ -8,57 +9,47 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class RidesProvider with ChangeNotifier {
+  List<Ride> pastRides = [];
+  List<Ride> upcomingRides = [];
+
   RidesProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;
     callback = () {
       if (authProvider.isAuthenticated) {
-        fetchPastRides(config, authProvider);
+        fetchAllRides(config, authProvider);
       }
     };
     callback();
     authProvider.addListener(callback);
   }
 
-  Future<List<Ride>> fetchPastRides(
+  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+    await _fetchPastRides(config, authProvider);
+    await _fetchUpcomingRides(config, authProvider);
+    notifyListeners();
+  }
+
+  Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
     final response = await http
         .get('${config.baseUrl}/rides?type=past&rider=${authProvider.id}');
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
-      return rides;
+      pastRides = rides;
     } else {
       throw Exception('Failed to load rides.');
     }
   }
 
-//  Future<List<Ride>> fetchUpcomingRides(
-//      AppConfig config, AuthProvider authProvider) async {
-//    final responseAct = await http
-//        .get('${config.baseUrl}/rides?type=active&rider=${authProvider.id}');
-//    final responseUn = await http.get(
-//        '${config.baseUrl}/rides?type=unscheduled&rider=${authProvider.id}');
-//    if (responseAct.statusCode == 200 || responseUn.statusCode == 200) {
-//      String responseActBody = responseAct.body;
-//      String responseUnBody = responseUn.body;
-//      List<Ride> ridesAct = _ridesFromJson(responseActBody);
-//      List<Ride> ridesUn = _ridesFromJson(responseUnBody);
-//      List<Ride> combRides = ridesAct + ridesUn;
-//      return combRides;
-//    } else {
-//      throw Exception('Failed to load rides.');
-//    }
-//  }
-
-  Future<List<Ride>> fetchUpcomingRides(
+  Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     final responseNs = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}');
     if (responseNs.statusCode == 200) {
       String responseNSBody = responseNs.body;
-      List<Ride> ridesNs = _ridesFromJson(responseNSBody);
-      print(ridesNs);
-      return ridesNs;
+      List<Ride> rides = _ridesFromJson(responseNSBody);
+      upcomingRides = rides;
     } else {
       throw Exception('Failed to load rides.');
     }
@@ -88,7 +79,7 @@ class RidesProvider with ChangeNotifier {
         'startLocation': startLocation,
         'endLocation': endLocation,
         'startTime': startTime,
-        'endTime': endTime,
+        'requestedEndTime': endTime,
       }),
     );
     print(response);

@@ -55,7 +55,7 @@ class Ride {
         endAddress: json['endLocation']['address'],
         startTime: DateTime.parse(json['startTime']),
         endDate: json['endDate'] == null
-            ? DateTime.now()
+            ? null
             : DateTime.parse(json['endDate']),
         endTime: DateTime.parse(json['endTime']),
         rider: Rider.fromJson(json['rider']),
@@ -68,7 +68,7 @@ class Ride {
             json['requestedEndTime'] == null ? '' : json['requestedEndTime'],
         status: json['status'],
         late: json['late'],
-        driver: json['driver'] == null ? false : json['driver']);
+        driver: json['driver'] == null ? null : json['driver']);
   }
 
   Widget buildStartTime() {
