@@ -3,6 +3,8 @@ import 'package:carriage_rider/RidesProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Ride.dart';
 
+import 'PopButton.dart';
+
 class RideHistory extends StatefulWidget {
   @override
   _RideHistoryState createState() => _RideHistoryState();
@@ -19,10 +21,16 @@ class _RideHistoryState extends State<RideHistory> {
   }
 
   Widget _mainHist(List<Ride> rides) {
-    return ListView(
+    return ListView.separated(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      children: rides.map((ride) => RideCard(ride, showConfirmation: false, showCallDriver: false, showArrow: false,)).toList()
+      itemCount: rides.length,
+      itemBuilder: (context, index) {
+        return RideCard(rides[index], showConfirmation: false, showCallDriver: false, showArrow: false);
+      },
+      separatorBuilder: (context, index) {
+        return SizedBox(height: 16);
+      },
     );
   }
 
@@ -156,6 +164,44 @@ class RideHistoryCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class HistorySeeMore extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    List<Ride> originalRides = ridesProvider.pastRides;
+    RecurringRidesGenerator ridesGenerator = RecurringRidesGenerator(originalRides);
+    return Scaffold(
+        body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: PopButton(context, 'Schedule'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: Text('Ride History', style: Theme.of(context).textTheme.headline1),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ridesGenerator.buildPastRidesList(),
+                        ),
+                      ),
+                    )
+                  ]
+              ),
+            )
+        )
     );
   }
 }

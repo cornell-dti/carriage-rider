@@ -7,7 +7,6 @@
 
 import 'package:carriage_rider/CarriageTheme.dart';
 import 'package:carriage_rider/Ride.dart';
-import 'package:carriage_rider/Upcoming.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -182,7 +181,7 @@ void main() {
     )
   ];
 
-  FutureRidesGenerator generator = FutureRidesGenerator(testRides);
+  RecurringRidesGenerator generator = RecurringRidesGenerator(testRides);
 
   nextDateOnWeekdayTest(String name, DateTime start, weekday, DateTime correct) {
     test(name, () {
@@ -285,7 +284,7 @@ void main() {
 
   group ('generate rides tests', () {
     test('list including single ride and recurring ride with edits is generated correctly', () {
-      expect(rideListsEqual(generator.generateFutureRides(), expectedGeneratedRides), true);
+      expect(rideListsEqual(generator.generateRideInstances(), expectedGeneratedRides), true);
     });
 
   });

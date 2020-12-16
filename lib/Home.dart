@@ -1,6 +1,5 @@
 import 'package:carriage_rider/Request_Ride_Loc.dart';
 import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/History.dart';
 import 'package:carriage_rider/Notifications.dart';
 import 'package:carriage_rider/Profile.dart';
 import 'package:carriage_rider/Upcoming.dart';
@@ -162,15 +161,15 @@ class Home extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Current Ride',
-                                      style: subHeadingStyle,
-                                    ),
-                                    SizedBox(height: 12),
-                                    CurrentRide(),
-                                  ]
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Ride',
+                                        style: subHeadingStyle,
+                                      ),
+                                      SizedBox(height: 12),
+                                      CurrentRide(),
+                                    ]
                                 ),
                               ),
                               SizedBox(height: 35),
@@ -219,8 +218,10 @@ class Home extends StatelessWidget {
                                   ) : Container()
                                 ]),
                               ),
-                              SizedBox(height: 12),
-                              RideHistory(),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
+                                child: RideHistory(),
+                              ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height / 8,
@@ -234,7 +235,17 @@ class Home extends StatelessWidget {
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height / 8,
-                        color: Colors.white,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, -2),
+                                  blurRadius: 11,
+                                  spreadRadius: 5,
+                                  color: Colors.black.withOpacity(0.11)
+                              )
+                            ]
+                        ),
                         child: Stack(
                           children: <Widget>[
                             Align(

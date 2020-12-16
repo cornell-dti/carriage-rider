@@ -512,6 +512,7 @@ class UpcomingRides extends StatelessWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SingleChildScrollView(
@@ -534,119 +535,12 @@ class UpcomingRides extends StatelessWidget {
   }
 }
 
-class FutureRidesGenerator {
-  FutureRidesGenerator(this.originalRides);
-  List<Ride> originalRides;
-
-  int daysUntilWeekday(DateTime start, int weekday) {
-    int startWeekday = start.weekday;
-    if (weekday < startWeekday) {
-      weekday += 7;
-    }
-    return weekday - startWeekday;
-  }
-
-  DateTime nextDateOnWeekday(DateTime start, int weekday) {
-    int daysUntil = daysUntilWeekday(start, weekday);
-    return start.add(Duration(days: daysUntil));
-  }
-
-  bool ridesEqualTimeLoc(Ride ride, Ride futureRide) {
-    return (
-        ride.startTime.isAtSameMomentAs(futureRide.startTime)
-            && ride.requestedEndTime.isAtSameMomentAs(futureRide.requestedEndTime)
-            && ride.startLocation == futureRide.startLocation
-            && ride.endLocation == futureRide.endLocation
-            && ride.startAddress == futureRide.startAddress
-            && ride.endAddress == futureRide.endAddress
-    );
-  }
-
-  bool wasDeleted(Ride futureRide, List<Ride> deletedRides) {
-    return deletedRides.where((deletedRide) => ridesEqualTimeLoc(deletedRide, futureRide)).isNotEmpty;
-  }
-
-  List<Ride> generateFutureRides() {
-    List<Ride> allRides = [];
-    Map<String, Ride> originalRidesByID = Map();
-    Map<Ride, String> futureRideParentIDs = Map();
-
-    for (Ride originalRide in originalRides) {
-      originalRidesByID[originalRide.id] = originalRide;
-    }
-    for (Ride originalRide in originalRides) {
-      // add one time rides
-      if (!originalRide.deleted && !originalRide.recurring) {
-        allRides.add(originalRide);
-      }
-      // Mon=1 Tues=2 Wed=3 Thurs=4 Fri=5
-      if (originalRide.recurring) {
-        Duration rideDuration = originalRide.requestedEndTime.difference(originalRide.startTime);
-        List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride.deleted).toList();
-        List<int> days = originalRide.recurringDays;
-
-        // find first occurrence
-        int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(originalRide.startTime, day)).reduce(min);
-        DateTime rideStart = originalRide.startTime.add(Duration(days: daysUntilFirstOccurrence));
-        int dayIndex = days.indexOf(rideStart.weekday);
-
-        // generate instances of recurring rides
-        while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
-          // create the new ride and keep track of its parent
-          Ride rideInstance = Ride(
-              id: CarriageTheme.generatedRideID,
-              startLocation: originalRide.startLocation,
-              startAddress: originalRide.startAddress,
-              endLocation: originalRide.endLocation,
-              endAddress: originalRide.endAddress,
-              startTime: rideStart,
-              requestedEndTime: rideStart.add(rideDuration)
-          );
-          futureRideParentIDs[rideInstance] = originalRide.id;
-
-          // if all ride info is equal to a deleted ride, don't add it because it was edited
-          if (!wasDeleted(rideInstance, deletedInstances) && rideInstance.startTime.isAfter(DateTime.now())) {
-            allRides.add(rideInstance);
-          }
-
-          // find the next occurrence
-          dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
-          int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
-          rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
-        }
-      }
-    }
-    return allRides;
-  }
-
-  ListView buildList() {
-    List<Ride> allRides = generateFutureRides();
-    List<Ride> futureRides = allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList();
-    return ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: futureRides.length,
-        itemBuilder: (context, index) {
-          return RideCard(
-            futureRides[index],
-            showConfirmation: true,
-            showCallDriver: false,
-            showArrow: true,
-          );
-        },
-      separatorBuilder: (context, index) {
-          return SizedBox(height: 16);
-      },
-    );
-  }
-}
-
 class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.upcomingRides;
-    FutureRidesGenerator ridesGenerator = FutureRidesGenerator(originalRides);
+    RecurringRidesGenerator ridesGenerator = RecurringRidesGenerator(originalRides);
 
     return Scaffold(
         body: SafeArea(
@@ -668,7 +562,7 @@ class UpcomingSeeMore extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ridesGenerator.buildList(),
+                          child: ridesGenerator.buildUpcomingRidesList(),
                         ),
                       ),
                     )
