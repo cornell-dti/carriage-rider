@@ -30,7 +30,7 @@ Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
   }
   
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
-  Future<List<Ride>> fetchPastRides(
+  Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
     final response = await http
         .get('${config.baseUrl}/rides?type=past&rider=${authProvider.id}');
@@ -45,7 +45,7 @@ Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
 
 
   //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
-  Future<List<Ride>> fetchUpcomingRides(
+  Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     final responseNs = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}');

@@ -38,13 +38,15 @@ class Ride {
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
   final bool deleted;
   //The requested end time of a ride. Will be null if ride is not recurring.
-  final String requestedEndTime;
+  final DateTime requestedEndTime;
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
   final String status;
   //Indicates whether a ride is late
   final bool late;
   //The driver associated with this ride
   final Map<String, dynamic> driver;
+  //The IDs of rides corresponding to edits
+  final List<String> edits;
 
   Ride(
       {this.id,
@@ -58,6 +60,7 @@ class Ride {
         this.endAddress,
 
         this.startTime,
+        this.endTime,
         this.requestedEndTime,
 
         this.recurring,
@@ -83,7 +86,8 @@ class Ride {
       endAddress: json['endLocation']['address'],
 
       startTime: DateTime.parse(json['startTime']),
-      requestedEndTime: json['requestedEndTime'] == null ? null : DateTime.parse(json['requestedEndTime']),
+      endTime: DateTime.parse(json['endTime']),
+      requestedEndTime: DateTime.parse(json['requestedEndTime']),
 
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays: json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
@@ -228,7 +232,7 @@ class Ride {
               children: <Widget>[
                 Text('Drop-off Time', style: labelStyle),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(requestedEndTime), style: infoStyle)
+                Text(DateFormat('jm').format(endTime), style: infoStyle)
               ],
             ),
           )
@@ -375,7 +379,7 @@ class RecurringRidesGenerator {
   bool ridesEqualTimeLoc(Ride ride, Ride otherRide) {
     return (
         ride.startTime.isAtSameMomentAs(otherRide.startTime)
-            && ride.requestedEndTime.isAtSameMomentAs(otherRide.requestedEndTime)
+            && ride.endTime.isAtSameMomentAs(otherRide.endTime)
             && ride.startLocation == otherRide.startLocation
             && ride.endLocation == otherRide.endLocation
             && ride.startAddress == otherRide.startAddress
@@ -402,7 +406,7 @@ class RecurringRidesGenerator {
       }
 
       if (originalRide.recurring) {
-        Duration rideDuration = originalRide.requestedEndTime.difference(originalRide.startTime);
+        Duration rideDuration = originalRide.endTime.difference(originalRide.startTime);
         List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride.deleted).toList();
         List<int> days = originalRide.recurringDays;
 
@@ -421,7 +425,7 @@ class RecurringRidesGenerator {
               endLocation: originalRide.endLocation,
               endAddress: originalRide.endAddress,
               startTime: rideStart,
-              requestedEndTime: rideStart.add(rideDuration)
+              endTime: rideStart.add(rideDuration)
           );
           rideInstanceParentIDs[rideInstance] = originalRide.id;
 
