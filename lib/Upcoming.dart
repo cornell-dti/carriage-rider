@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:carriage_rider/MeasureSize.dart';
 import 'package:carriage_rider/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'Cancel_Ride.dart';
 import 'Ride.dart';
-import 'CarriageTheme.dart';
 import 'PopButton.dart';
 
 Color grey = Color(0xFF9B9B9B);

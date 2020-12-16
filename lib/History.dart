@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/Upcoming.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart';
-import 'PopButton.dart';
 import 'Ride.dart';
 import 'Current.dart';
 

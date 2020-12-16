@@ -286,7 +286,5 @@ void main() {
     test('list including single ride and recurring ride with edits is generated correctly', () {
       expect(rideListsEqual(generator.generateRideInstances(), expectedGeneratedRides), true);
     });
-
   });
-
 }
