@@ -7,6 +7,7 @@ import 'package:carriage_rider/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+//Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
   List<Ride> pastRides = [];
   List<Ride> upcomingRides = [];
@@ -22,13 +23,14 @@ class RidesProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
-  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     notifyListeners();
   }
-
-  Future<void> _fetchPastRides(
+  
+  //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
+  Future<List<Ride>> fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
     final response = await http
         .get('${config.baseUrl}/rides?type=past&rider=${authProvider.id}');
@@ -41,7 +43,9 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _fetchUpcomingRides(
+
+  //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
+  Future<List<Ride>> fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     final responseNs = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}');
@@ -54,6 +58,7 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
+  //Decodes [json] of locations into a list representation of rides.
   List<Ride> _ridesFromJson(String json) {
     var data = jsonDecode(json)["data"];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
@@ -61,6 +66,8 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
+  //Creates a ride in the backend by an HTTP post request with the fields:
+  //[startLocation], [endLocation], [startTime], and [endTime].
   Future<void> createRide(
       AppConfig config,
       RiderProvider riderProvider,

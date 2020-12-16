@@ -9,28 +9,42 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'CarriageTheme.dart';
 
+//Model for a ride.
 class Ride {
-  String id;
-  String type;
-  Rider rider;
-  String status;
-
-  String startLocation;
-  String startAddress;
-  String endLocation;
-  String endAddress;
-
-  DateTime startTime;
-  DateTime requestedEndTime;
-
-  bool recurring;
-  List<int> recurringDays;
-  bool deleted;
-  bool late;
-  List<String> edits;
-  DateTime endDate;
-
-  Map<String, dynamic> driver;
+  //The ride's id in the backend.
+  final String id;
+  //The ride type. Can only be 'active', 'past', or 'unscheduled'.
+  final String type;
+  //The starting location of a ride.
+  final String startLocation;
+  //The starting address of a ride.
+  final String startAddress;
+  //The ending location of a ride.
+  final String endLocation;
+  //The ending address of a ride.
+  final String endAddress;
+  //The ending date of a recurring ride. Will be null if ride is not recurring.
+  final DateTime endDate;
+  //The starting time of a ride.
+  final DateTime startTime;
+  //The ending time of a ride
+  final DateTime endTime;
+  //The rider associated with this ride.
+  final Rider rider;
+  //Indicates whether a ride is recurring or not. Will be null if ride is not recurring.
+  final bool recurring;
+  //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
+  final List<int> recurringDays;
+  //Indicates whether a ride is deleted. Will be null if ride is not recurring.
+  final bool deleted;
+  //The requested end time of a ride. Will be null if ride is not recurring.
+  final String requestedEndTime;
+  //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
+  final String status;
+  //Indicates whether a ride is late
+  final bool late;
+  //The driver associated with this ride
+  final Map<String, dynamic> driver;
 
   Ride(
       {this.id,
@@ -55,6 +69,7 @@ class Ride {
         this.driver
       });
 
+  //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
       id: json['id'],
@@ -80,9 +95,7 @@ class Ride {
     );
   }
 
-  String toString() {
-    return 'Ride from $startLocation to $endLocation, ${DateFormat().format(startTime)} to ${DateFormat().format(requestedEndTime)}';
-  }
+  //Widget displaying the start time of a ride using DateFormat.
   Widget buildStartTime() {
     return RichText(
       text: TextSpan(
@@ -100,6 +113,8 @@ class Ride {
     );
   }
 
+  //Widget displaying a custom built card with information about a ride's start location and start time.
+  //[isIcon] determines whether the card needs an icon.
   Widget buildLocationsCard(context, bool isIcon) {
     return Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -126,6 +141,7 @@ class Ride {
         ));
   }
 
+  //Widget displaying the start address of a ride along with an icon for a card.
   Widget cardIconInfo(context) {
     return Row(
       children: [
@@ -138,6 +154,7 @@ class Ride {
     );
   }
 
+  //Widget displaying the start address of a ride without an icon for a card.
   Widget cardInfo(context) {
     return Row(
       children: [
@@ -148,6 +165,10 @@ class Ride {
     );
   }
 
+
+  //Widget displaying the information of a ride after it has been requested. Shows the ride's
+  //start location, end location, date, start and end time, recurring days,
+  //and accessibility requests.
   Widget buildSummary(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     final labelStyle = TextStyle(
