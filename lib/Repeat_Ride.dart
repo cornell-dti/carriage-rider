@@ -2,7 +2,7 @@ import 'package:carriage_rider/Request_Ride_Time.dart';
 import 'package:carriage_rider/Review_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/RideObject.dart';
-import 'package:carriage_rider/Request_Ride_Loc.dart';
+import 'TextThemes.dart';
 
 class RepeatRide extends StatefulWidget {
   final RideObject ride;
@@ -136,7 +136,7 @@ class _RepeatRideState extends State<RepeatRide> {
                 Container(
                   child: InkWell(
                     child: Text("Cancel",
-                        style: RideRequestStyles.cancel(context)),
+                        style: TextThemes.cancel),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -176,7 +176,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Flexible(
                     child: Text("When do you want to repeat this ride?",
-                        style: RideRequestStyles.question(context)))
+                        style: TextThemes.question))
               ],
             ),
             SizedBox(height: 15),
@@ -184,7 +184,7 @@ class _RepeatRideState extends State<RepeatRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text('This ride repeats every:',
-                    style: RideRequestStyles.description(context)),
+                    style: TextThemes.description),
               ],
             ),
             SizedBox(height: 10.0),
@@ -200,11 +200,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: RideRequestStyles.toggle(context)),
-                      Text('T', style: RideRequestStyles.toggle(context)),
-                      Text('W', style: RideRequestStyles.toggle(context)),
-                      Text('Th', style: RideRequestStyles.toggle(context)),
-                      Text('F', style: RideRequestStyles.toggle(context))
+                      Text('M', style: TextThemes.toggle),
+                      Text('T', style: TextThemes.toggle),
+                      Text('W', style: TextThemes.toggle),
+                      Text('Th', style: TextThemes.toggle),
+                      Text('F', style: TextThemes.toggle)
                     ],
                     onPressed: (int index) {
                       setState(() {

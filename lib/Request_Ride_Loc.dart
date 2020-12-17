@@ -7,46 +7,7 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/LocationsProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:provider/provider.dart';
-
-class RideRequestStyles {
-  static TextStyle cancel(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w100,
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle question(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w800,
-      fontSize: 25,
-    );
-  }
-
-  static TextStyle toggle(context) {
-    return TextStyle(
-      fontWeight: FontWeight.w200,
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle description(context) {
-    return TextStyle(
-        color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
-  }
-
-  static TextStyle label(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-  }
-
-  static TextStyle info(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
-  }
-}
+import 'TextThemes.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final RideObject ride;
@@ -77,7 +38,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   Container(
                     child: InkWell(
                       child: Text("Cancel",
-                          style: RideRequestStyles.cancel(context)),
+                          style: TextThemes.cancel),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -119,7 +80,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Where do you want to go?",
-                        style: RideRequestStyles.question(context)),
+                        style: TextThemes.question),
                   )
                 ],
               ),
