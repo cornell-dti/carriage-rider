@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:carriage_rider/RiderProvider.dart';
-import 'app_config.dart';
-import 'package:carriage_rider/app_config.dart';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
+import '../utils/app_config.dart';
+import 'package:carriage_rider/utils/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 

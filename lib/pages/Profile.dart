@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:provider/provider.dart';
-import 'RiderProvider.dart';
+import '../providers/RiderProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 

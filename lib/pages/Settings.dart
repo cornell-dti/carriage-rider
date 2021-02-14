@@ -1,13 +1,13 @@
 import 'dart:ui';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Location.dart';
-import 'package:carriage_rider/Upcoming.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/models/Location.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
-import 'RiderProvider.dart';
+import '../providers/RiderProvider.dart';
 
 class Settings extends StatefulWidget {
   @override

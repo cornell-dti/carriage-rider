@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart';
-import 'Ride.dart';
+import '../models/Ride.dart';
 import 'Current.dart';
 
 Map days = {

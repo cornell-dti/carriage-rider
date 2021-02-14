@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import '../utils/app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

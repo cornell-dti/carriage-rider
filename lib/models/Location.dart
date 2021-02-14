@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'app_config.dart';
+import '../utils/app_config.dart';
 
 //Model for a location.
 class Location {

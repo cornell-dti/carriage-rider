@@ -1,19 +1,19 @@
-import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Confirmed_Ride.dart';
-import 'package:carriage_rider/Current.dart';
-import 'package:carriage_rider/History.dart';
-import 'package:carriage_rider/Notifications.dart';
-import 'package:carriage_rider/Profile.dart';
-import 'package:carriage_rider/Ride.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/pages/Confirmed_Ride.dart';
+import 'package:carriage_rider/pages/Current.dart';
+import 'package:carriage_rider/pages/History.dart';
+import 'package:carriage_rider/pages/Notifications.dart';
+import 'package:carriage_rider/pages/Profile.dart';
+import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Ride_History.dart';
-import 'package:carriage_rider/Current_Ride.dart';
+import 'package:carriage_rider/pages/Ride_History.dart';
+import 'package:carriage_rider/pages/Current_Ride.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/Settings.dart';
-import 'package:carriage_rider/Help.dart';
-import 'RideObject.dart';
+import 'package:carriage_rider/pages/Settings.dart';
+import 'package:carriage_rider/pages/Help.dart';
+import '../models/RideObject.dart';
 
 void main() {
   MaterialApp(routes: {

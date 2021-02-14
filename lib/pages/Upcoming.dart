@@ -1,15 +1,15 @@
-import 'package:carriage_rider/MeasureSize.dart';
+import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'Cancel_Ride.dart';
-import 'Ride.dart';
-import 'TextThemes.dart';
-import 'package:carriage_rider/RidesProvider.dart';
-import 'package:carriage_rider/AuthProvider.dart';
+import '../models/Ride.dart';
+import '../utils/TextThemes.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 
 Color grey = Color(0xFF9B9B9B);
 

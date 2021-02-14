@@ -1,10 +1,10 @@
 import 'dart:core';
-import 'package:carriage_rider/RiderProvider.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'TextThemes.dart';
+import '../utils/TextThemes.dart';
 
 //Model for a ride.
 class Ride {

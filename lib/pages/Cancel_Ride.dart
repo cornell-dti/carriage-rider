@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'app_config.dart';
-import 'Ride.dart';
+import '../utils/app_config.dart';
+import '../models/Ride.dart';
 
 class CancelRidePage extends StatefulWidget {
   CancelRidePage(this.ride);

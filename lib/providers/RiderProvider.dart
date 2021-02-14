@@ -1,9 +1,9 @@
 import 'dart:core';
 import 'dart:convert';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/widgets.dart';
-import 'app_config.dart';
+import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
 
 //Model for a rider.

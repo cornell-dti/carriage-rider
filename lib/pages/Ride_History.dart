@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/RidesProvider.dart';
-import 'package:carriage_rider/AuthProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/Ride.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart' as humanize;
 

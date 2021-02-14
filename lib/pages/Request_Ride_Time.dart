@@ -1,8 +1,8 @@
-import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/Repeat_Ride.dart';
+import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
+import 'package:carriage_rider/pages/Repeat_Ride.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/RideObject.dart';
-import 'package:carriage_rider/TextThemes.dart';
+import 'package:carriage_rider/models/RideObject.dart';
+import 'package:carriage_rider/utils/TextThemes.dart';
 
 class RequestRideTime extends StatefulWidget {
   final RideObject ride;

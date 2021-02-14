@@ -1,12 +1,12 @@
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/RiderProvider.dart';
-import 'package:carriage_rider/RidesProvider.dart';
-import 'package:carriage_rider/LocationsProvider.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'Login.dart';
-import 'Home.dart';
-import 'app_config.dart';
+import 'pages/Login.dart';
+import 'pages/Home.dart';
+import 'utils/app_config.dart';
 
 void mainCommon() {}
 

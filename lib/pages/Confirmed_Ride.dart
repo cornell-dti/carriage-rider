@@ -1,4 +1,4 @@
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmedRide extends StatefulWidget {

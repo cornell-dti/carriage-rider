@@ -1,5 +1,5 @@
-import 'package:carriage_rider/Ride.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

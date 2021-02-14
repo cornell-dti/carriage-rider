@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Repeat_Ride.dart';
-import 'package:carriage_rider/Review_Ride.dart';
+import 'package:carriage_rider/pages/Repeat_Ride.dart';
+import 'package:carriage_rider/pages/Review_Ride.dart';
 
 class Assistance extends StatefulWidget {
 
