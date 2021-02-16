@@ -12,11 +12,12 @@ import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
-  RidesProvider(AppConfig config, AuthProvider authProvider) {
+  RidesProvider(
+      BuildContext context, AppConfig config, AuthProvider authProvider) {
     void Function() callback;
     callback = () {
       if (authProvider.isAuthenticated) {
-        fetchPastRides(config, authProvider);
+        fetchPastRides(context, config, authProvider);
       }
     };
     callback();
@@ -25,9 +26,13 @@ class RidesProvider with ChangeNotifier {
 
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<List<Ride>> fetchPastRides(
-      AppConfig config, AuthProvider authProvider) async {
-    final response = await http
-        .get('${config.baseUrl}/rides?type=past&rider=${authProvider.id}');
+      BuildContext context, AppConfig config, AuthProvider authProvider) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
@@ -57,13 +62,16 @@ class RidesProvider with ChangeNotifier {
 
   //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<List<Ride>> fetchUpcomingRides(
-      AppConfig config, AuthProvider authProvider) async {
+      BuildContext context, AppConfig config, AuthProvider authProvider) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
     final responseNs = await http.get(
-        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}');
+        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (responseNs.statusCode == 200) {
       String responseNSBody = responseNs.body;
       List<Ride> ridesNs = _ridesFromJson(responseNSBody);
-      print(ridesNs);
       return ridesNs;
     } else {
       throw Exception('Failed to load rides.');
@@ -88,7 +96,8 @@ class RidesProvider with ChangeNotifier {
       String endLocation,
       String startTime,
       String endTime) async {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${config.baseUrl}/rides",
