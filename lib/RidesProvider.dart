@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:carriage_rider/RiderProvider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
@@ -6,6 +7,8 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
@@ -79,15 +82,19 @@ class RidesProvider with ChangeNotifier {
   //[startLocation], [endLocation], [startTime], and [endTime].
   Future<void> createRide(
       AppConfig config,
+      BuildContext context,
       RiderProvider riderProvider,
       String startLocation,
       String endLocation,
       String startTime,
       String endTime) async {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${config.baseUrl}/rides",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
         'rider': riderProvider.info,

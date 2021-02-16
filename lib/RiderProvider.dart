@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:convert';
+import 'dart:io';
 import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/widgets.dart';
@@ -163,10 +164,12 @@ class RiderProvider with ChangeNotifier {
   //Sends a HTTP PUT request to update the rider fields specified in the map [changes].
   Future<void> sendUpdate(AppConfig config, AuthProvider authProvider,
       Map<String, dynamic> changes) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
       "${config.baseUrl}/riders/${authProvider.id}",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
       },
       body: jsonEncode(changes),
     );

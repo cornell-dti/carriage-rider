@@ -14,7 +14,8 @@ Future<String> auth(String baseUrl, String token, String email) async {
   Map<String, dynamic> requestBody = {
     "token": token,
     "email": email,
-    "clientId": "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
+    "clientId":
+        "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
     "table": "Riders"
   };
   return post(endpoint, body: requestBody).then((res) {
@@ -46,7 +47,8 @@ class AuthProvider with ChangeNotifier {
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
         String googleToken = await tokenFromAccount(newUser);
-        Map<String, dynamic> authResponse = jsonDecode(await auth(config.baseUrl, googleToken, newUser.email));
+        Map<String, dynamic> authResponse =
+            jsonDecode(await auth(config.baseUrl, googleToken, newUser.email));
         String token = authResponse['jwt'];
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
@@ -54,8 +56,7 @@ class AuthProvider with ChangeNotifier {
       } else {
         id = null;
       }
-        notifyListeners();
-
+      notifyListeners();
     }, onError: (e) {
       print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $e');
     });
@@ -63,7 +64,7 @@ class AuthProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    if(_userAuthSub != null) {
+    if (_userAuthSub != null) {
       _userAuthSub.cancel();
       _userAuthSub = null;
     }
@@ -85,5 +86,5 @@ class AuthProvider with ChangeNotifier {
   void signOut() {
     googleSignIn.signOut();
     id = null;
-}
+  }
 }

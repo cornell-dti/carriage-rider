@@ -204,6 +204,7 @@ class _ReviewRideState extends State<ReviewRide> {
                         onPressed: () {
                           rideProvider.createRide(
                               AppConfig.of(context),
+                              context,
                               riderProvider,
                               widget.ride.fromLocation,
                               widget.ride.toLocation,
