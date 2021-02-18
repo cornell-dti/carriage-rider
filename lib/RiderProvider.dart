@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:convert';
-import 'package:carriage_rider/AuthProvider.dart';
+import 'dart:io';
+import 'AuthProvider.dart';
 import 'package:carriage_rider/app_config.dart';
 import 'package:flutter/widgets.dart';
 import 'app_config.dart';
@@ -103,7 +104,6 @@ class Rider {
 
 //Manage the state of a rider with ChangeNotifier
 class RiderProvider with ChangeNotifier {
-
   //Instance of a rider.
   Rider info;
 
@@ -146,27 +146,28 @@ class RiderProvider with ChangeNotifier {
   //Fetches the rider with the authProvider's id from the backend
   //by using the baseUrl of [config] and id from [authProvider].
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
-    await http
-        .get("${config.baseUrl}/riders/${authProvider.id}")
-        .then((response) async {
-      if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        _setInfo(Rider.fromJson(json));
-      } else {
-        await Future.delayed(retryDelay);
-        fetchRider(config, authProvider);
-      }
-    });
+    String token = await authProvider.secureStorage.read(key: 'token');
+    http.Response response = await http.get(
+        "${config.baseUrl}/riders/${authProvider.id}",
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      _setInfo(Rider.fromJson(json));
+    } else {
+      await Future.delayed(retryDelay);
+      fetchRider(config, authProvider);
+    }
   }
-
 
   //Sends a HTTP PUT request to update the rider fields specified in the map [changes].
   Future<void> sendUpdate(AppConfig config, AuthProvider authProvider,
       Map<String, dynamic> changes) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
       "${config.baseUrl}/riders/${authProvider.id}",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
       },
       body: jsonEncode(changes),
     );

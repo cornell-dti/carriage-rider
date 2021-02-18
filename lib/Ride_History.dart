@@ -85,7 +85,7 @@ class _RideHistoryState extends State<RideHistory> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchPastRides(appConfig, authProvider),
+        future: ridesProvider.fetchPastRides(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.length == 0) {
