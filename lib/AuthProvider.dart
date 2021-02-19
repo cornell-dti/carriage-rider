@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'app_config.dart';
 
@@ -12,7 +14,8 @@ Future<String> auth(String baseUrl, String token, String email) async {
   Map<String, dynamic> requestBody = {
     "token": token,
     "email": email,
-    "clientId": "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
+    "clientId":
+        "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
     "table": "Riders"
   };
   return post(endpoint, body: requestBody).then((res) {
@@ -33,28 +36,27 @@ class AuthProvider with ChangeNotifier {
   String id;
   StreamSubscription _userAuthSub;
   GoogleSignIn googleSignIn;
+  FlutterSecureStorage secureStorage;
 
   AuthProvider(AppConfig config) {
+    secureStorage = FlutterSecureStorage();
     googleSignIn = GoogleSignIn(scopes: [
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
     ]);
     _userAuthSub = googleSignIn.onCurrentUserChanged.listen((newUser) async {
       if (newUser != null) {
-        id = await tokenFromAccount(newUser).then((token) async {
-          return auth(config.baseUrl, token, newUser.email);
-        }).then((response) {
-          Map<String, dynamic> json = jsonDecode(response);
-          if (!json.containsKey('id')) {
-            return null;
-          }
-          return json['id'];
-        });
+        String googleToken = await tokenFromAccount(newUser);
+        Map<String, dynamic> authResponse =
+            jsonDecode(await auth(config.baseUrl, googleToken, newUser.email));
+        String token = authResponse['jwt'];
+        Map<String, dynamic> jwt = JwtDecoder.decode(token);
+        id = jwt['id'];
+        await secureStorage.write(key: 'token', value: token);
       } else {
         id = null;
       }
-        notifyListeners();
-
+      notifyListeners();
     }, onError: (e) {
       print('AuthProvider - GoogleSignIn - onCurrentUserChanged - $e');
     });
@@ -62,7 +64,7 @@ class AuthProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    if(_userAuthSub != null) {
+    if (_userAuthSub != null) {
       _userAuthSub.cancel();
       _userAuthSub = null;
     }
@@ -84,5 +86,5 @@ class AuthProvider with ChangeNotifier {
   void signOut() {
     googleSignIn.signOut();
     id = null;
-}
+  }
 }

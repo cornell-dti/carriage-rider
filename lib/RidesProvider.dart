@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:carriage_rider/RiderProvider.dart';
 import 'app_config.dart';
 import 'package:carriage_rider/app_config.dart';
@@ -6,6 +7,8 @@ import 'package:carriage_rider/AuthProvider.dart';
 import 'package:carriage_rider/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
@@ -32,10 +35,11 @@ Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
-    final response = await http
-        .get('${config.baseUrl}/rides?type=past&rider=${authProvider.id}');
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
-      String responseBody = response.body;
       List<Ride> rides = _ridesFromJson(responseBody);
       pastRides = rides;
     } else {
@@ -45,19 +49,16 @@ Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
 
 
   //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
-  Future<void> _fetchUpcomingRides(
+  Future<void> fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
     final responseNs = await http.get(
-        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}');
+        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (responseNs.statusCode == 200) {
       String responseNSBody = responseNs.body;
       List<Ride> rides = _ridesFromJson(responseNSBody);
       upcomingRides = rides;
-    } else {
-      throw Exception('Failed to load rides.');
-    }
-  }
-
   //Decodes [json] of locations into a list representation of rides.
   List<Ride> _ridesFromJson(String json) {
     var data = jsonDecode(json)["data"];
@@ -70,15 +71,20 @@ Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
   //[startLocation], [endLocation], [startTime], and [endTime].
   Future<void> createRide(
       AppConfig config,
+      BuildContext context,
       RiderProvider riderProvider,
       String startLocation,
       String endLocation,
       String startTime,
       String endTime) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${config.baseUrl}/rides",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
         'rider': riderProvider.info,
