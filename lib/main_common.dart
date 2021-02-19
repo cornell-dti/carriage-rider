@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
         child: ChangeNotifierProvider<RidesProvider>(
           create: (context) {
             return RidesProvider(
-              context,
               appConfig,
               Provider.of<AuthProvider>(context, listen: false),
             );
