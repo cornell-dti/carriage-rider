@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import '../utils/app_config.dart';
+import 'dart:io';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
