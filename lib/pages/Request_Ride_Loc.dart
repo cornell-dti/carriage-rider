@@ -180,7 +180,7 @@ class _FromLocationState extends State<FromLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(appConfig, authProvider),
+        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _fromField(context, snapshot.data);
@@ -241,7 +241,7 @@ class _ToLocationState extends State<ToLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(appConfig, authProvider),
+        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _toField(context, snapshot.data);

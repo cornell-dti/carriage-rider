@@ -501,7 +501,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchUpcomingRides(appConfig, authProvider),
+        future: ridesProvider.fetchUpcomingRides(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.length == 0) {
