@@ -137,7 +137,7 @@ class _RepeatRideState extends State<RepeatRide> {
                 Container(
                   child: InkWell(
                     child: Text("Cancel",
-                        style: TextThemes.cancel),
+                        style: TextThemes.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -177,7 +177,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Flexible(
                     child: Text("When do you want to repeat this ride?",
-                        style: TextThemes.question))
+                        style: TextThemes.questionStyle))
               ],
             ),
             SizedBox(height: 15),
@@ -185,7 +185,7 @@ class _RepeatRideState extends State<RepeatRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text('This ride repeats every:',
-                    style: TextThemes.description),
+                    style: TextThemes.descriptionStyle),
               ],
             ),
             SizedBox(height: 10.0),
@@ -201,11 +201,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: TextThemes.toggle),
-                      Text('T', style: TextThemes.toggle),
-                      Text('W', style: TextThemes.toggle),
-                      Text('Th', style: TextThemes.toggle),
-                      Text('F', style: TextThemes.toggle)
+                      Text('M', style: TextThemes.toggleStyle),
+                      Text('T', style: TextThemes.toggleStyle),
+                      Text('W', style: TextThemes.toggleStyle),
+                      Text('Th', style: TextThemes.toggleStyle),
+                      Text('F', style: TextThemes.toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {

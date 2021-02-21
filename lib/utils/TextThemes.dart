@@ -1,11 +1,80 @@
 import 'package:flutter/material.dart';
 
 class TextThemes {
+  static final TextStyle largeTitle = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFDisplay',
+      fontWeight: FontWeight.bold,
+      fontSize: 34,
+      letterSpacing: 0.37);
+
+  static final TextStyle title1 = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFDisplay',
+      fontWeight: FontWeight.bold,
+      fontSize: 28,
+      letterSpacing: 0.36);
+
+  static final TextStyle title2 = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFDisplay',
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      letterSpacing: 0.35);
+
+  static final TextStyle title3 = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFDisplay',
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      height: 24 / 20,
+      letterSpacing: 0.38);
+
+  static final TextStyle body = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFText',
+      fontWeight: FontWeight.w400,
+      fontSize: 17,
+      letterSpacing: -0.41);
+
+  static final TextStyle button = TextStyle(
+      color: Colors.white,
+      fontFamily: 'SFText',
+      fontWeight: FontWeight.bold,
+      fontSize: 17);
+
+  static final TextStyle subheadline = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFText',
+      fontWeight: FontWeight.w400,
+      fontSize: 15,
+      letterSpacing: -0.24);
+
+  static final TextStyle caption1 = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFText',
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      letterSpacing: 0.07);
+
+  static final TextStyle caption2 = TextStyle(
+      color: Colors.black,
+      fontFamily: 'SFText',
+      fontWeight: FontWeight.w400,
+      fontSize: 11,
+      letterSpacing: 0.07);
+
+  static final subHeadingStyle = TextStyle(
+      color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 20);
+
+  static final seeMoreStyle = TextStyle(fontSize: 14, color: Color(0xFF181818));
+
   static final directionStyle = TextStyle(
-    color: Colors.grey[500],
-    fontWeight: FontWeight.w500,
-    fontSize: 12,
-  );
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.2,
+      fontSize: 12,
+      height: 2);
 
   static final rideInfoStyle = TextStyle(
     color: Colors.black,
@@ -14,36 +83,36 @@ class TextThemes {
   );
 
   static final monthStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 22);
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 22,  height: 2);
 
   static final dayStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 22);
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 22, height: 2);
 
   static final timeStyle = TextStyle(
-      color: Colors.grey[500], fontWeight: FontWeight.w400, fontSize: 22);
+      color: Colors.grey[500], fontWeight: FontWeight.w400, fontSize: 22, height: 2);
 
-  static final cancel = TextStyle(
+  static final cancelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w100,
     fontSize: 15,
   );
 
-  static final question = TextStyle(
+  static final questionStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w800,
     fontSize: 25,
   );
 
-  static final toggle = TextStyle(
+  static final toggleStyle = TextStyle(
     fontSize: 15,
   );
 
-  static final description =
+  static final descriptionStyle =
       TextStyle(color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
 
-  static final label =
+  static final labelStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
 
-  static final info =
+  static final infoStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
 }

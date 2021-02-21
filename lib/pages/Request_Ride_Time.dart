@@ -125,7 +125,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   Container(
                     child: InkWell(
                       child: Text("Cancel",
-                          style: TextThemes.cancel),
+                          style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -165,7 +165,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               Row(
                 children: <Widget>[
                   Text("When is this ride?",
-                      style: TextThemes.question),
+                      style: TextThemes.questionStyle),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -179,8 +179,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                     fillColor: Colors.grey[100],
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('Repeat', style: TextThemes.toggle),
-                      Text('Once', style: TextThemes.toggle)
+                      Text('Repeat', style: TextThemes.toggleStyle),
+                      Text('Once', style: TextThemes.toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {

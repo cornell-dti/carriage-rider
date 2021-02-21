@@ -38,7 +38,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   Container(
                     child: InkWell(
                       child: Text("Cancel",
-                          style: TextThemes.cancel),
+                          style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -80,7 +80,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text("Where do you want to go?",
-                        style: TextThemes.question),
+                        style: TextThemes.questionStyle),
                   )
                 ],
               ),

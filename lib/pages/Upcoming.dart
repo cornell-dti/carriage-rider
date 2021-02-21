@@ -55,7 +55,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           DateFormat('jm').format(widget.ride.startTime),
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
+                        fontSize: 34,
                         fontFamily: 'SFProDisplay',
                         fontWeight: FontWeight.bold,
                       )),

@@ -46,7 +46,7 @@ class Rider {
   final String address;
 
   //Creates a string representing a rider's full name from it's first name and last name
-  String fullName() => firstName + " " + lastName;
+  String fullName() => firstName + lastName;
 
   //Converts a rider's list of accessibility needs into a string representation
   String accessibilityStr() {

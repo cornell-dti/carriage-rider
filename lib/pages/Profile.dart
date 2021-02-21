@@ -85,9 +85,9 @@ class _ProfileState extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                 child: Text('Your Profile',
-                    style: Theme.of(context).textTheme.headline5),
+                    style: Theme.of(context).textTheme.headline4),
               ),
               Container(
                   decoration: BoxDecoration(

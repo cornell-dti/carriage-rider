@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Help.dart';
 import '../models/RideObject.dart';
+import '../utils/TextThemes.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -31,11 +32,6 @@ class Home extends StatelessWidget {
     final String headerName = "Hi " +
         authProvider.googleSignIn.currentUser.displayName.split(" ")[0] +
         "! ☀";
-
-    final subHeadingStyle = TextStyle(
-        color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 20);
-
-    final seeMoreStyle = TextStyle(fontSize: 14, color: Color(0xFF181818));
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -206,11 +202,7 @@ class Home extends StatelessWidget {
                                 left: 16, right: 16, bottom: 23),
                             child: Text(
                               headerName,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 30,
-                                  fontFamily: 'SFPro',
-                                  fontWeight: FontWeight.w700),
+                              style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
                           Spacer(),
@@ -235,7 +227,7 @@ class Home extends StatelessWidget {
                     [
                       Text(
                         'Current Ride',
-                        style: subHeadingStyle,
+                        style: TextThemes.subHeadingStyle,
                       ),
                       SizedBox(height: 12),
                       CurrentRide(),
@@ -243,10 +235,10 @@ class Home extends StatelessWidget {
                       Row(children: [
                         Text(
                           'Upcoming Rides',
-                          style: subHeadingStyle,
+                          style: TextThemes.subHeadingStyle,
                         ),
                         Spacer(),
-                        Text('See More', style: seeMoreStyle),
+                        Text('See More', style: TextThemes.seeMoreStyle),
                         Icon(Icons.arrow_forward, size: 16)
                       ]),
                       SizedBox(height: 12),
@@ -255,10 +247,10 @@ class Home extends StatelessWidget {
                       Row(children: [
                         Text(
                           'Ride History',
-                          style: subHeadingStyle,
+                          style: TextThemes.subHeadingStyle,
                         ),
                         Spacer(),
-                        Text('See More', style: seeMoreStyle),
+                        Text('See More', style: TextThemes.seeMoreStyle),
                         Icon(Icons.arrow_forward, size: 16)
                       ]),
                       RideHistory(),

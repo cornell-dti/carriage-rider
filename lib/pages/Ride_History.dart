@@ -6,6 +6,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart' as humanize;
+import '../utils/TextThemes.dart';
 
 class RideHistory extends StatefulWidget {
   @override
@@ -23,23 +24,9 @@ class _RideHistoryState extends State<RideHistory> {
   }
 
   Widget _mainHist(context, List<Ride> rides) {
-    final monthStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.2,
-        fontSize: 22,
-        height: 2);
-
     final dayStyle = TextStyle(
         color: Colors.grey[700],
         fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 22,
-        height: 2);
-
-    final timeStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w400,
         letterSpacing: 0.2,
         fontSize: 22,
         height: 2);
@@ -56,7 +43,7 @@ class _RideHistoryState extends State<RideHistory> {
                 text: TextSpan(
                     text:
                         DateFormat('MMM').format(rides[index].startTime) + ' ',
-                    style: monthStyle,
+                    style: TextThemes.monthStyle,
                     children: [
                       TextSpan(
                           text: humanize.ordinal(int.parse(DateFormat('d')
@@ -65,7 +52,7 @@ class _RideHistoryState extends State<RideHistory> {
                           style: dayStyle),
                       TextSpan(
                           text: DateFormat('jm').format(rides[index].startTime),
-                          style: timeStyle)
+                          style: TextThemes.timeStyle)
                     ]),
               ),
             ),
@@ -135,12 +122,6 @@ class InformationRow extends StatelessWidget {
 
   @override
   Widget build(context) {
-    final fromToStyle = TextStyle(
-      color: Colors.grey[500],
-      fontWeight: FontWeight.w500,
-      fontSize: 12,
-    );
-
     final infoStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w400,
@@ -157,7 +138,9 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[Text('From', style: fromToStyle)],
+                  children: <Widget>[
+                    Text('From', style: TextThemes.directionStyle)
+                  ],
                 ),
                 SizedBox(height: 2),
                 Row(
@@ -181,7 +164,9 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[Text('To', style: fromToStyle)],
+                  children: <Widget>[
+                    Text('To', style: TextThemes.directionStyle)
+                  ],
                 ),
                 SizedBox(height: 5),
                 Row(
