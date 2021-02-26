@@ -85,9 +85,9 @@ class Ride {
       endLocation: json['endLocation']['name'],
       endAddress: json['endLocation']['address'],
 
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      requestedEndTime: DateTime.parse(json['requestedEndTime']),
+      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['startTime'], true).toLocal(),
+      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['endTime'], true).toLocal(),
+      requestedEndTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['requestedEndTime'], true).toLocal(),
 
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays: json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
@@ -301,55 +301,55 @@ class RideCard extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.all(2),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
         decoration: CarriageTheme.cardDecoration,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Row(
             children: [
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    showConfirmation ?
-                    (ride.type == 'active' ? Text('Ride Confirmed', style: confirmationStyle.copyWith(color: Color(0xFF4CAF50))) :
-                    Text('Ride Requested', style: confirmationStyle.copyWith(color: Color(0xFFFF9800)))) : Container(),
-                    SizedBox(height: 4),
-                    ride.buildStartTime(),
-                    SizedBox(height: 16),
-                    Text('From', style: CarriageTheme.directionStyle),
-                    Text(ride.startLocation, style: CarriageTheme.rideInfoStyle),
-                    SizedBox(height: 8),
-                    Text('To', style: CarriageTheme.directionStyle),
-                    Text(ride.endLocation, style: CarriageTheme.rideInfoStyle),
-                    SizedBox(height: 16),
-                    showCallDriver ? Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          //TODO: replace temp phone number
-                          onTap: () => UrlLauncher.launch("tel://13232315234"),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(width: 0.5, color: Colors.black.withOpacity(0.25))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Icon(Icons.phone, size: 20, color: Color(0xFF9B9B9B)),
-                              )
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      showConfirmation ?
+                      (ride.type == 'active' ? Text('Ride Confirmed', style: confirmationStyle.copyWith(color: Color(0xFF4CAF50))) :
+                      Text('Ride Requested', style: confirmationStyle.copyWith(color: Color(0xFFFF9800)))) : Container(),
+                      SizedBox(height: 4),
+                      ride.buildStartTime(),
+                      SizedBox(height: 16),
+                      Text('From', style: CarriageTheme.directionStyle),
+                      Text(ride.startLocation, style: CarriageTheme.rideInfoStyle),
+                      SizedBox(height: 8),
+                      Text('To', style: CarriageTheme.directionStyle),
+                      Text(ride.endLocation, style: CarriageTheme.rideInfoStyle),
+                      SizedBox(height: 16),
+                      showCallDriver ? Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            //TODO: replace temp phone number
+                            onTap: () => UrlLauncher.launch("tel://13232315234"),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(width: 0.5, color: Colors.black.withOpacity(0.25))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Icon(Icons.phone, size: 20, color: Color(0xFF9B9B9B)),
+                                )
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Driver', style: TextStyle(fontSize: 11)),
-                            Text(ride.type == 'active' ? 'Confirmed' : 'TBD', style: CarriageTheme.rideInfoStyle)
-                          ],
-                        )
-                      ],
-                    ) : Container()
-                  ]
+                          SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Driver', style: TextStyle(fontSize: 11)),
+                              Text(ride.type == 'active' ? 'Confirmed' : 'TBD', style: CarriageTheme.rideInfoStyle)
+                            ],
+                          )
+                        ],
+                      ) : Container()
+                    ]
+                ),
               ),
-              showArrow ? Spacer() : Container(),
               showArrow ? Icon(Icons.chevron_right, size: 28) : Container()
             ],
           ),
@@ -444,10 +444,14 @@ class RecurringRidesGenerator {
     return allRides;
   }
 
-  ListView buildUpcomingRidesList() {
+  List<Ride> upcomingRides() {
     List<Ride> allRides = generateRideInstances();
-    List<Ride> futureRides = allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList()
+    return allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList()
       ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
+  }
+
+  ListView buildUpcomingRidesList() {
+    List futureRides = upcomingRides();
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

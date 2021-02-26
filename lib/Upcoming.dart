@@ -24,60 +24,60 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                PopButton(context, 'Schedule'),
-                Padding(
-                  padding:
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    PopButton(context, 'Schedule'),
+                    Padding(
+                      padding:
                       const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                  child: Text(
-                      DateFormat('MMM')
+                      child: Text(
+                          DateFormat('MMM')
                               .format(widget.ride.startTime)
                               .toUpperCase() +
-                          ' ' +
-                          ordinal(int.parse(
-                              DateFormat('d').format(widget.ride.startTime))) +
-                          ' ' +
-                          DateFormat('jm').format(widget.ride.startTime),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.bold,
-                      )),
+                              ' ' +
+                              ordinal(int.parse(
+                                  DateFormat('d').format(widget.ride.startTime))) +
+                              ' ' +
+                              DateFormat('jm').format(widget.ride.startTime),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 32),
+                          Contact(color: Colors.grey),
+                          SizedBox(height: 60),
+                          TimeLine(widget.ride, false),
+                          SizedBox(height: 70),
+                          RideAction(
+                              text: "Cancel Ride",
+                              color: Colors.red,
+                              icon: Icons.close,
+                              action: () => Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CancelRidePage(widget.ride)))),
+                          SizedBox(height: 20),
+                          EditRide(),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 32),
-                      Contact(color: Colors.grey),
-                      SizedBox(height: 60),
-                      TimeLine(widget.ride, false),
-                      SizedBox(height: 70),
-                      RideAction(
-                          text: "Cancel Ride",
-                          color: Colors.red,
-                          icon: Icons.close,
-                          action: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CancelRidePage(widget.ride)))),
-                      SizedBox(height: 20),
-                      EditRide(),
-                    ],
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -341,14 +341,14 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+          firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null
           ? Container(
-              margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
-              width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
-              color: Color(0xFFECEBED),
-            )
+        margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+        width: 4,
+        height: getLastRowPos() - getFirstRowPos(),
+        color: Color(0xFFECEBED),
+      )
           : CircularProgressIndicator();
     }
 
@@ -477,14 +477,12 @@ class UpcomingRides extends StatelessWidget {
       if (i == 0) {
         rideCards.add(SizedBox(width: 16));
       }
-      rideCards.add(RideCard(rides[i],
-          showConfirmation: true, showCallDriver: true, showArrow: false));
-      if (i != rides.length - 1) {
-        rideCards.add(SizedBox(width: 16));
-      }
-      if (i == rides.length - 1) {
-        rideCards.add(SizedBox(width: 16));
-      }
+      rideCards.add(Container(
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: RideCard(rides[i],
+            showConfirmation: true, showCallDriver: true, showArrow: false),
+      ));
+      rideCards.add(SizedBox(width: 16));
     }
 
     return Column(
@@ -516,36 +514,41 @@ class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.upcomingRides;
     RecurringRidesGenerator ridesGenerator =
-        RecurringRidesGenerator(originalRides);
+    RecurringRidesGenerator(originalRides);
 
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: PopButton(context, 'Schedule'),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text('Upcoming Rides',
-              style: Theme.of(context).textTheme.headline1),
-        ),
-        Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ridesGenerator.buildUpcomingRidesList(),
-            ),
-          ),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: PopButton(context, 'Schedule'),
+                    ),
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: Text('Upcoming Rides',
+                          style: Theme.of(context).textTheme.headline1),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ridesGenerator.buildUpcomingRidesList(),
+                        ),
+                      ),
+                    )
+                  ]
+              ),
+            )
         )
-      ]),
-    )));
+    );
   }
 }

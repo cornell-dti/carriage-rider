@@ -21,17 +21,27 @@ class _RideHistoryState extends State<RideHistory> {
   }
 
   Widget _mainHist(List<Ride> rides) {
-    return ListView.separated(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: rides.length,
-      itemBuilder: (context, index) {
-        return RideCard(rides[index],
-            showConfirmation: false, showCallDriver: false, showArrow: false);
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 16);
-      },
+    List<Widget> rideCards = [];
+    for (int i = 0; i < rides.length; i++) {
+      if (i == 0) {
+        rideCards.add(SizedBox(width: 16));
+      }
+      rideCards.add(Container(
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: RideCard(rides[i],
+            showConfirmation: false, showCallDriver: false, showArrow: false),
+      ));
+      rideCards.add(SizedBox(width: 16));
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: rideCards),
+        ),
+      ],
     );
   }
 

@@ -175,56 +175,58 @@ class Home extends StatelessWidget {
                               SizedBox(height: 35),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(children: [
-                                  Text(
-                                    'Upcoming Rides',
-                                    style: subHeadingStyle,
-                                  ),
-                                  Spacer(),
-                                  ridesProvider.upcomingRides.isNotEmpty ?
-                                  GestureDetector(
-                                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpcomingSeeMore())),
-                                      child: Row(
-                                          children: [
-                                            Text('See More', style: seeMoreStyle),
-                                            SizedBox(width: 4),
-                                            Icon(Icons.arrow_forward, size: 16)
-                                          ]
-                                      )
-                                  ) : Container()
-                                ]),
+                                child: Row(
+                                    children: [
+                                      Text(
+                                        'Upcoming Rides',
+                                        style: subHeadingStyle,
+                                      ),
+                                      Spacer(),
+                                      ridesProvider.upcomingRides.isNotEmpty ?
+                                      GestureDetector(
+                                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpcomingSeeMore())),
+                                          child: Row(
+                                              children: [
+                                                Text('See More', style: seeMoreStyle),
+                                                SizedBox(width: 4),
+                                                Icon(Icons.arrow_forward, size: 16)
+                                              ]
+                                          )
+                                      ) : Container()
+                                    ]
+                                ),
                               ),
                               SizedBox(height: 12),
                               UpcomingRides(),
                               SizedBox(height: 36),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(children: [
-                                  Text(
-                                    'Ride History',
-                                    style: subHeadingStyle,
-                                  ),
-                                  Spacer(),
-                                  ridesProvider.pastRides.isNotEmpty ?
-                                  GestureDetector(
-                                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistorySeeMore())),
-                                      child: Row(
-                                          children: [
-                                            Text('See More', style: seeMoreStyle),
-                                            SizedBox(width: 4),
-                                            Icon(Icons.arrow_forward, size: 16)
-                                          ]
-                                      )
-                                  ) : Container()
-                                ]),
+                                child: Row(
+                                    children: [
+                                      Text(
+                                        'Ride History',
+                                        style: subHeadingStyle,
+                                      ),
+                                      Spacer(),
+                                      ridesProvider.pastRides.isNotEmpty ?
+                                      GestureDetector(
+                                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistorySeeMore())),
+                                          child: Row(
+                                              children: [
+                                                Text('See More', style: seeMoreStyle),
+                                                SizedBox(width: 4),
+                                                Icon(Icons.arrow_forward, size: 16)
+                                              ]
+                                          )
+                                      ) : Container()
+                                    ]
+                                ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
-                                child: RideHistory(),
-                              ),
+                              SizedBox(height: 12),
+                              RideHistory(),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height / 8,
+                                height: MediaQuery.of(context).size.height / 8 + 36,
                               )
                             ],
                           )
