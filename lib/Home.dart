@@ -13,7 +13,6 @@ import 'package:carriage_rider/Current_Ride.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/Settings.dart';
 import 'package:carriage_rider/Help.dart';
-import 'RideObject.dart';
 
 void main() {
   MaterialApp(routes: {
@@ -290,8 +289,8 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
-                                        builder: (context) => RequestRideLoc(
-                                            ride: new RideObject())));
+                                        builder: (context) =>
+                                            RequestRideLoc()));
                               },
                               elevation: 3.0,
                               color: Colors.black,
