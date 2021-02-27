@@ -80,7 +80,7 @@ class RidesProvider with ChangeNotifier {
 
   //Decodes [json] of locations into a list representation of rides.
   List<Ride> _ridesFromJson(String json) {
-    var data = jsonDecode(json)["data"];
+    var data = jsonDecode(json)['data'];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
@@ -100,7 +100,7 @@ class RidesProvider with ChangeNotifier {
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
-      "${config.baseUrl}/rides",
+      '${config.baseUrl}/rides',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"

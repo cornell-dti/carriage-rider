@@ -71,12 +71,12 @@ class _DetailState extends State<Detail> {
   ];
 
   List<String> text = [
-    "Your driver is on the way! Wait outside to meet your driver.",
-    "Your ride on MM/DD/YYYY has been confirmed",
-    "How was your ride with Jennifer? Leave a review so we can improve our service",
-    "Your ride information has been edited by the admin. Please review your ride info.",
-    "Your driver is here! Meet your driver at the pickup point.",
-    "Your driver cancelled the ride because the driver was unable to find you."
+    'Your driver is on the way! Wait outside to meet your driver.',
+    'Your ride on MM/DD/YYYY has been confirmed',
+    'How was your ride with Jennifer? Leave a review so we can improve our service',
+    'Your ride information has been edited by the admin. Please review your ride info.',
+    'Your driver is here! Meet your driver at the pickup point.',
+    'Your driver cancelled the ride because the driver was unable to find you.'
   ];
 
   Widget notificationRow(BuildContext context, Color color, IconData icon, String text) {

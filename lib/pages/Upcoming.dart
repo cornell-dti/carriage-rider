@@ -73,7 +73,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           TimeLine(widget.ride, false),
                           SizedBox(height: 50),
                           RideAction(
-                              text: "Cancel Ride",
+                              text: 'Cancel Ride',
                               color: Colors.red,
                               icon: Icons.close,
                               action: () => Navigator.of(context)
@@ -219,7 +219,7 @@ class Contact extends StatelessWidget {
                         icon: Icon(Icons.phone, size: 16),
                         color: color,
                         onPressed: () =>
-                            UrlLauncher.launch("tel://13232315234"),
+                            UrlLauncher.launch('tel://13232315234'),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -489,7 +489,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
-        Text("You have no upcoming rides!")
+        Text('You have no upcoming rides!')
       ],
     );
   }
@@ -521,7 +521,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
               return _mainUpcoming(context, snapshot.data);
             }
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });
@@ -577,7 +577,7 @@ class UpcomingRideCard extends StatelessWidget {
                     children: <Widget>[
                       GestureDetector(
                         //TODO: replace temp phone number
-                        onTap: () => UrlLauncher.launch("tel://13232315234"),
+                        onTap: () => UrlLauncher.launch('tel://13232315234'),
                         child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),

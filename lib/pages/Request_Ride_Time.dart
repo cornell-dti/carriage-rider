@@ -31,7 +31,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        pickUpCtrl.text = "${_pickUpTime.format(context)}";
+        pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
@@ -43,7 +43,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     );
     if (_dropOffTime != null) {
       setState(() {
-        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
   }
@@ -52,7 +52,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -72,7 +72,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        dateCtrl.text = format("$selectedDate".split(' ')[0]);
+        dateCtrl.text = format('$selectedDate'.split(' ')[0]);
       });
   }
 
@@ -124,7 +124,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel",
+                      child: Text('Cancel',
                           style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
@@ -164,7 +164,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride?",
+                  Text('When is this ride?',
                       style: TextThemes.questionStyle),
                 ],
               ),
@@ -252,7 +252,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text("Next"),
+                          child: Text('Next'),
                         ),
                       ),
                     )),

@@ -18,7 +18,7 @@ class _RideHistoryState extends State<RideHistory> {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
-        Text("You have no ride history!")
+        Text('You have no ride history!')
       ],
     );
   }
@@ -81,7 +81,7 @@ class _RideHistoryState extends State<RideHistory> {
               return _mainHist(context, snapshot.data);
             }
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });

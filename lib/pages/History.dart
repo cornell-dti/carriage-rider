@@ -6,13 +6,13 @@ import '../models/Ride.dart';
 import 'Current.dart';
 
 Map days = {
-  0: 'Sunday',
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday'
+  0: 'Sun.',
+  1: 'Mon.',
+  2: 'Tue.',
+  3: 'Wed.',
+  4: 'Thurs.',
+  5: 'Fri.',
+  6: 'Sat.'
 };
 
 class History extends StatefulWidget {
@@ -104,7 +104,7 @@ class OccurrenceTitle extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(left: 20, bottom: 15),
           child: Text(
-            "Occurrence",
+            'Occurrence',
             style: Theme.of(context).textTheme.headline6,
           ),
         ),
@@ -132,7 +132,7 @@ class _NoRecurringRideHistoryState extends State<NoRecurringRideHistory> {
         NoRecurringText(),
         SizedBox(height: 20),
         RideAction(
-            text: "Repeat Ride", color: Colors.black, icon: Icons.repeat),
+            text: 'Repeat Ride', color: Colors.black, icon: Icons.repeat),
       ],
     ));
   }
@@ -150,14 +150,14 @@ class RecurringRideHistory extends StatefulWidget {
 class _RecurringRideHistoryState extends State<RecurringRideHistory> {
   @override
   Widget build(BuildContext context) {
-    String repeatedDays = "";
-    String recurringDays = "";
+    String repeatedDays = 'Every ';
+    String recurringDays = '';
     days.forEach((k, v) {
       if (widget.ride.recurringDays.contains(k)) {
-        repeatedDays += v + ", ";
+        repeatedDays += v + ' and ';
       }
     });
-    recurringDays = repeatedDays.substring(0, repeatedDays.length - 2);
+    recurringDays = repeatedDays.substring(0, repeatedDays.length - 4);
 
     return Container(
       child: Column(

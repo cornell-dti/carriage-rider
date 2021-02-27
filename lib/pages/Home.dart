@@ -29,9 +29,9 @@ class Home extends StatelessWidget {
   Widget build(context) {
     //TODO: change to get name from rider provider
     AuthProvider authProvider = Provider.of(context);
-    final String headerName = "Hi " +
-        authProvider.googleSignIn.currentUser.displayName.split(" ")[0] +
-        "! ☀";
+    final String headerName = 'Hi ' +
+        authProvider.googleSignIn.currentUser.displayName.split(' ')[0] +
+        '! ☀';
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.person, color: Colors.black),
-                  title: sideBarText("Profile", Colors.black),
+                  title: sideBarText('Profile', Colors.black),
                   onTap: () {
                     Navigator.push(context,
                         new MaterialPageRoute(builder: (context) => Profile()));
@@ -60,7 +60,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.settings, color: Colors.black),
-                  title: sideBarText("Settings", Colors.black),
+                  title: sideBarText('Settings', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -73,7 +73,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.notifications, color: Colors.black),
-                  title: sideBarText("Notifications", Colors.black),
+                  title: sideBarText('Notifications', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -86,7 +86,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.directions_car, color: Colors.black),
-                  title: sideBarText("Current Ride", Colors.black),
+                  title: sideBarText('Current Ride', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -110,7 +110,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.trending_up, color: Colors.black),
-                  title: sideBarText("Upcoming Ride", Colors.black),
+                  title: sideBarText('Upcoming Ride', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -133,7 +133,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.history, color: Colors.black),
-                  title: sideBarText("Ride History", Colors.black),
+                  title: sideBarText('Ride History', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -157,7 +157,7 @@ class Home extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.check, color: Colors.black),
-                  title: sideBarText("Confirmed Ride", Colors.black),
+                  title: sideBarText('Confirmed Ride', Colors.black),
                   onTap: () {
                     Navigator.push(
                         context,

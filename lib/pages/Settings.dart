@@ -33,9 +33,9 @@ class _SettingsState extends State<Settings> {
     if (riderProvider.hasInfo()) {
       String phoneNumber = riderProvider.info.phoneNumber;
       String fPhoneNumber = phoneNumber.substring(0, 3) +
-          "-" +
+          '-' +
           phoneNumber.substring(3, 6) +
-          "-" +
+          '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
@@ -134,7 +134,7 @@ class _SettingsState extends State<Settings> {
                               )))
                     ])),
                 SizedBox(height: 6),
-                LocationsInfo("Locations"),
+                LocationsInfo('Locations'),
                 SizedBox(height: 6),
                 PrivacyLegalInfo(),
                 SizedBox(height: 6),
@@ -345,7 +345,7 @@ class LocationsInfo extends StatelessWidget {
                             riderProvider.info.address,
                             () => _editAddress(context)),
                         Divider(height: 0, color: Colors.black),
-                        infoRow(context, Icons.accessible, "Add Favorites",
+                        infoRow(context, Icons.accessible, 'Add Favorites',
                             () => _editFavorites(context))
                       ]))
                 ])));
@@ -404,11 +404,11 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 
   @override
   Widget build(context) {
-    List<String> headings = ["Email Preferences", "Privacy", "Legal"];
+    List<String> headings = ['Email Preferences', 'Privacy', 'Legal'];
     final List<String> subText = [
-      "Set what email you want to receive",
-      "Choose what data you share with us",
-      "Terms of service \& Privacy Policy"
+      'Set what email you want to receive',
+      'Choose what data you share with us',
+      'Terms of service \& Privacy Policy'
     ];
 
     return Container(
@@ -462,7 +462,7 @@ class SignOutButton extends StatelessWidget {
                 'Sign out',
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: Colors.black, fontFamily: "SFPro", fontSize: 15),
+                    color: Colors.black, fontFamily: 'SFPro', fontSize: 15),
               )
             ],
           ),

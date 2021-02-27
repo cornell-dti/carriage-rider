@@ -33,7 +33,7 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel",
+                    child: Text('Cancel',
                         style: TextThemes.cancelStyle),
                     onTap: () {
                       Navigator.pop(
@@ -72,7 +72,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               children: <Widget>[
                 Flexible(
-                    child: Text("Review your ride",
+                    child: Text('Review your ride',
                         style: TextThemes.questionStyle))
               ],
             ),
@@ -87,7 +87,7 @@ class _ReviewRideState extends State<ReviewRide> {
                 Text(
                     widget.ride.fromLocation != null
                         ? widget.ride.fromLocation
-                        : "",
+                        : '',
                     style: TextThemes.infoStyle)
               ],
             ),
@@ -105,7 +105,7 @@ class _ReviewRideState extends State<ReviewRide> {
                 Text(
                     widget.ride.toLocation != null
                         ? widget.ride.toLocation
-                        : "",
+                        : '',
                     style: TextThemes.infoStyle)
               ],
             ),
@@ -120,7 +120,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(widget.ride.date != null ? widget.ride.date : "",
+                Text(widget.ride.date != null ? widget.ride.date : '',
                     style: TextThemes.infoStyle)
               ],
             ),
@@ -138,7 +138,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text(
                           widget.ride.pickUpTime != null
                               ? widget.ride.pickUpTime
-                              : "",
+                              : '',
                           style: TextThemes.infoStyle)
                     ],
                   ),
@@ -154,7 +154,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text(
                           widget.ride.dropOffTime != null
                               ? widget.ride.dropOffTime
-                              : "",
+                              : '',
                           style: TextThemes.infoStyle)
                     ],
                   ),

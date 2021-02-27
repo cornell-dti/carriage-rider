@@ -148,7 +148,7 @@ class RiderProvider with ChangeNotifier {
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
-        "${config.baseUrl}/riders/${authProvider.id}",
+        '${config.baseUrl}/riders/${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -164,7 +164,7 @@ class RiderProvider with ChangeNotifier {
       Map<String, dynamic> changes) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
+      '${config.baseUrl}/riders/${authProvider.id}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"

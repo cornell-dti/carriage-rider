@@ -23,11 +23,11 @@ class _RepeatRideState extends State<RepeatRide> {
   TextEditingController sDateCtrl = TextEditingController();
   TextEditingController eDateCtrl = TextEditingController();
 
-  String selectedDays = "";
+  String selectedDays = '';
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -47,7 +47,7 @@ class _RepeatRideState extends State<RepeatRide> {
     if (picked != null && picked != startDate)
       setState(() {
         startDate = picked;
-        sDateCtrl.text = format("$startDate".split(' ')[0]);
+        sDateCtrl.text = format('$startDate'.split(' ')[0]);
       });
   }
 
@@ -67,7 +67,7 @@ class _RepeatRideState extends State<RepeatRide> {
     if (picked != null && picked != endDate)
       setState(() {
         endDate = picked;
-        eDateCtrl.text = format("$endDate".split(' ')[0]);
+        eDateCtrl.text = format('$endDate'.split(' ')[0]);
       });
   }
 
@@ -109,14 +109,14 @@ class _RepeatRideState extends State<RepeatRide> {
   }
 
   final List<bool> isSelected = [false, false, false, false, false];
-  final List<String> days = ["M", "T", "W", "Th", "F"];
+  final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
 
   String setSelectedDays(String sDays) {
-    sDays = "";
+    sDays = '';
 
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        sDays += days[i] + " ";
+        sDays += days[i] + ' ';
       }
     }
     sDays = sDays.substring(0, sDays.length - 1);
@@ -136,7 +136,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel",
+                    child: Text('Cancel',
                         style: TextThemes.cancelStyle),
                     onTap: () {
                       Navigator.pop(
@@ -176,7 +176,7 @@ class _RepeatRideState extends State<RepeatRide> {
             Row(
               children: <Widget>[
                 Flexible(
-                    child: Text("When do you want to repeat this ride?",
+                    child: Text('When do you want to repeat this ride?',
                         style: TextThemes.questionStyle))
               ],
             ),

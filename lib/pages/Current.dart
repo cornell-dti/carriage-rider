@@ -46,7 +46,7 @@ class _CurrentState extends State<Current> {
               child: Column(
                 children: <Widget>[
                   BackgroundHeader(
-                      widget: Text("Current Ride",
+                      widget: Text('Current Ride',
                           style: TextStyle(
                               fontFamily: 'SFDisplay',
                               fontSize: 34,
@@ -95,7 +95,7 @@ class NoRecurringText extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: Text(
-                  "This is not a repeating ride.",
+                  'This is not a repeating ride.',
                   style: TextStyle(
                       color: grey, fontWeight: FontWeight.bold, fontSize: 15),
                 ))),
@@ -116,11 +116,11 @@ class RecurringRide extends StatefulWidget {
 class _RecurringRideState extends State<RecurringRide> {
   @override
   Widget build(BuildContext context) {
-    String repeatedDays = "Every ";
-    String recurringDays = "";
+    String repeatedDays = 'Every ';
+    String recurringDays = '';
     days.forEach((k, v) {
       if (widget.ride.recurringDays.contains(k)) {
-        repeatedDays += v + " and ";
+        repeatedDays += v + ' and ';
       }
     });
     recurringDays = repeatedDays.substring(0, repeatedDays.length - 4);

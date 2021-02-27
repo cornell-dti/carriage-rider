@@ -67,7 +67,7 @@ class _HelpState extends State<Help> {
                     ),
                   ),
                   infoRow(
-                      context, Icons.phone, "###-###-####", _launchPhoneURL),
+                      context, Icons.phone, '###-###-####', _launchPhoneURL),
                   Padding(
                     padding: EdgeInsets.only(left: 18),
                     child: Divider(
@@ -75,7 +75,7 @@ class _HelpState extends State<Help> {
                       color: Colors.black,
                     ),
                   ),
-                  infoRow(context, Icons.mail_outline, "culift@cornell.edu",
+                  infoRow(context, Icons.mail_outline, 'culift@cornell.edu',
                       _launchMailURL),
                 ],
               ),
@@ -85,8 +85,8 @@ class _HelpState extends State<Help> {
   }
 
   void _launchPhoneURL() async {
-    String number = "13232315234";
-    String url = "tel://$number";
+    String number = '13232315234';
+    String url = 'tel://$number';
     if (await UrlLauncher.canLaunch(url)) {
       await UrlLauncher.launch(url);
     } else {

@@ -44,7 +44,7 @@ class _AssistanceState extends State<Assistance> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
+                    child: Text('Cancel', style: cancelStyle),
                     onTap: () {
                       Navigator.pop(context, new MaterialPageRoute(builder: (context) => RepeatRide()));
                     },
@@ -78,12 +78,12 @@ class _AssistanceState extends State<Assistance> {
             SizedBox(height: 10.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("Do you need any assistance? (optional)", style: questionStyle))
+                Flexible(child: Text('Do you need any assistance? (optional)', style: questionStyle))
               ],
             ),
             SizedBox(height: 40),
             RadioListTile(
-              title: Text("Wheelchair"),
+              title: Text('Wheelchair'),
               value: 1,
               groupValue: selectedRadio,
               activeColor: Colors.black,
@@ -92,7 +92,7 @@ class _AssistanceState extends State<Assistance> {
               },
             ),
             RadioListTile(
-              title: Text("Other"),
+              title: Text('Other'),
               value: 2,
               groupValue: selectedRadio,
               activeColor: Colors.black,

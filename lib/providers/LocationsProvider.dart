@@ -64,7 +64,7 @@ class LocationsProvider with ChangeNotifier {
 
   //Decodes the string [json] of locations into a list representation of the locations.
   List<Location> _locationsFromJson(String json) {
-    var data = jsonDecode(json)["data"];
+    var data = jsonDecode(json)['data'];
     List<Location> res =
         data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;

@@ -37,7 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel",
+                      child: Text('Cancel',
                           style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
@@ -79,7 +79,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Where do you want to go?",
+                    child: Text('Where do you want to go?',
                         style: TextThemes.questionStyle),
                   )
                 ],
@@ -185,7 +185,7 @@ class _FromLocationState extends State<FromLocation> {
           if (snapshot.hasData) {
             return _fromField(context, snapshot.data);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });
@@ -246,7 +246,7 @@ class _ToLocationState extends State<ToLocation> {
           if (snapshot.hasData) {
             return _toField(context, snapshot.data);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });
