@@ -28,67 +28,69 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8.0, top: 16),
-                    child: Row(children: [
-                      Icon(Icons.arrow_back_ios, color: Colors.black),
-                      Text('Schedule', style: TextStyle(fontSize: 17))
-                    ]),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, bottom: 8, top: 16),
-                  child: Text(
-                      DateFormat('MMM')
-                              .format(widget.ride.startTime)
-                              .toUpperCase() +
-                          ' ' +
-                          ordinal(int.parse(
-                              DateFormat('d').format(widget.ride.startTime))) +
-                          ' ' +
-                          DateFormat('jm').format(widget.ride.startTime),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                      Contact(color: Colors.grey),
-                      SizedBox(height: 20),
-                      TimeLine(widget.ride, false),
-                      SizedBox(height: 20),
-                      CustomDivider(),
-                      SizedBox(height: 10),
-                      widget.ride.recurring
-                          ? RecurringRideHistory(widget.ride)
-                          : NoRecurringRideHistory(widget.ride),
-                      SizedBox(height: MediaQuery.of(context).size.height / 8),
-                    ],
-                  ),
-                )
-              ],
-            ),
+        appBar: AppBar(
+          title: PageTitle(title: 'Schedule'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
           ),
-          EditRide(),
-        ],
-      ),
-    ));
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 16),
+                      child: Text(
+                          DateFormat('MMM')
+                                  .format(widget.ride.startTime)
+                                  .toUpperCase() +
+                              ' ' +
+                              ordinal(int.parse(DateFormat('d')
+                                  .format(widget.ride.startTime))) +
+                              ' ' +
+                              DateFormat('jm').format(widget.ride.startTime),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 34,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20),
+                          Contact(color: Colors.grey),
+                          SizedBox(height: 20),
+                          TimeLine(widget.ride, false),
+                          SizedBox(height: 20),
+                          CustomDivider(),
+                          SizedBox(height: 10),
+                          widget.ride.recurring
+                              ? RecurringRideHistory(widget.ride)
+                              : NoRecurringRideHistory(widget.ride),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height / 8),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              EditRide(),
+            ],
+          ),
+        ));
   }
 }
 
@@ -103,8 +105,7 @@ class OccurrenceTitle extends StatelessWidget {
           padding: EdgeInsets.only(left: 20, bottom: 15),
           child: Text(
             "Occurrence",
-            style: TextStyle(
-                color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
       ),

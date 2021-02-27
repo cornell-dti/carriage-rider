@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 Map days = {
-  0: 'Sunday',
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday'
+  0: 'Sun.',
+  1: 'Mon.',
+  2: 'Tue.',
+  3: 'Wed.',
+  4: 'Thurs.',
+  5: 'Fri.',
+  6: 'Sat.'
 };
 
 class Current extends StatefulWidget {
@@ -33,6 +33,7 @@ class _CurrentState extends State<Current> {
                 color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
           ),
           backgroundColor: Colors.black,
+          titleSpacing: 0.0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () => Navigator.pop(context, false),
@@ -47,11 +48,11 @@ class _CurrentState extends State<Current> {
                   BackgroundHeader(
                       widget: Text("Current Ride",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontFamily: 'SFPro',
-                            fontWeight: FontWeight.bold,
-                          ))),
+                              fontFamily: 'SFDisplay',
+                              fontSize: 34,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.37,
+                              color: Colors.white))),
                   BackgroundHeader(
                     widget: SizedBox(height: 10),
                   ),
@@ -115,14 +116,14 @@ class RecurringRide extends StatefulWidget {
 class _RecurringRideState extends State<RecurringRide> {
   @override
   Widget build(BuildContext context) {
-    String repeatedDays = "";
+    String repeatedDays = "Every ";
     String recurringDays = "";
     days.forEach((k, v) {
       if (widget.ride.recurringDays.contains(k)) {
-        repeatedDays += v + ", ";
+        repeatedDays += v + " and ";
       }
     });
-    recurringDays = repeatedDays.substring(0, repeatedDays.length - 2);
+    recurringDays = repeatedDays.substring(0, repeatedDays.length - 4);
 
     return Container(
       child: Column(
@@ -253,8 +254,9 @@ class BackgroundHeader extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(
-              child:
-                  Padding(padding: EdgeInsets.only(left: 10), child: widget)),
+              child: Padding(
+                  padding: EdgeInsets.only(left: 15.0, top: 5.0),
+                  child: widget)),
         ],
       ),
     );

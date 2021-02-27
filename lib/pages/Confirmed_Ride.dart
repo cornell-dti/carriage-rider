@@ -12,6 +12,7 @@ class _ConfirmedRideState extends State<ConfirmedRide> {
     return Scaffold(
         appBar: AppBar(
           title:  PageTitle(title: 'Schedule'),
+          titleSpacing: 0.0,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),

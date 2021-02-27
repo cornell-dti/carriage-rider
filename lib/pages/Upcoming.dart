@@ -15,7 +15,9 @@ Color grey = Color(0xFF9B9B9B);
 
 class UpcomingRidePage extends StatefulWidget {
   UpcomingRidePage(this.ride);
+
   final Ride ride;
+
   @override
   _UpcomingRidePageState createState() => _UpcomingRidePageState();
 }
@@ -24,70 +26,74 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8.0, top: 16),
-                    child: Row(children: [
-                      Icon(Icons.arrow_back_ios, color: Colors.black),
-                      Text('Schedule', style: TextStyle(fontSize: 17))
-                    ]),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, bottom: 8, top: 16),
-                  child: Text(
-                      DateFormat('MMM')
-                              .format(widget.ride.startTime)
-                              .toUpperCase() +
-                          ' ' +
-                          ordinal(int.parse(
-                              DateFormat('d').format(widget.ride.startTime))) +
-                          ' ' +
-                          DateFormat('jm').format(widget.ride.startTime),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 34,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 32),
-                      Contact(color: Colors.grey),
-                      SizedBox(height: 60),
-                      TimeLine(widget.ride, false),
-                      SizedBox(height: 70),
-                      RideAction(
-                          text: "Cancel Ride",
-                          color: Colors.red,
-                          icon: Icons.close,
-                          action: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CancelRidePage(widget.ride)))),
-                      SizedBox(height: 20),
-                      EditRide(),
-                    ],
-                  ),
-                )
-              ],
-            ),
+        appBar: AppBar(
+          title: PageTitle(title: 'Schedule'),
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          iconTheme: IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context, false),
           ),
-        ],
-      ),
-    ));
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 16),
+                      child: Text(
+                          DateFormat('MMM')
+                                  .format(widget.ride.startTime)
+                                  .toUpperCase() +
+                              ' ' +
+                              ordinal(int.parse(DateFormat('d')
+                                  .format(widget.ride.startTime))) +
+                              ' ' +
+                              DateFormat('jm').format(widget.ride.startTime),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 34,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 32),
+                          Contact(color: Colors.grey),
+                          SizedBox(height: 60),
+                          TimeLine(widget.ride, false),
+                          SizedBox(height: 50),
+                          RideAction(
+                              text: "Cancel Ride",
+                              color: Colors.red,
+                              icon: Icons.close,
+                              action: () => Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) =>
+                                          CancelRidePage(widget.ride)))),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: EditRide(),
+              )
+            ],
+          ),
+        ));
   }
 }
 
@@ -121,10 +127,11 @@ class Header extends StatelessWidget {
           margin: EdgeInsets.only(left: 15, top: 15, bottom: 15),
           child: Text(header,
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontFamily: 'SFPro',
-                  fontWeight: FontWeight.bold)),
+                color: Colors.black,
+                fontSize: 34,
+                fontFamily: 'SFProDisplay',
+                fontWeight: FontWeight.bold,
+              )),
         )
       ],
     );
@@ -174,6 +181,7 @@ class CustomDivider extends StatelessWidget {
 
 class Contact extends StatelessWidget {
   final Color color;
+
   const Contact({Key key, this.color}) : super(key: key);
 
   @override
@@ -289,6 +297,7 @@ class EditRide extends StatelessWidget {
 
 class TimeLineRow extends StatelessWidget {
   TimeLineRow({this.text, this.infoWidget, this.decorationWidth});
+
   final String text;
   final Widget infoWidget;
   final double decorationWidth;
@@ -319,6 +328,7 @@ class TimeLineRow extends StatelessWidget {
 
 class TimeLine extends StatefulWidget {
   TimeLine(this.ride, this.isIcon);
+
   final Ride ride;
   final bool isIcon;
 
@@ -501,7 +511,8 @@ class _UpcomingRideState extends State<UpcomingRide> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Ride>>(
-        future: ridesProvider.fetchUpcomingRides(context, appConfig, authProvider),
+        future:
+            ridesProvider.fetchUpcomingRides(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.length == 0) {
@@ -519,6 +530,7 @@ class _UpcomingRideState extends State<UpcomingRide> {
 
 class UpcomingRideCard extends StatelessWidget {
   UpcomingRideCard(this.ride);
+
   final Ride ride;
 
   final confirmationStyle = TextStyle(
