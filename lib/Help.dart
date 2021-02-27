@@ -31,40 +31,47 @@ class _HelpState extends State<Help> {
         ),
         body: SingleChildScrollView(
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                  Widget>[
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+              Widget>[
             Padding(
               padding: EdgeInsets.only(left: 18.0, top: 10.0, bottom: 8.0),
-              child: Text('Help', style: Theme.of(context).textTheme.headline5),
+              child: Text('Help', style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5),
             ),
             Container(
               color: Colors.white,
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.only(top: 20, left: 18, bottom: 5),
-                      child: Expanded(
-                        child: Text(
-                          'Contact CULift',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      )),
-                  Padding(
+                    padding: EdgeInsets.only(top: 20, left: 18, bottom: 5),
+                    child: Text(
+                      'Contact CULift',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Flexible(
+                    child: Padding(
                       padding: EdgeInsets.only(top: 10, left: 18, bottom: 5),
-                      child: Flexible(
-                        child: Text(
-                          'Did your driver miss your ride? Or need any immediate '
-                          'assistance? Contact CULift for help',
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
+
+                      child: Text(
+                        'Did your driver miss your ride? Or need any immediate '
+                            'assistance? Contact CULift for help',
+                        style: TextStyle(
+                          color: Colors.grey,
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   infoRow(
                       context, Icons.phone, "###-###-####", _launchPhoneURL),
                   Padding(

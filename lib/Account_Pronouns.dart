@@ -38,7 +38,7 @@ class _AccountPronounsState extends State<AccountPronouns> {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     return Scaffold(

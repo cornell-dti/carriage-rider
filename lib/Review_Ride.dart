@@ -1,40 +1,28 @@
 import 'package:carriage_rider/Assistance.dart';
 import 'package:carriage_rider/Ride_Confirmation.dart';
+import 'package:carriage_rider/RiderProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/RideObject.dart';
+import 'package:provider/provider.dart';
+import 'package:carriage_rider/app_config.dart';
+import 'RidesProvider.dart';
+import 'package:carriage_rider/Request_Ride_Loc.dart';
 
 class ReviewRide extends StatefulWidget {
+  final RideObject ride;
+
+  ReviewRide({Key key, this.ride}) : super(key: key);
+
   @override
   _ReviewRideState createState() => _ReviewRideState();
 }
 
 class _ReviewRideState extends State<ReviewRide> {
-
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
-  );
-
-  final labelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w300,
-    fontSize: 11
-  );
-
-  final infoStyle = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w500,
-      fontSize: 16
-  );
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
+    RidesProvider rideProvider = Provider.of<RidesProvider>(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
@@ -45,9 +33,13 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
+                    child: Text("Cancel",
+                        style: RideRequestStyles.cancel(context)),
                     onTap: () {
-                      Navigator.pop(context, new MaterialPageRoute(builder: (context) => Assistance()));
+                      Navigator.pop(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => Assistance()));
                     },
                   ),
                 ),
@@ -79,49 +71,57 @@ class _ReviewRideState extends State<ReviewRide> {
             SizedBox(height: 10.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("Review your ride", style: questionStyle))
+                Flexible(
+                    child: Text("Review your ride",
+                        style: RideRequestStyles.question(context)))
               ],
             ),
             SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text('From', style: labelStyle)
-              ]
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Text('From', style: RideRequestStyles.label(context))
+            ]),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Bill & Melinda Gates Hall', style: infoStyle)
+                Text(
+                    widget.ride.fromLocation != null
+                        ? widget.ride.fromLocation
+                        : "",
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('To', style: labelStyle)
+                Text('To', style: RideRequestStyles.label(context))
               ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Barton Hall', style: infoStyle)
+                Text(
+                    widget.ride.toLocation != null
+                        ? widget.ride.toLocation
+                        : "",
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Date', style: labelStyle)
+                Text('Date', style: RideRequestStyles.label(context))
               ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('02/20/2020', style: infoStyle)
+                Text(widget.ride.date != null ? widget.ride.date : "",
+                    style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
@@ -132,9 +132,14 @@ class _ReviewRideState extends State<ReviewRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Pickup Time', style: labelStyle),
+                      Text('Pickup Time',
+                          style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
-                      Text('10:30 AM', style: infoStyle)
+                      Text(
+                          widget.ride.pickUpTime != null
+                              ? widget.ride.pickUpTime
+                              : "",
+                          style: RideRequestStyles.info(context))
                     ],
                   ),
                 ),
@@ -143,9 +148,14 @@ class _ReviewRideState extends State<ReviewRide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Drop-off Time', style: labelStyle),
+                      Text('Drop-off Time',
+                          style: RideRequestStyles.label(context)),
                       SizedBox(height: 5),
-                      Text('10:50 AM', style: infoStyle)
+                      Text(
+                          widget.ride.dropOffTime != null
+                              ? widget.ride.dropOffTime
+                              : "",
+                          style: RideRequestStyles.info(context))
                     ],
                   ),
                 )
@@ -155,28 +165,29 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Every', style: labelStyle)
+                Text('Every', style: RideRequestStyles.label(context))
               ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('M W F', style: infoStyle)
+                Text(widget.ride.every, style: RideRequestStyles.info(context))
               ],
             ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Accessibility Request', style: labelStyle)
+                Text('Accessibility Request',
+                    style: RideRequestStyles.label(context))
               ],
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Wheelchair', style: infoStyle)
+                Text('Wheelchair', style: RideRequestStyles.info(context))
               ],
             ),
             Expanded(
@@ -187,10 +198,22 @@ class _ReviewRideState extends State<ReviewRide> {
                     child: ButtonTheme(
                       minWidth: MediaQuery.of(context).size.width * 0.8,
                       height: 45.0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
                       child: RaisedButton(
-                        onPressed: (){
-                          Navigator.push(context, new MaterialPageRoute(builder: (context) => RideConfirmation()));
+                        onPressed: () {
+                          rideProvider.createRide(
+                              AppConfig.of(context),
+                              context,
+                              riderProvider,
+                              widget.ride.fromLocation,
+                              widget.ride.toLocation,
+                              widget.ride.pickUpTime,
+                              widget.ride.dropOffTime);
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => RideConfirmation()));
                         },
                         elevation: 3.0,
                         color: Colors.black,
@@ -198,8 +221,7 @@ class _ReviewRideState extends State<ReviewRide> {
                         child: Text('Send Request'),
                       ),
                     ),
-                  )
-              ),
+                  )),
             )
           ],
         ),

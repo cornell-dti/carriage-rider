@@ -21,7 +21,7 @@ class _SettingsState extends State<Settings> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     double _width = MediaQuery.of(context).size.width;
@@ -95,14 +95,12 @@ class _SettingsState extends State<Settings> {
                       Padding(
                           padding: EdgeInsets.only(bottom: 30),
                           child: Stack(
-                            overflow: Overflow.visible,
+                            clipBehavior: Clip.none,
                             children: [
                               Row(
                                   //crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text(
-                                        authProvider.googleSignIn.currentUser
-                                            .displayName,
+                                    Text(riderProvider.info.fullName(),
                                         style: TextStyle(
                                           fontSize: 20,
                                         )),
@@ -169,7 +167,7 @@ class LocationsSelector extends StatefulWidget {
 
 class LocationsSelectorState extends State<LocationsSelector> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     List<Location> options = widget.controller.options;
     Set<Location> selected = widget.controller.selected;
     return ListView.builder(
@@ -201,7 +199,7 @@ class LocationsSelectorState extends State<LocationsSelector> {
 class LocationsInfo extends StatelessWidget {
   LocationsInfo(this.title);
 
-  Widget _addressEditDialog(BuildContext context) {
+  Widget _addressEditDialog(context) {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
     final controller = TextEditingController(text: riderProvider.info.address);
@@ -223,8 +221,7 @@ class LocationsInfo extends StatelessWidget {
     );
   }
 
-  Widget _favoritesEditDialog(
-      BuildContext context, Map<String, Location> locations) {
+  Widget _favoritesEditDialog(context, Map<String, Location> locations) {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
     Set<Location> picked = Set<Location>();
@@ -257,12 +254,12 @@ class LocationsInfo extends StatelessWidget {
   }
 
   //
-  void _editAddress(BuildContext context) async {
+  void _editAddress(context) async {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
     String res = await showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return _addressEditDialog(context);
       },
     );
@@ -272,7 +269,7 @@ class LocationsInfo extends StatelessWidget {
         Provider.of<AuthProvider>(context, listen: false), res);
   }
 
-  void _editFavorites(BuildContext context) async {
+  void _editFavorites(context) async {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
     Map<String, Location> locations =
@@ -290,8 +287,8 @@ class LocationsInfo extends StatelessWidget {
   }
 
   final String title;
-  Widget infoRow(BuildContext context, IconData icon, String text,
-      void Function() onEditPressed) {
+  Widget infoRow(
+      context, IconData icon, String text, void Function() onEditPressed) {
     double paddingTB = 10;
     return Padding(
         padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
@@ -317,7 +314,7 @@ class LocationsInfo extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Container(
         decoration: BoxDecoration(
@@ -361,7 +358,7 @@ class PrivacyLegalInfo extends StatefulWidget {
 }
 
 class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
-  Widget infoRow(BuildContext context, String heading, String text) {
+  Widget infoRow(context, String heading, String text) {
     return Padding(
         padding: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -406,7 +403,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     List<String> headings = ["Email Preferences", "Privacy", "Legal"];
     final List<String> subText = [
       "Set what email you want to receive",
@@ -436,10 +433,10 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: subText.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (context, int index) {
                       return infoRow(context, headings[index], subText[index]);
                     },
-                    separatorBuilder: (BuildContext context, int index) {
+                    separatorBuilder: (context, int index) {
                       return Divider(height: 0, color: Colors.white);
                     })
               ],
@@ -449,7 +446,7 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 
 class SignOutButton extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     return SizedBox(
         width: double.maxFinite,

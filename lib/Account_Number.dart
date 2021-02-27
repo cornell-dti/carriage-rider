@@ -39,7 +39,7 @@ class _AccountNumberState extends State<AccountNumber> {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of(context);
     return Scaffold(
@@ -57,6 +57,13 @@ class _AccountNumberState extends State<AccountNumber> {
                   )
                 ],
               ),
+              SizedBox(height: 15.0),
+              Row(children: <Widget>[
+                Flexible(
+                    child: Text(
+                        "Provide your number will allow drivers to contact you in case of emergency or delays",
+                        style: TextStyle(fontSize: 15, color: Colors.grey)))
+              ]),
               SizedBox(height: 40.0),
               Form(
                 key: _formKey,
