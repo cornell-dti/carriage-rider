@@ -27,7 +27,7 @@ Future<List<Location>> fetchLocations(BuildContext context) async {
   final response = await http.get(AppConfig.of(context).baseUrl + '/locations');
   if (response.statusCode == 200) {
     String responseBody = response.body;
-    var data = jsonDecode(responseBody)["data"];
+    var data = jsonDecode(responseBody)['data'];
     List<Location> locations =
         data.map<Location>((e) => Location.fromJson(e)).toList();
     return locations;
