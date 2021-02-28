@@ -33,6 +33,7 @@ dependencies:
   flutter_verification_code: ^0.2.1
   jwt_decoder: ^1.0.4
   flutter_secure_storage: ^3.3.5
+  permission: ^0.1.7
 
 dev_dependencies:
   flutter_test:

@@ -73,7 +73,7 @@ class ShowPickupDestinationMapState extends State<ShowPickupDestinationMap> {
       zoomControlsEnabled: false,
       zoomGesturesEnabled: false,
       rotateGesturesEnabled: false,
-      scrollGesturesEnabled: false,
+      scrollGesturesEnabled: true,
       mapToolbarEnabled: false,
       compassEnabled: false,
       onMapCreated: (GoogleMapController controller) {
