@@ -18,8 +18,8 @@ class TextThemes {
   static final TextStyle title2 = TextStyle(
       color: Colors.black,
       fontFamily: 'SFDisplay',
-      fontWeight: FontWeight.bold,
-      fontSize: 22,
+      fontWeight: FontWeight.w800,
+      fontSize: 23,
       letterSpacing: 0.35);
 
   static final TextStyle title3 = TextStyle(
@@ -82,25 +82,28 @@ class TextThemes {
     fontSize: 17,
   );
 
-  static final monthStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 22,  height: 2);
+  static final monthStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+      fontSize: 22,
+      height: 2);
 
-  static final dayStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 22, height: 2);
+  static final dayStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 22,
+      height: 2);
 
   static final timeStyle = TextStyle(
-      color: Colors.grey[500], fontWeight: FontWeight.w400, fontSize: 22, height: 2);
+      color: Colors.grey[500],
+      fontWeight: FontWeight.w400,
+      fontSize: 22,
+      height: 2);
 
   static final cancelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w100,
     fontSize: 15,
-  );
-
-  static final questionStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w800,
-    fontSize: 25,
   );
 
   static final toggleStyle = TextStyle(

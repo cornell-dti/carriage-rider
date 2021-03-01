@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
 import 'package:carriage_rider/utils/TextThemes.dart';
 
-
 class RepeatRide extends StatefulWidget {
   final RideObject ride;
 
@@ -136,8 +135,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text('Cancel',
-                        style: TextThemes.cancelStyle),
+                    child: Text('Cancel', style: TextThemes.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -177,7 +175,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Flexible(
                     child: Text('When do you want to repeat this ride?',
-                        style: TextThemes.questionStyle))
+                        style: TextThemes.title1))
               ],
             ),
             SizedBox(height: 15),
@@ -236,9 +234,9 @@ class _RepeatRideState extends State<RepeatRide> {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: ButtonTheme(
                       minWidth: MediaQuery.of(context).size.width * 0.8,
-                      height: 45.0,
+                      height: 50.0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
+                          borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
@@ -255,7 +253,10 @@ class _RepeatRideState extends State<RepeatRide> {
                         elevation: 3.0,
                         color: Colors.black,
                         textColor: Colors.white,
-                        child: Text('Next'),
+                        child: Text(
+                          'Next',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                        ),
                       ),
                     ),
                   )),

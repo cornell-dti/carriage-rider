@@ -37,8 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text('Cancel',
-                          style: TextThemes.cancelStyle),
+                      child: Text('Cancel', style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -80,7 +79,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text('Where do you want to go?',
-                        style: TextThemes.questionStyle),
+                        style: TextThemes.title1),
                   )
                 ],
               ),
@@ -102,9 +101,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: ButtonTheme(
                         minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
+                        height: 50.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -120,7 +119,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text('Next'),
+                          child: Text('Next', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                         ),
                       ),
                     )),
@@ -180,7 +179,8 @@ class _FromLocationState extends State<FromLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
+        future:
+            locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _fromField(context, snapshot.data);
@@ -241,7 +241,8 @@ class _ToLocationState extends State<ToLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
+        future:
+            locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _toField(context, snapshot.data);

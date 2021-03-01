@@ -124,8 +124,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text('Cancel',
-                          style: TextThemes.cancelStyle),
+                      child: Text('Cancel', style: TextThemes.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -164,8 +163,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text('When is this ride?',
-                      style: TextThemes.questionStyle),
+                  Text('When is this ride?', style: TextThemes.title1),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -233,9 +231,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                       margin: EdgeInsets.only(bottom: 20.0),
                       child: ButtonTheme(
                         minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
+                        height: 50.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -252,7 +250,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text('Next'),
+                          child: Text('Next', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                         ),
                       ),
                     )),

@@ -274,7 +274,7 @@ class Home extends StatelessWidget {
                           alignment: Alignment.center,
                           child: ButtonTheme(
                             minWidth: MediaQuery.of(context).size.width * 0.8,
-                            height: 45.0,
+                            height: 50.0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(3)),
                             child: RaisedButton.icon(
@@ -288,9 +288,12 @@ class Home extends StatelessWidget {
                               elevation: 3.0,
                               color: Colors.black,
                               textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                              ),
                               icon: Icon(Icons.add),
                               label: Text('Request Ride',
-                                  style: TextStyle(fontSize: 18)),
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                             ),
                           )),
                     ],
