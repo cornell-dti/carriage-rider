@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
         child: ChangeNotifierProvider<RidesProvider>(
           create: (context) {
             return RidesProvider(
-              context,
               appConfig,
               Provider.of<AuthProvider>(context, listen: false),
             );
@@ -77,6 +76,10 @@ class MyApp extends StatelessWidget {
                         fontSize: 16.0, fontWeight: FontWeight.normal),
                     bodyText2: TextStyle(
                         fontSize: 12.0, fontWeight: FontWeight.normal),
+                    headline1: TextStyle(
+                        color: Colors.black,
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold),
                     subtitle1:
                         TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
                   )),
