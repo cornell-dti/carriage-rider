@@ -64,7 +64,7 @@ class _ConfirmedRideState extends State<ConfirmedRide> {
                     SizedBox(height: 30),
                     CustomDivider(),
                     SizedBox(height: 15),
-                    Contact(),
+                    ContactCard(),
                     SizedBox(height: 15),
                     CustomDivider(),
                     SizedBox(height: 20),

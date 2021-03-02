@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/TextThemes.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class CurrentRide extends StatelessWidget {
   @override
@@ -52,16 +52,16 @@ class CurrentRide extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('From', style: TextThemes.directionStyle),
-                    Text('Upson Hall', style: TextThemes.body,)
+                    Text('From', style: CarriageTheme.directionStyle),
+                    Text('Upson Hall', style: CarriageTheme.body,)
                   ],
                 ),
                 Icon(Icons.arrow_forward),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('To', style: TextThemes.directionStyle),
-                    Text('Uris Hall', style:  TextThemes.body,)
+                    Text('To', style: CarriageTheme.directionStyle),
+                    Text('Uris Hall', style:  CarriageTheme.body,)
                   ],
                 ),
               ],
@@ -79,7 +79,7 @@ class CurrentRide extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Davea Butler', style: TextThemes.subheadline),
+                    Text('Davea Butler', style: CarriageTheme.subheadline),
                     Row(
                       children: <Widget>[
                         Icon(Icons.phone, size: 13.0,),

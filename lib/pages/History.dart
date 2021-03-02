@@ -70,7 +70,7 @@ class _HistoryState extends State<History> {
                       child: Column(
                         children: [
                           SizedBox(height: 20),
-                          Contact(color: Colors.grey),
+                          ContactCard(color: Colors.grey),
                           SizedBox(height: 20),
                           TimeLine(widget.ride, false),
                           SizedBox(height: 20),

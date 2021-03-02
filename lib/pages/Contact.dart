@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-class Help extends StatefulWidget {
-  Help({Key key}) : super(key: key);
+class Contact extends StatefulWidget {
+  Contact({Key key}) : super(key: key);
 
   @override
-  _HelpState createState() => _HelpState();
+  _ContactState createState() => _ContactState();
 }
 
-class _HelpState extends State<Help> {
+class _ContactState extends State<Contact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +35,7 @@ class _HelpState extends State<Help> {
               Widget>[
             Padding(
               padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-              child: Text('Help', style: Theme.of(context).textTheme.headline4),
+              child: Text('Contact', style: Theme.of(context).textTheme.headline4),
             ),
             Container(
               color: Colors.white,

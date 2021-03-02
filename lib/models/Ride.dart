@@ -1,14 +1,13 @@
 import 'dart:core';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'dart:math';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../utils/TextThemes.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-import 'CarriageTheme.dart';
+import '../utils/CarriageTheme.dart';
 
 //Model for a ride.
 class Ride {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextThemes {
+class CarriageTheme {
   static final TextStyle largeTitle = TextStyle(
       color: Colors.black,
       fontFamily: 'SFDisplay',
@@ -70,11 +70,10 @@ class TextThemes {
   static final seeMoreStyle = TextStyle(fontSize: 14, color: Color(0xFF181818));
 
   static final directionStyle = TextStyle(
-      color: Colors.grey[500],
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.2,
-      fontSize: 12,
-      height: 2);
+    color: Colors.grey[500],
+    fontWeight: FontWeight.w500,
+    fontSize: 12,
+  );
 
   static final rideInfoStyle = TextStyle(
     color: Colors.black,
@@ -82,23 +81,14 @@ class TextThemes {
     fontSize: 17,
   );
 
-  static final monthStyle = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w700,
-      fontSize: 22,
-      height: 2);
+  static final monthStyle =
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 22);
 
-  static final dayStyle = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w400,
-      fontSize: 22,
-      height: 2);
+  static final dayStyle =
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 22);
 
   static final timeStyle = TextStyle(
-      color: Colors.grey[500],
-      fontWeight: FontWeight.w400,
-      fontSize: 22,
-      height: 2);
+      color: Colors.grey[500], fontWeight: FontWeight.w400, fontSize: 22);
 
   static final cancelStyle = TextStyle(
     color: Colors.black,
@@ -118,4 +108,16 @@ class TextThemes {
 
   static final infoStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
+
+  static final BoxDecoration cardDecoration = BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+            blurRadius: 2,
+            spreadRadius: 0,
+            color: Colors.black.withOpacity(0.25))
+      ]);
+
+  static final String generatedRideID = 'INSTANCE';
 }

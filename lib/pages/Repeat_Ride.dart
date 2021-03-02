@@ -2,7 +2,7 @@ import 'package:carriage_rider/pages/Request_Ride_Time.dart';
 import 'package:carriage_rider/pages/Review_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
-import 'package:carriage_rider/utils/TextThemes.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RepeatRide extends StatefulWidget {
   final RideObject ride;
@@ -135,7 +135,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text('Cancel', style: TextThemes.cancelStyle),
+                    child: Text('Cancel', style: CarriageTheme.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -175,7 +175,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Flexible(
                     child: Text('When do you want to repeat this ride?',
-                        style: TextThemes.title1))
+                        style: CarriageTheme.title1))
               ],
             ),
             SizedBox(height: 15),
@@ -183,7 +183,7 @@ class _RepeatRideState extends State<RepeatRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text('This ride repeats every:',
-                    style: TextThemes.descriptionStyle),
+                    style: CarriageTheme.descriptionStyle),
               ],
             ),
             SizedBox(height: 10.0),
@@ -199,11 +199,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: TextThemes.toggleStyle),
-                      Text('T', style: TextThemes.toggleStyle),
-                      Text('W', style: TextThemes.toggleStyle),
-                      Text('Th', style: TextThemes.toggleStyle),
-                      Text('F', style: TextThemes.toggleStyle)
+                      Text('M', style: CarriageTheme.toggleStyle),
+                      Text('T', style: CarriageTheme.toggleStyle),
+                      Text('W', style: CarriageTheme.toggleStyle),
+                      Text('Th', style: CarriageTheme.toggleStyle),
+                      Text('F', style: CarriageTheme.toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {
@@ -255,7 +255,8 @@ class _RepeatRideState extends State<RepeatRide> {
                         textColor: Colors.white,
                         child: Text(
                           'Next',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w800),
                         ),
                       ),
                     ),

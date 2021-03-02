@@ -1,7 +1,6 @@
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'dart:math';
-
-import 'package:carriage_rider/RidesProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
@@ -9,19 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
-import '../utils/TextThemes.dart';
-import 'package:carriage_rider/providers/RidesProvider.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
-import 'package:provider/provider.dart';
-import 'package:carriage_rider/utils/app_config.dart';
-import 'PopButton.dart';
+import '../PopButton.dart';
 
 Color grey = Color(0xFF9B9B9B);
 
 class UpcomingRidePage extends StatefulWidget {
   UpcomingRidePage(this.ride, {this.parentRideID});
+
   final Ride ride;
   final String parentRideID;
+
   @override
   _UpcomingRidePageState createState() => _UpcomingRidePageState();
 }
@@ -48,10 +44,9 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    PopButton(context, 'Schedule'),
                     Padding(
                       padding:
-                          const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                          const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
                       child: Text(
                           DateFormat('MMM')
                                   .format(widget.ride.startTime)
@@ -73,7 +68,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          Contact(color: Colors.grey),
+                          ContactCard(color: Colors.grey),
                           SizedBox(height: 60),
                           TimeLine(widget.ride, false),
                           SizedBox(height: 50),
@@ -184,10 +179,10 @@ class CustomDivider extends StatelessWidget {
   }
 }
 
-class Contact extends StatelessWidget {
+class ContactCard extends StatelessWidget {
   final Color color;
 
-  const Contact({Key key, this.color}) : super(key: key);
+  const ContactCard({Key key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

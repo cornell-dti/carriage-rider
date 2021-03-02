@@ -57,7 +57,7 @@ class _CurrentState extends State<Current> {
                     widget: SizedBox(height: 10),
                   ),
                   SizedBox(height: 20),
-                  Contact(color: Colors.black),
+                  ContactCard(color: Colors.black),
                   SizedBox(height: 40),
                   TimeLine(widget.ride, true),
                   SizedBox(height: 30),

@@ -7,7 +7,7 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/utils/TextThemes.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final RideObject ride;
@@ -37,7 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text('Cancel', style: TextThemes.cancelStyle),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -79,7 +79,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Flexible(
                     child: Text('Where do you want to go?',
-                        style: TextThemes.title1),
+                        style: CarriageTheme.title1),
                   )
                 ],
               ),

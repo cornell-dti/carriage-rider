@@ -1,19 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/utils/app_config.dart';
-import 'package:intl/intl.dart';
-import 'package:humanize/humanize.dart' as humanize;
-import '../utils/TextThemes.dart';
-import 'package:carriage_rider/RidesProvider.dart';
-import 'package:provider/provider.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
-import 'PopButton.dart';
+
+import '../PopButton.dart';
 
 class RideHistory extends StatefulWidget {
   @override
@@ -118,7 +111,7 @@ class InformationRow extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text('From', style: TextThemes.directionStyle)
+                    Text('From', style: CarriageTheme.directionStyle)
                   ],
                 ),
                 SizedBox(height: 2),
@@ -144,7 +137,7 @@ class InformationRow extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text('To', style: TextThemes.directionStyle)
+                    Text('To', style: CarriageTheme.directionStyle)
                   ],
                 ),
                 SizedBox(height: 5),

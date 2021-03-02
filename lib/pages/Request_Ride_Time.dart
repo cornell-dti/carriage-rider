@@ -2,7 +2,7 @@ import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/pages/Repeat_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
-import 'package:carriage_rider/utils/TextThemes.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RequestRideTime extends StatefulWidget {
   final RideObject ride;
@@ -124,7 +124,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text('Cancel', style: TextThemes.cancelStyle),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -163,7 +163,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text('When is this ride?', style: TextThemes.title1),
+                  Text('When is this ride?', style: CarriageTheme.title1),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -177,8 +177,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                     fillColor: Colors.grey[100],
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('Repeat', style: TextThemes.toggleStyle),
-                      Text('Once', style: TextThemes.toggleStyle)
+                      Text('Repeat', style: CarriageTheme.toggleStyle),
+                      Text('Once', style: CarriageTheme.toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {
