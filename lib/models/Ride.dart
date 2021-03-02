@@ -341,7 +341,7 @@ class RideCard extends StatelessWidget {
                                 GestureDetector(
                                   //TODO: replace temp phone number
                                   onTap: () =>
-                                      UrlLauncher.launch("tel://13232315234"),
+                                      UrlLauncher.launch('tel://13232315234'),
                                   child: Container(
                                       decoration: BoxDecoration(
                                           borderRadius:

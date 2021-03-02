@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
                     children: <Widget>[
                       ListTile(
                         leading: Icon(Icons.person, color: Colors.black),
-                        title: sideBarText("Profile", Colors.black),
+                        title: sideBarText('Profile', Colors.black),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -72,7 +72,7 @@ class Home extends StatelessWidget {
                       ),
                       ListTile(
                         leading: Icon(Icons.settings, color: Colors.black),
-                        title: sideBarText("Settings", Colors.black),
+                        title: sideBarText('Settings', Colors.black),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -85,7 +85,7 @@ class Home extends StatelessWidget {
                       ),
                       ListTile(
                         leading: Icon(Icons.notifications, color: Colors.black),
-                        title: sideBarText("Notifications", Colors.black),
+                        title: sideBarText('Notifications', Colors.black),
                         onTap: () {
                           Navigator.push(
                               context,

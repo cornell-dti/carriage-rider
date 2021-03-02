@@ -52,7 +52,7 @@ class LocationsProvider with ChangeNotifier {
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get('${config.baseUrl}/locations',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Location> locations = _locationsFromJson(responseBody);

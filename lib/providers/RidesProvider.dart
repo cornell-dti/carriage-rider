@@ -35,7 +35,7 @@ class RidesProvider with ChangeNotifier {
 
   //Decodes [json] of locations into a list representation of rides.
   List<Ride> _ridesFromJson(String json) {
-    var data = jsonDecode(json)["data"];
+    var data = jsonDecode(json)['data'];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     return res;
   }
@@ -46,7 +46,7 @@ class RidesProvider with ChangeNotifier {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => b.startTime.compareTo(a.startTime));
@@ -62,7 +62,7 @@ class RidesProvider with ChangeNotifier {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
@@ -87,7 +87,7 @@ class RidesProvider with ChangeNotifier {
       '${config.baseUrl}/rides',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: "Bearer $token"
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       },
       body: jsonEncode(<String, dynamic>{
         'rider': riderProvider.info,

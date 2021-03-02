@@ -149,7 +149,7 @@ class RiderProvider with ChangeNotifier {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
         '${config.baseUrl}/riders/${authProvider.id}',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(Rider.fromJson(json));
@@ -167,7 +167,7 @@ class RiderProvider with ChangeNotifier {
       '${config.baseUrl}/riders/${authProvider.id}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: "Bearer $token"
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       },
       body: jsonEncode(changes),
     );
