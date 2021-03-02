@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/RidesProvider.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,7 @@ class _RideHistoryState extends State<RideHistory> {
     if (pastRides.length == 0) {
       return _emptyRideHist();
     } else {
-      return _mainHist(pastRides);
+      return _mainHist(pastRides.sublist(0, min(5, pastRides.length)));
     }
   }
 }

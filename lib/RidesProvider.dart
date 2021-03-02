@@ -36,7 +36,6 @@ class RidesProvider with ChangeNotifier {
   List<Ride> _ridesFromJson(String json) {
     var data = jsonDecode(json)["data"];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
-    res.sort((a, b) => a.startTime.compareTo(b.startTime));
     return res;
   }
 
@@ -49,6 +48,7 @@ class RidesProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
+      rides.sort((a, b) => b.startTime.compareTo(a.startTime));
       pastRides = rides;
     } else {
       throw Exception('Failed to load rides.');
@@ -65,6 +65,7 @@ class RidesProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
+      rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingRides = rides;
     }
   }

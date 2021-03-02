@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carriage_rider/MeasureSize.dart';
 import 'package:carriage_rider/RidesProvider.dart';
 import 'package:flutter/material.dart';
@@ -505,7 +507,7 @@ class UpcomingRides extends StatelessWidget {
     if (upcomingRides.length == 0) {
       return _emptyUpcomingRides(context);
     } else {
-      return _mainUpcoming(context, upcomingRides);
+      return _mainUpcoming(context, upcomingRides.sublist(0, min(5, upcomingRides.length)));
     }
   }
 }
