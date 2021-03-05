@@ -28,7 +28,7 @@ class Rider {
   final String pronouns;
 
   //The accessibility needs of a rider as a list.
-  final List accessibilityNeeds;
+  final List accessibility;
 
   //The ids of favorite locations.
   final List<String> favoriteLocations;
@@ -37,7 +37,7 @@ class Rider {
   final String description;
 
   //The photo url of a rider's profile picture.
-  final String picture;
+  final String photoLink;
 
   //The ISO 8601 formatted UTC date of a rider's join date
   final String joinDate;
@@ -50,7 +50,7 @@ class Rider {
 
   //Converts a rider's list of accessibility needs into a string representation
   String accessibilityStr() {
-    String all = accessibilityNeeds.join(', ');
+    String all = accessibility.join(', ');
     return all == '' ? 'None' : all;
   }
 
@@ -61,10 +61,10 @@ class Rider {
       this.firstName,
       this.lastName,
       this.pronouns,
-      this.accessibilityNeeds,
+      this.accessibility,
       this.favoriteLocations,
       this.description,
-      this.picture,
+      this.photoLink,
       this.joinDate,
       this.address);
 
@@ -82,7 +82,7 @@ class Rider {
         ),
         List.from(json['favoriteLocations']),
         json['description'],
-        json['picture'],
+        json['photoLink'],
         json['joinDate'],
         json['address']);
   }
@@ -94,10 +94,10 @@ class Rider {
         'phoneNumber': phoneNumber,
         'firstName': firstName,
         'lastName': lastName,
-        'pronouns': picture,
-        'accessibility': accessibilityNeeds,
+        'pronouns': pronouns,
+        'accessibility': accessibility,
         'description': description,
-        'picture': picture,
+        'photoLink': photoLink,
         'joinDate': joinDate,
       };
 }
@@ -136,7 +136,7 @@ class RiderProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(
-        Rider.fromJson(json),
+        Rider.fromJson(json['data']),
       );
     } else {
       throw Exception('Failed to update rider.');
@@ -152,7 +152,7 @@ class RiderProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Rider.fromJson(json));
+      _setInfo(Rider.fromJson(json['data']));
     } else {
       await Future.delayed(retryDelay);
       fetchRider(config, authProvider);
