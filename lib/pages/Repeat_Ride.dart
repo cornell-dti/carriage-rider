@@ -14,6 +14,11 @@ class RepeatRide extends StatefulWidget {
 }
 
 class _RepeatRideState extends State<RepeatRide> {
+
+  static final toggleStyle = TextStyle(
+    fontSize: 15,
+  );
+
   final _formKey = GlobalKey<FormState>();
 
   DateTime startDate = DateTime.now();
@@ -199,11 +204,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: CarriageTheme.toggleStyle),
-                      Text('T', style: CarriageTheme.toggleStyle),
-                      Text('W', style: CarriageTheme.toggleStyle),
-                      Text('Th', style: CarriageTheme.toggleStyle),
-                      Text('F', style: CarriageTheme.toggleStyle)
+                      Text('M', style: toggleStyle),
+                      Text('T', style: toggleStyle),
+                      Text('W', style: toggleStyle),
+                      Text('Th', style: toggleStyle),
+                      Text('F', style: toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {

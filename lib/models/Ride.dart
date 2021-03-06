@@ -13,38 +13,55 @@ import '../utils/CarriageTheme.dart';
 class Ride {
   //The ride's id in the backend.
   final String id;
+
   //The ride type. Can only be 'active', 'past', or 'unscheduled'.
   final String type;
+
   //The starting location of a ride.
   final String startLocation;
+
   //The starting address of a ride.
   final String startAddress;
+
   //The ending location of a ride.
   final String endLocation;
+
   //The ending address of a ride.
   final String endAddress;
+
   //The ending date of a recurring ride. Will be null if ride is not recurring.
   final DateTime endDate;
+
   //The starting time of a ride.
   final DateTime startTime;
+
   //The ending time of a ride
   final DateTime endTime;
+
   //The rider associated with this ride.
   final Rider rider;
+
   //Indicates whether a ride is recurring or not. Will be null if ride is not recurring.
   final bool recurring;
+
   //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
   final List<int> recurringDays;
+
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
   final bool deleted;
+
   //The requested end time of a ride. Will be null if ride is not recurring.
   final DateTime requestedEndTime;
+
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
   final String status;
+
   //Indicates whether a ride is late
   final bool late;
+
   //The driver associated with this ride
   final Map<String, dynamic> driver;
+
   //The IDs of rides corresponding to edits
   final List<String> edits;
 
@@ -174,40 +191,36 @@ class Ride {
   //and accessibility requests.
   Widget buildSummary(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
-    final labelStyle = TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-
-    final infoStyle = TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
     return Column(children: [
       Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[Text('From', style: labelStyle)]),
+          children: <Widget>[Text('From', style: CarriageTheme.caption2)]),
       SizedBox(height: 8),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(startLocation, style: infoStyle)],
+        children: <Widget>[Text(startLocation, style: CarriageTheme.infoStyle)],
       ),
       SizedBox(height: 16),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('To', style: labelStyle)],
+        children: <Widget>[Text('To', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 8),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(endLocation, style: infoStyle)],
+        children: <Widget>[Text(endLocation, style: CarriageTheme.infoStyle)],
       ),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Date', style: labelStyle)],
+        children: <Widget>[Text('Date', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 5),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text(DateFormat('yMd').format(startTime), style: infoStyle)
+          Text(DateFormat('yMd').format(startTime),
+              style: CarriageTheme.infoStyle)
         ],
       ),
       SizedBox(height: 15),
@@ -218,9 +231,10 @@ class Ride {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Pickup Time', style: labelStyle),
+                Text('Pickup Time', style: CarriageTheme.caption2),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(startTime), style: infoStyle)
+                Text(DateFormat('jm').format(startTime),
+                    style: CarriageTheme.infoStyle)
               ],
             ),
           ),
@@ -229,9 +243,10 @@ class Ride {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Drop-off Time', style: labelStyle),
+                Text('Drop-off Time', style: CarriageTheme.caption2),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(endTime), style: infoStyle)
+                Text(DateFormat('jm').format(endTime),
+                    style: CarriageTheme.infoStyle)
               ],
             ),
           )
@@ -240,20 +255,22 @@ class Ride {
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Every', style: labelStyle)],
+        children: <Widget>[Text('Every', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 5),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           //TODO: change to have repeating rides info
-          Text('M W F', style: infoStyle)
+          Text('M W F', style: CarriageTheme.infoStyle)
         ],
       ),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Accessibility Request', style: labelStyle)],
+        children: <Widget>[
+          Text('Accessibility Request', style: CarriageTheme.caption2)
+        ],
       ),
       SizedBox(height: 5),
       Row(
@@ -263,7 +280,7 @@ class Ride {
               riderProvider.hasInfo()
                   ? riderProvider.info.accessibilityStr()
                   : '',
-              style: infoStyle)
+              style: CarriageTheme.infoStyle)
         ],
       ),
     ]);
@@ -283,6 +300,7 @@ class RideCard extends StatelessWidget {
       @required this.showCallDriver,
       @required this.showArrow,
       this.parentRideID});
+
   final Ride ride;
   final bool showConfirmation;
   final bool showCallDriver;
@@ -385,6 +403,7 @@ class RideCard extends StatelessWidget {
 
 class RecurringRidesGenerator {
   RecurringRidesGenerator(this.originalRides);
+
   List<Ride> originalRides;
 
   int daysUntilWeekday(DateTime start, int weekday) {

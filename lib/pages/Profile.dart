@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
@@ -269,9 +270,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(widget.title,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(widget.title, style: CarriageTheme.title3),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
@@ -302,12 +301,6 @@ class _EditProfileNameState extends State<EditProfileName> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
   final titleStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
@@ -332,7 +325,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text('Cancel', style: cancelStyle),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -470,12 +463,6 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
     });
   }
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
   final titleStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
@@ -496,7 +483,7 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text('Cancel', style: cancelStyle),
+                    child: Text('Cancel', style: CarriageTheme.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,

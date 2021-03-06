@@ -25,7 +25,7 @@ class CarriageTheme {
   static final TextStyle title3 = TextStyle(
       color: Colors.black,
       fontFamily: 'SFDisplay',
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w800,
       fontSize: 20,
       height: 24 / 20,
       letterSpacing: 0.38);
@@ -64,7 +64,7 @@ class CarriageTheme {
       fontSize: 11,
       letterSpacing: 0.07);
 
-  static final subHeadingStyle = TextStyle(
+  static final subHeading = TextStyle(
       color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 20);
 
   static final seeMoreStyle = TextStyle(fontSize: 14, color: Color(0xFF181818));
@@ -93,10 +93,6 @@ class CarriageTheme {
   static final cancelStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
-  static final toggleStyle = TextStyle(
     fontSize: 15,
   );
 

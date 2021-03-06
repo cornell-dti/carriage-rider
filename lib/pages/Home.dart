@@ -166,7 +166,7 @@ class Home extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Current Ride',
-                                    style: CarriageTheme.subHeadingStyle,
+                                    style: CarriageTheme.subHeading,
                                   ),
                                   SizedBox(height: 12),
                                   CurrentRide(),
@@ -178,7 +178,7 @@ class Home extends StatelessWidget {
                             child: Row(children: [
                               Text(
                                 'Upcoming Rides',
-                                style: CarriageTheme.subHeadingStyle,
+                                style: CarriageTheme.subHeading,
                               ),
                               Spacer(),
                               ridesProvider.upcomingRides.isNotEmpty
@@ -203,7 +203,7 @@ class Home extends StatelessWidget {
                             child: Row(children: [
                               Text(
                                 'Ride History',
-                                style: CarriageTheme.subHeadingStyle,
+                                style: CarriageTheme.subHeading,
                               ),
                               Spacer(),
                               ridesProvider.pastRides.isNotEmpty

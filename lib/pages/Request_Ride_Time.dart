@@ -14,6 +14,10 @@ class RequestRideTime extends StatefulWidget {
 }
 
 class _RequestRideTimeState extends State<RequestRideTime> {
+  static final toggleStyle = TextStyle(
+    fontSize: 15,
+  );
+
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
@@ -177,8 +181,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                     fillColor: Colors.grey[100],
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('Repeat', style: CarriageTheme.toggleStyle),
-                      Text('Once', style: CarriageTheme.toggleStyle)
+                      Text('Repeat', style: toggleStyle),
+                      Text('Once', style: toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {
@@ -250,7 +254,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text('Next', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                          child: Text('Next',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w800)),
                         ),
                       ),
                     )),

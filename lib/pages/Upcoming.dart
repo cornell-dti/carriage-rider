@@ -45,8 +45,8 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 8),
                       child: Text(
                           DateFormat('MMM')
                                   .format(widget.ride.startTime)

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class _SettingsState extends State<Settings> {
                                   children: [
                                     Text(riderProvider.info.fullName(),
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 19,
                                         )),
                                   ]),
                               Positioned(
@@ -151,6 +152,7 @@ class _SettingsState extends State<Settings> {
 class SelectionController<T> {
   final List<T> options;
   Set<T> selected;
+
   SelectionController(this.options, this.selected);
 }
 
@@ -287,6 +289,7 @@ class LocationsInfo extends StatelessWidget {
   }
 
   final String title;
+
   Widget infoRow(
       context, IconData icon, String text, void Function() onEditPressed) {
     double paddingTB = 10;
@@ -333,9 +336,7 @@ class LocationsInfo extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(title,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(title, style: CarriageTheme.title3),
                   Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Column(children: [
