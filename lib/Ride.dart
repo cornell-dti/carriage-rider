@@ -363,6 +363,10 @@ class RecurringRidesGenerator {
   RecurringRidesGenerator(this.originalRides);
   List<Ride> originalRides;
 
+  /// Returns the number of days between [start] and the next day that falls on [weekday].
+  ///
+  /// The weekday numbering follows Flutter's convention where 1 to 7 are Monday to Sunday.
+  /// If [start] falls on [weekday], returns 0.
   int daysUntilWeekday(DateTime start, int weekday) {
     int startWeekday = start.weekday;
     if (weekday < startWeekday) {
@@ -371,11 +375,19 @@ class RecurringRidesGenerator {
     return weekday - startWeekday;
   }
 
+  /// Returns the next date after [start] that falls on [weekday].
+  ///
+  /// The weekday numbering follows Flutter's convention where 1 to 7 are Monday to Sunday.
+  /// If [start] falls on [weekday], returns a new DateTime representing the same date and time.
   DateTime nextDateOnWeekday(DateTime start, int weekday) {
     int daysUntil = daysUntilWeekday(start, weekday);
     return start.add(Duration(days: daysUntil));
   }
 
+  /// Returns whether [ride] and [otherRide] have the same locations and start/end times.
+  ///
+  /// Does not use IDs because this is used to check frontend-generated instances of a repeating ride will not have
+  /// the ID that its corresponding ride in backend does if it does not exist yet.
   bool ridesEqualTimeLoc(Ride ride, Ride otherRide) {
     return (
         ride.startTime.isAtSameMomentAs(otherRide.startTime)
@@ -387,10 +399,18 @@ class RecurringRidesGenerator {
     );
   }
 
+  /// Returns whether [deletedRides], representing a list of deleted rides from backend, contains a ride that is
+  /// equivalent to [generatedRide], representing a frontend-generated instance of a repeating ride that does not
+  /// exist in backend yet.
   bool wasDeleted(Ride generatedRide, List<Ride> deletedRides) {
     return deletedRides.where((deletedRide) => ridesEqualTimeLoc(deletedRide, generatedRide)).isNotEmpty;
   }
 
+  /// Returns a list of all single-time rides and all future instances of repeating rides, based on [originalRides].
+  ///
+  /// Instances of repeating rides that do not exist yet use a temporary ID. Their parent rides, meaning the rides
+  /// in backend that they are generated from, will be used for editing instances of repeating rides that do not
+  /// exist in backend yet.
   List<Ride> generateRideInstances() {
     List<Ride> allRides = [];
     Map<String, Ride> originalRidesByID = Map();
@@ -444,14 +464,10 @@ class RecurringRidesGenerator {
     return allRides;
   }
 
-  List<Ride> upcomingRides() {
-    List<Ride> allRides = generateRideInstances();
-    return allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList()
-      ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
-  }
-
   ListView buildUpcomingRidesList() {
-    List futureRides = upcomingRides();
+    List futureRides = generateRideInstances()
+        .where((ride) => ride.startTime.isAfter(DateTime.now())).toList()
+      ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -472,6 +488,7 @@ class RecurringRidesGenerator {
 
   ListView buildPastRidesList() {
     List<Ride> allRides = generateRideInstances()
+        .where((ride) => ride.startTime.isBefore(DateTime.now())).toList()
       ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? 1 : -1);
     return ListView.separated(
       shrinkWrap: true,
