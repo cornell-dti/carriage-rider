@@ -136,7 +136,7 @@ class RiderProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(
-        Rider.fromJson(json['data']),
+        Rider.fromJson(json),
       );
     } else {
       throw Exception('Failed to update rider.');
@@ -152,7 +152,7 @@ class RiderProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
-      _setInfo(Rider.fromJson(json['data']));
+      _setInfo(Rider.fromJson(json));
     } else {
       await Future.delayed(retryDelay);
       fetchRider(config, authProvider);
