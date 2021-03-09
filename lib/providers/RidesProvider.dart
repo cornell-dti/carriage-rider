@@ -12,7 +12,7 @@ import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
-  Ride currentRide = null;
+  Ride currentRide;
   List<Ride> pastRides = [];
   List<Ride> upcomingRides = [];
 
@@ -82,11 +82,11 @@ class RidesProvider with ChangeNotifier {
   Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get(
-        '${config.baseUrl}/${authProvider.id}',
+    final response = await http.get('${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
+      print(rides);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingRides = rides;
     }

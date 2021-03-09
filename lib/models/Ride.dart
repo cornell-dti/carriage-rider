@@ -13,7 +13,7 @@ import '../utils/CarriageTheme.dart';
 enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
 
 ///Converts [status] to a string.
-String toString(RideStatus status) {
+String toEnumString(RideStatus status) {
   const mapping = <RideStatus, String>{
     RideStatus.NOT_STARTED: 'not_started',
     RideStatus.ON_THE_WAY: 'on_the_way',
@@ -106,7 +106,7 @@ class Ride {
       id: json['id'],
       type: json['type'],
       rider: Rider.fromJson(json['rider']),
-      status: json['status'],
+      status: json['status'].toEnumString(),
       startLocation: json['startLocation']['name'],
       startAddress: json['startLocation']['address'],
       endLocation: json['endLocation']['name'],
@@ -564,8 +564,51 @@ class RecurringRidesGenerator {
   }
 }
 
-Widget pickedUpRide(context) {
+Widget onTheWayRide(context, Ride ride) {
+  String startLocation = ride.startLocation;
+  DateTime startTime = ride.startTime;
+  String timeString = DateFormat.jm().format(startTime);
+  return Row(children: <Widget>[
+    RichText(
+      text: new TextSpan(
+        style: new TextStyle(
+          fontSize: 20.0,
+          color: Colors.black,
+        ),
+        children: <TextSpan>[
+          new TextSpan(text: 'Head to the '),
+          new TextSpan(
+              text: 'pickup location\n',
+              style: new TextStyle(fontWeight: FontWeight.bold)),
+          new TextSpan(text: 'for @$startLocation by $timeString'),
+        ],
+      ),
+    )
+  ]);
+}
 
+Widget arrivedRide(context, Ride ride) {
+  String startLocation = ride.startLocation;
+  return Row(children: <Widget>[
+    RichText(
+      text: new TextSpan(
+        style: new TextStyle(
+          fontSize: 20.0,
+          color: Colors.black,
+        ),
+        children: <TextSpan>[
+          new TextSpan(text: 'Meet your driver '),
+          new TextSpan(
+              text: '@$startLocation',
+              style: new TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    )
+  ]);
+}
+
+Widget pickedUpRide(context, Ride ride) {
+  String endLocation = ride.endLocation;
   return Row(children: <Widget>[
     RichText(
       text: new TextSpan(
@@ -576,7 +619,8 @@ Widget pickedUpRide(context) {
         children: <TextSpan>[
           new TextSpan(text: 'Your driver will drop you off \n'),
           new TextSpan(
-              text: '@', style: new TextStyle(fontWeight: FontWeight.bold)),
+              text: '@$endLocation',
+              style: new TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     )
@@ -585,7 +629,8 @@ Widget pickedUpRide(context) {
 
 Widget completeRide(context) {
   return Row(children: <Widget>[
-    RichText(
+    Expanded(
+        child: RichText(
       text: new TextSpan(
         style: new TextStyle(
           fontSize: 20.0,
@@ -594,14 +639,20 @@ Widget completeRide(context) {
         children: <TextSpan>[
           new TextSpan(text: 'Your ride is '),
           new TextSpan(
-              text: 'complete!', style: new TextStyle(fontWeight: FontWeight.bold)),
+              text: 'complete!',
+              style: new TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
-    )
+    ))
   ]);
 }
 
-Widget currentCardInstruction(context, String status) {}
+Widget currentCardInstruction(context, String status, Ride ride) {
+  return status == "on_the_way" ? onTheWayRide(context, ride)
+      : status == "arrived" ? arrivedRide(context, ride)
+      : status == "picked_up" ? pickedUpRide(context, ride)
+      : completeRide(context);
+}
 
 class CurrentRideCard extends StatelessWidget {
   CurrentRideCard(
@@ -650,7 +701,7 @@ class CurrentRideCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            pickedUpRide(context),
+                            currentCardInstruction(context, ride.status, ride),
                             SizedBox(height: 15),
                             showCallDriver
                                 ? Row(

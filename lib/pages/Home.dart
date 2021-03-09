@@ -171,6 +171,7 @@ class Home extends StatelessWidget {
                                   SizedBox(height: 12),
                                   CurrentRideCard(Ride(
                                       type: 'active',
+                                      status: 'on_the_way',
                                       startLocation: 'Uris Hall',
                                       startAddress:
                                       '100 Carriage Way, Ithaca, NY 14850',
