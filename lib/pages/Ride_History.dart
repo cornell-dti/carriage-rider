@@ -200,7 +200,7 @@ class HistorySeeMore extends StatelessWidget {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text('Ride History',
-              style: Theme.of(context).textTheme.headline1),
+              style: CarriageTheme.largeTitle),
         ),
         Container(
           color: Colors.white,

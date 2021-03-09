@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> {
               Padding(
                 padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                 child: Text('Your Profile',
-                    style: Theme.of(context).textTheme.headline4),
+                    style: CarriageTheme.largeTitle),
               ),
               Container(
                   decoration: BoxDecoration(
@@ -684,7 +684,7 @@ class _ProfileNumberState extends State<ProfileNumber> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Number',
-                        style: Theme.of(context).textTheme.headline5),
+                        style: CarriageTheme.title1),
                   ),
                 )),
                 Container(
@@ -794,7 +794,7 @@ class _NumberVerifyState extends State<NumberVerify> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Number',
-                        style: Theme.of(context).textTheme.headline5),
+                        style: CarriageTheme.title1),
                   ),
                 )),
                 Expanded(

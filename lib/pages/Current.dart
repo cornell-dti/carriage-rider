@@ -2,6 +2,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 Map days = {
   0: 'Sun.',
@@ -47,12 +48,8 @@ class _CurrentState extends State<Current> {
                 children: <Widget>[
                   BackgroundHeader(
                       widget: Text('Current Ride',
-                          style: TextStyle(
-                              fontFamily: 'SFDisplay',
-                              fontSize: 34,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.37,
-                              color: Colors.white))),
+                          style: CarriageTheme.largeTitle
+                              .copyWith(color: Colors.white))),
                   BackgroundHeader(
                     widget: SizedBox(height: 10),
                   ),

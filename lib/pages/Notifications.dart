@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class Notifications extends StatefulWidget {
   Notifications({Key key}) : super(key: key);
@@ -32,7 +33,7 @@ class _NotificationsState extends State<Notifications> {
               Padding(
                 padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                 child: Text('Notifications',
-                    style: Theme.of(context).textTheme.headline4),
+                    style: CarriageTheme.largeTitle),
               ),
               Detail(),
               Container(

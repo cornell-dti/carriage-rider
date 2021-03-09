@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
 import '../PopButton.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 Color grey = Color(0xFF9B9B9B);
 
@@ -56,12 +57,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                                   .format(widget.ride.startTime))) +
                               ' ' +
                               DateFormat('jm').format(widget.ride.startTime),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 34,
-                            fontFamily: 'SFProDisplay',
-                            fontWeight: FontWeight.bold,
-                          )),
+                          style: CarriageTheme.largeTitle),
                     ),
                     Container(
                       color: Colors.white,
@@ -552,7 +548,7 @@ class UpcomingSeeMore extends StatelessWidget {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text('Upcoming Rides',
-              style: Theme.of(context).textTheme.headline1),
+              style: CarriageTheme.largeTitle),
         ),
         Container(
           color: Colors.white,

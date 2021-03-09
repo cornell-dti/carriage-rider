@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
@@ -35,7 +36,7 @@ class _ContactState extends State<Contact> {
               Widget>[
             Padding(
               padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-              child: Text('Contact', style: Theme.of(context).textTheme.headline4),
+              child: Text('Contact', style: CarriageTheme.largeTitle),
             ),
             Container(
               color: Colors.white,
@@ -50,7 +51,7 @@ class _ContactState extends State<Contact> {
                     padding: EdgeInsets.only(top: 20, left: 18, bottom: 5),
                     child: Text(
                       'Contact CULift',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: CarriageTheme.title2,
                     ),
                   ),
                   Flexible(

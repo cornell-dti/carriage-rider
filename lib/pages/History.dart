@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:humanize/humanize.dart';
 import '../models/Ride.dart';
 import 'Current.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 Map days = {
   0: 'Sun.',
@@ -105,7 +106,7 @@ class OccurrenceTitle extends StatelessWidget {
           padding: EdgeInsets.only(left: 20, bottom: 15),
           child: Text(
             'Occurrence',
-            style: Theme.of(context).textTheme.headline6,
+            style: CarriageTheme.title2,
           ),
         ),
       ),
