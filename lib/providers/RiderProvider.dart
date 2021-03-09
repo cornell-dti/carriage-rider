@@ -1,10 +1,10 @@
 import 'dart:core';
-import 'dart:convert';
 import 'dart:io';
-import 'AuthProvider.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'dart:convert';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/widgets.dart';
-import 'app_config.dart';
+import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
 
 //Model for a rider.
@@ -28,7 +28,7 @@ class Rider {
   final String pronouns;
 
   //The accessibility needs of a rider as a list.
-  final List accessibilityNeeds;
+  final List accessibility;
 
   //The ids of favorite locations.
   final List<String> favoriteLocations;
@@ -37,7 +37,7 @@ class Rider {
   final String description;
 
   //The photo url of a rider's profile picture.
-  final String picture;
+  final String photoLink;
 
   //The ISO 8601 formatted UTC date of a rider's join date
   final String joinDate;
@@ -46,11 +46,11 @@ class Rider {
   final String address;
 
   //Creates a string representing a rider's full name from it's first name and last name
-  String fullName() => firstName + " " + lastName;
+  String fullName() => firstName + lastName;
 
   //Converts a rider's list of accessibility needs into a string representation
   String accessibilityStr() {
-    String all = accessibilityNeeds.join(', ');
+    String all = accessibility.join(', ');
     return all == '' ? 'None' : all;
   }
 
@@ -61,10 +61,10 @@ class Rider {
       this.firstName,
       this.lastName,
       this.pronouns,
-      this.accessibilityNeeds,
+      this.accessibility,
       this.favoriteLocations,
       this.description,
-      this.picture,
+      this.photoLink,
       this.joinDate,
       this.address);
 
@@ -82,7 +82,7 @@ class Rider {
         ),
         List.from(json['favoriteLocations']),
         json['description'],
-        json['picture'],
+        json['photoLink'],
         json['joinDate'],
         json['address']);
   }
@@ -94,10 +94,10 @@ class Rider {
         'phoneNumber': phoneNumber,
         'firstName': firstName,
         'lastName': lastName,
-        'pronouns': picture,
-        'accessibility': accessibilityNeeds,
+        'pronouns': pronouns,
+        'accessibility': accessibility,
         'description': description,
-        'picture': picture,
+        'photoLink': photoLink,
         'joinDate': joinDate,
       };
 }
@@ -148,8 +148,8 @@ class RiderProvider with ChangeNotifier {
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
-        "${config.baseUrl}/riders/${authProvider.id}",
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        '${config.baseUrl}/riders/${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(Rider.fromJson(json));
@@ -164,10 +164,10 @@ class RiderProvider with ChangeNotifier {
       Map<String, dynamic> changes) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
-      "${config.baseUrl}/riders/${authProvider.id}",
+      '${config.baseUrl}/riders/${authProvider.id}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: "Bearer $token"
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       },
       body: jsonEncode(changes),
     );

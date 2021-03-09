@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'package:carriage_rider/providers/RiderProvider.dart';
+import '../utils/app_config.dart';
 import 'dart:io';
-import 'package:carriage_rider/RiderProvider.dart';
-import 'app_config.dart';
-import 'package:carriage_rider/app_config.dart';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/utils/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,8 @@ class RidesProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
-  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchAllRides(
+      AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     notifyListeners();
@@ -34,7 +35,7 @@ class RidesProvider with ChangeNotifier {
 
   //Decodes [json] of locations into a list representation of rides.
   List<Ride> _ridesFromJson(String json) {
-    var data = jsonDecode(json)["data"];
+    var data = jsonDecode(json)['data'];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     return res;
   }
@@ -45,7 +46,7 @@ class RidesProvider with ChangeNotifier {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => b.startTime.compareTo(a.startTime));
@@ -55,14 +56,13 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-
   //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
@@ -81,13 +81,13 @@ class RidesProvider with ChangeNotifier {
       String startTime,
       String endTime) async {
     AuthProvider authProvider =
-    Provider.of<AuthProvider>(context, listen: false);
+        Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
-      "${config.baseUrl}/rides",
+      '${config.baseUrl}/rides',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: "Bearer $token"
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       },
       body: jsonEncode(<String, dynamic>{
         'rider': riderProvider.info,

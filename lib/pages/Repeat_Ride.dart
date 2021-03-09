@@ -1,8 +1,8 @@
-import 'package:carriage_rider/Request_Ride_Time.dart';
-import 'package:carriage_rider/Review_Ride.dart';
+import 'package:carriage_rider/pages/Request_Ride_Time.dart';
+import 'package:carriage_rider/pages/Review_Ride.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/RideObject.dart';
-import 'package:carriage_rider/Request_Ride_Loc.dart';
+import 'package:carriage_rider/models/RideObject.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RepeatRide extends StatefulWidget {
   final RideObject ride;
@@ -14,6 +14,11 @@ class RepeatRide extends StatefulWidget {
 }
 
 class _RepeatRideState extends State<RepeatRide> {
+
+  static final toggleStyle = TextStyle(
+    fontSize: 15,
+  );
+
   final _formKey = GlobalKey<FormState>();
 
   DateTime startDate = DateTime.now();
@@ -22,11 +27,11 @@ class _RepeatRideState extends State<RepeatRide> {
   TextEditingController sDateCtrl = TextEditingController();
   TextEditingController eDateCtrl = TextEditingController();
 
-  String selectedDays = "";
+  String selectedDays = '';
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -46,7 +51,7 @@ class _RepeatRideState extends State<RepeatRide> {
     if (picked != null && picked != startDate)
       setState(() {
         startDate = picked;
-        sDateCtrl.text = format("$startDate".split(' ')[0]);
+        sDateCtrl.text = format('$startDate'.split(' ')[0]);
       });
   }
 
@@ -66,7 +71,7 @@ class _RepeatRideState extends State<RepeatRide> {
     if (picked != null && picked != endDate)
       setState(() {
         endDate = picked;
-        eDateCtrl.text = format("$endDate".split(' ')[0]);
+        eDateCtrl.text = format('$endDate'.split(' ')[0]);
       });
   }
 
@@ -108,14 +113,14 @@ class _RepeatRideState extends State<RepeatRide> {
   }
 
   final List<bool> isSelected = [false, false, false, false, false];
-  final List<String> days = ["M", "T", "W", "Th", "F"];
+  final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
 
   String setSelectedDays(String sDays) {
-    sDays = "";
+    sDays = '';
 
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        sDays += days[i] + " ";
+        sDays += days[i] + ' ';
       }
     }
     sDays = sDays.substring(0, sDays.length - 1);
@@ -135,8 +140,7 @@ class _RepeatRideState extends State<RepeatRide> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel",
-                        style: RideRequestStyles.cancel(context)),
+                    child: Text('Cancel', style: CarriageTheme.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -175,8 +179,8 @@ class _RepeatRideState extends State<RepeatRide> {
             Row(
               children: <Widget>[
                 Flexible(
-                    child: Text("When do you want to repeat this ride?",
-                        style: RideRequestStyles.question(context)))
+                    child: Text('When do you want to repeat this ride?',
+                        style: CarriageTheme.title1))
               ],
             ),
             SizedBox(height: 15),
@@ -184,7 +188,7 @@ class _RepeatRideState extends State<RepeatRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text('This ride repeats every:',
-                    style: RideRequestStyles.description(context)),
+                    style: CarriageTheme.descriptionStyle),
               ],
             ),
             SizedBox(height: 10.0),
@@ -200,11 +204,11 @@ class _RepeatRideState extends State<RepeatRide> {
                     fillColor: Colors.white,
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('M', style: RideRequestStyles.toggle(context)),
-                      Text('T', style: RideRequestStyles.toggle(context)),
-                      Text('W', style: RideRequestStyles.toggle(context)),
-                      Text('Th', style: RideRequestStyles.toggle(context)),
-                      Text('F', style: RideRequestStyles.toggle(context))
+                      Text('M', style: toggleStyle),
+                      Text('T', style: toggleStyle),
+                      Text('W', style: toggleStyle),
+                      Text('Th', style: toggleStyle),
+                      Text('F', style: toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {
@@ -235,9 +239,9 @@ class _RepeatRideState extends State<RepeatRide> {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: ButtonTheme(
                       minWidth: MediaQuery.of(context).size.width * 0.8,
-                      height: 45.0,
+                      height: 50.0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
+                          borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
@@ -254,7 +258,11 @@ class _RepeatRideState extends State<RepeatRide> {
                         elevation: 3.0,
                         color: Colors.black,
                         textColor: Colors.white,
-                        child: Text('Next'),
+                        child: Text(
+                          'Next',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w800),
+                        ),
                       ),
                     ),
                   )),

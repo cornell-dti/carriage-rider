@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'AuthProvider.dart';
-import 'app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import '../utils/app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -52,7 +52,7 @@ class LocationsProvider with ChangeNotifier {
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get('${config.baseUrl}/locations',
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;
       List<Location> locations = _locationsFromJson(responseBody);
@@ -64,7 +64,7 @@ class LocationsProvider with ChangeNotifier {
 
   //Decodes the string [json] of locations into a list representation of the locations.
   List<Location> _locationsFromJson(String json) {
-    var data = jsonDecode(json)["data"];
+    var data = jsonDecode(json)['data'];
     List<Location> res =
         data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;

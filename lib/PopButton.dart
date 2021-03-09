@@ -14,7 +14,7 @@ class PopButton extends StatelessWidget {
         child: Row(
             children: [
               Icon(Icons.arrow_back_ios, color: Colors.black),
-              Text(text, style: TextStyle(fontSize: 17))
+              Text(text, style: TextStyle(fontSize: 20))
             ]
         ),
       ),

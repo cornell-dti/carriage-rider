@@ -1,11 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/RidesProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/Ride.dart';
+import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
-import 'PopButton.dart';
+
+import '../PopButton.dart';
 
 class RideHistory extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _RideHistoryState extends State<RideHistory> {
     return Row(
       children: <Widget>[
         SizedBox(width: 15),
-        Text("You have no ride history!")
+        Text('You have no ride history!')
       ],
     );
   }
@@ -93,12 +94,6 @@ class InformationRow extends StatelessWidget {
 
   @override
   Widget build(context) {
-    final fromToStyle = TextStyle(
-      color: Colors.grey[500],
-      fontWeight: FontWeight.w500,
-      fontSize: 12,
-    );
-
     final infoStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w400,
@@ -115,7 +110,9 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[Text('From', style: fromToStyle)],
+                  children: <Widget>[
+                    Text('From', style: CarriageTheme.directionStyle)
+                  ],
                 ),
                 SizedBox(height: 2),
                 Row(
@@ -139,7 +136,9 @@ class InformationRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: <Widget>[Text('To', style: fromToStyle)],
+                  children: <Widget>[
+                    Text('To', style: CarriageTheme.directionStyle)
+                  ],
                 ),
                 SizedBox(height: 5),
                 Row(
@@ -201,7 +200,7 @@ class HistorySeeMore extends StatelessWidget {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text('Ride History',
-              style: Theme.of(context).textTheme.headline1),
+              style: CarriageTheme.largeTitle),
         ),
         Container(
           color: Colors.white,

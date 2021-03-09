@@ -1,7 +1,8 @@
-import 'package:carriage_rider/Request_Ride_Loc.dart';
-import 'package:carriage_rider/Repeat_Ride.dart';
+import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
+import 'package:carriage_rider/pages/Repeat_Ride.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/RideObject.dart';
+import 'package:carriage_rider/models/RideObject.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RequestRideTime extends StatefulWidget {
   final RideObject ride;
@@ -13,6 +14,10 @@ class RequestRideTime extends StatefulWidget {
 }
 
 class _RequestRideTimeState extends State<RequestRideTime> {
+  static final toggleStyle = TextStyle(
+    fontSize: 15,
+  );
+
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
@@ -30,7 +35,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        pickUpCtrl.text = "${_pickUpTime.format(context)}";
+        pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
@@ -42,7 +47,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     );
     if (_dropOffTime != null) {
       setState(() {
-        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
   }
@@ -51,7 +56,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -71,7 +76,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        dateCtrl.text = format("$selectedDate".split(' ')[0]);
+        dateCtrl.text = format('$selectedDate'.split(' ')[0]);
       });
   }
 
@@ -123,8 +128,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel",
-                          style: RideRequestStyles.cancel(context)),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -163,8 +167,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride?",
-                      style: RideRequestStyles.question(context)),
+                  Text('When is this ride?', style: CarriageTheme.title1),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -178,8 +181,8 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                     fillColor: Colors.grey[100],
                     splashColor: Colors.white,
                     children: <Widget>[
-                      Text('Repeat', style: RideRequestStyles.toggle(context)),
-                      Text('Once', style: RideRequestStyles.toggle(context))
+                      Text('Repeat', style: toggleStyle),
+                      Text('Once', style: toggleStyle)
                     ],
                     onPressed: (int index) {
                       setState(() {
@@ -232,9 +235,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                       margin: EdgeInsets.only(bottom: 20.0),
                       child: ButtonTheme(
                         minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
+                        height: 50.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -251,7 +254,9 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text("Next"),
+                          child: Text('Next',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w800)),
                         ),
                       ),
                     )),

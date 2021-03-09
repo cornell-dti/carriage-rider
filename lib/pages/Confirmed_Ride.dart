@@ -1,4 +1,4 @@
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmedRide extends StatefulWidget {
@@ -12,6 +12,7 @@ class _ConfirmedRideState extends State<ConfirmedRide> {
     return Scaffold(
         appBar: AppBar(
           title:  PageTitle(title: 'Schedule'),
+          titleSpacing: 0.0,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -63,12 +64,12 @@ class _ConfirmedRideState extends State<ConfirmedRide> {
                     SizedBox(height: 30),
                     CustomDivider(),
                     SizedBox(height: 15),
-                    Contact(),
+                    ContactCard(),
                     SizedBox(height: 15),
                     CustomDivider(),
                     SizedBox(height: 20),
                     RideAction(
-                        text: "Cancel Ride",
+                        text: 'Cancel Ride',
                         color: Colors.red,
                         icon: Icons.clear),
                     SizedBox(height: MediaQuery.of(context).size.height / 8),

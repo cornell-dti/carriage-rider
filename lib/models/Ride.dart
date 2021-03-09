@@ -1,76 +1,89 @@
 import 'dart:core';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'dart:math';
-import 'package:carriage_rider/RiderProvider.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-import 'CarriageTheme.dart';
+import '../utils/CarriageTheme.dart';
 
 //Model for a ride.
 class Ride {
   //The ride's id in the backend.
   final String id;
+
   //The ride type. Can only be 'active', 'past', or 'unscheduled'.
   final String type;
+
   //The starting location of a ride.
   final String startLocation;
+
   //The starting address of a ride.
   final String startAddress;
+
   //The ending location of a ride.
   final String endLocation;
+
   //The ending address of a ride.
   final String endAddress;
+
   //The ending date of a recurring ride. Will be null if ride is not recurring.
   final DateTime endDate;
+
   //The starting time of a ride.
   final DateTime startTime;
+
   //The ending time of a ride
   final DateTime endTime;
+
   //The rider associated with this ride.
   final Rider rider;
+
   //Indicates whether a ride is recurring or not. Will be null if ride is not recurring.
   final bool recurring;
+
   //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
   final List<int> recurringDays;
+
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
   final bool deleted;
+
   //The requested end time of a ride. Will be null if ride is not recurring.
   final DateTime requestedEndTime;
+
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
   final String status;
+
   //Indicates whether a ride is late
   final bool late;
+
   //The driver associated with this ride
   final Map<String, dynamic> driver;
+
   //The IDs of rides corresponding to edits
   final List<String> edits;
 
   Ride(
       {this.id,
-        this.type,
-        this.rider,
-        this.status,
-
-        this.startLocation,
-        this.startAddress,
-        this.endLocation,
-        this.endAddress,
-
-        this.startTime,
-        this.endTime,
-        this.requestedEndTime,
-
-        this.recurring,
-        this.recurringDays,
-        this.deleted,
-        this.late,
-        this.edits,
-        this.endDate,
-        this.driver
-      });
+      this.type,
+      this.rider,
+      this.status,
+      this.startLocation,
+      this.startAddress,
+      this.endLocation,
+      this.endAddress,
+      this.startTime,
+      this.endTime,
+      this.requestedEndTime,
+      this.recurring,
+      this.recurringDays,
+      this.deleted,
+      this.late,
+      this.edits,
+      this.endDate,
+      this.driver});
 
   //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -79,23 +92,29 @@ class Ride {
       type: json['type'],
       rider: Rider.fromJson(json['rider']),
       status: json['status'],
-
       startLocation: json['startLocation']['name'],
       startAddress: json['startLocation']['address'],
       endLocation: json['endLocation']['name'],
       endAddress: json['endLocation']['address'],
-
-      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['startTime'], true).toLocal(),
-      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['endTime'], true).toLocal(),
-      requestedEndTime: DateFormat('yyyy-MM-ddTHH:mm:ss').parse(json['requestedEndTime'], true).toLocal(),
-
+      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+          .parse(json['startTime'], true)
+          .toLocal(),
+      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+          .parse(json['endTime'], true)
+          .toLocal(),
+      requestedEndTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+          .parse(json['requestedEndTime'], true)
+          .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
-      recurringDays: json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
+      recurringDays:
+          json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
       deleted: json['deleted'] == null ? false : json['deleted'],
       late: json['late'],
       driver: json['driver'] == null ? null : json['driver'],
       edits: json['edits'] == null ? [] : List.from(json['edits']),
-      endDate: json['endDate'] == null ? null : DateTime.parse(json['endDate']),
+      endDate: json['endDate'] == null
+          ? null
+          : DateFormat('MM/dd/yyyy').parse(json['endDate']),
     );
   }
 
@@ -108,7 +127,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -130,13 +149,13 @@ class Ride {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(startLocation,
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child:
-                isIcon == true ? cardIconInfo(context) : cardInfo(context)),
+                    isIcon == true ? cardIconInfo(context) : cardInfo(context)),
             SizedBox(height: 16),
             Text(
                 'Estimated pick up time: ' + DateFormat('jm').format(startTime),
@@ -169,46 +188,41 @@ class Ride {
     );
   }
 
-
   //Widget displaying the information of a ride after it has been requested. Shows the ride's
   //start location, end location, date, start and end time, recurring days,
   //and accessibility requests.
   Widget buildSummary(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
-    final labelStyle = TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-
-    final infoStyle = TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
     return Column(children: [
       Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[Text('From', style: labelStyle)]),
+          children: <Widget>[Text('From', style: CarriageTheme.caption2)]),
       SizedBox(height: 8),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(startLocation, style: infoStyle)],
+        children: <Widget>[Text(startLocation, style: CarriageTheme.infoStyle)],
       ),
       SizedBox(height: 16),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('To', style: labelStyle)],
+        children: <Widget>[Text('To', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 8),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(endLocation, style: infoStyle)],
+        children: <Widget>[Text(endLocation, style: CarriageTheme.infoStyle)],
       ),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Date', style: labelStyle)],
+        children: <Widget>[Text('Date', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 5),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text(DateFormat('yMd').format(startTime), style: infoStyle)
+          Text(DateFormat('yMd').format(startTime),
+              style: CarriageTheme.infoStyle)
         ],
       ),
       SizedBox(height: 15),
@@ -219,9 +233,10 @@ class Ride {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Pickup Time', style: labelStyle),
+                Text('Pickup Time', style: CarriageTheme.caption2),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(startTime), style: infoStyle)
+                Text(DateFormat('jm').format(startTime),
+                    style: CarriageTheme.infoStyle)
               ],
             ),
           ),
@@ -230,9 +245,10 @@ class Ride {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Drop-off Time', style: labelStyle),
+                Text('Drop-off Time', style: CarriageTheme.caption2),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(endTime), style: infoStyle)
+                Text(DateFormat('jm').format(endTime),
+                    style: CarriageTheme.infoStyle)
               ],
             ),
           )
@@ -241,20 +257,22 @@ class Ride {
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Every', style: labelStyle)],
+        children: <Widget>[Text('Every', style: CarriageTheme.caption2)],
       ),
       SizedBox(height: 5),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           //TODO: change to have repeating rides info
-          Text('M W F', style: infoStyle)
+          Text('M W F', style: CarriageTheme.infoStyle)
         ],
       ),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Accessibility Request', style: labelStyle)],
+        children: <Widget>[
+          Text('Accessibility Request', style: CarriageTheme.caption2)
+        ],
       ),
       SizedBox(height: 5),
       Row(
@@ -264,7 +282,7 @@ class Ride {
               riderProvider.hasInfo()
                   ? riderProvider.info.accessibilityStr()
                   : '',
-              style: infoStyle)
+              style: CarriageTheme.infoStyle)
         ],
       ),
     ]);
@@ -279,7 +297,12 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
 }
 
 class RideCard extends StatelessWidget {
-  RideCard(this.ride, {@required this.showConfirmation, @required this.showCallDriver, @required this.showArrow, this.parentRideID});
+  RideCard(this.ride,
+      {@required this.showConfirmation,
+      @required this.showCallDriver,
+      @required this.showArrow,
+      this.parentRideID});
+
   final Ride ride;
   final bool showConfirmation;
   final bool showCallDriver;
@@ -295,9 +318,11 @@ class RideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => UpcomingRidePage(ride, parentRideID: parentRideID))
-        );
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) =>
+                    UpcomingRidePage(ride, parentRideID: parentRideID)));
       },
       child: Container(
         margin: EdgeInsets.all(2),
@@ -310,45 +335,64 @@ class RideCard extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      showConfirmation ?
-                      (ride.type == 'active' ? Text('Ride Confirmed', style: confirmationStyle.copyWith(color: Color(0xFF4CAF50))) :
-                      Text('Ride Requested', style: confirmationStyle.copyWith(color: Color(0xFFFF9800)))) : Container(),
+                      showConfirmation
+                          ? (ride.type == 'active'
+                              ? Text('Ride Confirmed',
+                                  style: confirmationStyle.copyWith(
+                                      color: Color(0xFF4CAF50)))
+                              : Text('Ride Requested',
+                                  style: confirmationStyle.copyWith(
+                                      color: Color(0xFFFF9800))))
+                          : Container(),
                       SizedBox(height: 4),
                       ride.buildStartTime(),
                       SizedBox(height: 16),
                       Text('From', style: CarriageTheme.directionStyle),
-                      Text(ride.startLocation, style: CarriageTheme.rideInfoStyle),
+                      Text(ride.startLocation,
+                          style: CarriageTheme.rideInfoStyle),
                       SizedBox(height: 8),
                       Text('To', style: CarriageTheme.directionStyle),
-                      Text(ride.endLocation, style: CarriageTheme.rideInfoStyle),
+                      Text(ride.endLocation,
+                          style: CarriageTheme.rideInfoStyle),
                       SizedBox(height: 16),
-                      showCallDriver ? Row(
-                        children: <Widget>[
-                          GestureDetector(
-                            //TODO: replace temp phone number
-                            onTap: () => UrlLauncher.launch("tel://13232315234"),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(width: 0.5, color: Colors.black.withOpacity(0.25))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Icon(Icons.phone, size: 20, color: Color(0xFF9B9B9B)),
+                      showCallDriver
+                          ? Row(
+                              children: <Widget>[
+                                GestureDetector(
+                                  //TODO: replace temp phone number
+                                  onTap: () =>
+                                      UrlLauncher.launch('tel://13232315234'),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          border: Border.all(
+                                              width: 0.5,
+                                              color: Colors.black
+                                                  .withOpacity(0.25))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Icon(Icons.phone,
+                                            size: 20, color: Color(0xFF9B9B9B)),
+                                      )),
+                                ),
+                                SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('Driver',
+                                        style: TextStyle(fontSize: 11)),
+                                    Text(
+                                        ride.type == 'active'
+                                            ? 'Confirmed'
+                                            : 'TBD',
+                                        style: CarriageTheme.rideInfoStyle)
+                                  ],
                                 )
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Driver', style: TextStyle(fontSize: 11)),
-                              Text(ride.type == 'active' ? 'Confirmed' : 'TBD', style: CarriageTheme.rideInfoStyle)
-                            ],
-                          )
-                        ],
-                      ) : Container()
-                    ]
-                ),
+                              ],
+                            )
+                          : Container()
+                    ]),
               ),
               showArrow ? Icon(Icons.chevron_right, size: 28) : Container()
             ],
@@ -361,6 +405,7 @@ class RideCard extends StatelessWidget {
 
 class RecurringRidesGenerator {
   RecurringRidesGenerator(this.originalRides);
+
   List<Ride> originalRides;
 
   int daysUntilWeekday(DateTime start, int weekday) {
@@ -377,18 +422,18 @@ class RecurringRidesGenerator {
   }
 
   bool ridesEqualTimeLoc(Ride ride, Ride otherRide) {
-    return (
-        ride.startTime.isAtSameMomentAs(otherRide.startTime)
-            && ride.endTime.isAtSameMomentAs(otherRide.endTime)
-            && ride.startLocation == otherRide.startLocation
-            && ride.endLocation == otherRide.endLocation
-            && ride.startAddress == otherRide.startAddress
-            && ride.endAddress == otherRide.endAddress
-    );
+    return (ride.startTime.isAtSameMomentAs(otherRide.startTime) &&
+        ride.endTime.isAtSameMomentAs(otherRide.endTime) &&
+        ride.startLocation == otherRide.startLocation &&
+        ride.endLocation == otherRide.endLocation &&
+        ride.startAddress == otherRide.startAddress &&
+        ride.endAddress == otherRide.endAddress);
   }
 
   bool wasDeleted(Ride generatedRide, List<Ride> deletedRides) {
-    return deletedRides.where((deletedRide) => ridesEqualTimeLoc(deletedRide, generatedRide)).isNotEmpty;
+    return deletedRides
+        .where((deletedRide) => ridesEqualTimeLoc(deletedRide, generatedRide))
+        .isNotEmpty;
   }
 
   List<Ride> generateRideInstances() {
@@ -406,17 +451,25 @@ class RecurringRidesGenerator {
       }
 
       if (originalRide.recurring) {
-        Duration rideDuration = originalRide.endTime.difference(originalRide.startTime);
-        List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride.deleted).toList();
+        Duration rideDuration =
+            originalRide.endTime.difference(originalRide.startTime);
+        List<Ride> deletedInstances = originalRide.edits
+            .map((rideID) => originalRidesByID[rideID])
+            .where((ride) => ride.deleted)
+            .toList();
         List<int> days = originalRide.recurringDays;
 
         // find first occurrence
-        int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(originalRide.startTime, day)).reduce(min);
-        DateTime rideStart = originalRide.startTime.add(Duration(days: daysUntilFirstOccurrence));
+        int daysUntilFirstOccurrence = days
+            .map((day) => daysUntilWeekday(originalRide.startTime, day))
+            .reduce(min);
+        DateTime rideStart = originalRide.startTime
+            .add(Duration(days: daysUntilFirstOccurrence));
         int dayIndex = days.indexOf(rideStart.weekday);
 
         // generate instances of recurring rides
-        while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
+        while (rideStart.isBefore(originalRide.endDate) ||
+            rideStart.isAtSameMomentAs(originalRide.endDate)) {
           // create the new ride and keep track of its parent
           Ride rideInstance = Ride(
               id: CarriageTheme.generatedRideID,
@@ -425,8 +478,7 @@ class RecurringRidesGenerator {
               endLocation: originalRide.endLocation,
               endAddress: originalRide.endAddress,
               startTime: rideStart,
-              endTime: rideStart.add(rideDuration)
-          );
+              endTime: rideStart.add(rideDuration));
           rideInstanceParentIDs[rideInstance] = originalRide.id;
 
           // if all ride info is equal to a deleted ride, don't add it because it was edited
@@ -436,7 +488,8 @@ class RecurringRidesGenerator {
 
           // find the next occurrence
           dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
-          int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
+          int daysUntilNextOccurrence =
+              daysUntilWeekday(rideStart, days[dayIndex]);
           rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
         }
       }
@@ -446,8 +499,11 @@ class RecurringRidesGenerator {
 
   List<Ride> upcomingRides() {
     List<Ride> allRides = generateRideInstances();
-    return allRides.where((ride) => ride.startTime.isAfter(DateTime.now())).toList()
-      ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
+    return allRides
+        .where((ride) => ride.startTime.isAfter(DateTime.now()))
+        .toList()
+          ..sort((ride1, ride2) =>
+              ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
   }
 
   ListView buildUpcomingRidesList() {
@@ -472,7 +528,8 @@ class RecurringRidesGenerator {
 
   ListView buildPastRidesList() {
     List<Ride> allRides = generateRideInstances()
-      ..sort((ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? 1 : -1);
+      ..sort(
+          (ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? 1 : -1);
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

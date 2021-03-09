@@ -1,25 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class CurrentRide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    final directionStyle = TextStyle(
-        color: Colors.grey[500],
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.2,
-        fontSize: 12,
-        height: 2
-    );
-
-    final infoStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.2,
-        fontSize: 18,
-        height: 2
-    );
-
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3.0), boxShadow: [
@@ -68,16 +52,16 @@ class CurrentRide extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('From', style: directionStyle),
-                    Text('Upson Hall', style: infoStyle,)
+                    Text('From', style: CarriageTheme.directionStyle),
+                    Text('Upson Hall', style: CarriageTheme.body,)
                   ],
                 ),
                 Icon(Icons.arrow_forward),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('To', style: directionStyle),
-                    Text('Uris Hall', style: infoStyle,)
+                    Text('To', style: CarriageTheme.directionStyle),
+                    Text('Uris Hall', style:  CarriageTheme.body,)
                   ],
                 ),
               ],
@@ -95,7 +79,7 @@ class CurrentRide extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Davea Butler', style: infoStyle),
+                    Text('Davea Butler', style: CarriageTheme.subheadline),
                     Row(
                       children: <Widget>[
                         Icon(Icons.phone, size: 13.0,),

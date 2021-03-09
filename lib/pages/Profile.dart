@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Upcoming.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:provider/provider.dart';
-import 'RiderProvider.dart';
+import '../providers/RiderProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 
@@ -63,9 +64,9 @@ class _ProfileState extends State<Profile> {
     if (riderProvider.hasInfo()) {
       String phoneNumber = riderProvider.info.phoneNumber;
       String fPhoneNumber = phoneNumber.substring(0, 3) +
-          "-" +
+          '-' +
           phoneNumber.substring(3, 6) +
-          "-" +
+          '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
@@ -85,9 +86,9 @@ class _ProfileState extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                 child: Text('Your Profile',
-                    style: Theme.of(context).textTheme.headline5),
+                    style: CarriageTheme.largeTitle),
               ),
               Container(
                   decoration: BoxDecoration(
@@ -169,7 +170,7 @@ class _ProfileState extends State<Profile> {
                                 ]),
                             Positioned(
                               child:
-                                  Text("Joined " + riderProvider.info.joinDate,
+                                  Text('Joined ' + riderProvider.info.joinDate,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Theme.of(context).accentColor,
@@ -180,22 +181,22 @@ class _ProfileState extends State<Profile> {
                         ))
                   ]))),
               SizedBox(height: 6),
-              ProfileInfo("Account Info", [
+              ProfileInfo('Account Info', [
                 Icons.mail_outline,
                 Icons.phone
               ], [
                 riderProvider.info.email,
-                fPhoneNumber == null ? "Add your number" : fPhoneNumber
+                fPhoneNumber == null ? 'Add your number' : fPhoneNumber
               ], [
                 () => _editEmail(context),
                 () => _editNumber(context)
               ]),
               SizedBox(height: 6),
-              ProfileInfo("Personal Info", [
+              ProfileInfo('Personal Info', [
                 Icons.person_outline,
               ], [
                 riderProvider.info.pronouns == null
-                    ? "How should we address you?"
+                    ? 'How should we address you?'
                     : riderProvider.info.pronouns
               ], [
                 () => _editPronouns(context)
@@ -269,9 +270,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(widget.title,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(widget.title, style: CarriageTheme.title3),
                 ListView.separated(
                     padding: EdgeInsets.all(2),
                     shrinkWrap: true,
@@ -302,12 +301,6 @@ class _EditProfileNameState extends State<EditProfileName> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
 
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
-
   final titleStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
@@ -332,7 +325,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel", style: cancelStyle),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -348,7 +341,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                 children: <Widget>[
                   Flexible(
                     child:
-                        Text("How should we address you?", style: titleStyle),
+                        Text('How should we address you?', style: titleStyle),
                   )
                 ],
               ),
@@ -458,7 +451,7 @@ class ProfilePronouns extends StatefulWidget {
 class _ProfilePronounsState extends State<ProfilePronouns> {
   int selectedRadio = 0;
 
-  String pronouns = "";
+  String pronouns = '';
 
   setPronouns(String pronoun) {
     pronouns = pronoun;
@@ -469,12 +462,6 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
       selectedRadio = val;
     });
   }
-
-  final cancelStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.w100,
-    fontSize: 15,
-  );
 
   final titleStyle = TextStyle(
     color: Colors.black,
@@ -496,7 +483,7 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
               children: <Widget>[
                 Container(
                   child: InkWell(
-                    child: Text("Cancel", style: cancelStyle),
+                    child: Text('Cancel', style: CarriageTheme.cancelStyle),
                     onTap: () {
                       Navigator.pop(
                           context,
@@ -510,14 +497,14 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
             SizedBox(height: 50.0),
             Row(
               children: <Widget>[
-                Flexible(child: Text("Share your pronouns", style: titleStyle))
+                Flexible(child: Text('Share your pronouns', style: titleStyle))
               ],
             ),
             SizedBox(height: 15.0),
             Row(children: <Widget>[
               Flexible(
                   child: Text(
-                      "Help us get better at addressing you by selecting your pronouns",
+                      'Help us get better at addressing you by selecting your pronouns',
                       style: TextStyle(fontSize: 15, color: Colors.grey)))
             ]),
             SizedBox(height: 40),
@@ -525,53 +512,53 @@ class _ProfilePronounsState extends State<ProfilePronouns> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 RadioListTile(
-                  title: Text("They/Them/Theirs"),
+                  title: Text('They/Them/Theirs'),
                   value: 1,
                   groupValue: selectedRadio,
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
-                    setPronouns("They/Them/Theirs");
+                    setPronouns('They/Them/Theirs');
                   },
                 ),
                 RadioListTile(
-                  title: Text("She/Her/Hers"),
+                  title: Text('She/Her/Hers'),
                   value: 2,
                   groupValue: selectedRadio,
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
-                    setPronouns("She/Her/Hers");
+                    setPronouns('She/Her/Hers');
                   },
                 ),
                 RadioListTile(
-                  title: Text("He/Him/His"),
+                  title: Text('He/Him/His'),
                   value: 3,
                   groupValue: selectedRadio,
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
-                    setPronouns("He/Him/His");
+                    setPronouns('He/Him/His');
                   },
                 ),
                 RadioListTile(
-                  title: Text("Others"),
+                  title: Text('Others'),
                   value: 4,
                   groupValue: selectedRadio,
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
-                    setPronouns("Others");
+                    setPronouns('Others');
                   },
                 ),
                 RadioListTile(
-                  title: Text("Prefer not to say"),
+                  title: Text('Prefer not to say'),
                   value: 5,
                   groupValue: selectedRadio,
                   activeColor: Colors.black,
                   onChanged: (val) {
                     setSelectedRadio(val);
-                    setPronouns("");
+                    setPronouns('');
                   },
                 ),
               ],
@@ -697,7 +684,7 @@ class _ProfileNumberState extends State<ProfileNumber> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Number',
-                        style: Theme.of(context).textTheme.headline5),
+                        style: CarriageTheme.title1),
                   ),
                 )),
                 Container(
@@ -710,7 +697,7 @@ class _ProfileNumberState extends State<ProfileNumber> {
                         Container(
                           margin: EdgeInsets.all(20),
                           child: Text(
-                              "For security, please enter your current phone number and then then number you want to change it to.",
+                              'For security, please enter your current phone number and then then number you want to change it to.',
                               style: TextStyle(fontSize: 15)),
                         ),
                         SizedBox(height: 10.0),
@@ -731,7 +718,7 @@ class _ProfileNumberState extends State<ProfileNumber> {
                             left: 30,
                           ),
                           child: Text(
-                              "By continuing, you may receive a SMS for verification. Message and data rates apply.",
+                              'By continuing, you may receive a SMS for verification. Message and data rates apply.',
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.bold)),
                         )))),
@@ -807,7 +794,7 @@ class _NumberVerifyState extends State<NumberVerify> {
                     padding:
                         EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
                     child: Text('Your Number',
-                        style: Theme.of(context).textTheme.headline5),
+                        style: CarriageTheme.title1),
                   ),
                 )),
                 Expanded(

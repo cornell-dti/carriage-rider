@@ -1,13 +1,14 @@
 import 'dart:ui';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/Location.dart';
-import 'package:carriage_rider/Upcoming.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/models/Location.dart';
+import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
-import 'RiderProvider.dart';
+import '../providers/RiderProvider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -33,9 +34,9 @@ class _SettingsState extends State<Settings> {
     if (riderProvider.hasInfo()) {
       String phoneNumber = riderProvider.info.phoneNumber;
       String fPhoneNumber = phoneNumber.substring(0, 3) +
-          "-" +
+          '-' +
           phoneNumber.substring(3, 6) +
-          "-" +
+          '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
         appBar: AppBar(
@@ -55,9 +56,9 @@ class _SettingsState extends State<Settings> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 5.0, bottom: 8.0),
+                  padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                   child: Text('Settings',
-                      style: Theme.of(context).textTheme.headline5),
+                      style: CarriageTheme.largeTitle),
                 ),
                 Container(
                     decoration: BoxDecoration(
@@ -102,7 +103,7 @@ class _SettingsState extends State<Settings> {
                                   children: [
                                     Text(riderProvider.info.fullName(),
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 19,
                                         )),
                                   ]),
                               Positioned(
@@ -134,7 +135,7 @@ class _SettingsState extends State<Settings> {
                               )))
                     ])),
                 SizedBox(height: 6),
-                LocationsInfo("Locations"),
+                LocationsInfo('Locations'),
                 SizedBox(height: 6),
                 PrivacyLegalInfo(),
                 SizedBox(height: 6),
@@ -151,6 +152,7 @@ class _SettingsState extends State<Settings> {
 class SelectionController<T> {
   final List<T> options;
   Set<T> selected;
+
   SelectionController(this.options, this.selected);
 }
 
@@ -287,6 +289,7 @@ class LocationsInfo extends StatelessWidget {
   }
 
   final String title;
+
   Widget infoRow(
       context, IconData icon, String text, void Function() onEditPressed) {
     double paddingTB = 10;
@@ -333,9 +336,7 @@ class LocationsInfo extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(title,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(title, style: CarriageTheme.title3),
                   Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Column(children: [
@@ -345,7 +346,7 @@ class LocationsInfo extends StatelessWidget {
                             riderProvider.info.address,
                             () => _editAddress(context)),
                         Divider(height: 0, color: Colors.black),
-                        infoRow(context, Icons.accessible, "Add Favorites",
+                        infoRow(context, Icons.accessible, 'Add Favorites',
                             () => _editFavorites(context))
                       ]))
                 ])));
@@ -404,11 +405,11 @@ class _PrivacyLegalInfoState extends State<PrivacyLegalInfo> {
 
   @override
   Widget build(context) {
-    List<String> headings = ["Email Preferences", "Privacy", "Legal"];
+    List<String> headings = ['Email Preferences', 'Privacy', 'Legal'];
     final List<String> subText = [
-      "Set what email you want to receive",
-      "Choose what data you share with us",
-      "Terms of service \& Privacy Policy"
+      'Set what email you want to receive',
+      'Choose what data you share with us',
+      'Terms of service \& Privacy Policy'
     ];
 
     return Container(
@@ -462,7 +463,7 @@ class SignOutButton extends StatelessWidget {
                 'Sign out',
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: Colors.black, fontFamily: "SFPro", fontSize: 15),
+                    color: Colors.black, fontFamily: 'SFPro', fontSize: 15),
               )
             ],
           ),

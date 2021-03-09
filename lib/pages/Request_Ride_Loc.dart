@@ -1,52 +1,13 @@
-import 'package:carriage_rider/Request_Ride_Time.dart';
+import 'package:carriage_rider/pages/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/Home.dart';
-import 'package:carriage_rider/RideObject.dart';
+import 'package:carriage_rider/pages/Home.dart';
+import 'package:carriage_rider/models/RideObject.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:carriage_rider/AuthProvider.dart';
-import 'package:carriage_rider/LocationsProvider.dart';
-import 'package:carriage_rider/app_config.dart';
+import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:provider/provider.dart';
-
-class RideRequestStyles {
-  static TextStyle cancel(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w100,
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle question(context) {
-    return TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w800,
-      fontSize: 25,
-    );
-  }
-
-  static TextStyle toggle(context) {
-    return TextStyle(
-      fontWeight: FontWeight.w200,
-      fontSize: 15,
-    );
-  }
-
-  static TextStyle description(context) {
-    return TextStyle(
-        color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
-  }
-
-  static TextStyle label(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
-  }
-
-  static TextStyle info(context) {
-    return TextStyle(
-        color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
-  }
-}
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final RideObject ride;
@@ -76,8 +37,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                 children: <Widget>[
                   Container(
                     child: InkWell(
-                      child: Text("Cancel",
-                          style: RideRequestStyles.cancel(context)),
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle),
                       onTap: () {
                         Navigator.pop(
                             context,
@@ -118,8 +78,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Where do you want to go?",
-                        style: RideRequestStyles.question(context)),
+                    child: Text('Where do you want to go?',
+                        style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -141,9 +101,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: ButtonTheme(
                         minWidth: MediaQuery.of(context).size.width * 0.8,
-                        height: 45.0,
+                        height: 50.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -159,7 +119,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                           elevation: 3.0,
                           color: Colors.black,
                           textColor: Colors.white,
-                          child: Text('Next'),
+                          child: Text('Next', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                         ),
                       ),
                     )),
@@ -219,12 +179,13 @@ class _FromLocationState extends State<FromLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
+        future:
+            locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _fromField(context, snapshot.data);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });
@@ -280,12 +241,13 @@ class _ToLocationState extends State<ToLocation> {
     AppConfig appConfig = AppConfig.of(context);
 
     return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(context, appConfig, authProvider),
+        future:
+            locationsProvider.fetchLocations(context, appConfig, authProvider),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return _toField(context, snapshot.data);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });

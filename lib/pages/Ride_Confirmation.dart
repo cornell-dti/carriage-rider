@@ -1,3 +1,4 @@
+import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 
 class RideConfirmation extends StatefulWidget {
@@ -10,12 +11,6 @@ class _RideConfirmationState extends State<RideConfirmation> {
     color: Colors.black,
     fontWeight: FontWeight.w700,
     fontSize: 17,
-  );
-
-  final descriptionStyle = TextStyle(
-    color: Colors.grey,
-    fontWeight: FontWeight.w300,
-    fontSize: 15,
   );
 
   @override
@@ -37,14 +32,14 @@ class _RideConfirmationState extends State<RideConfirmation> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('You\'ll be notified via in-app notification',
-                  style: descriptionStyle)
+                  style: CarriageTheme.descriptionStyle)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('and email when your ride is confirmed',
-                  style: descriptionStyle)
+                  style: CarriageTheme.descriptionStyle)
             ],
           ),
           Expanded(
