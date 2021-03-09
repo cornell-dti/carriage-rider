@@ -12,6 +12,7 @@ import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
+  Ride currentRide = null;
   List<Ride> pastRides = [];
   List<Ride> upcomingRides = [];
 
@@ -30,6 +31,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
+    await _fetchCurrentRide(config, authProvider);
     notifyListeners();
   }
 
@@ -38,6 +40,26 @@ class RidesProvider with ChangeNotifier {
     var data = jsonDecode(json)['data'];
     List<Ride> res = data.map<Ride>((e) => Ride.fromJson(e)).toList();
     return res;
+  }
+
+  Ride _rideFromJson(String json) {
+    var data = jsonDecode(json)['data'];
+    Ride res = Ride.fromJson(data);
+    return res;
+  }
+
+  Future<void> _fetchCurrentRide(
+      AppConfig config, AuthProvider authProvider) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        '${config.baseUrl}/{authProvider.id}/currentride',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      Ride ride = _rideFromJson(response.body);
+      currentRide = ride;
+    } else {
+      throw Exception('Failed to load rides.');
+    }
   }
 
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
@@ -61,7 +83,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
+        '${config.baseUrl}/${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);

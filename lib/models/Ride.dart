@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:carriage_rider/pages/Current.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'dart:math';
 import 'package:carriage_rider/pages/Upcoming.dart';
@@ -8,6 +9,20 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import '../utils/CarriageTheme.dart';
+
+enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
+
+///Converts [status] to a string.
+String toString(RideStatus status) {
+  const mapping = <RideStatus, String>{
+    RideStatus.NOT_STARTED: 'not_started',
+    RideStatus.ON_THE_WAY: 'on_the_way',
+    RideStatus.ARRIVED: 'arrived',
+    RideStatus.PICKED_UP: 'picked_up',
+    RideStatus.COMPLETED: 'completed',
+  };
+  return mapping[status];
+}
 
 //Model for a ride.
 class Ride {
@@ -545,6 +560,142 @@ class RecurringRidesGenerator {
       separatorBuilder: (context, index) {
         return SizedBox(height: 16);
       },
+    );
+  }
+}
+
+Widget pickedUpRide(context) {
+
+  return Row(children: <Widget>[
+    RichText(
+      text: new TextSpan(
+        style: new TextStyle(
+          fontSize: 20.0,
+          color: Colors.black,
+        ),
+        children: <TextSpan>[
+          new TextSpan(text: 'Your driver will drop you off \n'),
+          new TextSpan(
+              text: '@', style: new TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    )
+  ]);
+}
+
+Widget completeRide(context) {
+  return Row(children: <Widget>[
+    RichText(
+      text: new TextSpan(
+        style: new TextStyle(
+          fontSize: 20.0,
+          color: Colors.black,
+        ),
+        children: <TextSpan>[
+          new TextSpan(text: 'Your ride is '),
+          new TextSpan(
+              text: 'complete!', style: new TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    )
+  ]);
+}
+
+Widget currentCardInstruction(context, String status) {}
+
+class CurrentRideCard extends StatelessWidget {
+  CurrentRideCard(
+    this.ride, {
+    @required this.showCallDriver,
+  });
+
+  final Ride ride;
+  final bool showCallDriver;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => Current(ride)));
+      },
+      child: Container(
+        margin: EdgeInsets.all(2),
+        decoration: CarriageTheme.cardDecoration,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            children: [
+              ride == null
+                  ? Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 20),
+                          Icon(
+                            Icons.directions_car_rounded,
+                            size: 32,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 10),
+                          Text('No Current Ride',
+                              style: CarriageTheme.body
+                                  .copyWith(color: Colors.grey)),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    )
+                  : Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 10),
+                            pickedUpRide(context),
+                            SizedBox(height: 15),
+                            showCallDriver
+                                ? Row(
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        //TODO: replace temp phone number
+                                        onTap: () => UrlLauncher.launch(
+                                            'tel://13232315234'),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                border: Border.all(
+                                                    width: 0.5,
+                                                    color: Colors.black
+                                                        .withOpacity(0.25))),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Icon(Icons.phone,
+                                                  size: 20,
+                                                  color: Color(0xFF4CAF50)),
+                                            )),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text('Driver',
+                                              style: TextStyle(fontSize: 11)),
+                                          Text('Davea Butler',
+                                              style:
+                                                  CarriageTheme.rideInfoStyle)
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : Container(),
+                            SizedBox(height: 10),
+                          ]),
+                    ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
