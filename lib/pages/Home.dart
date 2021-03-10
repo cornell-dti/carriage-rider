@@ -1,3 +1,4 @@
+import 'package:carriage_rider/models/Driver.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
@@ -181,7 +182,8 @@ class Home extends StatelessWidget {
                                       endTime: DateTime(2020, 10, 18, 13, 15),
                                       endDate: DateTime(2020, 12, 10),
                                       recurring: true,
-                                      recurringDays: [0, 3, 4]), showCallDriver: true),
+                                      driver: Driver(id: '123', firstName: 'Davea', lastName: 'Butler', phoneNumber: '13232315234'),
+                                      recurringDays: [2, 3, 4]), showCallDriver: true),
                                 ]),
                           ),
                           SizedBox(height: 35),

@@ -11,6 +11,8 @@ class Driver {
   //The phoneNumber of a driver
   final String phoneNumber;
 
+  String fullName() => firstName + ' ' + lastName;
+
   Driver({@required this.id, this.firstName, this.lastName, this.phoneNumber});
 
   //Creates a location from JSON representation.

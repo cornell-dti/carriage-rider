@@ -31,7 +31,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
-    await _fetchCurrentRide(config, authProvider);
+    //await _fetchCurrentRide(config, authProvider);
     notifyListeners();
   }
 
@@ -42,13 +42,14 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
+/*
   Ride _rideFromJson(String json) {
     var data = jsonDecode(json)['data'];
     Ride res = Ride.fromJson(data);
     return res;
-  }
+  }*/
 
-  Future<void> _fetchCurrentRide(
+  /*Future<void> _fetchCurrentRide(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
@@ -60,7 +61,7 @@ class RidesProvider with ChangeNotifier {
     } else {
       throw Exception('Failed to load rides.');
     }
-  }
+  }*/
 
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchPastRides(

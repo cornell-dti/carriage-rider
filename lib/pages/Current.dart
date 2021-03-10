@@ -5,13 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 Map days = {
-  0: 'Sun.',
-  1: 'Mon.',
-  2: 'Tue.',
-  3: 'Wed.',
-  4: 'Thurs.',
-  5: 'Fri.',
-  6: 'Sat.'
+  1: 'M',
+  2: 'T',
+  3: 'W',
+  4: 'Th',
+  5: 'F',
 };
 
 class Current extends StatefulWidget {
@@ -54,7 +52,7 @@ class _CurrentState extends State<Current> {
                     widget: SizedBox(height: 10),
                   ),
                   SizedBox(height: 20),
-                  ContactCard(color: Colors.black),
+                  ContactCard(color: Colors.black, ride: widget.ride),
                   SizedBox(height: 40),
                   TimeLine(widget.ride, true),
                   SizedBox(height: 30),
@@ -111,16 +109,30 @@ class RecurringRide extends StatefulWidget {
 }
 
 class _RecurringRideState extends State<RecurringRide> {
+  String recurringRides(List<String> days) {
+    String repeatedDays = 'Repeats every ';
+    String display = '';
+    if (days.length == 1) {
+      display = days.first;
+    } else if (days.length == 2) {
+      display = repeatedDays + days.join(' and ');
+    } else {
+      List<String> newDays = days.sublist(0, days.length - 1);
+      display = repeatedDays + newDays.join(', ') + ", and " + days.last;
+    }
+    return display;
+  }
+
   @override
   Widget build(BuildContext context) {
-    String repeatedDays = 'Every ';
     String recurringDays = '';
+    List<String> dayList = [];
     days.forEach((k, v) {
       if (widget.ride.recurringDays.contains(k)) {
-        repeatedDays += v + ' and ';
+        dayList.add(v);
       }
     });
-    recurringDays = repeatedDays.substring(0, repeatedDays.length - 4);
+    recurringDays = recurringRides(dayList);
 
     return Container(
       child: Column(
@@ -145,7 +157,7 @@ class _RecurringRideState extends State<RecurringRide> {
                 padding: EdgeInsets.only(left: 20),
                 child: Text(
                   recurringDays,
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: TextStyle(color: Colors.grey[800], fontSize: 16),
                 ),
               ),
             ],
@@ -202,7 +214,7 @@ class StartDate extends StatelessWidget {
                   DateFormat('d').format(ride.startTime) +
                   '/' +
                   DateFormat('y').format(ride.startTime),
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: TextStyle(color: Colors.grey[800], fontSize: 16),
             ),
           )
         ],
@@ -232,7 +244,7 @@ class EndDate extends StatelessWidget {
                 DateFormat('d').format(ride.endDate) +
                 '/' +
                 DateFormat('y').format(ride.endDate),
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(color: Colors.grey[800], fontSize: 16),
           )
         ],
       ),

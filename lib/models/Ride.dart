@@ -8,6 +8,7 @@ import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:carriage_rider/models/Driver.dart';
 import '../utils/CarriageTheme.dart';
 
 enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
@@ -75,7 +76,7 @@ class Ride {
   final bool late;
 
   //The driver associated with this ride
-  final Map<String, dynamic> driver;
+  final Driver driver;
 
   //The IDs of rides corresponding to edits
   final List<String> edits;
@@ -106,7 +107,7 @@ class Ride {
       id: json['id'],
       type: json['type'],
       rider: Rider.fromJson(json['rider']),
-      status: json['status'].toEnumString(),
+      status: json['status'],
       startLocation: json['startLocation']['name'],
       startAddress: json['startLocation']['address'],
       endLocation: json['endLocation']['name'],
@@ -709,7 +710,7 @@ class CurrentRideCard extends StatelessWidget {
                                       GestureDetector(
                                         //TODO: replace temp phone number
                                         onTap: () => UrlLauncher.launch(
-                                            'tel://13232315234'),
+                                            'tel://$ride.driver.phoneNumber'),
                                         child: Container(
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -732,7 +733,7 @@ class CurrentRideCard extends StatelessWidget {
                                         children: <Widget>[
                                           Text('Driver',
                                               style: TextStyle(fontSize: 11)),
-                                          Text('Davea Butler',
+                                          Text(ride.driver.fullName(),
                                               style:
                                                   CarriageTheme.rideInfoStyle)
                                         ],

@@ -177,8 +177,9 @@ class CustomDivider extends StatelessWidget {
 
 class ContactCard extends StatelessWidget {
   final Color color;
+  final Ride ride;
 
-  const ContactCard({Key key, this.color}) : super(key: key);
+  const ContactCard({Key key, this.color, this.ride}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -547,8 +548,7 @@ class UpcomingSeeMore extends StatelessWidget {
         Padding(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text('Upcoming Rides',
-              style: CarriageTheme.largeTitle),
+          child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
         ),
         Container(
           color: Colors.white,
