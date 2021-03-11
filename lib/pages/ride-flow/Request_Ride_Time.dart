@@ -30,7 +30,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Date & Time", style: CarriageTheme.title1),
+                    child: Text('Date & Time', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -46,7 +46,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Is this a repeating ride? (1/2)",
+                    child: Text('Is this a repeating ride? (1/2)',
                         style: CarriageTheme.title1),
                   )
                 ],
@@ -101,7 +101,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        pickUpCtrl.text = "${_pickUpTime.format(context)}";
+        pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
@@ -113,7 +113,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     );
     if (_dropOffTime != null) {
       setState(() {
-        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
   }
@@ -122,7 +122,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -142,7 +142,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        dateCtrl.text = format("$selectedDate".split(' ')[0]);
+        dateCtrl.text = format('$selectedDate'.split(' ')[0]);
       });
   }
 
@@ -197,7 +197,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Date & Time", style: CarriageTheme.title1),
+                    child: Text('Date & Time', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -212,13 +212,13 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride? (2/2)", style: CarriageTheme.title1),
+                  Text('When is this ride? (2/2)', style: CarriageTheme.title1),
                 ],
               ),
               SizedBox(height: 30.0),
               Row(
                 children: <Widget>[
-                  Text("Date & Time",
+                  Text('Date & Time',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
@@ -281,7 +281,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                               elevation: 2.0,
                               color: Colors.black,
                               textColor: Colors.white,
-                              child: Text("Set Date & Time"),
+                              child: Text('Set Date & Time'),
                             ),
                           ),
                         ]))),
@@ -321,7 +321,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        pickUpCtrl.text = "${_pickUpTime.format(context)}";
+        pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
@@ -333,14 +333,14 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     );
     if (_dropOffTime != null) {
       setState(() {
-        dropOffCtrl.text = "${_dropOffTime.format(context)}";
+        dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
   }
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + "/" + dates[2] + "/" + dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/'+ dates[0];
     return formatDate;
   }
 
@@ -362,7 +362,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     if (picked != null && picked != date)
       setState(() {
         date = picked;
-        ctrl.text = format("$date".split(' ')[0]);
+        ctrl.text = format('$date'.split(' ')[0]);
       });
   }
 
@@ -409,10 +409,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
   }
 
   final List<bool> isSelected = [false, false, false, false, false];
-  final List<String> days = ["M", "T", "W", "Th", "F"];
+  final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
   final List<int> dayList = [1, 2, 3, 4, 5];
 
-  String selectedDays = "";
+  String selectedDays = '';
   List<int> recurringDays = [];
 
   List<int> setRecurringDays(List<int> rDays) {
@@ -426,10 +426,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
   }
 
   String setSelectedDays(String sDays) {
-    sDays = "";
+    sDays = '';
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        sDays += days[i] + " ";
+        sDays += days[i] + ' ';
       }
     }
     sDays = sDays.substring(0, sDays.length - 1);
@@ -449,7 +449,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Date & Time", style: CarriageTheme.title1),
+                    child: Text('Date & Time', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -464,13 +464,13 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Text("When is this ride? (2/2)", style: CarriageTheme.title1),
+                  Text('When is this ride? (2/2)', style: CarriageTheme.title1),
                 ],
               ),
               SizedBox(height: 30.0),
               Row(
                 children: <Widget>[
-                  Text("Date & Time",
+                  Text('Date & Time',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
@@ -543,7 +543,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               SizedBox(height: 30.0),
               Row(
                 children: <Widget>[
-                  Text("Repeat Days",
+                  Text('Repeat Days',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
@@ -613,7 +613,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                               elevation: 2.0,
                               color: Colors.black,
                               textColor: Colors.white,
-                              child: Text("Set Date & Time"),
+                              child: Text('Set Date & Time'),
                             ),
                           ),
                         ]))),

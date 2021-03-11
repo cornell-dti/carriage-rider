@@ -57,7 +57,7 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Text(widget.ride.fromLocation != null
                     ? widget.ride.fromLocation
-                    : "", style: CarriageTheme.infoStyle)
+                    : '', style: CarriageTheme.infoStyle)
               ],
             ),
             SizedBox(height: 15),
@@ -73,7 +73,7 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Text(widget.ride.toLocation != null
                     ? widget.ride.toLocation
-                    : "", style: CarriageTheme.infoStyle)
+                    : '', style: CarriageTheme.infoStyle)
               ],
             ),
             SizedBox(height: 15),
@@ -89,7 +89,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       SizedBox(height: 5),
                       Text(widget.ride.startDate != null
                           ? widget.ride.startDate
-                          : "", style: CarriageTheme.infoStyle)
+                          : '', style: CarriageTheme.infoStyle)
                     ],
                   ),
                 ),
@@ -102,7 +102,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       SizedBox(height: 5),
                       Text(widget.ride.endDate != null
                           ? widget.ride.endDate
-                          : "", style: CarriageTheme.infoStyle)
+                          : '', style: CarriageTheme.infoStyle)
                     ],
                   ),
                 )
@@ -121,7 +121,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       SizedBox(height: 5),
                       Text(widget.ride.pickUpTime != null
                           ? widget.ride.pickUpTime
-                          : "", style: CarriageTheme.infoStyle)
+                          : '', style: CarriageTheme.infoStyle)
                     ],
                   ),
                 ),
@@ -135,7 +135,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       SizedBox(height: 5),
                       Text(widget.ride.dropOffTime != null
                           ? widget.ride.dropOffTime
-                          : "", style: CarriageTheme.infoStyle)
+                          : '', style: CarriageTheme.infoStyle)
                     ],
                   ),
                 )
@@ -154,7 +154,7 @@ class _ReviewRideState extends State<ReviewRide> {
               children: <Widget>[
                 Text(widget.ride.every != null
                     ? widget.ride.every
-                    : "No Recurring Days", style: CarriageTheme.infoStyle)
+                    : 'No Recurring Days', style: CarriageTheme.infoStyle)
               ],
             ),
             SizedBox(height: 15),
@@ -207,7 +207,7 @@ class _ReviewRideState extends State<ReviewRide> {
                             elevation: 2.0,
                             color: Colors.black,
                             textColor: Colors.white,
-                            child: Text("Send Request"),
+                            child: Text('Send Request'),
                           ),
                         ),
                       ]))),

@@ -61,7 +61,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location", style: CarriageTheme.title1),
+                    child: Text('Location', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -77,7 +77,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Set your pickup and dropoff location",
+                    child: Text('Set your pickup and dropoff location',
                         style: CarriageTheme.title1),
                   )
                 ],
@@ -137,7 +137,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location", style: CarriageTheme.title1),
+                    child: Text('Location', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -153,7 +153,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Where do you want to be picked up? (1/3)",
+                    child: Text('Where do you want to be picked up? (1/3)',
                         style: CarriageTheme.title1),
                   )
                 ],
@@ -220,7 +220,7 @@ class _RequestLocState extends State<RequestLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location", style: CarriageTheme.title1),
+                    child: Text('Location', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -236,7 +236,7 @@ class _RequestLocState extends State<RequestLoc> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Where do you want to be picked up? (2/3)",
+                    child: Text('Where do you want to be picked up? (2/3)',
                         style: CarriageTheme.title1),
                   )
                 ],
@@ -277,7 +277,7 @@ class _RequestLocState extends State<RequestLoc> {
                               elevation: 2.0,
                               color: Colors.black,
                               textColor: Colors.white,
-                              child: Text("Next"),
+                              child: Text('Next'),
                             ),
                           ),
                         ]))),
@@ -317,7 +317,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Location", style: CarriageTheme.title1),
+                    child: Text('Location', style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -333,7 +333,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text("Review your pickup and dropoff location",
+                    child: Text('Review your pickup and dropoff location',
                         style: CarriageTheme.title1),
                   )
                 ],
@@ -390,7 +390,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                               elevation: 2.0,
                               color: Colors.black,
                               textColor: Colors.white,
-                              child: Text("Set Location"),
+                              child: Text('Set Location'),
                             ),
                           ),
                         ]))),
@@ -529,7 +529,7 @@ class _LocationFieldState extends State<LocationField> {
           if (snapshot.hasData) {
             return _locationField(context, snapshot.data);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text('${snapshot.error}');
           }
           return Center(child: CircularProgressIndicator());
         });
