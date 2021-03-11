@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
-import '../utils/app_config.dart';
 import 'dart:io';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
@@ -8,7 +7,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
+import 'package:carriage_rider/models/Location.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
@@ -76,10 +75,13 @@ class RidesProvider with ChangeNotifier {
       AppConfig config,
       BuildContext context,
       RiderProvider riderProvider,
-      String startLocation,
-      String endLocation,
-      String startTime,
-      String endTime) async {
+      Location startLocation,
+      Location endLocation,
+      DateTime startTime,
+      DateTime endTime,
+      DateTime endDate,
+      bool recurring,
+      List<int> recurringDays) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -93,11 +95,17 @@ class RidesProvider with ChangeNotifier {
         'rider': riderProvider.info,
         'startLocation': startLocation,
         'endLocation': endLocation,
-        'startTime': startTime,
-        'requestedEndTime': endTime,
+        'startTime': startTime.toIso8601String(),
+        'endTime': endTime.toIso8601String(),
+        'requestedEndTime': endTime.toIso8601String(),
+        'endDate': endDate == null ? endDate : endDate.toIso8601String(),
+        'recurring': recurring,
+        'recurringDays': recurringDays
       }),
     );
-    print(response);
+    print(response.body);
+    print(response.statusCode);
+
     if (response.statusCode != 200) {
       throw Exception('Failed to create ride.');
     }

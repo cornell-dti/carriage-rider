@@ -4,6 +4,7 @@ import 'package:carriage_rider/models/RideObject.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';

@@ -8,18 +8,26 @@ import '../utils/app_config.dart';
 class Location {
   //The id of a location
   final String id;
+
   //The name of a location
   final String name;
+
   //The address of a location
   final String address;
 
-  Location({@required this.id, this.name, this.address});
+  Location({this.id, this.name, this.address});
 
   //Creates a location from JSON representation.
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
         id: json['id'], name: json['name'], address: json['address']);
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'address': address
+  };
 }
 
 //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].

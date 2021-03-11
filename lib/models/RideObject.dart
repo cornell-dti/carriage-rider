@@ -8,6 +8,10 @@ class RideObject {
   bool recurring;
   List<int> recurringDays;
   String endDate;
+  DateTime start;
+  DateTime end;
+  DateTime pickUp;
+  DateTime dropOff;
 
   RideObject(
       {this.fromLocation,
@@ -18,5 +22,9 @@ class RideObject {
       this.every,
       this.recurring,
       this.recurringDays,
-      this.endDate});
+      this.endDate,
+      this.start,
+      this.end,
+      this.pickUp,
+      this.dropOff});
 }

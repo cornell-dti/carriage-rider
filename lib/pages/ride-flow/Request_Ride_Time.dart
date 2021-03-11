@@ -95,24 +95,30 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   TextEditingController dropOffCtrl = TextEditingController();
 
   Future<Null> selectPickUpTime(BuildContext context) async {
+    final now = new DateTime.now();
     _pickUpTime = await showTimePicker(
       context: context,
       initialTime: _pickUpTime,
     );
     if (_pickUpTime != null) {
       setState(() {
+        widget.ride.pickUp = new DateTime(now.year, now.month, now.day,
+            _pickUpTime.hour, _pickUpTime.minute);
         pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
 
   Future<Null> selectDropOffTime(BuildContext context) async {
+    final now = new DateTime.now();
     _dropOffTime = await showTimePicker(
       context: context,
       initialTime: _dropOffTime,
     );
     if (_dropOffTime != null) {
       setState(() {
+        widget.ride.dropOff = new DateTime(now.year, now.month, now.day,
+            _dropOffTime.hour, _dropOffTime.minute);
         dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
@@ -272,8 +278,8 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                                       new MaterialPageRoute(
                                           builder: (context) =>
                                               ReviewRide(ride: widget.ride)));
-                                  //widget.ride.startDate = dateCtrl.text;
-                                  // widget.ride.endDate = dateCtrl.text;
+                                  widget.ride.startDate = dateCtrl.text;
+                                  widget.ride.endDate = dateCtrl.text;
                                   widget.ride.pickUpTime = pickUpCtrl.text;
                                   widget.ride.dropOffTime = dropOffCtrl.text;
                                 }
@@ -315,24 +321,30 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
   TextEditingController dropOffCtrl = TextEditingController();
 
   Future<Null> selectPickUpTime(BuildContext context) async {
+    final now = new DateTime.now();
     _pickUpTime = await showTimePicker(
       context: context,
       initialTime: _pickUpTime,
     );
     if (_pickUpTime != null) {
       setState(() {
+        widget.ride.pickUp = new DateTime(now.year, now.month, now.day,
+            _pickUpTime.hour, _pickUpTime.minute);
         pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
   }
 
   Future<Null> selectDropOffTime(BuildContext context) async {
+    final now = new DateTime.now();
     _dropOffTime = await showTimePicker(
       context: context,
       initialTime: _dropOffTime,
     );
     if (_dropOffTime != null) {
       setState(() {
+        widget.ride.dropOff = new DateTime(now.year, now.month, now.day,
+            _dropOffTime.hour, _dropOffTime.minute);
         dropOffCtrl.text = '${_dropOffTime.format(context)}';
       });
     }
@@ -340,7 +352,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
 
   String format(String date) {
     var dates = date.split('-');
-    String formatDate = dates[1] + '/' + dates[2] + '/'+ dates[0];
+    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
     return formatDate;
   }
 
@@ -362,6 +374,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     if (picked != null && picked != date)
       setState(() {
         date = picked;
+        widget.ride.end = date;
         ctrl.text = format('$date'.split(' ')[0]);
       });
   }
@@ -601,13 +614,14 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                   Navigator.push(
                                       context,
                                       new MaterialPageRoute(
-                                          builder: (context) => ReviewRide()));
-                                  //widget.ride.startDate = startDateCtrl.text;
-                                  // widget.ride.endDate = endDateCtrl.text;
-                                  //widget.ride.pickUpTime = pickUpCtrl.text;
-                                  // widget.ride.dropOffTime = dropOffCtrl.text;
-                                  //widget.ride.every = selectedDays;
-                                  //widget.ride.recurringDays = recurringDays;
+                                          builder: (context) =>
+                                              ReviewRide(ride: widget.ride)));
+                                  widget.ride.startDate = startDateCtrl.text;
+                                  widget.ride.endDate = endDateCtrl.text;
+                                  widget.ride.pickUpTime = pickUpCtrl.text;
+                                  widget.ride.dropOffTime = dropOffCtrl.text;
+                                  widget.ride.every = selectedDays;
+                                  widget.ride.recurringDays = recurringDays;
                                 }
                               },
                               elevation: 2.0,

@@ -6,30 +6,7 @@ import '../utils/app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-//The type for a location.
-class Location {
-  //The id of a location
-  final String id;
-
-  //The name of a location
-  final String name;
-
-  //The address of a location
-  final String address;
-
-  Location({
-    this.id,
-    this.name,
-    this.address,
-  });
-
-  //Creates a location from JSON representation.
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-        id: json['id'], name: json['name'], address: json['address']);
-  }
-}
+import 'package:carriage_rider/models/Location.dart';
 
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
@@ -76,5 +53,10 @@ class LocationsProvider with ChangeNotifier {
         locations.map((e) => e.name).where((e) => e != 'Custom').toList();
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
+  }
+
+  static Location locationByName(String location, List<Location> locations) {
+    int index = locations.indexWhere((e) => e.name == location);
+    return locations[index];
   }
 }
