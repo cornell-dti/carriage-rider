@@ -72,7 +72,8 @@ class LocationsProvider with ChangeNotifier {
 
   //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
   static List<String> getSuggestions(String query, List<Location> locations) {
-    List<String> matches = locations.map((e) => e.name).toList();
+    List<String> matches =
+        locations.map((e) => e.name).where((e) => e != 'Custom').toList();
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
