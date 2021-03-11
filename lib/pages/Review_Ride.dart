@@ -1,4 +1,3 @@
-import 'package:carriage_rider/pages/Assistance.dart';
 import 'package:carriage_rider/pages/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       Navigator.pop(
                           context,
                           new MaterialPageRoute(
-                              builder: (context) => Assistance()));
+                              builder: (context) => ReviewRide()));
                     },
                   ),
                 ),
