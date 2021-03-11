@@ -1,5 +1,5 @@
-import 'package:carriage_rider/pages/Request_Ride_Time.dart';
-import 'package:carriage_rider/pages/Review_Ride.dart';
+import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
+import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';

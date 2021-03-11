@@ -1,4 +1,4 @@
-import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
+import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';

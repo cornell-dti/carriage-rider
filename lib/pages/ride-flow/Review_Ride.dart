@@ -1,10 +1,10 @@
-import 'package:carriage_rider/pages/Ride_Confirmation.dart';
+import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
-import '../providers/RidesProvider.dart';
+import '../../providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class ReviewRide extends StatefulWidget {
