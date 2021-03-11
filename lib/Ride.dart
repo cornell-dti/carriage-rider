@@ -95,7 +95,7 @@ class Ride {
       late: json['late'],
       driver: json['driver'] == null ? null : json['driver'],
       edits: json['edits'] == null ? [] : List.from(json['edits']),
-      endDate: json['endDate'] == null ? null : DateTime.parse(json['endDate']),
+      endDate: json['endDate'] == null ? null : DateFormat('MM/dd/yyyy').parse(json['endDate']),
     );
   }
 
