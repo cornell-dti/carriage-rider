@@ -126,7 +126,7 @@ class Ride {
           json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
       deleted: json['deleted'] == null ? false : json['deleted'],
       late: json['late'],
-      driver: json['driver'] == null ? null : json['driver'],
+      driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
       edits: json['edits'] == null ? [] : List.from(json['edits']),
       endDate: json['endDate'] == null
           ? null

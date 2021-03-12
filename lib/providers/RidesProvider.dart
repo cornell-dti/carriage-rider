@@ -31,7 +31,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
-    //await _fetchCurrentRide(config, authProvider);
+    await _fetchCurrentRide(config, authProvider);
     notifyListeners();
   }
 
@@ -42,26 +42,28 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
-/*
+
   Ride _rideFromJson(String json) {
     var data = jsonDecode(json)['data'];
     Ride res = Ride.fromJson(data);
     return res;
-  }*/
+  }
 
-  /*Future<void> _fetchCurrentRide(
+  Future<void> _fetchCurrentRide(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/{authProvider.id}/currentride',
+        '${config.baseUrl}/rides/{authProvider.id}/currentride',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
       currentRide = ride;
     } else {
-      throw Exception('Failed to load rides.');
+      throw Exception('Failed to load ride.');
     }
-  }*/
+  }
 
   //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchPastRides(
@@ -87,7 +89,6 @@ class RidesProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
-      print(rides);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingRides = rides;
     }
