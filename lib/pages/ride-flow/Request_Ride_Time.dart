@@ -95,7 +95,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   TextEditingController dropOffCtrl = TextEditingController();
 
   Future<Null> selectPickUpTime(BuildContext context) async {
-    final now = new DateTime.now();
+    final now = selectedDate;
     _pickUpTime = await showTimePicker(
       context: context,
       initialTime: _pickUpTime,
@@ -110,7 +110,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   }
 
   Future<Null> selectDropOffTime(BuildContext context) async {
-    final now = new DateTime.now();
+    final now = selectedDate;
     _dropOffTime = await showTimePicker(
       context: context,
       initialTime: _dropOffTime,
@@ -321,7 +321,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
   TextEditingController dropOffCtrl = TextEditingController();
 
   Future<Null> selectPickUpTime(BuildContext context) async {
-    final now = new DateTime.now();
+    final now = startDate;
     _pickUpTime = await showTimePicker(
       context: context,
       initialTime: _pickUpTime,
@@ -336,7 +336,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
   }
 
   Future<Null> selectDropOffTime(BuildContext context) async {
-    final now = new DateTime.now();
+    final now = startDate;
     _dropOffTime = await showTimePicker(
       context: context,
       initialTime: _dropOffTime,

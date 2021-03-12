@@ -66,6 +66,7 @@ class RidesProvider with ChangeNotifier {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingRides = rides;
+      print(upcomingRides);
     }
   }
 
@@ -75,8 +76,8 @@ class RidesProvider with ChangeNotifier {
       AppConfig config,
       BuildContext context,
       RiderProvider riderProvider,
-      Location startLocation,
-      Location endLocation,
+      String startLocation,
+      String endLocation,
       DateTime startTime,
       DateTime endTime,
       DateTime endDate,
