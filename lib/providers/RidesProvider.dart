@@ -65,7 +65,6 @@ class RidesProvider with ChangeNotifier {
       List<Ride> rides = _ridesFromJson(response.body);
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingRides = rides;
-      print(upcomingRides);
     }
   }
 
@@ -95,17 +94,15 @@ class RidesProvider with ChangeNotifier {
         'rider': riderProvider.info,
         'startLocation': startLocation,
         'endLocation': endLocation,
-        'startTime': startTime.toIso8601String(),
-        'endTime': endTime.toIso8601String(),
-        'requestedEndTime': endTime.toIso8601String(),
+        'startTime': startTime.toUtc().toIso8601String(),
+        'endTime': endTime.toUtc().toIso8601String(),
+        'requestedEndTime': endTime.toUtc().toIso8601String(),
         'endDate': endDate == null ? endDate : endDate.toIso8601String(),
         'recurring': recurring,
         'recurringDays': recurringDays
       }),
     );
     print(response.body);
-    print(response.statusCode);
-
     if (response.statusCode != 200) {
       throw Exception('Failed to create ride.');
     }

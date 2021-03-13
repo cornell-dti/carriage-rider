@@ -201,9 +201,9 @@ class _ReviewRideState extends State<ReviewRide> {
                                   riderProvider,
                                   LocationsProvider.locationByName(widget.ride.fromLocation, locations).id,
                                   LocationsProvider.locationByName(widget.ride.toLocation, locations).id,
-                                  widget.ride.pickUp.toUtc(),
-                                  widget.ride.dropOff.toUtc(),
-                                  widget.ride.end.toUtc(),
+                                  widget.ride.pickUp,
+                                  widget.ride.dropOff,
+                                  widget.ride.end,
                                   widget.ride.recurring,
                                   widget.ride.recurringDays);
                               Navigator.push(
