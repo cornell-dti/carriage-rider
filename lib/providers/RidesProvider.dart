@@ -53,15 +53,14 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/rides/{authProvider.id}/currentride',
+        '${config.baseUrl}/riders/${authProvider.id}/currentride',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print(response.body);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
       currentRide = ride;
+      print(currentRide);
     } else {
-      throw Exception('Failed to load ride.');
+      throw Exception('Failed to load current ride.');
     }
   }
 
