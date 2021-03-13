@@ -27,6 +27,7 @@ class RidesProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+
   Future<void> fetchAllRides(
       AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
@@ -42,6 +43,9 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
+  //Returns a ride that is decoded from the response body of an HTTP request [json].
+  //If there is no ride in [json], we will return null to indicate that there is no
+  //current ride.
   Ride _rideFromJson(String json) {
     if (json != '{}') {
       var data = jsonDecode(json)['data'];
@@ -51,6 +55,9 @@ class RidesProvider with ChangeNotifier {
     return null;
   }
 
+  //Fetches the most current ride from the backend by using the baseUrl of [config] and id from [authProvider].
+  //The current ride that is retrieved from the backend is within the next 30 minutes for the rider with the
+  //associated id.
   Future<void> _fetchCurrentRide(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');

@@ -15,7 +15,7 @@ class Driver {
 
   Driver({@required this.id, this.firstName, this.lastName, this.phoneNumber});
 
-  //Creates a location from JSON representation.
+  //Creates a driver from JSON representation.
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
         id: json['id'], firstName: json['firstName'], lastName: json['lastName'], phoneNumber: json['phoneNumber']);
