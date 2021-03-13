@@ -12,7 +12,7 @@ import 'AuthProvider.dart';
 
 //Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
-  Ride currentRide;
+  Ride currentRide = Ride();
   List<Ride> pastRides = [];
   List<Ride> upcomingRides = [];
 
@@ -42,11 +42,13 @@ class RidesProvider with ChangeNotifier {
     return res;
   }
 
-
   Ride _rideFromJson(String json) {
-    var data = jsonDecode(json)['data'];
-    Ride res = Ride.fromJson(data);
-    return res;
+    if (json != '{}') {
+      var data = jsonDecode(json)['data'];
+      Ride res = Ride.fromJson(data);
+      return res;
+    }
+    return null;
   }
 
   Future<void> _fetchCurrentRide(
@@ -58,13 +60,12 @@ class RidesProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
       currentRide = ride;
-      print(currentRide);
     } else {
       throw Exception('Failed to load current ride.');
     }
   }
 
-  //Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
+//Fetches a list of past rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -80,11 +81,12 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-  //Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
+//Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and id from [authProvider].
   Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get('${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
+    final response = await http.get(
+        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
@@ -93,8 +95,8 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-  //Creates a ride in the backend by an HTTP post request with the fields:
-  //[startLocation], [endLocation], [startTime], and [endTime].
+//Creates a ride in the backend by an HTTP post request with the fields:
+//[startLocation], [endLocation], [startTime], and [endTime].
   Future<void> createRide(
       AppConfig config,
       BuildContext context,

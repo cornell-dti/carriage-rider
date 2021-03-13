@@ -649,10 +649,13 @@ Widget completeRide(context) {
 }
 
 Widget currentCardInstruction(context, String status, Ride ride) {
-  return status == "on_the_way" ? onTheWayRide(context, ride)
-      : status == "arrived" ? arrivedRide(context, ride)
-      : status == "picked_up" ? pickedUpRide(context, ride)
-      : completeRide(context);
+  return status == "on_the_way"
+      ? onTheWayRide(context, ride)
+      : status == "arrived"
+          ? arrivedRide(context, ride)
+          : status == "picked_up"
+              ? pickedUpRide(context, ride)
+              : completeRide(context);
 }
 
 class CurrentRideCard extends StatelessWidget {
