@@ -59,8 +59,8 @@ class RidesProvider with ChangeNotifier {
   }
 
   /// Fetches the most current ride from the backend by using the baseUrl of [config] and the rider id from [authProvider].
-  /// The current ride that is retrieved from the backend is within the next 30 minutes for the rider with the
-  /// associated id.
+  /// The current ride that is retrieved from the backend is the soonest ride
+  /// within the next 30 minutes for the rider with the associated id (if it exists).
   Future<void> _fetchCurrentRide(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -75,7 +75,7 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-  /// Fetches a list of past rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
+  /// Fetches a list of have already occurred from the backend by using the baseUrl of [config] and rider id from [authProvider].
   /// Past rides are sorted and displayed in order of their initial start time.
   Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
@@ -107,8 +107,10 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-/// Creates a ride in the backend by an HTTP POST request with the following fields:
-/// [startLocation], [endLocation], [startTime], and [endTime].
+  /// Creates a ride in the backend by an HTTP POST request with the following fields:
+  /// the location id if [startLocation] or [endLocation] is an already existing location or
+  /// just the location name if it is a new location (not in backend yet) and
+  /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
   Future<void> createRide(
       AppConfig config,
       BuildContext context,
