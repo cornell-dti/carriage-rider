@@ -64,7 +64,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          ContactCard(color: Colors.grey),
+                          ContactCard(color: Colors.grey, ride: widget.ride),
                           SizedBox(height: 60),
                           TimeLine(widget.ride, false),
                           SizedBox(height: 50),
@@ -188,7 +188,11 @@ class ContactCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.account_circle, size: 64, color: grey),
+          ride.driver == null
+              ? Icon(Icons.account_circle, size: 64, color: grey)
+              : CircleAvatar(
+                  backgroundImage: NetworkImage('https://${ride.driver.photoLink}'),
+                  radius: 35),
           SizedBox(width: 15),
           Container(
             child: Column(
@@ -215,8 +219,8 @@ class ContactCard extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.phone, size: 16),
                         color: color,
-                        onPressed: () =>
-                            UrlLauncher.launch('tel://${ride.driver.phoneNumber}'),
+                        onPressed: () => UrlLauncher.launch(
+                            'tel://${ride.driver.phoneNumber}'),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -271,9 +275,9 @@ class EditRide extends StatelessWidget {
               alignment: Alignment.center,
               child: ButtonTheme(
                 minWidth: MediaQuery.of(context).size.width * 0.8,
-                height: 45.0,
+                height: 50.0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3)),
+                    borderRadius: BorderRadius.circular(10)),
                 child: RaisedButton.icon(
                     onPressed: () {
                       //TODO: navigate to edit flow
