@@ -678,7 +678,7 @@ class CurrentRideCard extends StatelessWidget {
         if (ride != null) {
           Navigator.push(context,
               new MaterialPageRoute(builder: (context) => Current(ride)));
-        };
+        }
       },
       child: Container(
         margin: EdgeInsets.all(2),

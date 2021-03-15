@@ -1,4 +1,3 @@
-import 'package:carriage_rider/models/Driver.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
