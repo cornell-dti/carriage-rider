@@ -681,7 +681,7 @@ class CurrentRideCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Row(
             children: [
-              ride == null
+              ride == null || ride.status == 'not_started'
                   ? Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -713,7 +713,7 @@ class CurrentRideCard extends StatelessWidget {
                                       GestureDetector(
                                         //TODO: replace temp phone number
                                         onTap: () => UrlLauncher.launch(
-                                            'tel://$ride.driver.phoneNumber'),
+                                            'tel://${ride.driver.phoneNumber}'),
                                         child: Container(
                                             decoration: BoxDecoration(
                                                 borderRadius:

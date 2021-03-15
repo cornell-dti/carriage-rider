@@ -195,7 +195,7 @@ class ContactCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Driver TBD',
+                  ride.driver == null ? 'Driver TBD' : ride.driver.fullName(),
                   style: TextStyle(
                       color: color, fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -216,7 +216,7 @@ class ContactCard extends StatelessWidget {
                         icon: Icon(Icons.phone, size: 16),
                         color: color,
                         onPressed: () =>
-                            UrlLauncher.launch('tel://13232315234'),
+                            UrlLauncher.launch('tel://${ride.driver.phoneNumber}'),
                       ),
                     ),
                     SizedBox(width: 8),
