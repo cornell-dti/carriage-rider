@@ -105,6 +105,10 @@ class CarriageTheme {
   static final infoStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
 
+  static Color gray1 = Color.fromRGBO(74, 74, 74, 1);
+  static Color gray2 = Color.fromRGBO(132, 132, 132, 1);
+  static Color gray3 = Color.fromRGBO(167, 167, 167, 1);
+
   static final BoxDecoration cardDecoration = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),

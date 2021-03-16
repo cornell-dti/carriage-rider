@@ -71,7 +71,7 @@ class _HistoryState extends State<History> {
                           SizedBox(height: 20),
                           ContactCard(color: Colors.grey),
                           SizedBox(height: 20),
-                          TimeLine(widget.ride, false),
+                          TimeLine(widget.ride, false, false, false),
                           SizedBox(height: 20),
                           CustomDivider(),
                           SizedBox(height: 10),

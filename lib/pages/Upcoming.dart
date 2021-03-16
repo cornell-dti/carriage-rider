@@ -1,5 +1,6 @@
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'dart:math';
+import 'package:flutter_svg/svg.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
@@ -66,7 +67,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           SizedBox(height: 32),
                           ContactCard(color: Colors.grey, ride: widget.ride),
                           SizedBox(height: 60),
-                          TimeLine(widget.ride, false),
+                          TimeLine(widget.ride, false, false, false),
                           SizedBox(height: 50),
                           RideAction(
                               text: 'Cancel Ride',
@@ -191,7 +192,8 @@ class ContactCard extends StatelessWidget {
           ride.driver == null
               ? Icon(Icons.account_circle, size: 64, color: grey)
               : CircleAvatar(
-                  backgroundImage: NetworkImage('https://${ride.driver.photoLink}'),
+                  backgroundImage:
+                      NetworkImage('https://${ride.driver.photoLink}'),
                   radius: 35),
           SizedBox(width: 15),
           Container(
@@ -299,41 +301,71 @@ class EditRide extends StatelessWidget {
 }
 
 class TimeLineRow extends StatelessWidget {
-  TimeLineRow({this.text, this.infoWidget, this.decorationWidth});
+  TimeLineRow(
+      {this.text,
+      this.infoWidget,
+      this.decorationWidth,
+      this.carIcon,
+      this.currentRide});
 
   final String text;
   final Widget infoWidget;
+  final bool carIcon;
+  final bool currentRide;
   final double decorationWidth;
-
-  Widget locationCircle() {
-    return Container(
-      width: decorationWidth,
-      height: decorationWidth,
-      child: Icon(Icons.circle, size: 9.75, color: grey),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: grey, blurRadius: 2, spreadRadius: 0)]),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    double circleRadius = 13;
+    Widget stopCircle =
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+      Container(
+          width: circleRadius * 2,
+          height: 26,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          )),
+      Container(
+          width: 8,
+          height: 8,
+          decoration: new BoxDecoration(
+            color: Color(0xFF9B9B9B),
+            shape: BoxShape.circle,
+          ))
+    ]);
+
+    Widget locationCircle() {
+      return Container(
+          width: 26,
+          child: carIcon
+              ? SvgPicture.asset('assets/images/carIcon.svg')
+              : stopCircle);
+    }
+
     return Row(children: [
       locationCircle(),
       SizedBox(width: 16),
       text == null
           ? infoWidget
-          : Text(text, style: TextStyle(fontSize: 16, color: grey))
+          : currentRide
+              ? Text(text,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold))
+              : Text(text, style: TextStyle(fontSize: 16, color: grey))
     ]);
   }
 }
 
 class TimeLine extends StatefulWidget {
-  TimeLine(this.ride, this.isIcon);
+  TimeLine(this.ride, this.isIcon, this.isCurrent, this.isCarIcon);
 
   final Ride ride;
   final bool isIcon;
+  final bool isCurrent;
+  final bool isCarIcon;
 
   @override
   _TimeLineState createState() => _TimeLineState();
@@ -361,13 +393,14 @@ class _TimeLineState extends State<TimeLine> {
     }
 
     Widget buildLine() {
+      double length = getLastRowPos() - getFirstRowPos();
       return timelineHeight != null &&
               firstRowKey.currentContext != null &&
               lastRowKey.currentContext != null
           ? Container(
               margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
               width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
+              height: length + length / 4,
               color: Color(0xFFECEBED),
             )
           : CircularProgressIndicator();
@@ -389,20 +422,27 @@ class _TimeLineState extends State<TimeLine> {
               Container(
                 key: firstRowKey,
                 child: TimeLineRow(
-                    text: 'Your driver is on the way.', decorationWidth: width),
+                    text: 'Your driver is on the way.',
+                    decorationWidth: width,
+                    carIcon: widget.isCarIcon,
+                    currentRide: widget.isCurrent),
               ),
-              SizedBox(height: 32),
-              TimeLineRow(text: 'Driver has arrived.', decorationWidth: width),
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
-                      child: widget.ride
-                          .buildLocationsCard(context, widget.isIcon)),
-                  decorationWidth: width),
+                      child: widget.ride.buildLocationsCard(
+                          context, widget.isIcon, true, true, true, true)),
+                  decorationWidth: width,
+                  carIcon: false),
               SizedBox(height: 32),
               Container(
                 key: lastRowKey,
-                child: TimeLineRow(text: 'Arrived!', decorationWidth: width),
+                child: TimeLineRow(
+                    infoWidget: Expanded(
+                        child: widget.ride.buildLocationsCard(context,
+                            widget.isIcon, false, false, false, false)),
+                    decorationWidth: width,
+                    carIcon: false),
               )
             ]),
           ),
