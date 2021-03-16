@@ -4,7 +4,7 @@ import 'main_common.dart';
 
 void main() {
   AppConfig configuredApp = AppConfig(
-    baseUrl: 'https://carriage-web.herokuapp.com/api',
+    baseUrl: 'http://localhost:3001/api',
     child: MyApp(),
   );
 
