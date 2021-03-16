@@ -5,7 +5,6 @@ import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
 import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:carriage_rider/utils/app_config.dart';
-import 'package:carriage_rider/models/Driver.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
