@@ -374,6 +374,7 @@ class TimeLine extends StatefulWidget {
 class _TimeLineState extends State<TimeLine> {
   double width = 26;
   double timelineHeight;
+  double firstRowHeight;
   Widget line;
 
   @override
@@ -393,10 +394,11 @@ class _TimeLineState extends State<TimeLine> {
     }
 
     Widget buildLine() {
-      double length = getLastRowPos() - getFirstRowPos();
+      double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2);
       return timelineHeight != null &&
               firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+              lastRowKey.currentContext != null &&
+              firstRowHeight != null
           ? Container(
               margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
               width: 4,
@@ -410,22 +412,31 @@ class _TimeLineState extends State<TimeLine> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
         children: <Widget>[
-          line == null ? CircularProgressIndicator() : line,
+          line != null && firstRowHeight != null
+              ? Positioned(top: firstRowHeight / 2, child: line)
+              : Container(),
           MeasureSize(
             onChange: (size) {
               setState(() {
                 timelineHeight = size.height;
-                line = buildLine();
               });
             },
             child: Column(children: [
-              Container(
-                key: firstRowKey,
-                child: TimeLineRow(
-                    text: 'Your driver is on the way.',
-                    decorationWidth: width,
-                    carIcon: widget.isCarIcon,
-                    currentRide: widget.isCurrent),
+              MeasureSize(
+                onChange: (size) {
+                  setState(() {
+                    firstRowHeight = size.height;
+                    line = buildLine();
+                  });
+                },
+                child: Container(
+                  key: firstRowKey,
+                  child: TimeLineRow(
+                      text: 'Your driver is on the way.',
+                      decorationWidth: width,
+                      carIcon: widget.isCarIcon,
+                      currentRide: widget.isCurrent),
+                ),
               ),
               SizedBox(height: 32),
               TimeLineRow(

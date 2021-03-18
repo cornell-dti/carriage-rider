@@ -171,11 +171,12 @@ class Ride {
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
                 width: MediaQuery.of(context).size.width,
-                child:
-                    isIcon == true ? cardIconInfo(context, isStartAddress) : cardInfo(context, isStartAddress)),
+                child: isIcon == true
+                    ? cardIconInfo(context, isStartAddress)
+                    : cardInfo(context, isStartAddress)),
             SizedBox(height: 16),
             Text(
-                'Estimated ${pickUp ? "pick up time" : "drop off time:"}: ' +
+                'Estimated ${pickUp ? "pick up time" : "drop off time"}: ' +
                     DateFormat('jm').format(isStartTime ? startTime : endTime),
                 style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
           ]),
@@ -186,9 +187,11 @@ class Ride {
   Widget cardIconInfo(context, bool isStartAddress) {
     return Row(
       children: [
-        Text(isStartAddress ? startAddress : endAddress,
-            style: TextStyle(
-                fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
+        Expanded(
+          child: Text(isStartAddress ? startAddress : endAddress,
+              style: TextStyle(
+                  fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
+        ),
         SizedBox(width: 10),
         Icon(Icons.location_on),
       ],
@@ -572,19 +575,21 @@ Widget onTheWayRide(context, Ride ride) {
   DateTime startTime = ride.startTime;
   String timeString = DateFormat.jm().format(startTime);
   return Row(children: <Widget>[
-    RichText(
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.black,
+    Expanded(
+      child: RichText(
+        text: new TextSpan(
+          style: new TextStyle(
+            fontSize: 20.0,
+            color: Colors.black,
+          ),
+          children: <TextSpan>[
+            new TextSpan(text: 'Head to the '),
+            new TextSpan(
+                text: 'pickup location\n',
+                style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(text: 'for @$startLocation by $timeString'),
+          ],
         ),
-        children: <TextSpan>[
-          new TextSpan(text: 'Head to the '),
-          new TextSpan(
-              text: 'pickup location\n',
-              style: new TextStyle(fontWeight: FontWeight.bold)),
-          new TextSpan(text: 'for @$startLocation by $timeString'),
-        ],
       ),
     )
   ]);
@@ -613,7 +618,8 @@ Widget arrivedRide(context, Ride ride) {
 Widget pickedUpRide(context, Ride ride) {
   String endLocation = ride.endLocation;
   return Row(children: <Widget>[
-    RichText(
+    Expanded(
+        child: RichText(
       text: new TextSpan(
         style: new TextStyle(
           fontSize: 20.0,
@@ -626,7 +632,7 @@ Widget pickedUpRide(context, Ride ride) {
               style: new TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
-    )
+    ))
   ]);
 }
 
