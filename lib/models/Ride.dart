@@ -651,7 +651,7 @@ Widget completeRide(context) {
 }
 
 Widget currentCardInstruction(context, String status, Ride ride) {
-  return status == "on_the_way"
+  return status == "on_the_way" || status == "not_started"
       ? onTheWayRide(context, ride)
       : status == "arrived"
           ? arrivedRide(context, ride)
@@ -685,7 +685,7 @@ class CurrentRideCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Row(
             children: [
-              ride == null || ride.status == 'not_started'
+              ride == null
                   ? Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,

@@ -51,8 +51,9 @@ class RidesProvider with ChangeNotifier {
   /// current ride.
   Ride _rideFromJson(String json) {
     if (json != '{}') {
-      var data = jsonDecode(json)['data'];
+      var data = jsonDecode(json);
       Ride res = Ride.fromJson(data);
+      print (res);
       return res;
     }
     return null;
@@ -69,7 +70,9 @@ class RidesProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
+      print(response.body);
       currentRide = ride;
+      print(currentRide);
     } else {
       throw Exception('Failed to load current ride.');
     }
