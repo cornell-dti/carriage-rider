@@ -12,7 +12,7 @@ import 'AuthProvider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
-  Ride currentRide = Ride();
+  Ride currentRide;
   List<Ride> pastRides = [];
   List<Ride> upcomingRides = [];
 
@@ -53,7 +53,6 @@ class RidesProvider with ChangeNotifier {
     if (json != '{}') {
       var data = jsonDecode(json);
       Ride res = Ride.fromJson(data);
-      print (res);
       return res;
     }
     return null;
@@ -70,16 +69,15 @@ class RidesProvider with ChangeNotifier {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
-      print(response.body);
       currentRide = ride;
-      print(currentRide);
     } else {
       throw Exception('Failed to load current ride.');
     }
   }
 
   /// Fetches a list of have already occurred from the backend by using the baseUrl of [config] and rider id from [authProvider].
-  /// Past rides are sorted and displayed in order of their initial start time.
+  /// Past rides are sorted from closest in time to farthest back in time,
+  /// so past rides has the most recent ride first.
   Future<void> _fetchPastRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -96,7 +94,8 @@ class RidesProvider with ChangeNotifier {
   }
 
   /// Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
-  /// Upcoming rides are sorted and displayed in order of their initial start time.
+  /// Past rides are sorted from closest in time to farthest back in time,
+  /// so upcoming rides has the soonest ride first.
   Future<void> _fetchUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
@@ -139,7 +138,6 @@ class RidesProvider with ChangeNotifier {
         'requestedEndTime': endTime,
       }),
     );
-    print(response);
     if (response.statusCode != 200) {
       throw Exception('Failed to create ride.');
     }

@@ -67,7 +67,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           SizedBox(height: 32),
                           ContactCard(color: Colors.grey, ride: widget.ride),
                           SizedBox(height: 60),
-                          TimeLine(widget.ride, false, false, false),
+                          TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
                           RideAction(
                               text: 'Cancel Ride',
@@ -189,7 +189,7 @@ class ContactCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          ride.driver == null
+          ride.driver == null || ride.driver.photoLink == null
               ? Icon(Icons.account_circle, size: 64, color: grey)
               : CircleAvatar(
                   backgroundImage:
@@ -442,7 +442,7 @@ class _TimeLineState extends State<TimeLine> {
               TimeLineRow(
                   infoWidget: Expanded(
                       child: widget.ride.buildLocationsCard(
-                          context, widget.isIcon, true, true, true, true)),
+                          context, widget.isIcon, true, true)),
                   decorationWidth: width,
                   carIcon: false),
               SizedBox(height: 32),
@@ -450,8 +450,8 @@ class _TimeLineState extends State<TimeLine> {
                 key: lastRowKey,
                 child: TimeLineRow(
                     infoWidget: Expanded(
-                        child: widget.ride.buildLocationsCard(context,
-                            widget.isIcon, false, false, false, false)),
+                        child: widget.ride.buildLocationsCard(
+                            context, widget.isIcon, false, false)),
                     decorationWidth: width,
                     carIcon: false),
               )

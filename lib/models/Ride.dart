@@ -70,7 +70,7 @@ class Ride {
   final DateTime requestedEndTime;
 
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
-  final String status;
+  final RideStatus status;
 
   //Indicates whether a ride is late
   final bool late;
@@ -154,8 +154,7 @@ class Ride {
 
   //Widget displaying a custom built card with information about a ride's start location and start time.
   //[isIcon] determines whether the card needs an icon.
-  Widget buildLocationsCard(context, bool isIcon, bool pickUp,
-      bool isStartLocation, bool isStartAddress, bool isStartTime) {
+  Widget buildLocationsCard(context, bool isIcon, bool pickUp, bool isStart) {
     return Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
@@ -167,46 +166,34 @@ class Ride {
           padding: const EdgeInsets.all(16),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(isStartLocation ? startLocation : endLocation,
+            Text(isStart ? startLocation : endLocation,
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
                 width: MediaQuery.of(context).size.width,
-                child: isIcon == true
-                    ? cardIconInfo(context, isStartAddress)
-                    : cardInfo(context, isStartAddress)),
+                child: cardInfo(context, isStart, isIcon)),
             SizedBox(height: 16),
             Text(
                 'Estimated ${pickUp ? "pick up time" : "drop off time"}: ' +
-                    DateFormat('jm').format(isStartTime ? startTime : endTime),
+                    DateFormat('jm').format(isStart ? startTime : endTime),
                 style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
           ]),
         ));
   }
 
-  //Widget displaying the address of a ride along with an icon for a card.
-  Widget cardIconInfo(context, bool isStartAddress) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(isStartAddress ? startAddress : endAddress,
-              style: TextStyle(
-                  fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
-        ),
-        SizedBox(width: 10),
-        Icon(Icons.location_on),
-      ],
-    );
-  }
-
-  //Widget displaying the address of a ride without an icon for a card.
-  Widget cardInfo(context, bool isStartAddress) {
-    return Row(
-      children: [
-        Text(isStartAddress ? startAddress : endAddress,
+  Widget cardInfo(context, bool isStartAddress, bool isIcon) {
+    Widget addressInfo = Row(children: [
+      Expanded(
+        child: Text(isStartAddress ? startAddress : endAddress,
             style: TextStyle(
                 fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
-      ],
-    );
+      ),
+      isIcon
+          ? Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(Icons.location_on))
+          : Container()
+    ]);
+    return addressInfo;
   }
 
   //Widget displaying the information of a ride after it has been requested. Shows the ride's
@@ -380,7 +367,6 @@ class RideCard extends StatelessWidget {
                           ? Row(
                               children: <Widget>[
                                 GestureDetector(
-                                  //TODO: replace temp phone number
                                   onTap: () =>
                                       UrlLauncher.launch('tel://13232315234'),
                                   child: Container(
@@ -598,7 +584,8 @@ Widget onTheWayRide(context, Ride ride) {
 Widget arrivedRide(context, Ride ride) {
   String startLocation = ride.startLocation;
   return Row(children: <Widget>[
-    RichText(
+    Expanded(
+        child: RichText(
       text: new TextSpan(
         style: new TextStyle(
           fontSize: 20.0,
@@ -611,7 +598,7 @@ Widget arrivedRide(context, Ride ride) {
               style: new TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
-    )
+    ))
   ]);
 }
 
@@ -656,12 +643,12 @@ Widget completeRide(context) {
   ]);
 }
 
-Widget currentCardInstruction(context, String status, Ride ride) {
-  return status == "on_the_way" || status == "not_started"
+Widget currentCardInstruction(context, Ride ride) {
+  return ride.status == RideStatus.ON_THE_WAY || ride.status == RideStatus.NOT_STARTED
       ? onTheWayRide(context, ride)
-      : status == "arrived"
+      : ride.status == RideStatus.ARRIVED
           ? arrivedRide(context, ride)
-          : status == "picked_up"
+          : ride.status == RideStatus.PICKED_UP
               ? pickedUpRide(context, ride)
               : completeRide(context);
 }
@@ -703,7 +690,7 @@ class CurrentRideCard extends StatelessWidget {
                             color: Colors.grey,
                           ),
                           SizedBox(height: 10),
-                          Text('No Current Ride',
+                          Text('No current ride',
                               style: CarriageTheme.body
                                   .copyWith(color: Colors.grey)),
                           SizedBox(height: 20),
@@ -715,13 +702,12 @@ class CurrentRideCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            currentCardInstruction(context, ride.status, ride),
+                            currentCardInstruction(context, ride),
                             SizedBox(height: 15),
                             showCallDriver
                                 ? Row(
                                     children: <Widget>[
                                       GestureDetector(
-                                        //TODO: replace temp phone number
                                         onTap: () => UrlLauncher.launch(
                                             'tel://${ride.driver.phoneNumber}'),
                                         child: Container(

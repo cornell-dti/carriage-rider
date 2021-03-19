@@ -11,10 +11,10 @@ class Driver {
   //The last name of a driver
   final String lastName;
 
-  //The phoneNumber of a driver
+  //The phone number of a driver
   final String phoneNumber;
 
-  //The photoLink of a driver
+  //The link to a profile picture of a driver
   final String photoLink;
 
   String fullName() => firstName + ' ' + lastName;
@@ -33,6 +33,6 @@ class Driver {
         firstName: json['firstName'],
         lastName: json['lastName'],
         phoneNumber: json['phoneNumber'],
-        photoLink: json['photoLink']);
+        photoLink: json['photoLink'] == null ? null : json['photoLink']);
   }
 }
