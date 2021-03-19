@@ -1,5 +1,6 @@
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'dart:math';
+import 'package:flutter_svg/svg.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
@@ -64,9 +65,9 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          ContactCard(color: Colors.grey),
+                          ContactCard(color: Colors.grey, ride: widget.ride),
                           SizedBox(height: 60),
-                          TimeLine(widget.ride, false),
+                          TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
                           RideAction(
                               text: 'Cancel Ride',
@@ -177,8 +178,9 @@ class CustomDivider extends StatelessWidget {
 
 class ContactCard extends StatelessWidget {
   final Color color;
+  final Ride ride;
 
-  const ContactCard({Key key, this.color}) : super(key: key);
+  const ContactCard({Key key, this.color, this.ride}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,14 +189,19 @@ class ContactCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.account_circle, size: 64, color: grey),
+          ride.driver == null || ride.driver.photoLink == null
+              ? Icon(Icons.account_circle, size: 64, color: grey)
+              : CircleAvatar(
+                  backgroundImage:
+                      NetworkImage('https://${ride.driver.photoLink}'),
+                  radius: 35),
           SizedBox(width: 15),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Driver TBD',
+                  ride.driver == null ? 'Driver TBD' : ride.driver.fullName(),
                   style: TextStyle(
                       color: color, fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -214,8 +221,8 @@ class ContactCard extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.phone, size: 16),
                         color: color,
-                        onPressed: () =>
-                            UrlLauncher.launch('tel://13232315234'),
+                        onPressed: () => UrlLauncher.launch(
+                            'tel://${ride.driver.phoneNumber}'),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -270,9 +277,9 @@ class EditRide extends StatelessWidget {
               alignment: Alignment.center,
               child: ButtonTheme(
                 minWidth: MediaQuery.of(context).size.width * 0.8,
-                height: 45.0,
+                height: 50.0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3)),
+                    borderRadius: BorderRadius.circular(10)),
                 child: RaisedButton.icon(
                     onPressed: () {
                       //TODO: navigate to edit flow
@@ -294,41 +301,71 @@ class EditRide extends StatelessWidget {
 }
 
 class TimeLineRow extends StatelessWidget {
-  TimeLineRow({this.text, this.infoWidget, this.decorationWidth});
+  TimeLineRow(
+      {this.text,
+      this.infoWidget,
+      this.decorationWidth,
+      this.carIcon,
+      this.currentRide});
 
   final String text;
   final Widget infoWidget;
+  final bool carIcon;
+  final bool currentRide;
   final double decorationWidth;
-
-  Widget locationCircle() {
-    return Container(
-      width: decorationWidth,
-      height: decorationWidth,
-      child: Icon(Icons.circle, size: 9.75, color: grey),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: grey, blurRadius: 2, spreadRadius: 0)]),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    double circleRadius = 13;
+    Widget stopCircle =
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+      Container(
+          width: circleRadius * 2,
+          height: 26,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          )),
+      Container(
+          width: 8,
+          height: 8,
+          decoration: new BoxDecoration(
+            color: Color(0xFF9B9B9B),
+            shape: BoxShape.circle,
+          ))
+    ]);
+
+    Widget locationCircle() {
+      return Container(
+          width: 26,
+          child: carIcon
+              ? SvgPicture.asset('assets/images/carIcon.svg')
+              : stopCircle);
+    }
+
     return Row(children: [
       locationCircle(),
       SizedBox(width: 16),
       text == null
           ? infoWidget
-          : Text(text, style: TextStyle(fontSize: 16, color: grey))
+          : currentRide
+              ? Text(text,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold))
+              : Text(text, style: TextStyle(fontSize: 16, color: grey))
     ]);
   }
 }
 
 class TimeLine extends StatefulWidget {
-  TimeLine(this.ride, this.isIcon);
+  TimeLine(this.ride, this.isIcon, this.isCurrent, this.isCarIcon);
 
   final Ride ride;
   final bool isIcon;
+  final bool isCurrent;
+  final bool isCarIcon;
 
   @override
   _TimeLineState createState() => _TimeLineState();
@@ -337,6 +374,7 @@ class TimeLine extends StatefulWidget {
 class _TimeLineState extends State<TimeLine> {
   double width = 26;
   double timelineHeight;
+  double firstRowHeight;
   Widget line;
 
   @override
@@ -356,13 +394,15 @@ class _TimeLineState extends State<TimeLine> {
     }
 
     Widget buildLine() {
+      double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2);
       return timelineHeight != null &&
               firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null
+              lastRowKey.currentContext != null &&
+              firstRowHeight != null
           ? Container(
               margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
               width: 4,
-              height: getLastRowPos() - getFirstRowPos(),
+              height: length + length / 4,
               color: Color(0xFFECEBED),
             )
           : CircularProgressIndicator();
@@ -372,32 +412,48 @@ class _TimeLineState extends State<TimeLine> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
         children: <Widget>[
-          line == null ? CircularProgressIndicator() : line,
+          line != null && firstRowHeight != null
+              ? Positioned(top: firstRowHeight / 2, child: line)
+              : Container(),
           MeasureSize(
             onChange: (size) {
               setState(() {
                 timelineHeight = size.height;
-                line = buildLine();
               });
             },
             child: Column(children: [
-              Container(
-                key: firstRowKey,
-                child: TimeLineRow(
-                    text: 'Your driver is on the way.', decorationWidth: width),
+              MeasureSize(
+                onChange: (size) {
+                  setState(() {
+                    firstRowHeight = size.height;
+                    line = buildLine();
+                  });
+                },
+                child: Container(
+                  key: firstRowKey,
+                  child: TimeLineRow(
+                      text: 'Your driver is on the way.',
+                      decorationWidth: width,
+                      carIcon: widget.isCarIcon,
+                      currentRide: widget.isCurrent),
+                ),
               ),
-              SizedBox(height: 32),
-              TimeLineRow(text: 'Driver has arrived.', decorationWidth: width),
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
-                      child: widget.ride
-                          .buildLocationsCard(context, widget.isIcon)),
-                  decorationWidth: width),
+                      child: widget.ride.buildLocationsCard(
+                          context, widget.isIcon, true, true)),
+                  decorationWidth: width,
+                  carIcon: false),
               SizedBox(height: 32),
               Container(
                 key: lastRowKey,
-                child: TimeLineRow(text: 'Arrived!', decorationWidth: width),
+                child: TimeLineRow(
+                    infoWidget: Expanded(
+                        child: widget.ride.buildLocationsCard(
+                            context, widget.isIcon, false, false)),
+                    decorationWidth: width,
+                    carIcon: false),
               )
             ]),
           ),
@@ -547,8 +603,7 @@ class UpcomingSeeMore extends StatelessWidget {
         Padding(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text('Upcoming Rides',
-              style: CarriageTheme.largeTitle),
+          child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
         ),
         Container(
           color: Colors.white,
