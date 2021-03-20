@@ -39,8 +39,10 @@ class _LoginState extends State<Login> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Welcome to Carriage',
-                      style: TextStyle(fontSize: 33, color: Colors.white)),
+                  Expanded(
+                    child: Text('Welcome to Carriage',
+                        style: TextStyle(fontSize: 33, color: Colors.white)),
+                  ),
                 ],
               ),
             ),

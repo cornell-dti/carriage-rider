@@ -32,7 +32,7 @@ class _RideHistoryState extends State<RideHistory> {
       rideCards.add(Container(
         width: MediaQuery.of(context).size.width * 0.65,
         child: RideCard(rides[i],
-            showConfirmation: false, showCallDriver: false, showArrow: false, isPast: true),
+            showConfirmation: false, showCallDriver: false, showArrow: false),
       ));
       rideCards.add(SizedBox(width: 16));
     }
