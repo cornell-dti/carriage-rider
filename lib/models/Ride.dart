@@ -14,13 +14,13 @@ import '../utils/CarriageTheme.dart';
 enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
 
 ///Converts [status] to a string.
-String toEnumString(RideStatus status) {
-  const mapping = <RideStatus, String>{
-    RideStatus.NOT_STARTED: 'not_started',
-    RideStatus.ON_THE_WAY: 'on_the_way',
-    RideStatus.ARRIVED: 'arrived',
-    RideStatus.PICKED_UP: 'picked_up',
-    RideStatus.COMPLETED: 'completed',
+RideStatus toEnumString(RideStatus status) {
+  const mapping = <String, RideStatus>{
+    'not_started': RideStatus.NOT_STARTED,
+    'on_the_way': RideStatus.ON_THE_WAY,
+    'arrived': RideStatus.ARRIVED,
+    'picked_up': RideStatus.PICKED_UP,
+    'completed': RideStatus.COMPLETED
   };
   return mapping[status];
 }
@@ -70,7 +70,7 @@ class Ride {
   final DateTime requestedEndTime;
 
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
-  final RideStatus status;
+  final String status;
 
   //Indicates whether a ride is late
   final bool late;
@@ -644,11 +644,11 @@ Widget completeRide(context) {
 }
 
 Widget currentCardInstruction(context, Ride ride) {
-  return ride.status == RideStatus.ON_THE_WAY || ride.status == RideStatus.NOT_STARTED
+  return ride.status == 'not_started' || ride.status == 'on_the_way'
       ? onTheWayRide(context, ride)
-      : ride.status == RideStatus.ARRIVED
+      : ride.status == 'arrived'
           ? arrivedRide(context, ride)
-          : ride.status == RideStatus.PICKED_UP
+          : ride.status == 'picked_up'
               ? pickedUpRide(context, ride)
               : completeRide(context);
 }
