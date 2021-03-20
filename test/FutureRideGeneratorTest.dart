@@ -13,7 +13,7 @@ void main() {
   Ride urisCasc = Ride(
     id: 'urisCasc',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startAddress: '123 Carriage Way',
@@ -25,7 +25,7 @@ void main() {
   Ride urisCascCopy = Ride(
     id: 'urisCascCopy',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startAddress: '123 Carriage Way',
@@ -37,7 +37,7 @@ void main() {
   Ride urisCascStart = Ride(
     id: 'urisCascStart',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startTime: DateTime(2020, 10, 18, 13, 10),
@@ -47,7 +47,7 @@ void main() {
   Ride urisCascEnd = Ride(
     id: 'urisCascEnd',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startTime: DateTime(2020, 10, 18, 13, 0),
@@ -57,7 +57,7 @@ void main() {
   Ride balchCasc = Ride(
     id: 'urisCascStartLoc',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Balch Hall',
     endLocation: 'Cascadilla Hall',
     startTime: DateTime(2020, 10, 18, 13, 0),
@@ -67,7 +67,7 @@ void main() {
   Ride urisBalch = Ride(
     id: 'urisCascEndLoc',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Balch Hall',
     startTime: DateTime(2020, 10, 18, 13, 0),
@@ -127,7 +127,7 @@ void main() {
   Ride urisCascStartAddress = Ride(
     id: 'urisCascCopy',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startAddress: '321 Carriage Way',
@@ -139,7 +139,7 @@ void main() {
   Ride urisCascEndAddress = Ride(
     id: 'urisCascCopy',
     type: 'past',
-    status: 'not_started',
+    status: RideStatus.NOT_STARTED,
     startLocation: 'Uris Hall',
     endLocation: 'Cascadilla Hall',
     startAddress: '123 Carriage Way',
