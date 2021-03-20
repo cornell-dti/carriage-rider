@@ -27,7 +27,7 @@ class _ReviewRideState extends State<ReviewRide> {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+        margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
         child: Column(
           children: <Widget>[
             FlowCancel(),

@@ -14,7 +14,7 @@ description: Carriage Rider App
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -32,7 +32,6 @@ dependencies:
   flutter_verification_code: ^0.2.1
   jwt_decoder: ^1.0.4
   flutter_secure_storage: ^3.3.5
-  customtogglebuttons:
   flutter_svg: ^0.18.0
 
 dev_dependencies:

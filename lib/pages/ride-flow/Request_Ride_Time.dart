@@ -1,9 +1,9 @@
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
+import 'package:carriage_rider/pages/ride-flow/ToggleButton.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/models/RideObject.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:customtogglebuttons/customtogglebuttons.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 
 class RequestRideTime extends StatefulWidget {
@@ -22,7 +22,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -195,7 +195,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -428,7 +428,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         ));
   }
 
-  final List<bool> isSelected = [false, false, false, false, false];
+  List<bool> isSelected = [false, false, false, false, false];
   final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
   final List<int> dayList = [1, 2, 3, 4, 5];
 
@@ -461,7 +461,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -573,36 +573,17 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               ),
               SizedBox(height: 30),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  CustomToggleButtons(
-                    constraints: BoxConstraints.expand(
-                      width: 60,
-                      height: 60.0,
-                    ),
-                    color: Colors.grey,
-                    spacing: 5,
-                    selectedColor: Colors.white,
-                    renderBorder: true,
-                    borderColor: Colors.black,
-                    fillColor: Colors.black,
-                    splashColor: Colors.white,
-                    children: <Widget>[
-                      Text('M', style: CarriageTheme.subheadline),
-                      Text('T', style: CarriageTheme.subheadline),
-                      Text('W', style: CarriageTheme.subheadline),
-                      Text('Th', style: CarriageTheme.subheadline),
-                      Text('F', style: CarriageTheme.subheadline)
-                    ],
-                    onPressed: (int index) {
-                      setState(() {
-                        isSelected[index] = !isSelected[index];
-                        selectedDays = setSelectedDays(selectedDays);
-                        recurringDays = setRecurringDays(recurringDays);
-                      });
-                    },
-                    isSelected: isSelected,
-                  )
+                  ToggleButton(0, 'M', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(1, 'T', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(2, 'W', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(3, 'Th', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(4, 'F', isSelected),
                 ],
               ),
               Expanded(
@@ -628,6 +609,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                           new MaterialPageRoute(
                                               builder: (context) => ReviewRide(
                                                   ride: widget.ride)));
+                                      selectedDays =
+                                          setSelectedDays(selectedDays);
+                                      recurringDays =
+                                          setRecurringDays(recurringDays);
                                       widget.ride.startDate =
                                           startDateCtrl.text;
                                       widget.ride.endDate = endDateCtrl.text;
