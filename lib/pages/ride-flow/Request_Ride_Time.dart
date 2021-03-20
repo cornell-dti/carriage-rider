@@ -22,7 +22,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -45,7 +45,7 @@ class _RequestRideTimeState extends State<RequestRideTime> {
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Flexible(
+                  Expanded(
                     child: Text('Is this a repeating ride? (1/2)',
                         style: CarriageTheme.title1),
                   )
@@ -102,8 +102,8 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        widget.ride.pickUp = new DateTime(now.year, now.month, now.day,
-            _pickUpTime.hour, _pickUpTime.minute);
+        widget.ride.pickUp = new DateTime(
+            now.year, now.month, now.day, _pickUpTime.hour, _pickUpTime.minute);
         pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
@@ -195,7 +195,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -218,7 +218,10 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Text('When is this ride? (2/2)', style: CarriageTheme.title1),
+                  Flexible(
+                    child: Text('When is this ride? (2/2)',
+                        style: CarriageTheme.title1),
+                  )
                 ],
               ),
               SizedBox(height: 30.0),
@@ -266,30 +269,34 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                           FlowBackDuo(),
                           SizedBox(width: 40),
                           ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.65,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: RaisedButton(
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) =>
-                                              ReviewRide(ride: widget.ride)));
-                                  widget.ride.startDate = dateCtrl.text;
-                                  widget.ride.endDate = dateCtrl.text;
-                                  widget.ride.pickUpTime = pickUpCtrl.text;
-                                  widget.ride.dropOffTime = dropOffCtrl.text;
-                                }
-                              },
-                              elevation: 2.0,
-                              color: Colors.black,
-                              textColor: Colors.white,
-                              child: Text('Set Date & Time'),
-                            ),
-                          ),
+                              minWidth:
+                                  MediaQuery.of(context).size.width * 0.65,
+                              height: 50.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Expanded(
+                                child: RaisedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        Navigator.push(
+                                            context,
+                                            new MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReviewRide(
+                                                        ride: widget.ride)));
+                                        widget.ride.startDate = dateCtrl.text;
+                                        widget.ride.endDate = dateCtrl.text;
+                                        widget.ride.pickUpTime =
+                                            pickUpCtrl.text;
+                                        widget.ride.dropOffTime =
+                                            dropOffCtrl.text;
+                                      }
+                                    },
+                                    elevation: 2.0,
+                                    color: Colors.black,
+                                    textColor: Colors.white,
+                                    child: Text('Set Date & Time')),
+                              )),
                         ]))),
               ),
             ],
@@ -328,8 +335,8 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     );
     if (_pickUpTime != null) {
       setState(() {
-        widget.ride.pickUp = new DateTime(now.year, now.month, now.day,
-            _pickUpTime.hour, _pickUpTime.minute);
+        widget.ride.pickUp = new DateTime(
+            now.year, now.month, now.day, _pickUpTime.hour, _pickUpTime.minute);
         pickUpCtrl.text = '${_pickUpTime.format(context)}';
       });
     }
@@ -454,7 +461,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
               FlowCancel(),
@@ -477,7 +484,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Text('When is this ride? (2/2)', style: CarriageTheme.title1),
+                  Flexible(
+                    child: Text('When is this ride? (2/2)',
+                        style: CarriageTheme.title1),
+                  )
                 ],
               ),
               SizedBox(height: 30.0),
@@ -604,32 +614,36 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                           FlowBackDuo(),
                           SizedBox(width: 40),
                           ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.65,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: RaisedButton(
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) =>
-                                              ReviewRide(ride: widget.ride)));
-                                  widget.ride.startDate = startDateCtrl.text;
-                                  widget.ride.endDate = endDateCtrl.text;
-                                  widget.ride.pickUpTime = pickUpCtrl.text;
-                                  widget.ride.dropOffTime = dropOffCtrl.text;
-                                  widget.ride.every = selectedDays;
-                                  widget.ride.recurringDays = recurringDays;
-                                }
-                              },
-                              elevation: 2.0,
-                              color: Colors.black,
-                              textColor: Colors.white,
-                              child: Text('Set Date & Time'),
-                            ),
-                          ),
+                              minWidth:
+                                  MediaQuery.of(context).size.width * 0.65,
+                              height: 50.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Expanded(
+                                child: RaisedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      Navigator.push(
+                                          context,
+                                          new MaterialPageRoute(
+                                              builder: (context) => ReviewRide(
+                                                  ride: widget.ride)));
+                                      widget.ride.startDate =
+                                          startDateCtrl.text;
+                                      widget.ride.endDate = endDateCtrl.text;
+                                      widget.ride.pickUpTime = pickUpCtrl.text;
+                                      widget.ride.dropOffTime =
+                                          dropOffCtrl.text;
+                                      widget.ride.every = selectedDays;
+                                      widget.ride.recurringDays = recurringDays;
+                                    }
+                                  },
+                                  elevation: 2.0,
+                                  color: Colors.black,
+                                  textColor: Colors.white,
+                                  child: Text('Set Date & Time'),
+                                ),
+                              )),
                         ]))),
               ),
             ],
