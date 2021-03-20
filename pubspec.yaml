@@ -33,6 +33,7 @@ dependencies:
   jwt_decoder: ^1.0.4
   flutter_secure_storage: ^3.3.5
   customtogglebuttons:
+  flutter_svg: ^0.18.0
 
 dev_dependencies:
   flutter_test:

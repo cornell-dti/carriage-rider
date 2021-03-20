@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,8 +15,9 @@ Future<String> auth(String baseUrl, String token, String email) async {
   Map<String, dynamic> requestBody = {
     "token": token,
     "email": email,
-    "clientId":
-        "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com",
+    "clientId": Platform.isAndroid
+        ? "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com"
+        : "241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c.apps.googleusercontent.com",
     "table": "Riders"
   };
   return post(endpoint, body: requestBody).then((res) {
