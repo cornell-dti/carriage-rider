@@ -69,14 +69,16 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           SizedBox(height: 60),
                           TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
-                          RideAction(
-                              text: 'Cancel Ride',
-                              color: Colors.red,
-                              icon: Icons.close,
-                              action: () => Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          CancelRidePage(widget.ride)))),
+                          widget.ride.type == 'past'
+                              ? Container()
+                              : RideAction(
+                                  text: 'Cancel Ride',
+                                  color: Colors.red,
+                                  icon: Icons.close,
+                                  action: () => Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CancelRidePage(widget.ride)))),
                           SizedBox(height: 20),
                         ],
                       ),
@@ -86,7 +88,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: EditRide(),
+                child: widget.ride.type == 'past' ? Container() : EditRide(),
               )
             ],
           ),
@@ -552,7 +554,9 @@ class UpcomingRides extends StatelessWidget {
       rideCards.add(Container(
         width: MediaQuery.of(context).size.width * 0.65,
         child: RideCard(rides[i],
-            showConfirmation: true, showCallDriver: true, showArrow: false),
+            showConfirmation: true,
+            showCallDriver: true,
+            showArrow: false),
       ));
       rideCards.add(SizedBox(width: 16));
     }

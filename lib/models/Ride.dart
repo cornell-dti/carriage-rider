@@ -11,18 +11,32 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:carriage_rider/models/Driver.dart';
 import '../utils/CarriageTheme.dart';
 
-enum RideStatus { NOT_STARTED, ON_THE_WAY, ARRIVED, PICKED_UP, COMPLETED }
+enum RideStatus {
+  NOT_STARTED,
+  ON_THE_WAY,
+  ARRIVED,
+  PICKED_UP,
+  COMPLETED,
+  NO_SHOW
+}
 
-///Converts [status] to a string.
-String toEnumString(RideStatus status) {
-  const mapping = <RideStatus, String>{
-    RideStatus.NOT_STARTED: 'not_started',
-    RideStatus.ON_THE_WAY: 'on_the_way',
-    RideStatus.ARRIVED: 'arrived',
-    RideStatus.PICKED_UP: 'picked_up',
-    RideStatus.COMPLETED: 'completed',
-  };
-  return mapping[status];
+RideStatus getStatusEnum(String status) {
+  switch (status) {
+    case ('not_started'):
+      return RideStatus.NOT_STARTED;
+    case ('on_the_way'):
+      return RideStatus.ON_THE_WAY;
+    case ('arrived'):
+      return RideStatus.ARRIVED;
+    case ('picked_up'):
+      return RideStatus.PICKED_UP;
+    case ('completed'):
+      return RideStatus.COMPLETED;
+    case ('no_show'):
+      return RideStatus.NO_SHOW;
+    default:
+      throw Exception('Ride status is invalid');
+  }
 }
 
 //Model for a ride.
@@ -70,7 +84,7 @@ class Ride {
   final DateTime requestedEndTime;
 
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
-  final RideStatus status;
+  RideStatus status;
 
   //Indicates whether a ride is late
   final bool late;
@@ -107,7 +121,7 @@ class Ride {
       id: json['id'],
       type: json['type'],
       rider: Rider.fromJson(json['rider']),
-      status: json['status'],
+      status: getStatusEnum(json['status']),
       startLocation: json['startLocation']['name'],
       startAddress: json['startLocation']['address'],
       endLocation: json['endLocation']['name'],
@@ -173,7 +187,7 @@ class Ride {
                 child: cardInfo(context, isStart, isIcon)),
             SizedBox(height: 16),
             Text(
-                'Estimated ${pickUp ? "pick up time" : "drop off time"}: ' +
+                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
                     DateFormat('jm').format(isStart ? startTime : endTime),
                 style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
           ]),
@@ -644,7 +658,8 @@ Widget completeRide(context) {
 }
 
 Widget currentCardInstruction(context, Ride ride) {
-  return ride.status == RideStatus.ON_THE_WAY || ride.status == RideStatus.NOT_STARTED
+  return ride.status == RideStatus.NOT_STARTED ||
+          ride.status == RideStatus.ON_THE_WAY
       ? onTheWayRide(context, ride)
       : ride.status == RideStatus.ARRIVED
           ? arrivedRide(context, ride)
