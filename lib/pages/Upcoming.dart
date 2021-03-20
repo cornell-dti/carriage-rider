@@ -15,9 +15,10 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 Color grey = Color(0xFF9B9B9B);
 
 class UpcomingRidePage extends StatefulWidget {
-  UpcomingRidePage(this.ride, {this.parentRideID});
+  UpcomingRidePage(this.ride, this.isPast, {this.parentRideID});
 
   final Ride ride;
+  final bool isPast;
   final String parentRideID;
 
   @override
@@ -69,14 +70,16 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                           SizedBox(height: 60),
                           TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
-                          RideAction(
-                              text: 'Cancel Ride',
-                              color: Colors.red,
-                              icon: Icons.close,
-                              action: () => Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          CancelRidePage(widget.ride)))),
+                          widget.isPast
+                              ? Container()
+                              : RideAction(
+                                  text: 'Cancel Ride',
+                                  color: Colors.red,
+                                  icon: Icons.close,
+                                  action: () => Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CancelRidePage(widget.ride)))),
                           SizedBox(height: 20),
                         ],
                       ),
@@ -86,7 +89,7 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: EditRide(),
+                child: widget.isPast ? Container() : EditRide(),
               )
             ],
           ),
@@ -554,7 +557,8 @@ class UpcomingRides extends StatelessWidget {
         child: RideCard(rides[i],
             showConfirmation: true,
             showCallDriver: true,
-            showArrow: false),
+            showArrow: false,
+            isPast: false),
       ));
       rideCards.add(SizedBox(width: 16));
     }

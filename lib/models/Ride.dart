@@ -309,12 +309,14 @@ class RideCard extends StatelessWidget {
       {@required this.showConfirmation,
       @required this.showCallDriver,
       @required this.showArrow,
+      @required this.isPast,
       this.parentRideID});
 
   final Ride ride;
   final bool showConfirmation;
   final bool showCallDriver;
   final bool showArrow;
+  final bool isPast;
   final String parentRideID;
 
   final confirmationStyle = TextStyle(
@@ -329,8 +331,8 @@ class RideCard extends StatelessWidget {
         Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) =>
-                    UpcomingRidePage(ride, parentRideID: parentRideID)));
+                builder: (context) => UpcomingRidePage(ride, isPast,
+                    parentRideID: parentRideID)));
       },
       child: Container(
         margin: EdgeInsets.all(2),
@@ -525,6 +527,7 @@ class RecurringRidesGenerator {
           showConfirmation: true,
           showCallDriver: false,
           showArrow: true,
+          isPast: false,
         );
       },
       separatorBuilder: (context, index) {
@@ -547,6 +550,7 @@ class RecurringRidesGenerator {
           showConfirmation: false,
           showCallDriver: false,
           showArrow: true,
+          isPast: true,
         );
       },
       separatorBuilder: (context, index) {
