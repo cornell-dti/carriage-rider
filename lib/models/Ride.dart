@@ -173,7 +173,7 @@ class Ride {
                 child: cardInfo(context, isStart, isIcon)),
             SizedBox(height: 16),
             Text(
-                'Estimated ${pickUp ? "pick up time" : "drop off time"}: ' +
+                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
                     DateFormat('jm').format(isStart ? startTime : endTime),
                 style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
           ]),
