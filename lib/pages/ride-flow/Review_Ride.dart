@@ -199,8 +199,19 @@ class _ReviewRideState extends State<ReviewRide> {
                                   AppConfig.of(context),
                                   context,
                                   riderProvider,
-                                  LocationsProvider.locationByName(widget.ride.fromLocation, locations).id,
-                                  LocationsProvider.locationByName(widget.ride.toLocation, locations).id,
+                                  LocationsProvider.isCustom(
+                                          widget.ride.fromLocation, locations)
+                                      ? widget.ride.fromLocation
+                                      : LocationsProvider.locationByName(
+                                              widget.ride.fromLocation,
+                                              locations)
+                                          .id,
+                                  LocationsProvider.isCustom(
+                                          widget.ride.toLocation, locations)
+                                      ? widget.ride.toLocation
+                                      : LocationsProvider.locationByName(
+                                              widget.ride.toLocation, locations)
+                                          .id,
                                   widget.ride.pickUp,
                                   widget.ride.dropOff,
                                   widget.ride.end,
