@@ -95,7 +95,7 @@ class _RecurringRideState extends State<RecurringRide> {
       display = repeatedDays + days.join(' and ');
     } else {
       List<String> newDays = days.sublist(0, days.length - 1);
-      display = repeatedDays + newDays.join(', ') + ", and " + days.last;
+      display = repeatedDays + newDays.join(', ') + ', and ' + days.last;
     }
     return display;
   }
