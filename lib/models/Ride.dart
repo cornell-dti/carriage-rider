@@ -25,6 +25,18 @@ String toEnumString(RideStatus status) {
   return mapping[status];
 }
 
+/// Parses [status] representing a ride status into its corresponding enum.
+RideStatus parseRideStatus(String status) {
+  const mapping = <String, RideStatus>{
+    'not_started': RideStatus.NOT_STARTED,
+    'on_the_way': RideStatus.ON_THE_WAY,
+    'arrived': RideStatus.ARRIVED,
+    'picked_up': RideStatus.PICKED_UP,
+    'completed': RideStatus.COMPLETED,
+  };
+  return mapping[status];
+}
+
 //Model for a ride.
 class Ride {
   //The ride's id in the backend.
@@ -107,7 +119,7 @@ class Ride {
       id: json['id'],
       type: json['type'],
       rider: Rider.fromJson(json['rider']),
-      status: json['status'],
+      status: parseRideStatus(json['status']),
       startLocation: json['startLocation']['name'],
       startAddress: json['startLocation']['address'],
       endLocation: json['endLocation']['name'],
