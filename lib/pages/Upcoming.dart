@@ -1,4 +1,5 @@
 import 'package:carriage_rider/utils/MeasureSize.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'dart:math';
 import 'package:flutter_svg/svg.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
@@ -9,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
-import '../PopButton.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 Color grey = Color(0xFF9B9B9B);
@@ -28,31 +28,20 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
               SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 8, top: 8),
+                          left: 16, right: 16, bottom: 8, top: 16),
                       child: Text(
                           DateFormat('MMM')
-                                  .format(widget.ride.startTime)
-                                  .toUpperCase() +
+                              .format(widget.ride.startTime)
+                              .toUpperCase() +
                               ' ' +
                               ordinal(int.parse(DateFormat('d')
                                   .format(widget.ride.startTime))) +
@@ -65,20 +54,18 @@ class _UpcomingRidePageState extends State<UpcomingRidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          ContactCard(color: Colors.grey, ride: widget.ride),
-                          SizedBox(height: 60),
                           TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
                           widget.ride.type == 'past'
                               ? Container()
                               : RideAction(
-                                  text: 'Cancel Ride',
-                                  color: Colors.red,
-                                  icon: Icons.close,
-                                  action: () => Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                          builder: (context) =>
-                                              CancelRidePage(widget.ride)))),
+                              text: 'Cancel Ride',
+                              color: Colors.red,
+                              icon: Icons.close,
+                              action: () => Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                  builder: (context) =>
+                                      CancelRidePage(widget.ride)))),
                           SizedBox(height: 20),
                         ],
                       ),
@@ -194,9 +181,9 @@ class ContactCard extends StatelessWidget {
           ride.driver == null || ride.driver.photoLink == null
               ? Icon(Icons.account_circle, size: 64, color: grey)
               : CircleAvatar(
-                  backgroundImage:
-                      NetworkImage('https://${ride.driver.photoLink}'),
-                  radius: 35),
+              backgroundImage:
+              NetworkImage('https://${ride.driver.photoLink}'),
+              radius: 35),
           SizedBox(width: 15),
           Container(
             child: Column(
@@ -305,10 +292,10 @@ class EditRide extends StatelessWidget {
 class TimeLineRow extends StatelessWidget {
   TimeLineRow(
       {this.text,
-      this.infoWidget,
-      this.decorationWidth,
-      this.carIcon,
-      this.currentRide});
+        this.infoWidget,
+        this.decorationWidth,
+        this.carIcon,
+        this.currentRide});
 
   final String text;
   final Widget infoWidget;
@@ -320,7 +307,7 @@ class TimeLineRow extends StatelessWidget {
   Widget build(BuildContext context) {
     double circleRadius = 13;
     Widget stopCircle =
-        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+    Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
       Container(
           width: circleRadius * 2,
           height: 26,
@@ -351,12 +338,12 @@ class TimeLineRow extends StatelessWidget {
       text == null
           ? infoWidget
           : currentRide
-              ? Text(text,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold))
-              : Text(text, style: TextStyle(fontSize: 16, color: grey))
+          ? Text(text,
+          style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold))
+          : Text(text, style: TextStyle(fontSize: 16, color: grey))
     ]);
   }
 }
@@ -398,15 +385,15 @@ class _TimeLineState extends State<TimeLine> {
     Widget buildLine() {
       double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2);
       return timelineHeight != null &&
-              firstRowKey.currentContext != null &&
-              lastRowKey.currentContext != null &&
-              firstRowHeight != null
+          firstRowKey.currentContext != null &&
+          lastRowKey.currentContext != null &&
+          firstRowHeight != null
           ? Container(
-              margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
-              width: 4,
-              height: length + length / 4,
-              color: Color(0xFFECEBED),
-            )
+        margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+        width: 4,
+        height: length + length / 4,
+        color: Color(0xFFECEBED),
+      )
           : CircularProgressIndicator();
     }
 
@@ -591,35 +578,34 @@ class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.upcomingRides;
     RecurringRidesGenerator ridesGenerator =
-        RecurringRidesGenerator(originalRides);
+    RecurringRidesGenerator(originalRides);
 
     return Scaffold(
+        appBar: ScheduleBar(),
         body: SafeArea(
             child: SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: PopButton(context, 'Schedule'),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
-        ),
-        Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ridesGenerator.buildUpcomingRidesList(),
-            ),
-          ),
-        )
-      ]),
-    )));
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ridesGenerator.buildUpcomingRidesList(),
+                        ),
+                      ),
+                    )
+                  ]),
+            )));
   }
 }
