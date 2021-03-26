@@ -1,9 +1,10 @@
+import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/models/RideObject.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import '../../providers/RidesProvider.dart';
@@ -13,9 +14,10 @@ import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/models/Location.dart';
 
 class ReviewRide extends StatefulWidget {
-  final RideObject ride;
+  final Ride ride;
+  final String selectedDays;
 
-  ReviewRide({Key key, this.ride}) : super(key: key);
+  ReviewRide({Key key, this.ride, this.selectedDays}) : super(key: key);
 
   @override
   _ReviewRideState createState() => _ReviewRideState();
@@ -56,8 +58,8 @@ class _ReviewRideState extends State<ReviewRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                    widget.ride.fromLocation != null
-                        ? widget.ride.fromLocation
+                    widget.ride.startLocation != null
+                        ? widget.ride.startLocation
                         : '',
                     style: CarriageTheme.infoStyle)
               ],
@@ -72,8 +74,8 @@ class _ReviewRideState extends State<ReviewRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                    widget.ride.toLocation != null
-                        ? widget.ride.toLocation
+                    widget.ride.endLocation != null
+                        ? widget.ride.endLocation
                         : '',
                     style: CarriageTheme.infoStyle)
               ],
@@ -89,8 +91,8 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Start Date', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
                       Text(
-                          widget.ride.startDate != null
-                              ? widget.ride.startDate
+                          widget.ride.startTime != null
+                              ? DateFormat.yMd().format(widget.ride.startTime)
                               : '',
                           style: CarriageTheme.infoStyle)
                     ],
@@ -105,7 +107,7 @@ class _ReviewRideState extends State<ReviewRide> {
                       SizedBox(height: 5),
                       Text(
                           widget.ride.endDate != null
-                              ? widget.ride.endDate
+                              ? DateFormat.yMd().format(widget.ride.endDate)
                               : 'None',
                           style: CarriageTheme.infoStyle)
                     ],
@@ -124,8 +126,8 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Pickup Time', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
                       Text(
-                          widget.ride.pickUpTime != null
-                              ? widget.ride.pickUpTime
+                          widget.ride.startTime != null
+                              ? DateFormat.jm().format(widget.ride.startTime)
                               : '',
                           style: CarriageTheme.infoStyle)
                     ],
@@ -139,8 +141,8 @@ class _ReviewRideState extends State<ReviewRide> {
                       Text('Drop-off Time', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
                       Text(
-                          widget.ride.dropOffTime != null
-                              ? widget.ride.dropOffTime
+                          widget.ride.endTime != null
+                              ? DateFormat.jm().format(widget.ride.endTime)
                               : '',
                           style: CarriageTheme.infoStyle)
                     ],
@@ -160,8 +162,8 @@ class _ReviewRideState extends State<ReviewRide> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                    widget.ride.every != null
-                        ? widget.ride.every
+                    widget.ride.recurringDays != null
+                        ? widget.selectedDays
                         : 'No Recurring Days',
                     style: CarriageTheme.infoStyle)
               ],
@@ -189,46 +191,49 @@ class _ReviewRideState extends State<ReviewRide> {
                         FlowBackDuo(),
                         SizedBox(width: 40),
                         ButtonTheme(
-                          minWidth: MediaQuery.of(context).size.width * 0.65,
-                          height: 50.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: RaisedButton(
-                            onPressed: () {
-                              rideProvider.createRide(
-                                  AppConfig.of(context),
-                                  context,
-                                  riderProvider,
-                                  LocationsProvider.isCustom(
-                                          widget.ride.fromLocation, locations)
-                                      ? widget.ride.fromLocation
-                                      : LocationsProvider.locationByName(
-                                              widget.ride.fromLocation,
+                            minWidth: MediaQuery.of(context).size.width * 0.65,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Expanded(
+                              child: RaisedButton(
+                                onPressed: () {
+                                  rideProvider.createRide(
+                                      AppConfig.of(context),
+                                      context,
+                                      riderProvider,
+                                      LocationsProvider.isCustom(
+                                              widget.ride.startLocation,
                                               locations)
-                                          .id,
-                                  LocationsProvider.isCustom(
-                                          widget.ride.toLocation, locations)
-                                      ? widget.ride.toLocation
-                                      : LocationsProvider.locationByName(
-                                              widget.ride.toLocation, locations)
-                                          .id,
-                                  widget.ride.pickUp,
-                                  widget.ride.dropOff,
-                                  widget.ride.end,
-                                  widget.ride.recurring,
-                                  widget.ride.recurringDays);
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) =>
-                                          RideConfirmation()));
-                            },
-                            elevation: 2.0,
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            child: Text('Send Request'),
-                          ),
-                        ),
+                                          ? widget.ride.startLocation
+                                          : LocationsProvider.locationByName(
+                                                  widget.ride.startLocation,
+                                                  locations)
+                                              .id,
+                                      LocationsProvider.isCustom(
+                                              widget.ride.endLocation, locations)
+                                          ? widget.ride.endLocation
+                                          : LocationsProvider.locationByName(
+                                                  widget.ride.endLocation,
+                                                  locations)
+                                              .id,
+                                      widget.ride.startTime,
+                                      widget.ride.endTime,
+                                      widget.ride.endDate,
+                                      widget.ride.recurring,
+                                      widget.ride.recurringDays);
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) =>
+                                              RideConfirmation()));
+                                },
+                                elevation: 2.0,
+                                color: Colors.black,
+                                textColor: Colors.white,
+                                child: Text('Send Request'),
+                              ),
+                            )),
                       ]))),
             ),
           ],

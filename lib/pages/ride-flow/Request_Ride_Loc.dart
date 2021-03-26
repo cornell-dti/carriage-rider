@@ -1,6 +1,6 @@
+import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/models/RideObject.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
@@ -37,7 +37,7 @@ class FlowCancel extends StatelessWidget {
 }
 
 class RequestRideLoc extends StatefulWidget {
-  final RideObject ride;
+  final Ride ride;
 
   RequestRideLoc({Key key, this.ride}) : super(key: key);
 
@@ -113,7 +113,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
 }
 
 class LocationRequestSelection extends StatefulWidget {
-  final RideObject ride;
+  final Ride ride;
   final Widget page;
 
   LocationRequestSelection({Key key, this.ride, this.page}) : super(key: key);
@@ -183,7 +183,7 @@ class _LocationRequestSelectionState extends State<LocationRequestSelection> {
 }
 
 class RequestLoc extends StatefulWidget {
-  final RideObject ride;
+  final Ride ride;
   final TextEditingController fromCtrl;
   final TextEditingController toCtrl;
   final bool isToLocation;
@@ -292,7 +292,7 @@ class _RequestLocState extends State<RequestLoc> {
 class RequestRideLocConfirm extends StatefulWidget {
   final TextEditingController fromCtrl;
   final TextEditingController toCtrl;
-  final RideObject ride;
+  final Ride ride;
 
   RequestRideLocConfirm({Key key, this.ride, this.fromCtrl, this.toCtrl})
       : super(key: key);
@@ -383,10 +383,8 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                                       new MaterialPageRoute(
                                           builder: (context) => RequestRideTime(
                                               ride: widget.ride)));
-                                  widget.ride.fromLocation = fromCtrl.text;
-                                  widget.ride.toLocation = toCtrl.text;
-                                  fromCtrl.clear();
-                                  toCtrl.clear();
+                                  widget.ride.startLocation = fromCtrl.text;
+                                  widget.ride.endLocation = toCtrl.text;
                                 }
                               },
                               elevation: 2.0,
@@ -406,7 +404,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
 class LocationInput extends StatefulWidget {
   final TextEditingController fromCtrl;
   final TextEditingController toCtrl;
-  final RideObject ride;
+  final Ride ride;
   final String label;
   final bool finished;
   final bool isToLocation;
