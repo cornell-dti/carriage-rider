@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,8 +58,7 @@ class _SettingsState extends State<Settings> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                  child: Text('Settings',
-                      style: CarriageTheme.largeTitle),
+                  child: Text('Settings', style: CarriageTheme.largeTitle),
                 ),
                 Container(
                     decoration: BoxDecoration(
@@ -272,10 +272,14 @@ class LocationsInfo extends StatelessWidget {
   }
 
   void _editFavorites(context) async {
+    AuthProvider authProvider = Provider.of(context, listen: false);
+    AppConfig appConfig = AppConfig.of(context);
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
-    Map<String, Location> locations =
-        locationsById(await fetchLocations(context));
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
+    Map<String, Location> locations = locationsById(await locationsProvider
+        .fetchLocations(context, appConfig, authProvider));
     List<String> res = (await Navigator.push(
             context,
             MaterialPageRoute(
