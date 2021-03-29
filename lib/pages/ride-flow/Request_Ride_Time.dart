@@ -553,7 +553,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                     Row(
                       children: <Widget>[
                         _buildPickupTimeField(),
-                        SizedBox(width: 20.0),
+                        SizedBox(width: 30.0),
                         _buildDropOTimeField(),
                       ],
                     )

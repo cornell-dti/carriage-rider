@@ -56,11 +56,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                    widget.ride.startLocation != null
-                        ? widget.ride.startLocation
-                        : '',
-                    style: CarriageTheme.infoStyle)
+                Text(widget.ride.startLocation, style: CarriageTheme.infoStyle)
               ],
             ),
             SizedBox(height: 15),
@@ -72,11 +68,7 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                    widget.ride.endLocation != null
-                        ? widget.ride.endLocation
-                        : '',
-                    style: CarriageTheme.infoStyle)
+                Text(widget.ride.endLocation, style: CarriageTheme.infoStyle)
               ],
             ),
             SizedBox(height: 15),
@@ -89,10 +81,7 @@ class _ReviewRideState extends State<ReviewRide> {
                     children: <Widget>[
                       Text('Start Date', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
-                      Text(
-                          widget.ride.startTime != null
-                              ? DateFormat.yMd().format(widget.ride.startTime)
-                              : '',
+                      Text(DateFormat.yMd().format(widget.ride.startTime),
                           style: CarriageTheme.infoStyle)
                     ],
                   ),
@@ -124,10 +113,7 @@ class _ReviewRideState extends State<ReviewRide> {
                     children: <Widget>[
                       Text('Pickup Time', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
-                      Text(
-                          widget.ride.startTime != null
-                              ? DateFormat.jm().format(widget.ride.startTime)
-                              : '',
+                      Text(DateFormat.jm().format(widget.ride.startTime),
                           style: CarriageTheme.infoStyle)
                     ],
                   ),
@@ -139,10 +125,7 @@ class _ReviewRideState extends State<ReviewRide> {
                     children: <Widget>[
                       Text('Drop-off Time', style: CarriageTheme.labelStyle),
                       SizedBox(height: 5),
-                      Text(
-                          widget.ride.endTime != null
-                              ? DateFormat.jm().format(widget.ride.endTime)
-                              : '',
+                      Text(DateFormat.jm().format(widget.ride.endTime),
                           style: CarriageTheme.infoStyle)
                     ],
                   ),
