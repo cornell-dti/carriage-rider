@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ToggleButton extends StatelessWidget {
+class ToggleButton extends StatefulWidget {
   ToggleButton(this.index, this.text, this.values);
 
   final int index;
   final String text;
   final List<bool> values;
 
+  @override
+  _ToggleButtonState createState() => new _ToggleButtonState();
+}
+
+class _ToggleButtonState extends State<ToggleButton> {
   void _buttonChange() {
-    values[index] = values[index];
+    setState(() {
+      widget.values[widget.index] = !widget.values[widget.index];
+    });
   }
 
   @override
@@ -16,8 +23,8 @@ class ToggleButton extends StatelessWidget {
     return RawMaterialButton(
       elevation: 0.0,
       child: Text(
-        text,
-        style: values[index]
+        widget.text,
+        style: widget.values[widget.index]
             ? TextStyle(color: Colors.white, fontSize: 18)
             : TextStyle(color: Colors.grey, fontSize: 18),
       ),
@@ -26,8 +33,10 @@ class ToggleButton extends StatelessWidget {
         width: 50.0,
         height: 50.0,
       ),
-      shape: CircleBorder(side: BorderSide(color: Colors.grey)),
-      fillColor: values[index] ? Colors.black : Colors.white,
+      shape: CircleBorder(
+        side: BorderSide(color: Colors.grey)
+      ),
+      fillColor: widget.values[widget.index] ? Colors.black : Colors.white,
     );
   }
 }
