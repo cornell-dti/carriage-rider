@@ -1,13 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/utils/CarriageTheme.dart';
+
+TextEditingController fromCtrl = TextEditingController();
+TextEditingController toCtrl = TextEditingController();
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
+}
+
+class FlowCancel extends StatelessWidget {
+  const FlowCancel({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: InkWell(
+            child: Text("Cancel", style: CarriageTheme.cancelStyle),
+            onTap: () {
+              fromCtrl.clear();
+              toCtrl.clear();
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 class SelectionButton extends StatelessWidget {
   final Widget page;
   final String text;
-  final bool repeatPage;
   final GestureTapCallback onPressed;
 
-  const SelectionButton(
-      {Key key, this.page, this.text, this.repeatPage, this.onPressed})
+  const SelectionButton({Key key, this.page, this.text, this.onPressed})
       : super(key: key);
 
   @override
@@ -43,7 +74,7 @@ class FlowBack extends StatelessWidget {
       child: Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: const EdgeInsets.only(bottom: 30.0),
               child: Row(
                 children: <Widget>[
                   ButtonTheme(
@@ -57,7 +88,12 @@ class FlowBack extends StatelessWidget {
                       },
                       elevation: 2.0,
                       color: Colors.white,
-                      child: Icon(Icons.arrow_back_ios),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 5),
+                          Icon(Icons.arrow_back_ios),
+                        ],
+                      )
                     ),
                   ),
                 ],
@@ -81,7 +117,12 @@ class FlowBackDuo extends StatelessWidget {
         },
         elevation: 2.0,
         color: Colors.white,
-        child: Icon(Icons.arrow_back_ios),
+        child: Row(
+          children: [
+            SizedBox(width: 5),
+            Icon(Icons.arrow_back_ios),
+          ],
+        )
       ),
     );
   }
@@ -112,10 +153,10 @@ class TabBarTop extends StatelessWidget {
         Expanded(
           child: new Container(
               child: Divider(
-                color: colorTwo,
-                height: 50,
-                thickness: 5,
-              )),
+            color: colorTwo,
+            height: 50,
+            thickness: 5,
+          )),
         ),
         Expanded(
           child: new Container(
@@ -148,8 +189,7 @@ class TabBarBot extends StatelessWidget {
           child: new Container(
             transform: Matrix4.translationValues(0.0, -15.0, 0.0),
             margin: const EdgeInsets.only(left: 10.0),
-            child: Icon(Icons.location_on_outlined,
-                color: colorOne, size: 30),
+            child: Icon(Icons.location_on_outlined, color: colorOne, size: 30),
           ),
         ),
         Expanded(

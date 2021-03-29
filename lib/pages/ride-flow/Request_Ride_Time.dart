@@ -1,5 +1,4 @@
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/ToggleButton.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +57,11 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   children: <Widget>[
                     SelectionButton(
                         text: 'Yes',
-                        repeatPage: true,
                         onPressed: () => widget.ride.recurring = true,
                         page: RequestRideRepeat(ride: widget.ride)),
                     SizedBox(width: 30.0),
                     SelectionButton(
                         text: 'No',
-                        repeatPage: true,
                         onPressed: () => widget.ride.recurring = false,
                         page: RequestRideNoRepeat(ride: widget.ride))
                   ]),
@@ -125,8 +122,6 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
     }
   }
 
-  final List<bool> isSelected = [true, false];
-
   String format(String date) {
     var dates = date.split('-');
     String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
@@ -134,11 +129,12 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   }
 
   _selectDate(BuildContext context) async {
+    DateTime date = DateTime.now();
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      firstDate: date,
+      lastDate: DateTime(date.year + 1),
       builder: (context, child) {
         return Theme(
           data: ThemeData.light(),
@@ -156,6 +152,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   Widget _buildPickupTimeField() {
     return TextFormField(
       controller: pickUpCtrl,
+      focusNode: AlwaysDisabledFocusNode(),
       decoration: InputDecoration(
           labelText: 'Pickup Time',
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -175,6 +172,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   Widget _buildDropOTimeField() {
     return TextFormField(
       controller: dropOffCtrl,
+      focusNode: AlwaysDisabledFocusNode(),
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -239,7 +237,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                   children: <Widget>[
                     TextFormField(
                       controller: dateCtrl,
-                      focusNode: focusNode,
+                      focusNode: AlwaysDisabledFocusNode(),
                       decoration: InputDecoration(
                           labelText: 'Date',
                           labelStyle:
@@ -266,7 +264,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
+                        padding: const EdgeInsets.only(bottom: 30.0),
                         child: Row(children: <Widget>[
                           FlowBackDuo(),
                           SizedBox(width: 40),
@@ -291,7 +289,9 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                                     elevation: 2.0,
                                     color: Colors.black,
                                     textColor: Colors.white,
-                                    child: Text('Set Date & Time')),
+                                    child: Text('Set Date & Time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
                               )),
                         ]))),
               ),
@@ -361,11 +361,12 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
 
   _selectDate(
       BuildContext context, DateTime date, TextEditingController ctrl) async {
+    DateTime init = DateTime.now();
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: date,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      firstDate: init,
+      lastDate: DateTime(init.year + 1),
       builder: (context, child) {
         return Theme(
           data: ThemeData.light(),
@@ -387,6 +388,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         width: MediaQuery.of(context).size.width / 3,
         margin: EdgeInsets.only(left: 15.0),
         child: TextFormField(
+          focusNode: AlwaysDisabledFocusNode(),
           controller: pickUpCtrl,
           decoration: InputDecoration(
               labelText: 'Pickup Time',
@@ -408,6 +410,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         width: MediaQuery.of(context).size.width / 3,
         margin: EdgeInsets.only(right: 15.0),
         child: TextFormField(
+          focusNode: AlwaysDisabledFocusNode(),
           controller: dropOffCtrl,
           decoration: InputDecoration(
               labelText: 'Drop-off Time',
@@ -424,10 +427,8 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         ));
   }
 
-  List<bool> isSelected = [false, false, false, false, false];
+  List<bool> isSelected = List.filled(5, false);
   final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
-  final List<int> dayList = [1, 2, 3, 4, 5];
-
   String selectedDays = '';
   List<int> recurringDays = [];
 
@@ -435,7 +436,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     rDays = [];
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        rDays.add(dayList[i]);
+        rDays.add(i + 1);
       }
     }
     return rDays;
@@ -457,147 +458,146 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-            margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-            child: Column(
-              children: <Widget>[
-                FlowCancel(),
-                SizedBox(height: 20.0),
-                Row(
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('Date & Time', style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.green,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('When is your ride? (2/2)',
+                        style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              SizedBox(height: 30.0),
+              Row(
+                children: <Widget>[
+                  Text('Date & Time',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
                   children: <Widget>[
-                    Flexible(
-                      child: Text('Date & Time', style: CarriageTheme.title1),
-                    )
-                  ],
-                ),
-                TabBarTop(
-                    colorOne: Colors.black,
-                    colorTwo: Colors.black,
-                    colorThree: Colors.grey[350]),
-                TabBarBot(
-                    colorOne: Colors.green,
-                    colorTwo: Colors.black,
-                    colorThree: Colors.grey[350]),
-                SizedBox(height: 15.0),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Text('When is your ride? (2/2)',
-                          style: CarriageTheme.title1),
-                    )
-                  ],
-                ),
-                SizedBox(height: 30.0),
-                Row(
-                  children: <Widget>[
-                    Text('Date & Time',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            width: MediaQuery.of(context).size.width / 3,
-                            margin: EdgeInsets.only(left: 15.0),
-                            child: TextFormField(
-                              controller: startDateCtrl,
-                              focusNode: focusNode,
-                              decoration: InputDecoration(
-                                  labelText: 'Start Date',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 17)),
-                              validator: (input) {
-                                if (input.isEmpty) {
-                                  return 'Please enter the date';
-                                }
-                                return null;
-                              },
-                              textInputAction: TextInputAction.next,
-                              onTap: () => _selectDate(
-                                  context, startDate, startDateCtrl),
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                          ),
-                          SizedBox(width: 30),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 3,
-                            margin: EdgeInsets.only(right: 15.0),
-                            child: TextFormField(
-                              controller: endDateCtrl,
-                              decoration: InputDecoration(
-                                labelText: 'End Date',
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width / 3,
+                          margin: EdgeInsets.only(left: 15.0),
+                          child: TextFormField(
+                            controller: startDateCtrl,
+                            focusNode: AlwaysDisabledFocusNode(),
+                            decoration: InputDecoration(
+                                labelText: 'Start Date',
                                 labelStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 17),
-                              ),
-                              validator: (input) {
-                                if (input.isEmpty) {
-                                  return 'Please enter the date';
-                                }
-                                return null;
-                              },
-                              textInputAction: TextInputAction.next,
-                              onTap: () =>
-                                  _selectDate(context, endDate, endDateCtrl),
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
+                                    color: Colors.grey, fontSize: 17)),
+                            validator: (input) {
+                              if (input.isEmpty) {
+                                return 'Please enter the date';
+                              }
+                              return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            onTap: () =>
+                                _selectDate(context, startDate, startDateCtrl),
+                            style: TextStyle(color: Colors.black, fontSize: 15),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Row(
-                        children: <Widget>[
-                          _buildPickupTimeField(),
-                          SizedBox(width: 20.0),
-                          _buildDropOTimeField(),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: 30.0),
-                Row(
-                  children: <Widget>[
-                    Text('Repeat Days',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(width: 30),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 3,
+                          margin: EdgeInsets.only(right: 15.0),
+                          child: TextFormField(
+                            focusNode: AlwaysDisabledFocusNode(),
+                            controller: endDateCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'End Date',
+                              labelStyle:
+                                  TextStyle(color: Colors.grey, fontSize: 17),
+                            ),
+                            validator: (input) {
+                              if (input.isEmpty) {
+                                return 'Please enter the date';
+                              }
+                              return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            onTap: () =>
+                                _selectDate(context, endDate, endDateCtrl),
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.0),
+                    Row(
+                      children: <Widget>[
+                        _buildPickupTimeField(),
+                        SizedBox(width: 20.0),
+                        _buildDropOTimeField(),
+                      ],
+                    )
                   ],
                 ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    ToggleButton(0, 'M', isSelected),
-                    SizedBox(width: 15),
-                    ToggleButton(1, 'T', isSelected),
-                    SizedBox(width: 15),
-                    ToggleButton(2, 'W', isSelected),
-                    SizedBox(width: 15),
-                    ToggleButton(3, 'Th', isSelected),
-                    SizedBox(width: 15),
-                    ToggleButton(4, 'F', isSelected),
-                  ],
-                ),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
-                          child: Row(children: <Widget>[
-                            FlowBackDuo(),
-                            SizedBox(width: 40),
-                            ButtonTheme(
-                                minWidth:
-                                MediaQuery.of(context).size.width * 0.65,
-                                height: 50.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Expanded(
-                                  child: RaisedButton(
+              ),
+              SizedBox(height: 30.0),
+              Row(
+                children: <Widget>[
+                  Text('Repeat Days',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  ToggleButton(0, 'M', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(1, 'T', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(2, 'W', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(3, 'Th', isSelected),
+                  SizedBox(width: 15),
+                  ToggleButton(4, 'F', isSelected),
+                ],
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        child: Row(children: <Widget>[
+                          FlowBackDuo(),
+                          SizedBox(width: 40),
+                          ButtonTheme(
+                              minWidth:
+                                  MediaQuery.of(context).size.width * 0.65,
+                              height: 50.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Expanded(
+                                child: RaisedButton(
                                     onPressed: () {
                                       if (_formKey.currentState.validate()) {
                                         Navigator.push(
@@ -605,7 +605,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                             new MaterialPageRoute(
                                                 builder: (context) =>
                                                     ReviewRide(
-                                                        ride: widget.ride, selectedDays: selectedDays,)));
+                                                      ride: widget.ride,
+                                                      selectedDays:
+                                                          selectedDays,
+                                                    )));
                                         selectedDays =
                                             setSelectedDays(selectedDays);
                                         recurringDays =
@@ -617,12 +620,14 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                     elevation: 2.0,
                                     color: Colors.black,
                                     textColor: Colors.white,
-                                    child: Text('Set Date & Time'),
-                                  ),
-                                )),
-                          ]))),
-                ),
-              ],
-            ),));
+                                    child: Text('Set Date & Time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                              )),
+                        ]))),
+              ),
+            ],
+          ),
+        ));
   }
 }

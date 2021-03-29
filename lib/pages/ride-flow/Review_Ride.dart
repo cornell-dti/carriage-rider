@@ -10,7 +10,6 @@ import 'package:carriage_rider/utils/app_config.dart';
 import '../../providers/RidesProvider.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/models/Location.dart';
 
 class ReviewRide extends StatefulWidget {
@@ -172,7 +171,8 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Accessibility Request', style: CarriageTheme.labelStyle)
+                Text('Accessibility Requirement',
+                    style: CarriageTheme.labelStyle)
               ],
             ),
             SizedBox(height: 5),
@@ -197,8 +197,10 @@ class _ReviewRideState extends State<ReviewRide> {
                                 borderRadius: BorderRadius.circular(10)),
                             child: Expanded(
                               child: RaisedButton(
-                                onPressed: () {
-                                  rideProvider.createRide(
+                                onPressed: () async {
+                                  fromCtrl.clear();
+                                  toCtrl.clear();
+                                  await rideProvider.createRide(
                                       AppConfig.of(context),
                                       context,
                                       riderProvider,
@@ -211,7 +213,8 @@ class _ReviewRideState extends State<ReviewRide> {
                                                   locations)
                                               .id,
                                       LocationsProvider.isCustom(
-                                              widget.ride.endLocation, locations)
+                                              widget.ride.endLocation,
+                                              locations)
                                           ? widget.ride.endLocation
                                           : LocationsProvider.locationByName(
                                                   widget.ride.endLocation,
@@ -231,7 +234,9 @@ class _ReviewRideState extends State<ReviewRide> {
                                 elevation: 2.0,
                                 color: Colors.black,
                                 textColor: Colors.white,
-                                child: Text('Send Request'),
+                                child: Text('Send Request',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
                             )),
                       ]))),
