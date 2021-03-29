@@ -75,61 +75,64 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Start Date', style: CarriageTheme.labelStyle),
-                      SizedBox(height: 5),
-                      Text(DateFormat.yMd().format(widget.ride.startTime),
-                          style: CarriageTheme.infoStyle)
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Start Date', style: CarriageTheme.labelStyle),
+                          SizedBox(height: 5),
+                          Text(DateFormat.yMd().format(widget.ride.startTime),
+                              style: CarriageTheme.infoStyle)
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Pickup Time', style: CarriageTheme.labelStyle),
+                        SizedBox(height: 5),
+                        Text(DateFormat.jm().format(widget.ride.startTime),
+                            style: CarriageTheme.infoStyle)
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(width: 30),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('End Date', style: CarriageTheme.labelStyle),
-                      SizedBox(height: 5),
-                      Text(
-                          widget.ride.endDate != null
-                              ? DateFormat.yMd().format(widget.ride.endDate)
-                              : 'None',
-                          style: CarriageTheme.infoStyle)
-                    ],
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Pickup Time', style: CarriageTheme.labelStyle),
-                      SizedBox(height: 5),
-                      Text(DateFormat.jm().format(widget.ride.startTime),
-                          style: CarriageTheme.infoStyle)
-                    ],
-                  ),
+                SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('End Date', style: CarriageTheme.labelStyle),
+                          SizedBox(height: 5),
+                          Text(
+                              widget.ride.endDate != null
+                                  ? DateFormat.yMd().format(widget.ride.endDate)
+                                  : 'None',
+                              style: CarriageTheme.infoStyle)
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Drop-off Time', style: CarriageTheme.labelStyle),
+                          SizedBox(height: 5),
+                          Text(DateFormat.jm().format(widget.ride.endTime),
+                              style: CarriageTheme.infoStyle)
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(width: 30),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Drop-off Time', style: CarriageTheme.labelStyle),
-                      SizedBox(height: 5),
-                      Text(DateFormat.jm().format(widget.ride.endTime),
-                          style: CarriageTheme.infoStyle)
-                    ],
-                  ),
-                )
               ],
             ),
             SizedBox(height: 15),
