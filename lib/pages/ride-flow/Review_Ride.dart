@@ -56,7 +56,9 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(widget.ride.startLocation, style: CarriageTheme.infoStyle)
+                Flexible(
+                    child: Text(widget.ride.startLocation,
+                        style: CarriageTheme.infoStyle))
               ],
             ),
             SizedBox(height: 15),
@@ -68,7 +70,9 @@ class _ReviewRideState extends State<ReviewRide> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(widget.ride.endLocation, style: CarriageTheme.infoStyle)
+                Flexible(
+                    child: Text(widget.ride.endLocation,
+                        style: CarriageTheme.infoStyle))
               ],
             ),
             SizedBox(height: 15),
@@ -124,7 +128,8 @@ class _ReviewRideState extends State<ReviewRide> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('Drop-off Time', style: CarriageTheme.labelStyle),
+                          Text('Drop-off Time',
+                              style: CarriageTheme.labelStyle),
                           SizedBox(height: 5),
                           Text(DateFormat.jm().format(widget.ride.endTime),
                               style: CarriageTheme.infoStyle)

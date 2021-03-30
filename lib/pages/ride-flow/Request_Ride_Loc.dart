@@ -86,74 +86,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   }
 }
 
-class LocationRequestSelection extends StatefulWidget {
-  final Ride ride;
-  final Widget page;
-
-  LocationRequestSelection({Key key, this.ride, this.page}) : super(key: key);
-
-  @override
-  _LocationRequestSelectionState createState() =>
-      _LocationRequestSelectionState();
-}
-
-class _LocationRequestSelectionState extends State<LocationRequestSelection> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Where do you want to be picked up? (1/3)',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 40.0),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SelectionButton(
-                      page: widget.page,
-                      text: 'Campus',
-                    ),
-                    SizedBox(width: 30.0),
-                    SelectionButton(
-                      page: widget.page,
-                      text: 'Off-Campus',
-                    )
-                  ]),
-              FlowBack()
-            ],
-          ),
-        )));
-  }
-}
-
 class RequestLoc extends StatefulWidget {
   final Ride ride;
   final TextEditingController fromCtrl;
@@ -188,29 +120,16 @@ class _RequestLocState extends State<RequestLoc> {
           margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
           child: Column(
             children: <Widget>[
-              FlowCancel(),
+              BackText(),
               SizedBox(height: 20.0),
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Where do you want to be picked up? (2/3)',
-                        style: CarriageTheme.title1),
+                    child: widget.isToLocation
+                        ? Text('Where do you want to be picked up?',
+                            style: CarriageTheme.title1)
+                        : Text('Where do you want to be dropped off?',
+                            style: CarriageTheme.title1),
                   )
                 ],
               ),
@@ -405,22 +324,20 @@ class LocationInput extends StatelessWidget {
       onTap: () => Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => LocationRequestSelection(
-                    ride: ride,
-                    page: RequestLoc(
+            builder: (context) => RequestLoc(
+                ride: ride,
+                fromCtrl: fromCtrl,
+                toCtrl: toCtrl,
+                label: label,
+                isToLocation: isToLocation,
+                page: finished
+                    ? RequestRideLocConfirm(
                         ride: ride,
                         fromCtrl: fromCtrl,
                         toCtrl: toCtrl,
-                        label: label,
-                        isToLocation: isToLocation,
-                        page: finished
-                            ? RequestRideLocConfirm(
-                                ride: ride,
-                                fromCtrl: fromCtrl,
-                                toCtrl: toCtrl,
-                              )
-                            : RequestRideLoc(ride: ride)),
-                  ))),
+                      )
+                    : RequestRideLoc(ride: ride)),
+          )),
       decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -457,6 +374,9 @@ class LocationField extends StatelessWidget {
         textFieldConfiguration: TextFieldConfiguration(
             controller: ctrl,
             decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+              ),
               floatingLabelBehavior: FloatingLabelBehavior.never,
               labelText: label,
               labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -466,8 +386,14 @@ class LocationField extends StatelessWidget {
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
-            title: Text(suggestion),
-          );
+              title: Container(
+                  child: Column(children: [
+            Text(suggestion, style: TextStyle(fontSize: 14)),
+            Text(
+                LocationsProvider.locationByName(suggestion, locations).address,
+                style: TextStyle(color: Colors.grey, fontSize: 12)),
+            Divider(),
+          ])));
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;

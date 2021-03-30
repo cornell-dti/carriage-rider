@@ -19,7 +19,7 @@ class FlowCancel extends StatelessWidget {
       children: <Widget>[
         Container(
           child: InkWell(
-            child: Text("Cancel", style: CarriageTheme.cancelStyle),
+            child: Text('Cancel', style: CarriageTheme.cancelStyle),
             onTap: () {
               fromCtrl.clear();
               toCtrl.clear();
@@ -32,6 +32,26 @@ class FlowCancel extends StatelessWidget {
   }
 }
 
+class BackText extends StatelessWidget {
+  const BackText({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: InkWell(
+            child: Text('Back', style: CarriageTheme.cancelStyle),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class SelectionButton extends StatelessWidget {
   final Widget page;

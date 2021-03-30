@@ -51,6 +51,7 @@ class Home extends StatelessWidget {
             );
           }
           return Scaffold(
+              resizeToAvoidBottomInset: false,
               endDrawer: SafeArea(
                 child: Drawer(
                   child: ListView(
