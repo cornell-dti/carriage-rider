@@ -108,15 +108,19 @@ class CarriageTheme {
   static Color gray1 = Color.fromRGBO(74, 74, 74, 1);
   static Color gray2 = Color.fromRGBO(132, 132, 132, 1);
   static Color gray3 = Color.fromRGBO(167, 167, 167, 1);
+  static Color gray4 = Color.fromRGBO(155, 155, 155, 1);
+
+  static final BoxShadow boxShadow = BoxShadow(
+      blurRadius: 2,
+      spreadRadius: 0,
+      color: Colors.black.withOpacity(0.25)
+  );
 
   static final BoxDecoration cardDecoration = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
       boxShadow: [
-        BoxShadow(
-            blurRadius: 2,
-            spreadRadius: 0,
-            color: Colors.black.withOpacity(0.25))
+        boxShadow
       ]);
 
   static final String generatedRideID = 'INSTANCE';

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/app_config.dart';

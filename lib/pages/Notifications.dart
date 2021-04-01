@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';

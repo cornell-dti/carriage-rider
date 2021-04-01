@@ -2,7 +2,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:intl/intl.dart';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 
 Map days = {
   1: 'M',
@@ -69,7 +69,7 @@ class NoRecurringText extends StatelessWidget {
                 child: Text(
                   'This is not a repeating ride.',
                   style: TextStyle(
-                      color: grey, fontWeight: FontWeight.bold, fontSize: 15),
+                      color: CarriageTheme.gray1, fontWeight: FontWeight.bold, fontSize: 15),
                 ))),
       ],
     );

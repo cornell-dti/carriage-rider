@@ -1,5 +1,7 @@
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
+import 'package:carriage_rider/widgets/DriverCard.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/RecurringRide.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
@@ -17,19 +19,7 @@ class _CurrentState extends State<Current> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Schedule',
-            style: TextStyle(
-                color: Colors.white, fontSize: 20, fontFamily: 'SFPro'),
-          ),
-          backgroundColor: Colors.black,
-          titleSpacing: 0.0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(Colors.white, Colors.black),
         body: SafeArea(
             child: Stack(
           children: <Widget>[
@@ -44,7 +34,7 @@ class _CurrentState extends State<Current> {
                     widget: SizedBox(height: 10),
                   ),
                   SizedBox(height: 20),
-                  ContactCard(color: Colors.black, ride: widget.ride),
+                  DriverCard(color: Colors.black, ride: widget.ride, showButtons: true),
                   SizedBox(height: 40),
                   TimeLine(widget.ride, true, true, true),
                   SizedBox(height: 30),

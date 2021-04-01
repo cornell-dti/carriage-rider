@@ -187,7 +187,7 @@ class HistorySeeMore extends StatelessWidget {
     RecurringRidesGenerator ridesGenerator =
     RecurringRidesGenerator(originalRides);
     return Scaffold(
-        appBar: ScheduleBar(),
+      appBar: ScheduleBar(Colors.black, Colors.white),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
