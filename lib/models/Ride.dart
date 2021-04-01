@@ -385,7 +385,7 @@ class RideCard extends StatelessWidget {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () =>
-                                UrlLauncher.launch('tel://13232315234'),
+                                UrlLauncher.launch('tel://${ride.driver.phoneNumber}'),
                             child: Container(
                                 decoration: BoxDecoration(
                                     borderRadius:

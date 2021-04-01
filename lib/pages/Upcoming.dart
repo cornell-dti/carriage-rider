@@ -26,7 +26,7 @@ class UpcomingRides extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.65,
         child: RideCard(rides[i],
             showConfirmation: true,
-            showCallDriver: true,
+            showCallDriver: rides[i].type == 'active',
             showArrow: false),
       ));
       rideCards.add(SizedBox(width: 16));
