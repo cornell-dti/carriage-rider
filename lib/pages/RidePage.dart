@@ -49,7 +49,7 @@ class _RidePageState extends State<RidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          DriverCard(color: CarriageTheme.gray4, ride: widget.ride, showButtons: false),
+                          DriverCard(color: widget.ride.type == 'unscheduled' ? CarriageTheme.gray4 : Colors.black, ride: widget.ride, showButtons: false),
                           SizedBox(height: 48),
                           TimeLine(widget.ride, true, false, false),
                           SizedBox(height: 50),
