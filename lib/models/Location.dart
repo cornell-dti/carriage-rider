@@ -11,15 +11,22 @@ class Location {
   //The address of a location
   final String address;
 
-  Location({this.id, this.name, this.address});
+  //The information about a location
+  final String info;
+
+  Location({this.id, this.name, this.address, this.info});
 
   //Creates a location from JSON representation.
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-        id: json['id'], name: json['name'], address: json['address']);
+        id: json['id'],
+        name: json['name'],
+        address: json['address'],
+        info: json['info']);
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'address': address};
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'name': name, 'address': address, 'info': info};
 }
 
 //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).

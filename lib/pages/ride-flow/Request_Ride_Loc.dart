@@ -24,65 +24,111 @@ class _RequestRideLocState extends State<RequestRideLoc> {
 
   @override
   Widget build(context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Set your pickup and dropoff location',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    LocationInput(
-                      fromCtrl: fromCtrl,
-                      label: 'From',
-                      ride: widget.ride,
-                      finished: false,
-                      isToLocation: false,
-                    ),
-                    SizedBox(height: 30.0),
-                    LocationInput(
-                      toCtrl: toCtrl,
-                      label: 'To',
-                      ride: widget.ride,
-                      finished: true,
-                      isToLocation: true,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )));
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig config = AppConfig.of(context);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
+    return FutureBuilder<List<Location>>(
+        future: locationsProvider.fetchLocations(context, config, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Location> locations = snapshot.data;
+            return Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: SafeArea(
+                    child: Container(
+                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      FlowCancel(),
+                      SizedBox(height: 20.0),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child:
+                                Text('Location', style: CarriageTheme.title1),
+                          )
+                        ],
+                      ),
+                      TabBarTop(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.grey[350],
+                          colorThree: Colors.grey[350]),
+                      TabBarBot(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.grey[350],
+                          colorThree: Colors.grey[350]),
+                      SizedBox(height: 15.0),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Text('Set your pickup and dropoff location',
+                                style: CarriageTheme.title1),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            LocationInput(
+                              fromCtrl: fromCtrl,
+                              label: 'From',
+                              ride: widget.ride,
+                              finished: false,
+                              isToLocation: false,
+                            ),
+                            SizedBox(height: 10.0),
+                            Text(
+                                LocationsProvider.checkLocation(
+                                        fromCtrl.text, locations)
+                                    ? LocationsProvider.locationByName(
+                                                    fromCtrl.text, locations)
+                                                .info ==
+                                            null
+                                        ? ' '
+                                        : LocationsProvider.locationByName(
+                                                fromCtrl.text, locations)
+                                            .info
+                                    : ' ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey)),
+                            SizedBox(height: 30.0),
+                            LocationInput(
+                              toCtrl: toCtrl,
+                              label: 'To',
+                              ride: widget.ride,
+                              finished: true,
+                              isToLocation: true,
+                            ),
+                            SizedBox(height: 10.0),
+                            Text(
+                                LocationsProvider.checkLocation(
+                                        toCtrl.text, locations)
+                                    ? LocationsProvider.locationByName(
+                                                    toCtrl.text, locations)
+                                                .info ==
+                                            null
+                                        ? ' '
+                                        : LocationsProvider.locationByName(
+                                                toCtrl.text, locations)
+                                            .info
+                                    : ' ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )));
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }
 
@@ -126,9 +172,9 @@ class _RequestLocState extends State<RequestLoc> {
                 children: <Widget>[
                   Flexible(
                     child: widget.isToLocation
-                        ? Text('Where do you want to be picked up?',
+                        ? Text('Where do you want to be dropped off?',
                             style: CarriageTheme.title1)
-                        : Text('Where do you want to be dropped off?',
+                        : Text('Where do you want to be picked up?',
                             style: CarriageTheme.title1),
                   )
                 ],
@@ -139,8 +185,10 @@ class _RequestLocState extends State<RequestLoc> {
                 child: Column(
                   children: <Widget>[
                     LocationField(
-                        ctrl: widget.isToLocation ? toCtrl : fromCtrl,
-                        label: widget.label),
+                      ctrl: widget.isToLocation ? toCtrl : fromCtrl,
+                      label: widget.label,
+                      page: widget.page,
+                    ),
                   ],
                 ),
               ),
@@ -200,101 +248,155 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Review your pickup and dropoff location',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    LocationInput(
-                      fromCtrl: fromCtrl,
-                      label: 'From',
-                      ride: widget.ride,
-                      finished: false,
-                      isToLocation: false,
-                    ),
-                    SizedBox(height: 30.0),
-                    LocationInput(
-                        toCtrl: toCtrl,
-                        label: 'To',
-                        ride: widget.ride,
-                        finished: true,
-                        isToLocation: true),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(width: 50),
-                          ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.6,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Expanded(
-                                child: RaisedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RequestRideTime(
-                                                        ride: widget.ride)));
-                                        widget.ride.startLocation =
-                                            fromCtrl.text;
-                                        widget.ride.endLocation = toCtrl.text;
-                                      }
-                                    },
-                                    elevation: 2.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    child: Text('Set Location',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)))),
-                          ),
-                        ]))),
-              ),
-            ],
-          ),
-        )));
+    AuthProvider authProvider = Provider.of(context);
+    AppConfig config = AppConfig.of(context);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
+
+    return FutureBuilder(
+        future: locationsProvider.fetchLocations(context, config, authProvider),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Location> locations = snapshot.data;
+            return Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: SafeArea(
+                    child: Container(
+                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      FlowCancel(),
+                      SizedBox(height: 20.0),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child:
+                                Text('Location', style: CarriageTheme.title1),
+                          )
+                        ],
+                      ),
+                      TabBarTop(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.grey[350],
+                          colorThree: Colors.grey[350]),
+                      TabBarBot(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.grey[350],
+                          colorThree: Colors.grey[350]),
+                      SizedBox(height: 15.0),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Text(
+                                'Review your pickup and dropoff location',
+                                style: CarriageTheme.title1),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            LocationInput(
+                              fromCtrl: fromCtrl,
+                              label: 'From',
+                              ride: widget.ride,
+                              finished: false,
+                              isToLocation: false,
+                            ),
+                            SizedBox(height: 10.0),
+                            Text(
+                                LocationsProvider.checkLocation(
+                                        fromCtrl.text, locations)
+                                    ? LocationsProvider.locationByName(
+                                                    fromCtrl.text, locations)
+                                                .info ==
+                                            null
+                                        ? ' '
+                                        : LocationsProvider.locationByName(
+                                                fromCtrl.text, locations)
+                                            .info
+                                    : ' ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey)),
+                            SizedBox(height: 30.0),
+                            LocationInput(
+                                toCtrl: toCtrl,
+                                label: 'To',
+                                ride: widget.ride,
+                                finished: true,
+                                isToLocation: true),
+                            SizedBox(height: 10.0),
+                            Text(
+                                LocationsProvider.checkLocation(
+                                        toCtrl.text, locations)
+                                    ? LocationsProvider.locationByName(
+                                                    toCtrl.text, locations)
+                                                .info ==
+                                            null
+                                        ? ' '
+                                        : LocationsProvider.locationByName(
+                                                toCtrl.text, locations)
+                                            .info
+                                    : ' ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                                padding: const EdgeInsets.only(bottom: 30.0),
+                                child: Row(children: <Widget>[
+                                  FlowBackDuo(),
+                                  SizedBox(width: 50),
+                                  ButtonTheme(
+                                    minWidth:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    height: 50.0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Expanded(
+                                        child: RaisedButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState
+                                                  .validate()) {
+                                                Navigator.push(
+                                                    context,
+                                                    new MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RequestRideTime(
+                                                                ride: widget
+                                                                    .ride)));
+                                                widget.ride.startLocation =
+                                                    fromCtrl.text;
+                                                widget.ride.endLocation =
+                                                    toCtrl.text;
+                                              }
+                                            },
+                                            elevation: 2.0,
+                                            color: Colors.black,
+                                            textColor: Colors.white,
+                                            child: Text('Set Location',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)))),
+                                  ),
+                                ]))),
+                      ),
+                    ],
+                  ),
+                )));
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }
 
@@ -365,8 +467,10 @@ class LocationField extends StatelessWidget {
   final bool filled;
   final String label;
   final Function navigator;
+  final Widget page;
 
-  LocationField({Key key, this.ctrl, this.filled, this.label, this.navigator})
+  LocationField(
+      {Key key, this.ctrl, this.filled, this.label, this.navigator, this.page})
       : super(key: key);
 
   Widget _locationField(BuildContext context, List<Location> locations) {
@@ -387,14 +491,40 @@ class LocationField extends StatelessWidget {
         itemBuilder: (context, suggestion) {
           return ListTile(
               title: Container(
-                  child: Column(children: [
-            Text(suggestion, style: TextStyle(fontSize: 14)),
-            Text(
-                LocationsProvider.locationByName(suggestion, locations).address,
-                style: TextStyle(color: Colors.grey, fontSize: 12)),
-            Divider(),
-          ])));
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                Text(suggestion, style: TextStyle(fontSize: 14)),
+                Text(
+                    LocationsProvider.locationByName(suggestion, locations)
+                        .address,
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Divider(),
+              ])));
         },
+        noItemsFoundBuilder: (context) => GestureDetector(
+              onTap: () => {
+                Navigator.push(
+                    context, new MaterialPageRoute(builder: (context) => page))
+              },
+              child: Container(
+                  child: Padding(
+                      padding: EdgeInsets.only(top: 10, left: 20, bottom: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(ctrl.text,
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold)),
+                          Text('Ithaca NY',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold)),
+                          Divider(),
+                        ],
+                      ))),
+            ),
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },

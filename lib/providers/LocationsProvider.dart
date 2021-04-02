@@ -60,6 +60,11 @@ class LocationsProvider with ChangeNotifier {
     return locations[index];
   }
 
+  static bool checkLocation(String location, List<Location> locations) {
+    int index = locations.indexWhere((e) => e.name == location);
+    return index == -1 ? false : locations.contains(locations[index]);
+  }
+
   static bool isCustom(String locationName, List<Location> locations) {
     List locationNames = locations.map((e) => e.name).toList();
     return !locationNames.contains(locationName);
