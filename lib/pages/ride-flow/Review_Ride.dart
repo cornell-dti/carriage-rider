@@ -1,7 +1,6 @@
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +22,12 @@ class ReviewRide extends StatefulWidget {
 }
 
 class _ReviewRideState extends State<ReviewRide> {
-  Widget _reviewPage(BuildContext context, List<Location> locations) {
+  @override
+  Widget build(context) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    List<Location> locations = locationsProvider.locations;
+
     RidesProvider rideProvider = Provider.of<RidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Scaffold(
@@ -236,25 +240,5 @@ class _ReviewRideState extends State<ReviewRide> {
         ),
       ),
     );
-  }
-
-  @override
-  Widget build(context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Location>>(
-        future:
-            locationsProvider.fetchLocations(context, appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _reviewPage(context, snapshot.data);
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return Center(child: CircularProgressIndicator());
-        });
   }
 }

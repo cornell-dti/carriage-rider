@@ -272,14 +272,11 @@ class LocationsInfo extends StatelessWidget {
   }
 
   void _editFavorites(context) async {
-    AuthProvider authProvider = Provider.of(context, listen: false);
-    AppConfig appConfig = AppConfig.of(context);
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context, listen: false);
-    Map<String, Location> locations = locationsById(await locationsProvider
-        .fetchLocations(context, appConfig, authProvider));
+    Map<String, Location> locations = locationsById(locationsProvider.locations);
     List<String> res = (await Navigator.push(
             context,
             MaterialPageRoute(

@@ -2,10 +2,8 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
-import 'package:carriage_rider/utils/app_config.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
@@ -24,111 +22,96 @@ class _RequestRideLocState extends State<RequestRideLoc> {
 
   @override
   Widget build(context) {
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig config = AppConfig.of(context);
     LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context, listen: false);
-    return FutureBuilder<List<Location>>(
-        future: locationsProvider.fetchLocations(context, config, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Location> locations = snapshot.data;
-            return Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: SafeArea(
-                    child: Container(
-                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      FlowCancel(),
-                      SizedBox(height: 20.0),
-                      Row(
-                        children: <Widget>[
-                          Flexible(
-                            child:
-                                Text('Location', style: CarriageTheme.title1),
-                          )
-                        ],
-                      ),
-                      TabBarTop(
-                          colorOne: Colors.black,
-                          colorTwo: Colors.grey[350],
-                          colorThree: Colors.grey[350]),
-                      TabBarBot(
-                          colorOne: Colors.black,
-                          colorTwo: Colors.grey[350],
-                          colorThree: Colors.grey[350]),
-                      SizedBox(height: 15.0),
-                      Row(
-                        children: <Widget>[
-                          Flexible(
-                            child: Text('Set your pickup and dropoff location',
-                                style: CarriageTheme.title1),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            LocationInput(
-                              fromCtrl: fromCtrl,
-                              label: 'From',
-                              ride: widget.ride,
-                              finished: false,
-                              isToLocation: false,
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                                LocationsProvider.checkLocation(
+        Provider.of<LocationsProvider>(context);
+    List<Location> locations = locationsProvider.locations;
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('Location', style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('Set your pickup and dropoff location',
+                        style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              SizedBox(height: 20),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    LocationInput(
+                      fromCtrl: fromCtrl,
+                      label: 'From',
+                      ride: widget.ride,
+                      finished: false,
+                      isToLocation: false,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                        LocationsProvider.checkLocation(
+                                fromCtrl.text, locations)
+                            ? LocationsProvider.locationByName(
+                                            fromCtrl.text, locations)
+                                        .info ==
+                                    null
+                                ? ' '
+                                : LocationsProvider.locationByName(
                                         fromCtrl.text, locations)
-                                    ? LocationsProvider.locationByName(
-                                                    fromCtrl.text, locations)
-                                                .info ==
-                                            null
-                                        ? ' '
-                                        : LocationsProvider.locationByName(
-                                                fromCtrl.text, locations)
-                                            .info
-                                    : ' ',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey)),
-                            SizedBox(height: 30.0),
-                            LocationInput(
-                              toCtrl: toCtrl,
-                              label: 'To',
-                              ride: widget.ride,
-                              finished: true,
-                              isToLocation: true,
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                                LocationsProvider.checkLocation(
+                                    .info
+                            : ' ',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                    SizedBox(height: 30.0),
+                    LocationInput(
+                      toCtrl: toCtrl,
+                      label: 'To',
+                      ride: widget.ride,
+                      finished: true,
+                      isToLocation: true,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                        LocationsProvider.checkLocation(toCtrl.text, locations)
+                            ? LocationsProvider.locationByName(
+                                            toCtrl.text, locations)
+                                        .info ==
+                                    null
+                                ? ' '
+                                : LocationsProvider.locationByName(
                                         toCtrl.text, locations)
-                                    ? LocationsProvider.locationByName(
-                                                    toCtrl.text, locations)
-                                                .info ==
-                                            null
-                                        ? ' '
-                                        : LocationsProvider.locationByName(
-                                                toCtrl.text, locations)
-                                            .info
-                                    : ' ',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )));
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+                                    .info
+                            : ' ',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )));
   }
 }
 
@@ -248,155 +231,133 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig config = AppConfig.of(context);
     LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context, listen: false);
+        Provider.of<LocationsProvider>(context);
 
-    return FutureBuilder(
-        future: locationsProvider.fetchLocations(context, config, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Location> locations = snapshot.data;
-            return Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: SafeArea(
-                    child: Container(
-                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      FlowCancel(),
-                      SizedBox(height: 20.0),
-                      Row(
-                        children: <Widget>[
-                          Flexible(
-                            child:
-                                Text('Location', style: CarriageTheme.title1),
-                          )
-                        ],
-                      ),
-                      TabBarTop(
-                          colorOne: Colors.black,
-                          colorTwo: Colors.grey[350],
-                          colorThree: Colors.grey[350]),
-                      TabBarBot(
-                          colorOne: Colors.black,
-                          colorTwo: Colors.grey[350],
-                          colorThree: Colors.grey[350]),
-                      SizedBox(height: 15.0),
-                      Row(
-                        children: <Widget>[
-                          Flexible(
-                            child: Text(
-                                'Review your pickup and dropoff location',
-                                style: CarriageTheme.title1),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            LocationInput(
-                              fromCtrl: fromCtrl,
-                              label: 'From',
-                              ride: widget.ride,
-                              finished: false,
-                              isToLocation: false,
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                                LocationsProvider.checkLocation(
+    List<Location> locations = locationsProvider.locations;
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: Container(
+          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('Location', style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.grey[350],
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Text('Review your pickup and dropoff location',
+                        style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    LocationInput(
+                      fromCtrl: fromCtrl,
+                      label: 'From',
+                      ride: widget.ride,
+                      finished: false,
+                      isToLocation: false,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                        LocationsProvider.checkLocation(
+                                fromCtrl.text, locations)
+                            ? LocationsProvider.locationByName(
+                                            fromCtrl.text, locations)
+                                        .info ==
+                                    null
+                                ? ' '
+                                : LocationsProvider.locationByName(
                                         fromCtrl.text, locations)
-                                    ? LocationsProvider.locationByName(
-                                                    fromCtrl.text, locations)
-                                                .info ==
-                                            null
-                                        ? ' '
-                                        : LocationsProvider.locationByName(
-                                                fromCtrl.text, locations)
-                                            .info
-                                    : ' ',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey)),
-                            SizedBox(height: 30.0),
-                            LocationInput(
-                                toCtrl: toCtrl,
-                                label: 'To',
-                                ride: widget.ride,
-                                finished: true,
-                                isToLocation: true),
-                            SizedBox(height: 10.0),
-                            Text(
-                                LocationsProvider.checkLocation(
+                                    .info
+                            : ' ',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                    SizedBox(height: 30.0),
+                    LocationInput(
+                        toCtrl: toCtrl,
+                        label: 'To',
+                        ride: widget.ride,
+                        finished: true,
+                        isToLocation: true),
+                    SizedBox(height: 10.0),
+                    Text(
+                        LocationsProvider.checkLocation(toCtrl.text, locations)
+                            ? LocationsProvider.locationByName(
+                                            toCtrl.text, locations)
+                                        .info ==
+                                    null
+                                ? ' '
+                                : LocationsProvider.locationByName(
                                         toCtrl.text, locations)
-                                    ? LocationsProvider.locationByName(
-                                                    toCtrl.text, locations)
-                                                .info ==
-                                            null
-                                        ? ' '
-                                        : LocationsProvider.locationByName(
-                                                toCtrl.text, locations)
-                                            .info
-                                    : ' ',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                                padding: const EdgeInsets.only(bottom: 30.0),
-                                child: Row(children: <Widget>[
-                                  FlowBackDuo(),
-                                  SizedBox(width: 50),
-                                  ButtonTheme(
-                                    minWidth:
-                                        MediaQuery.of(context).size.width * 0.6,
-                                    height: 50.0,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Expanded(
-                                        child: RaisedButton(
-                                            onPressed: () {
-                                              if (_formKey.currentState
-                                                  .validate()) {
-                                                Navigator.push(
-                                                    context,
-                                                    new MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RequestRideTime(
-                                                                ride: widget
-                                                                    .ride)));
-                                                widget.ride.startLocation =
-                                                    fromCtrl.text;
-                                                widget.ride.endLocation =
-                                                    toCtrl.text;
-                                              }
-                                            },
-                                            elevation: 2.0,
-                                            color: Colors.black,
-                                            textColor: Colors.white,
-                                            child: Text('Set Location',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)))),
-                                  ),
-                                ]))),
-                      ),
-                    ],
-                  ),
-                )));
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+                                    .info
+                            : ' ',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        child: Row(children: <Widget>[
+                          FlowBackDuo(),
+                          SizedBox(width: 50),
+                          ButtonTheme(
+                            minWidth: MediaQuery.of(context).size.width * 0.6,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Expanded(
+                                child: RaisedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        Navigator.push(
+                                            context,
+                                            new MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RequestRideTime(
+                                                        ride: widget.ride)));
+                                        widget.ride.startLocation =
+                                            fromCtrl.text;
+                                        widget.ride.endLocation = toCtrl.text;
+                                      }
+                                    },
+                                    elevation: 2.0,
+                                    color: Colors.black,
+                                    textColor: Colors.white,
+                                    child: Text('Set Location',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)))),
+                          ),
+                        ]))),
+              ),
+            ],
+          ),
+        )));
   }
 }
 
@@ -473,7 +434,12 @@ class LocationField extends StatelessWidget {
       {Key key, this.ctrl, this.filled, this.label, this.navigator, this.page})
       : super(key: key);
 
-  Widget _locationField(BuildContext context, List<Location> locations) {
+  @override
+  Widget build(context) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    List<Location> locations = locationsProvider.locations;
+
     return TypeAheadFormField(
         textFieldConfiguration: TextFieldConfiguration(
             controller: ctrl,
@@ -538,25 +504,5 @@ class LocationField extends StatelessWidget {
           return null;
         },
         onSaved: (value) => ctrl.text = value);
-  }
-
-  @override
-  Widget build(context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
-    AppConfig appConfig = AppConfig.of(context);
-
-    return FutureBuilder<List<Location>>(
-        future:
-            locationsProvider.fetchLocations(context, appConfig, authProvider),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _locationField(context, snapshot.data);
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return Center(child: CircularProgressIndicator());
-        });
   }
 }

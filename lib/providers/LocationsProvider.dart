@@ -10,6 +10,9 @@ import 'package:carriage_rider/models/Location.dart';
 
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
+
+  List<Location> locations;
+
   LocationsProvider(
       BuildContext context, AppConfig config, AuthProvider authProvider) {
     void Function() callback;
@@ -22,8 +25,14 @@ class LocationsProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+  final retryDelay = Duration(seconds: 30);
+
+  bool hasLocations() {
+    return locations != null;
+  }
+
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
-  Future<List<Location>> fetchLocations(
+  Future<void> fetchLocations(
       BuildContext context, AppConfig config, AuthProvider authProvider) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
@@ -31,11 +40,16 @@ class LocationsProvider with ChangeNotifier {
     final response = await http.get('${config.baseUrl}/locations',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
+      locations = [];
       String responseBody = response.body;
-      List<Location> locations = _locationsFromJson(responseBody);
-      return locations;
+      List<Location> loc = _locationsFromJson(responseBody);
+      for (Location l in loc) {
+        locations.add(l);
+      }
+      notifyListeners();
     } else {
-      throw Exception('Failed to load locations.');
+      await Future.delayed(retryDelay);
+      fetchLocations(context, config, authProvider);
     }
   }
 
@@ -56,13 +70,20 @@ class LocationsProvider with ChangeNotifier {
   }
 
   static Location locationByName(String location, List<Location> locations) {
-    int index = locations.indexWhere((e) => e.name == location);
-    return locations[index];
+    int index;
+    if (locations != null) {
+      index = locations.indexWhere((e) => e.name == location);
+    }
+    return index == null ? null : locations[index];
   }
 
   static bool checkLocation(String location, List<Location> locations) {
-    int index = locations.indexWhere((e) => e.name == location);
-    return index == -1 ? false : locations.contains(locations[index]);
+    int index;
+    if (locations != null) {
+      index = locations.indexWhere((e) => e.name == location);
+      return index == -1 ? false : locations.contains(locations[index]);
+    }
+    return false;
   }
 
   static bool isCustom(String locationName, List<Location> locations) {
