@@ -64,7 +64,7 @@ class LocationsProvider with ChangeNotifier {
   //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
   static List<String> getSuggestions(String query, List<Location> locations) {
     List<String> matches =
-        locations.map((e) => e.name).where((e) => e != 'Custom').toList();
+        locations.where((e) => e.tag != 'custom').map((e) => e.name).toList();
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
@@ -87,7 +87,7 @@ class LocationsProvider with ChangeNotifier {
   }
 
   static bool isCustom(String locationName, List<Location> locations) {
-    List locationNames = locations.map((e) => e.name).toList();
-    return !locationNames.contains(locationName);
+    List regularLocations = locations.map((e) => e.tag != 'custom').toList();
+    return !regularLocations.contains(locationName);
   }
 }
