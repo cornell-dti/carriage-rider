@@ -83,7 +83,7 @@ class Rider {
         List.from(json['accessibility']),
         List.from(json['favoriteLocations']),
         json['description'],
-        json['photoLink'] == null ? null : 'http://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+        json['photoLink'] == null ? null : 'https://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
         json['joinDate'],
         json['address']);
   }

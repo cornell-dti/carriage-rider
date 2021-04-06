@@ -26,10 +26,7 @@ class DriverCard extends StatelessWidget {
         children: <Widget>[
           ride.driver == null || ride.driver.photoLink == null
               ? Icon(Icons.account_circle, size: 64, color: CarriageTheme.gray4)
-              : CircleAvatar(
-              backgroundImage:
-              NetworkImage('https://${ride.driver.photoLink}'),
-              radius: 35),
+              : ride.driver.profilePicture(70),
           SizedBox(width: 15),
           Container(
             child: Column(
