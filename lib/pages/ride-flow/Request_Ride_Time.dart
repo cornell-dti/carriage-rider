@@ -9,15 +9,11 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
 DateTime assignDate() {
-  DateTime start;
   DateTime now = DateTime.now();
   DateTime compare = DateTime(now.year, now.month, now.day, 10);
-  if (now.difference(compare).inMinutes >= 0) {
-    start = DateTime(now.year, now.month, now.day + 2);
-  } else {
-    start = DateTime(now.year, now.month, now.day);
-  }
-  return start;
+  return now.difference(compare).inMinutes >= 0
+      ? DateTime(now.year, now.month, now.day + 2)
+      : DateTime(now.year, now.month, now.day);
 }
 
 class RequestRideTime extends StatefulWidget {
@@ -402,7 +398,6 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         );
       },
     );
-
 
     if (picked != null)
       setState(() {
