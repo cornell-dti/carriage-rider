@@ -145,7 +145,7 @@ class Ride {
       edits: json['edits'] == null ? [] : List.from(json['edits']),
       endDate: json['endDate'] == null
           ? null
-          : DateFormat('MM/dd/yyyy').parse(json['endDate']),
+          : DateFormat('yyyy-MM-dd').parse(json['endDate']),
     );
   }
 
