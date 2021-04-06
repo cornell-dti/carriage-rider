@@ -4,6 +4,8 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 TextEditingController fromCtrl = TextEditingController();
 TextEditingController toCtrl = TextEditingController();
 
+bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
+
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
   bool get hasFocus => false;

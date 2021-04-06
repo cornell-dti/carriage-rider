@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 
-bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
 
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
@@ -108,7 +107,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   ],
                 ),
               ),
-              fromCtrl.text != '' || toCtrl.text != '' ? Expanded(
+              isFinished() ? Expanded(
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(

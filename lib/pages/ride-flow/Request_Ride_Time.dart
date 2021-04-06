@@ -2,9 +2,11 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/ToggleButton.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+
+double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
 class RequestRideTime extends StatefulWidget {
   final Ride ride;
@@ -158,6 +160,13 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
           floatingLabelBehavior: FloatingLabelBehavior.never),
       validator: (input) {
+        if (input.isNotEmpty) {
+          if (_dropOffTime != null &&
+              toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
+            return 'Start time must be before pick up time';
+          }
+          return null;
+        }
         if (input.isEmpty) {
           return 'Please enter your pickup time';
         }
@@ -178,6 +187,13 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
           floatingLabelBehavior: FloatingLabelBehavior.never),
       validator: (input) {
+        if (input.isNotEmpty) {
+          if (_pickUpTime != null &&
+              toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
+            return 'End time must be after start time';
+          }
+          return null;
+        }
         if (input.isEmpty) {
           return 'Please enter your drop-off time';
         }
@@ -378,6 +394,9 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     if (picked != null && picked != date)
       setState(() {
         date = picked;
+        if (ctrl == startDateCtrl) {
+          startDate = date;
+        }
         widget.ride.endDate = date;
         ctrl.text = format('$date'.split(' ')[0]);
       });
@@ -391,9 +410,17 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
           focusNode: AlwaysDisabledFocusNode(),
           controller: pickUpCtrl,
           decoration: InputDecoration(
+              errorMaxLines: 3,
               labelText: 'Pickup Time',
               labelStyle: TextStyle(color: Colors.grey, fontSize: 17)),
           validator: (input) {
+            if (input.isNotEmpty) {
+              if (_dropOffTime != null &&
+                  toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
+                return 'Start time must be before pick up time';
+              }
+              return null;
+            }
             if (input.isEmpty) {
               return 'Please enter your pickup time';
             }
@@ -413,9 +440,17 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
           focusNode: AlwaysDisabledFocusNode(),
           controller: dropOffCtrl,
           decoration: InputDecoration(
+              errorMaxLines: 3,
               labelText: 'Drop-off Time',
               labelStyle: TextStyle(color: Colors.grey, fontSize: 17)),
           validator: (input) {
+            if (input.isNotEmpty) {
+              if (_pickUpTime != null &&
+                  toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
+                return 'End time must be after start time';
+              }
+              return null;
+            }
             if (input.isEmpty) {
               return 'Please enter your drop-off time';
             }
@@ -449,8 +484,10 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         sDays += days[i] + ' ';
       }
     }
-    sDays = sDays.substring(0, sDays.length - 1);
-    return sDays;
+    if (sDays.length == 0) {
+      return sDays;
+    }
+    return sDays.substring(0, sDays.length - 1);
   }
 
   @override
@@ -508,10 +545,19 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                             controller: startDateCtrl,
                             focusNode: AlwaysDisabledFocusNode(),
                             decoration: InputDecoration(
+                                errorMaxLines: 3,
                                 labelText: 'Start Date',
                                 labelStyle: TextStyle(
                                     color: Colors.grey, fontSize: 17)),
                             validator: (input) {
+                              if (input.isNotEmpty &&
+                                  endDateCtrl.text != '' && DateFormat('MM/dd/yyyy')
+                                  .parse(startDateCtrl.text)
+                                  .difference(DateFormat('MM/dd/yyyy')
+                                  .parse(endDateCtrl.text))
+                                  .inDays > 0) {
+                                return 'Start date must be before end date';
+                              }
                               if (input.isEmpty) {
                                 return 'Please enter the date';
                               }
@@ -531,11 +577,20 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                             focusNode: AlwaysDisabledFocusNode(),
                             controller: endDateCtrl,
                             decoration: InputDecoration(
+                              errorMaxLines: 3,
                               labelText: 'End Date',
                               labelStyle:
                                   TextStyle(color: Colors.grey, fontSize: 17),
                             ),
                             validator: (input) {
+                              if (input.isNotEmpty &&
+                                  startDateCtrl.text != '' && DateFormat('MM/dd/yyyy')
+                                  .parse(startDateCtrl.text)
+                                  .difference(DateFormat('MM/dd/yyyy')
+                                  .parse(endDateCtrl.text))
+                                  .inDays > 0) {
+                                return 'End date must be after start date';
+                              }
                               if (input.isEmpty) {
                                 return 'Please enter the date';
                               }
