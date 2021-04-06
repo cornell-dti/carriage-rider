@@ -262,7 +262,7 @@ class _HomeState extends State<Home> {
                                         new MaterialPageRoute(
                                             builder: (context) =>
                                                 RequestRideLoc(
-                                                    ride: new RideObject())));
+                                                    ride: new Ride())));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,
