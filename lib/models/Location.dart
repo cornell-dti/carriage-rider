@@ -28,16 +28,4 @@ class Location {
         info: json['info'],
         tag: json['tag']);
   }
-
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'name': name, 'address': address, 'info': info, 'tag': tag};
-}
-
-//Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
-Map<String, Location> locationsById(List<Location> locations) {
-  Map<String, Location> res = {};
-  locations.forEach((element) {
-    res[element.id] = element;
-  });
-  return res;
 }

@@ -9,7 +9,6 @@ import 'package:carriage_rider/utils/app_config.dart';
 import '../../providers/RidesProvider.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:carriage_rider/models/Location.dart';
 
 class ReviewRide extends StatefulWidget {
   final Ride ride;
@@ -26,7 +25,6 @@ class _ReviewRideState extends State<ReviewRide> {
   Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
-    List<Location> locations = locationsProvider.locations;
 
     RidesProvider rideProvider = Provider.of<RidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
@@ -199,21 +197,19 @@ class _ReviewRideState extends State<ReviewRide> {
                                       AppConfig.of(context),
                                       context,
                                       riderProvider,
-                                      LocationsProvider.isCustom(
-                                              widget.ride.startLocation,
-                                              locations)
+                                      locationsProvider.isCustom(
+                                              widget.ride.startLocation)
                                           ? widget.ride.startLocation
-                                          : LocationsProvider.locationByName(
-                                                  widget.ride.startLocation,
-                                                  locations)
+                                          : locationsProvider
+                                              .locationByName(
+                                                  widget.ride.startLocation)
                                               .id,
-                                      LocationsProvider.isCustom(
-                                              widget.ride.endLocation,
-                                              locations)
+                                      locationsProvider
+                                              .isCustom(widget.ride.endLocation)
                                           ? widget.ride.endLocation
-                                          : LocationsProvider.locationByName(
-                                                  widget.ride.endLocation,
-                                                  locations)
+                                          : locationsProvider
+                                              .locationByName(
+                                                  widget.ride.endLocation)
                                               .id,
                                       widget.ride.startTime,
                                       widget.ride.endTime,

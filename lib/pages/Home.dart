@@ -47,6 +47,7 @@ class _HomeState extends State<Home> {
     AppConfig appConfig = AppConfig.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
         child: Drawer(
           child: ListView(

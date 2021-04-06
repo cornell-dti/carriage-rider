@@ -276,7 +276,8 @@ class LocationsInfo extends StatelessWidget {
         Provider.of<RiderProvider>(context, listen: false);
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context, listen: false);
-    Map<String, Location> locations = locationsById(locationsProvider.locations);
+    Map<String, Location> locations =
+        locationsProvider.locationsById(locationsProvider.locations);
     List<String> res = (await Navigator.push(
             context,
             MaterialPageRoute(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
@@ -28,10 +29,12 @@ class RidesProvider with ChangeNotifier {
   bool hasData() {
     return pastRides != null && upcomingRides != null;
   }
+
   /// Fetches past rides, upcoming rides, and current ride from the backend.
   /// Uses AppConfig [config] and AuthProvider [authProvider] to pass in as arguments for each
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
-  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchAllRides(
+      AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     await _fetchCurrentRide(config, authProvider);
@@ -140,7 +143,10 @@ class RidesProvider with ChangeNotifier {
         'startTime': startTime.toUtc().toIso8601String(),
         'endTime': endTime.toUtc().toIso8601String(),
         'requestedEndTime': endTime.toUtc().toIso8601String(),
-        'endDate': endDate == null ? endDate : endDate.toIso8601String(),
+        'endDate': endDate == null
+            ? endDate
+            : DateTime.parse(DateFormat('y-MM-dd').format(endDate))
+                .toIso8601String(),
         'recurring': recurring,
         'recurringDays': recurringDays
       }),

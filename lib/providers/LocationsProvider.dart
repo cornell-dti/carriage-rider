@@ -10,7 +10,6 @@ import 'package:carriage_rider/models/Location.dart';
 
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
-
   List<Location> locations;
 
   LocationsProvider(
@@ -40,12 +39,8 @@ class LocationsProvider with ChangeNotifier {
     final response = await http.get('${config.baseUrl}/locations',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      locations = [];
       String responseBody = response.body;
-      List<Location> loc = _locationsFromJson(responseBody);
-      for (Location l in loc) {
-        locations.add(l);
-      }
+      locations = _locationsFromJson(responseBody);
       notifyListeners();
     } else {
       await Future.delayed(retryDelay);
@@ -62,14 +57,14 @@ class LocationsProvider with ChangeNotifier {
   }
 
   //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
-  static List<String> getSuggestions(String query, List<Location> locations) {
+  List<String> getSuggestions(String query) {
     List<String> matches =
         locations.where((e) => e.tag != 'custom').map((e) => e.name).toList();
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
 
-  static Location locationByName(String location, List<Location> locations) {
+  Location locationByName(String location) {
     int index;
     if (locations != null) {
       index = locations.indexWhere((e) => e.name == location);
@@ -77,7 +72,7 @@ class LocationsProvider with ChangeNotifier {
     return index == null ? null : locations[index];
   }
 
-  static bool checkLocation(String location, List<Location> locations) {
+  bool checkLocation(String location) {
     int index;
     if (locations != null) {
       index = locations.indexWhere((e) => e.name == location);
@@ -86,8 +81,17 @@ class LocationsProvider with ChangeNotifier {
     return false;
   }
 
-  static bool isCustom(String locationName, List<Location> locations) {
+  bool isCustom(String locationName) {
     List regularLocations = locations.map((e) => e.tag != 'custom').toList();
     return !regularLocations.contains(locationName);
+  }
+
+  //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
+  Map<String, Location> locationsById(List<Location> locations) {
+    Map<String, Location> res = {};
+    locations.forEach((element) {
+      res[element.id] = element;
+    });
+    return res;
   }
 }

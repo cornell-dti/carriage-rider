@@ -3,10 +3,11 @@ import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:carriage_rider/models/Location.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+
+bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
 
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
@@ -24,7 +25,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
-    List<Location> locations = locationsProvider.locations;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -68,20 +68,19 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       fromCtrl: fromCtrl,
                       label: 'From',
                       ride: widget.ride,
-                      finished: false,
+                      finished: isFinished(),
                       isToLocation: false,
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                        LocationsProvider.checkLocation(
-                                fromCtrl.text, locations)
-                            ? LocationsProvider.locationByName(
-                                            fromCtrl.text, locations)
+                        locationsProvider.checkLocation(fromCtrl.text)
+                            ? locationsProvider
+                                        .locationByName(fromCtrl.text)
                                         .info ==
                                     null
                                 ? ' '
-                                : LocationsProvider.locationByName(
-                                        fromCtrl.text, locations)
+                                : locationsProvider
+                                    .locationByName(fromCtrl.text)
                                     .info
                             : ' ',
                         style: TextStyle(fontSize: 14, color: Colors.grey)),
@@ -90,25 +89,32 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       toCtrl: toCtrl,
                       label: 'To',
                       ride: widget.ride,
-                      finished: true,
+                      finished: isFinished(),
                       isToLocation: true,
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                        LocationsProvider.checkLocation(toCtrl.text, locations)
-                            ? LocationsProvider.locationByName(
-                                            toCtrl.text, locations)
+                        locationsProvider.checkLocation(toCtrl.text)
+                            ? locationsProvider
+                                        .locationByName(toCtrl.text)
                                         .info ==
                                     null
                                 ? ' '
-                                : LocationsProvider.locationByName(
-                                        toCtrl.text, locations)
+                                : locationsProvider
+                                    .locationByName(toCtrl.text)
                                     .info
                             : ' ',
                         style: TextStyle(fontSize: 14, color: Colors.grey)),
                   ],
                 ),
               ),
+              fromCtrl.text != '' || toCtrl.text != '' ? Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Row(children: <Widget>[FlowBack()]))),
+              ) : Container(),
             ],
           ),
         )));
@@ -175,39 +181,6 @@ class _RequestLocState extends State<RequestLoc> {
                   ],
                 ),
               ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.1),
-                          ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.6,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: RaisedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState.validate()) {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) => widget.page));
-                                  }
-                                },
-                                elevation: 2.0,
-                                color: Colors.black,
-                                textColor: Colors.white,
-                                child: Text(
-                                  'Next',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                        ]))),
-              ),
             ],
           ),
         )));
@@ -234,7 +207,6 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
 
-    List<Location> locations = locationsProvider.locations;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -278,20 +250,19 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                       fromCtrl: fromCtrl,
                       label: 'From',
                       ride: widget.ride,
-                      finished: false,
+                      finished: isFinished(),
                       isToLocation: false,
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                        LocationsProvider.checkLocation(
-                                fromCtrl.text, locations)
-                            ? LocationsProvider.locationByName(
-                                            fromCtrl.text, locations)
+                        locationsProvider.checkLocation(fromCtrl.text)
+                            ? locationsProvider
+                                        .locationByName(fromCtrl.text)
                                         .info ==
                                     null
                                 ? ' '
-                                : LocationsProvider.locationByName(
-                                        fromCtrl.text, locations)
+                                : locationsProvider
+                                    .locationByName(fromCtrl.text)
                                     .info
                             : ' ',
                         style: TextStyle(fontSize: 14, color: Colors.grey)),
@@ -300,18 +271,18 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                         toCtrl: toCtrl,
                         label: 'To',
                         ride: widget.ride,
-                        finished: true,
+                        finished: isFinished(),
                         isToLocation: true),
                     SizedBox(height: 10.0),
                     Text(
-                        LocationsProvider.checkLocation(toCtrl.text, locations)
-                            ? LocationsProvider.locationByName(
-                                            toCtrl.text, locations)
+                        locationsProvider.checkLocation(toCtrl.text)
+                            ? locationsProvider
+                                        .locationByName(toCtrl.text)
                                         .info ==
                                     null
                                 ? ' '
-                                : LocationsProvider.locationByName(
-                                        toCtrl.text, locations)
+                                : locationsProvider
+                                    .locationByName(toCtrl.text)
                                     .info
                             : ' ',
                         style: TextStyle(fontSize: 14, color: Colors.grey)),
@@ -438,8 +409,6 @@ class LocationField extends StatelessWidget {
   Widget build(context) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
-    List<Location> locations = locationsProvider.locations;
-
     return TypeAheadFormField(
         textFieldConfiguration: TextFieldConfiguration(
             controller: ctrl,
@@ -452,7 +421,7 @@ class LocationField extends StatelessWidget {
               labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
             )),
         suggestionsCallback: (pattern) {
-          return LocationsProvider.getSuggestions(pattern, locations);
+          return locationsProvider.getSuggestions(pattern);
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
@@ -461,9 +430,7 @@ class LocationField extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                 Text(suggestion, style: TextStyle(fontSize: 14)),
-                Text(
-                    LocationsProvider.locationByName(suggestion, locations)
-                        .address,
+                Text(locationsProvider.locationByName(suggestion).address,
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
                 Divider(),
               ])));
@@ -496,6 +463,8 @@ class LocationField extends StatelessWidget {
         },
         onSuggestionSelected: (suggestion) {
           ctrl.text = suggestion;
+          Navigator.push(
+              context, new MaterialPageRoute(builder: (context) => page));
         },
         validator: (value) {
           if (value.isEmpty) {
