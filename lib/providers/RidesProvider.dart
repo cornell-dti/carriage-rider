@@ -13,8 +13,8 @@ import 'AuthProvider.dart';
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
   Ride currentRide;
-  List<Ride> pastRides = [];
-  List<Ride> upcomingRides = [];
+  List<Ride> pastRides;
+  List<Ride> upcomingRides;
 
   RidesProvider(AppConfig config, AuthProvider authProvider) {
     void Function() callback;
@@ -27,11 +27,13 @@ class RidesProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+  bool hasData() {
+    return pastRides != null && upcomingRides != null;
+  }
   /// Fetches past rides, upcoming rides, and current ride from the backend.
   /// Uses AppConfig [config] and AuthProvider [authProvider] to pass in as arguments for each
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
-  Future<void> fetchAllRides(
-      AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     await _fetchCurrentRide(config, authProvider);
