@@ -8,6 +8,18 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 
 double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
+DateTime assignDate() {
+  DateTime start;
+  DateTime now = DateTime.now();
+  DateTime compare = DateTime(now.year, now.month, now.day, 10);
+  if (now.difference(compare).inMinutes >= 0) {
+    start = DateTime(now.year, now.month, now.day + 2);
+  } else {
+    start = DateTime(now.year, now.month, now.day);
+  }
+  return start;
+}
+
 class RequestRideTime extends StatefulWidget {
   final Ride ride;
 
@@ -86,7 +98,7 @@ class RequestRideNoRepeat extends StatefulWidget {
 class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = assignDate();
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
 
@@ -131,7 +143,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   }
 
   _selectDate(BuildContext context) async {
-    DateTime date = DateTime.now();
+    DateTime date = selectedDate;
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -144,7 +156,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
         );
       },
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null)
       setState(() {
         selectedDate = picked;
         dateCtrl.text = format('$selectedDate'.split(' ')[0]);
@@ -329,8 +341,8 @@ class RequestRideRepeat extends StatefulWidget {
 class _RequestRideRepeatState extends State<RequestRideRepeat> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  DateTime startDate = assignDate();
+  DateTime endDate = assignDate();
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
 
@@ -377,7 +389,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
 
   _selectDate(
       BuildContext context, DateTime date, TextEditingController ctrl) async {
-    DateTime init = DateTime.now();
+    DateTime init = startDate;
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: date,
@@ -391,13 +403,14 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
       },
     );
 
-    if (picked != null && picked != date)
+
+    if (picked != null)
       setState(() {
         date = picked;
-        if (ctrl == startDateCtrl) {
-          startDate = date;
+        print(date);
+        if (ctrl == endDateCtrl) {
+          widget.ride.endDate = date;
         }
-        widget.ride.endDate = date;
         ctrl.text = format('$date'.split(' ')[0]);
       });
   }
@@ -551,11 +564,13 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                     color: Colors.grey, fontSize: 17)),
                             validator: (input) {
                               if (input.isNotEmpty &&
-                                  endDateCtrl.text != '' && DateFormat('MM/dd/yyyy')
-                                  .parse(startDateCtrl.text)
-                                  .difference(DateFormat('MM/dd/yyyy')
-                                  .parse(endDateCtrl.text))
-                                  .inDays > 0) {
+                                  endDateCtrl.text != '' &&
+                                  DateFormat('MM/dd/yyyy')
+                                          .parse(startDateCtrl.text)
+                                          .difference(DateFormat('MM/dd/yyyy')
+                                              .parse(endDateCtrl.text))
+                                          .inDays >
+                                      0) {
                                 return 'Start date must be before end date';
                               }
                               if (input.isEmpty) {
@@ -584,11 +599,13 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                             ),
                             validator: (input) {
                               if (input.isNotEmpty &&
-                                  startDateCtrl.text != '' && DateFormat('MM/dd/yyyy')
-                                  .parse(startDateCtrl.text)
-                                  .difference(DateFormat('MM/dd/yyyy')
-                                  .parse(endDateCtrl.text))
-                                  .inDays > 0) {
+                                  startDateCtrl.text != '' &&
+                                  DateFormat('MM/dd/yyyy')
+                                          .parse(startDateCtrl.text)
+                                          .difference(DateFormat('MM/dd/yyyy')
+                                              .parse(endDateCtrl.text))
+                                          .inDays >
+                                      0) {
                                 return 'End date must be after start date';
                               }
                               if (input.isEmpty) {
