@@ -86,11 +86,11 @@ class Notification extends StatelessWidget {
 
     else if (timeWithin(Duration(days: 1))) {
       int hoursSince = timeSinceNotif.inHours;
-      time = '${hoursSince} hour${hoursSince == 1 ? '' : 's'} ago';
+      time = '$hoursSince hour${hoursSince == 1 ? '' : 's'} ago';
     }
     else if (timeWithin(Duration(days: 3))) {
       int daysSince = timeSinceNotif.inDays;
-      time = '${daysSince} day${daysSince == 1 ? '' : 's'} ago';
+      time = '$daysSince day${daysSince == 1 ? '' : 's'} ago';
     }
     else {
       time = DateFormat('yMd').format(notifTime);
