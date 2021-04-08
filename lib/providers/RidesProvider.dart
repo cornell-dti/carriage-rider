@@ -137,7 +137,7 @@ class RidesProvider with ChangeNotifier {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       },
       body: jsonEncode(<String, dynamic>{
-        'rider': riderProvider.info,
+        'rider': riderProvider.info.id,
         'startLocation': startLocation,
         'endLocation': endLocation,
         'startTime': startTime.toUtc().toIso8601String(),
@@ -151,7 +151,6 @@ class RidesProvider with ChangeNotifier {
         'recurringDays': recurringDays
       }),
     );
-    print(response.body);
     if (response.statusCode != 200) {
       throw Exception('Failed to create ride.');
     }

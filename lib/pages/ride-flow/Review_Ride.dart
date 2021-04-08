@@ -193,17 +193,6 @@ class _ReviewRideState extends State<ReviewRide> {
                                 onPressed: () async {
                                   fromCtrl.clear();
                                   toCtrl.clear();
-                                  print(locationsProvider
-                                      .locationByName(
-                                      widget.ride.startLocation).id);
-                                  print(locationsProvider
-                                      .locationByName(
-                                      widget.ride.endLocation).id);
-                                  print(widget.ride.startTime);
-                                  print(widget.ride.endTime);
-                                  print(widget.ride.endDate);
-                                  print(widget.ride.recurringDays);
-                                  print(widget.ride.recurring);
                                   await rideProvider.createRide(
                                       AppConfig.of(context),
                                       context,
