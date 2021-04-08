@@ -67,12 +67,10 @@ class _RequestRideTimeState extends State<RequestRideTime> {
                   children: <Widget>[
                     SelectionButton(
                         text: 'Yes',
-                        onPressed: () => widget.ride.recurring = true,
                         page: RequestRideRepeat(ride: widget.ride)),
                     SizedBox(width: 30.0),
                     SelectionButton(
                         text: 'No',
-                        onPressed: () => widget.ride.recurring = false,
                         page: RequestRideNoRepeat(ride: widget.ride))
                   ]),
               FlowBack()
@@ -308,6 +306,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                                                 builder: (context) =>
                                                     ReviewRide(
                                                         ride: widget.ride)));
+                                        widget.ride.recurring = false;
                                       }
                                     },
                                     elevation: 2.0,
@@ -402,7 +401,6 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
     if (picked != null)
       setState(() {
         date = picked;
-        print(date);
         if (ctrl == endDateCtrl) {
           widget.ride.endDate = date;
         }
@@ -680,6 +678,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                                             setSelectedDays(selectedDays);
                                         recurringDays =
                                             setRecurringDays(recurringDays);
+                                        widget.ride.recurring = true;
                                         widget.ride.recurringDays =
                                             recurringDays;
                                       }

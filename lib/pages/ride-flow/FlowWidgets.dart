@@ -100,7 +100,7 @@ class FlowBack extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width * 0.1,
+                    minWidth: MediaQuery.of(context).size.width * 0.05,
                     height: 50.0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -112,7 +112,7 @@ class FlowBack extends StatelessWidget {
                       color: Colors.white,
                       child: Row(
                         children: [
-                          SizedBox(width: 5),
+                          SizedBox(width: 10),
                           Icon(Icons.arrow_back_ios),
                         ],
                       )
@@ -130,7 +130,7 @@ class FlowBackDuo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.1,
+      minWidth: MediaQuery.of(context).size.width * 0.05,
       height: 50.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: RaisedButton(

@@ -297,7 +297,7 @@ class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
                           FlowBackDuo(),
                           SizedBox(width: 50),
                           ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.6,
+                            minWidth: MediaQuery.of(context).size.width * 0.65,
                             height: 50.0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
