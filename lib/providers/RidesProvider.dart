@@ -124,34 +124,37 @@ class RidesProvider with ChangeNotifier {
       String endLocation,
       DateTime startTime,
       DateTime endTime,
-      DateTime endDate,
       bool recurring,
-      List<int> recurringDays) async {
+      {DateTime endDate,
+      List<int> recurringDays}) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.post(
-      '${config.baseUrl}/rides',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token'
-      },
-      body: jsonEncode(<String, dynamic>{
-        'rider': riderProvider.info.id,
-        'startLocation': startLocation,
-        'endLocation': endLocation,
-        'startTime': startTime.toUtc().toIso8601String(),
-        'endTime': endTime.toUtc().toIso8601String(),
-        'requestedEndTime': endTime.toUtc().toIso8601String(),
-        'endDate': endDate == null
-            ? endDate
-            : DateTime.parse(DateFormat('y-MM-dd').format(endDate))
-                .toIso8601String(),
-        'recurring': recurring,
-        'recurringDays': recurringDays
-      }),
-    );
+    Map<String, dynamic> request = <String, dynamic>{
+      'rider': riderProvider.info,
+      'startLocation': startLocation,
+      'endLocation': endLocation,
+      'startTime': startTime.toUtc().toIso8601String(),
+      'endTime': endTime.toUtc().toIso8601String(),
+      'requestedEndTime': endTime.toUtc().toIso8601String(),
+    };
+    if (recurring) {
+      request['recurring'] = true;
+      request['endDate'] = DateTime.parse(DateFormat('y-MM-dd').format(endDate))
+          .toIso8601String()
+          .substring(0, 10);
+      request['recurringDays'] = recurringDays;
+    }
+    final response = await http.post('${config.baseUrl}/rides',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
+    print(request['endDate']);
     if (response.statusCode != 200) {
+      print(response.statusCode);
+      print(response.body);
       throw Exception('Failed to create ride.');
     }
   }

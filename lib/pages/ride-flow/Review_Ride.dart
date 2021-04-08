@@ -213,9 +213,9 @@ class _ReviewRideState extends State<ReviewRide> {
                                               .id,
                                       widget.ride.startTime,
                                       widget.ride.endTime,
-                                      widget.ride.endDate,
                                       widget.ride.recurring,
-                                      widget.ride.recurringDays);
+                                  recurringDays: widget.ride.recurringDays,
+                                  endDate: widget.ride.endDate);
                                   Navigator.push(
                                       context,
                                       new MaterialPageRoute(
