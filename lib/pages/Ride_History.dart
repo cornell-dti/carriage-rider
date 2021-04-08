@@ -1,12 +1,10 @@
 import 'dart:math';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-
-
-import '../PopButton.dart';
 
 class RideHistory extends StatefulWidget {
   @override
@@ -184,35 +182,34 @@ class HistorySeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.pastRides;
     RecurringRidesGenerator ridesGenerator =
-        RecurringRidesGenerator(originalRides);
+    RecurringRidesGenerator(originalRides);
     return Scaffold(
+      appBar: ScheduleBar(Colors.black, Colors.white),
         body: SafeArea(
             child: SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: PopButton(context, 'Schedule'),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text('Ride History',
-              style: CarriageTheme.largeTitle),
-        ),
-        Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ridesGenerator.buildPastRidesList(),
-            ),
-          ),
-        )
-      ]),
-    )));
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: Text('Ride History',
+                          style: CarriageTheme.largeTitle),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ridesGenerator.buildPastRidesList(),
+                        ),
+                      ),
+                    )
+                  ]),
+            )));
   }
 }

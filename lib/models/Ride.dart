@@ -2,7 +2,7 @@ import 'dart:core';
 import 'package:carriage_rider/pages/Current.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'dart:math';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +20,7 @@ enum RideStatus {
   NO_SHOW
 }
 
+/// Parses [status] representing a ride status into its corresponding enum.
 RideStatus getStatusEnum(String status) {
   switch (status) {
     case ('not_started'):
@@ -97,23 +98,23 @@ class Ride {
 
   Ride(
       {this.id,
-      this.type,
-      this.rider,
-      this.status,
-      this.startLocation,
-      this.startAddress,
-      this.endLocation,
-      this.endAddress,
-      this.startTime,
-      this.endTime,
-      this.requestedEndTime,
-      this.recurring,
-      this.recurringDays,
-      this.deleted,
-      this.late,
-      this.edits,
-      this.endDate,
-      this.driver});
+        this.type,
+        this.rider,
+        this.status,
+        this.startLocation,
+        this.startAddress,
+        this.endLocation,
+        this.endAddress,
+        this.startTime,
+        this.endTime,
+        this.requestedEndTime,
+        this.recurring,
+        this.recurringDays,
+        this.deleted,
+        this.late,
+        this.edits,
+        this.endDate,
+        this.driver});
 
   //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -137,7 +138,7 @@ class Ride {
           .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays:
-          json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
+      json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
       deleted: json['deleted'] == null ? false : json['deleted'],
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
@@ -157,7 +158,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -170,27 +171,29 @@ class Ride {
   //[isIcon] determines whether the card needs an icon.
   Widget buildLocationsCard(context, bool isIcon, bool pickUp, bool isStart) {
     return Container(
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-              blurRadius: 8,
-              spreadRadius: 0,
-              color: Colors.black.withOpacity(0.15))
-        ]),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              CarriageTheme.boxShadow
+            ]),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(isStart ? startLocation : endLocation,
-                style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                child: cardInfo(context, isStart, isIcon)),
-            SizedBox(height: 16),
-            Text(
-                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
-                    DateFormat('jm').format(isStart ? startTime : endTime),
-                style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-          ]),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(isStart ? startLocation : endLocation,
+                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: cardInfo(context, isStart, isIcon)),
+                SizedBox(height: 16),
+                Text(
+                    'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
+                        DateFormat('jm').format(isStart ? startTime : endTime),
+                    style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+              ]),
         ));
   }
 
@@ -203,8 +206,8 @@ class Ride {
       ),
       isIcon
           ? Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(Icons.location_on))
+          padding: EdgeInsets.only(left: 10),
+          child: Icon(Icons.location_on))
           : Container()
     ]);
     return addressInfo;
@@ -321,9 +324,9 @@ T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
 class RideCard extends StatelessWidget {
   RideCard(this.ride,
       {@required this.showConfirmation,
-      @required this.showCallDriver,
-      @required this.showArrow,
-      this.parentRideID});
+        @required this.showCallDriver,
+        @required this.showArrow,
+        this.parentRideID});
 
   final Ride ride;
   final bool showConfirmation;
@@ -344,7 +347,7 @@ class RideCard extends StatelessWidget {
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    UpcomingRidePage(ride, parentRideID: parentRideID)));
+                    RidePage(ride, parentRideID: parentRideID)));
       },
       child: Container(
         margin: EdgeInsets.all(2),
@@ -359,12 +362,12 @@ class RideCard extends StatelessWidget {
                     children: <Widget>[
                       showConfirmation
                           ? (ride.type == 'active'
-                              ? Text('Ride Confirmed',
-                                  style: confirmationStyle.copyWith(
-                                      color: Color(0xFF4CAF50)))
-                              : Text('Ride Requested',
-                                  style: confirmationStyle.copyWith(
-                                      color: Color(0xFFFF9800))))
+                          ? Text('Ride Confirmed',
+                          style: confirmationStyle.copyWith(
+                              color: Color(0xFF4CAF50)))
+                          : Text('Ride Requested',
+                          style: confirmationStyle.copyWith(
+                              color: Color(0xFFFF9800))))
                           : Container(),
                       SizedBox(height: 4),
                       ride.buildStartTime(),
@@ -379,39 +382,39 @@ class RideCard extends StatelessWidget {
                       SizedBox(height: 16),
                       showCallDriver
                           ? Row(
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () =>
-                                      UrlLauncher.launch('tel://13232315234'),
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          border: Border.all(
-                                              width: 0.5,
-                                              color: Colors.black
-                                                  .withOpacity(0.25))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Icon(Icons.phone,
-                                            size: 20, color: Color(0xFF9B9B9B)),
-                                      )),
-                                ),
-                                SizedBox(width: 8),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text('Driver',
-                                        style: TextStyle(fontSize: 11)),
-                                    Text(
-                                        ride.type == 'active'
-                                            ? 'Confirmed'
-                                            : 'TBD',
-                                        style: CarriageTheme.rideInfoStyle)
-                                  ],
-                                )
-                              ],
-                            )
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () =>
+                                UrlLauncher.launch('tel://${ride.driver.phoneNumber}'),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(100),
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: Colors.black
+                                            .withOpacity(0.25))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Icon(Icons.phone,
+                                      size: 20, color: Color(0xFF9B9B9B)),
+                                )),
+                          ),
+                          SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Driver',
+                                  style: TextStyle(fontSize: 11)),
+                              Text(
+                                  ride.type == 'active'
+                                      ? 'Confirmed'
+                                      : 'TBD',
+                                  style: CarriageTheme.rideInfoStyle)
+                            ],
+                          )
+                        ],
+                      )
                           : Container()
                     ]),
               ),
@@ -473,7 +476,7 @@ class RecurringRidesGenerator {
 
       if (originalRide.recurring) {
         Duration rideDuration =
-            originalRide.endTime.difference(originalRide.startTime);
+        originalRide.endTime.difference(originalRide.startTime);
         List<Ride> deletedInstances = originalRide.edits
             .map((rideID) => originalRidesByID[rideID])
             .where((ride) => ride.deleted)
@@ -510,7 +513,7 @@ class RecurringRidesGenerator {
           // find the next occurrence
           dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
           int daysUntilNextOccurrence =
-              daysUntilWeekday(rideStart, days[dayIndex]);
+          daysUntilWeekday(rideStart, days[dayIndex]);
           rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
         }
       }
@@ -523,8 +526,8 @@ class RecurringRidesGenerator {
     return allRides
         .where((ride) => ride.startTime.isAfter(DateTime.now()))
         .toList()
-          ..sort((ride1, ride2) =>
-              ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
+      ..sort((ride1, ride2) =>
+      ride1.startTime.isBefore(ride2.startTime) ? -1 : 1);
   }
 
   ListView buildUpcomingRidesList() {
@@ -550,7 +553,7 @@ class RecurringRidesGenerator {
   ListView buildPastRidesList() {
     List<Ride> allRides = generateRideInstances()
       ..sort(
-          (ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? 1 : -1);
+              (ride1, ride2) => ride1.startTime.isBefore(ride2.startTime) ? 1 : -1);
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -600,19 +603,19 @@ Widget arrivedRide(context, Ride ride) {
   return Row(children: <Widget>[
     Expanded(
         child: RichText(
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.black,
-        ),
-        children: <TextSpan>[
-          new TextSpan(text: 'Meet your driver '),
-          new TextSpan(
-              text: '@$startLocation',
-              style: new TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
-    ))
+          text: new TextSpan(
+            style: new TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+            children: <TextSpan>[
+              new TextSpan(text: 'Meet your driver '),
+              new TextSpan(
+                  text: '@$startLocation',
+                  style: new TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ))
   ]);
 }
 
@@ -621,19 +624,19 @@ Widget pickedUpRide(context, Ride ride) {
   return Row(children: <Widget>[
     Expanded(
         child: RichText(
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.black,
-        ),
-        children: <TextSpan>[
-          new TextSpan(text: 'Your driver will drop you off \n'),
-          new TextSpan(
-              text: '@$endLocation',
-              style: new TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
-    ))
+          text: new TextSpan(
+            style: new TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+            children: <TextSpan>[
+              new TextSpan(text: 'Your driver will drop you off \n'),
+              new TextSpan(
+                  text: '@$endLocation',
+                  style: new TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ))
   ]);
 }
 
@@ -641,38 +644,38 @@ Widget completeRide(context) {
   return Row(children: <Widget>[
     Expanded(
         child: RichText(
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.black,
-        ),
-        children: <TextSpan>[
-          new TextSpan(text: 'Your ride is '),
-          new TextSpan(
-              text: 'complete!',
-              style: new TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
-    ))
+          text: new TextSpan(
+            style: new TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+            children: <TextSpan>[
+              new TextSpan(text: 'Your ride is '),
+              new TextSpan(
+                  text: 'complete!',
+                  style: new TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ))
   ]);
 }
 
 Widget currentCardInstruction(context, Ride ride) {
   return ride.status == RideStatus.NOT_STARTED ||
-          ride.status == RideStatus.ON_THE_WAY
+      ride.status == RideStatus.ON_THE_WAY
       ? onTheWayRide(context, ride)
       : ride.status == RideStatus.ARRIVED
-          ? arrivedRide(context, ride)
-          : ride.status == RideStatus.PICKED_UP
-              ? pickedUpRide(context, ride)
-              : completeRide(context);
+      ? arrivedRide(context, ride)
+      : ride.status == RideStatus.PICKED_UP
+      ? pickedUpRide(context, ride)
+      : completeRide(context);
 }
 
 class CurrentRideCard extends StatelessWidget {
   CurrentRideCard(
-    this.ride, {
-    @required this.showCallDriver,
-  });
+      this.ride, {
+        @required this.showCallDriver,
+      });
 
   final Ride ride;
   final bool showCallDriver;
@@ -695,69 +698,69 @@ class CurrentRideCard extends StatelessWidget {
             children: [
               ride == null
                   ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(height: 20),
-                          Icon(
-                            Icons.directions_car_rounded,
-                            size: 32,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(height: 10),
-                          Text('No current ride',
-                              style: CarriageTheme.body
-                                  .copyWith(color: Colors.grey)),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    )
-                  : Expanded(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(height: 10),
-                            currentCardInstruction(context, ride),
-                            SizedBox(height: 15),
-                            showCallDriver
-                                ? Row(
-                                    children: <Widget>[
-                                      GestureDetector(
-                                        onTap: () => UrlLauncher.launch(
-                                            'tel://${ride.driver.phoneNumber}'),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                border: Border.all(
-                                                    width: 0.5,
-                                                    color: Colors.black
-                                                        .withOpacity(0.25))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: Icon(Icons.phone,
-                                                  size: 20,
-                                                  color: Color(0xFF4CAF50)),
-                                            )),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('Driver',
-                                              style: TextStyle(fontSize: 11)),
-                                          Text(ride.driver.fullName(),
-                                              style:
-                                                  CarriageTheme.rideInfoStyle)
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                : Container(),
-                            SizedBox(height: 10),
-                          ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    Icon(
+                      Icons.directions_car_rounded,
+                      size: 32,
+                      color: Colors.grey,
                     ),
+                    SizedBox(height: 10),
+                    Text('No current ride',
+                        style: CarriageTheme.body
+                            .copyWith(color: Colors.grey)),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              )
+                  : Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      currentCardInstruction(context, ride),
+                      SizedBox(height: 15),
+                      showCallDriver
+                          ? Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () => UrlLauncher.launch(
+                                'tel://${ride.driver.phoneNumber}'),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(100),
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: Colors.black
+                                            .withOpacity(0.25))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Icon(Icons.phone,
+                                      size: 20,
+                                      color: Color(0xFF4CAF50)),
+                                )),
+                          ),
+                          SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Driver',
+                                  style: TextStyle(fontSize: 11)),
+                              Text(ride.driver.fullName(),
+                                  style:
+                                  CarriageTheme.rideInfoStyle)
+                            ],
+                          )
+                        ],
+                      )
+                          : Container(),
+                      SizedBox(height: 10),
+                    ]),
+              ),
             ],
           ),
         ),
