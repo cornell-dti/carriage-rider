@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => Notifications()));
+                          builder: (context) => NotificationsPage()));
                 },
               ),
               Divider(

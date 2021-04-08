@@ -1,143 +1,191 @@
 import 'dart:ui';
+import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class Notifications extends StatefulWidget {
-  Notifications({Key key}) : super(key: key);
-
-  @override
-  _NotificationsState createState() => _NotificationsState();
+DriverNotification driverArrivedNotif(Ride ride, DateTime notifTime) {
+  return DriverNotification(ride, notifTime, 'Your driver is here! Meet your driver at the pickup point for ${ride.endLocation}.');
+}
+DriverNotification driverOnTheWayNotif(Ride ride, DateTime notifTime) {
+  return DriverNotification(ride, notifTime, 'Your driver is on the way! Wait outside at the pickup point for ${ride.endLocation}.');
+}
+DispatcherNotification driverCancelledNotif(Ride ride, DateTime notifTime) {
+  return DispatcherNotification(ride, notifTime, 'Your driver cancelled the ride because they were unable to find you.', Colors.red, Icons.close);
+}
+DispatcherNotification rideEditedNotif(Ride ride, DateTime notifTime) {
+  return DispatcherNotification(ride, notifTime, 'The information for your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been edited. Please review your ride info.', Colors.red, Icons.edit);
+}
+DispatcherNotification rideConfirmedNotif(Ride ride, DateTime notifTime) {
+  return DispatcherNotification(ride, notifTime, 'Your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been confirmed.', Colors.green, Icons.check);
 }
 
-class _NotificationsState extends State<Notifications> {
+class DriverNotification extends StatelessWidget {
+  DriverNotification(this.ride, this.notifTime, this.text);
+  final Ride ride;
+  final DateTime notifTime;
+  final String text;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: PageTitle(title: 'Schedule'),
-        backgroundColor: Colors.white,
-        titleSpacing: 0.0,
-        iconTheme: IconThemeData(color: Colors.black),
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context, false),
+    Widget driverImage = ride.driver.profilePicture(48);
+    return Notification(ride, notifTime, driverImage, 'Driver', text);
+  }
+}
+
+class DispatcherNotification extends StatelessWidget {
+  DispatcherNotification(this.ride, this.notifTime, this.text, this.color, this.iconData);
+  final Ride ride;
+  final DateTime notifTime;
+  final String text;
+  final Color color;
+  final IconData iconData;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget icon = CircleAvatar(
+        radius: 22,
+        child: CircleAvatar(
+          radius: 22,
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          child: Icon(iconData),
+        )
+    );
+    return Notification(this.ride, this.notifTime, icon, 'Dispatcher', this.text);
+  }
+}
+
+class Notification extends StatelessWidget {
+  Notification(this.ride, this.notifTime, this.circularWidget, this.title, this.text);
+
+  final Ride ride;
+  final DateTime notifTime;
+  final Widget circularWidget;
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    Duration timeSinceNotif = now.difference(notifTime);
+    String time = '';
+
+    bool timeWithin(Duration threshold) {
+      return timeSinceNotif.compareTo(threshold) <= 0;
+    }
+
+    if (timeWithin(Duration(hours: 1))) {
+      time = '${timeSinceNotif.inMinutes} min ago';
+    }
+
+    else if (timeWithin(Duration(days: 1))) {
+      int hoursSince = timeSinceNotif.inHours;
+      time = '${hoursSince} hour${hoursSince == 1 ? '' : 's'} ago';
+    }
+    else if (timeWithin(Duration(days: 3))) {
+      int daysSince = timeSinceNotif.inDays;
+      time = '${daysSince} day${daysSince == 1 ? '' : 's'} ago';
+    }
+    else {
+      time = DateFormat('yMd').format(notifTime);
+    }
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RidePage(ride))
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: <Widget>[
+            circularWidget,
+            SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          time,
+                          style: TextStyle(fontSize: 11, color: CarriageTheme.gray2),
+                        ),
+                      ]
+                  ),
+                  SizedBox(height: 4),
+                  Text(text, style: TextStyle(fontSize: 15, color: Colors.black))
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                child: Text('Notifications',
-                    style: CarriageTheme.largeTitle),
-              ),
-              Detail(),
-              Container(
-                color: Colors.white,
-                height: MediaQuery.of(context).size.height / 5,
-              )
-            ]),
-      )
     );
   }
 }
 
-class Detail extends StatefulWidget {
+class NotificationsPage extends StatefulWidget {
+  NotificationsPage({Key key}) : super(key: key);
+
   @override
-  _DetailState createState() => _DetailState();
+  _NotificationsPageState createState() => _NotificationsPageState();
 }
 
-class _DetailState extends State<Detail> {
-
-  List<Color> colors = [
-    Colors.black,
-    Colors.black,
-    Colors.black,
-    Colors.red,
-    Colors.black,
-    Colors.red
-  ];
-
-  List<IconData> icons = [
-    Icons.directions_car,
-    Icons.check,
-    Icons.directions_car,
-    Icons.edit,
-    Icons.directions_car,
-    Icons.cancel
-  ];
-
-  List<String> text = [
-    'Your driver is on the way! Wait outside to meet your driver.',
-    'Your ride on MM/DD/YYYY has been confirmed',
-    'How was your ride with Jennifer? Leave a review so we can improve our service',
-    'Your ride information has been edited by the admin. Please review your ride info.',
-    'Your driver is here! Meet your driver at the pickup point.',
-    'Your driver cancelled the ride because the driver was unable to find you.'
-  ];
-
-  Widget notificationRow(BuildContext context, Color color, IconData icon, String text) {
-    return Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 22,
-              child: CircleAvatar(
-                radius: 22,
-                backgroundColor: color,
-                foregroundColor: Colors.white,
-                child: Icon(icon),
-              ),
-            ),
-            SizedBox(width: 19),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
-          ],
-        ));
-  }
-
+class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(3),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(15, 0, 0, 0),
-                offset: Offset(0, 4.0),
-                blurRadius: 10.0,
-                spreadRadius: 1.0)
-          ],
-        ),
-        child: Padding(
-            padding: EdgeInsets.only(top: 24, left: 16, right: 16),
+    Ride ride = Provider.of<RidesProvider>(context, listen: false).upcomingRides.first;
+    return Scaffold(
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
-              children: <Widget>[
-                ListView.separated(
-                    padding: EdgeInsets.all(0),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: icons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return notificationRow(context, colors[index], icons[index], text[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 0, color: Colors.white,
-                      );
-                    }
-                )
-              ],
-            )));
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+                    child: Text('Notifications',
+                        style: CarriageTheme.largeTitle),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                        children: [
+                          driverArrivedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
+                          driverOnTheWayNotif(ride, DateTime.now().subtract(Duration(days: 1))),
+                          driverCancelledNotif(ride, DateTime.now().subtract(Duration(days: 1))),
+                          rideEditedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
+
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(days: 7))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(days: 3))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(days: 2))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(days: 1))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(hours: 7))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(hours: 1))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(minutes: 7))),
+                          rideConfirmedNotif(ride, DateTime.now().subtract(Duration(minutes: 1))),
+                        ]
+                    ),
+                  )
+                ]
+            ),
+          ),
+        )
+    );
   }
 }
+
