@@ -23,12 +23,13 @@ class _RidePageState extends State<RidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Colors.white),
+      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
               SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
