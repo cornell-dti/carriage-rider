@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
@@ -14,8 +12,7 @@ import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import '../models/RideObject.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
+
 import 'Upcoming.dart';
 
 void main() {
@@ -32,71 +29,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  StreamSubscription iosSubscription; // ignore: cancel_subscriptions
-  String myMessage = '';
-
-  _registerOnFirebase() {
-    _firebaseMessaging.subscribeToTopic('all');
-    _firebaseMessaging.getToken().then((token) => print(token));
-  }
-
-  @override
-  void initState() {
-    _registerOnFirebase();
-    getMessage();
-    super.initState();
-    if (Platform.isIOS) {
-      iosSubscription =
-          _firebaseMessaging.onIosSettingsRegistered.listen((data) {
-            // save the token  OR subscribe to a topic here
-            _firebaseMessaging.subscribeToTopic('all');
-          });
-
-      _firebaseMessaging.requestNotificationPermissions(
-          IosNotificationSettings(sound: true, badge: true, alert: true));
-    }
-  }
-
-
-Future<void> fetchMessage() async {
-    await http.get("").then((response) async {
-      if (response.statusCode == 200) {} else {}
-    });
-  }
-
-  void getMessage() {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        showDialog(
-          context: context,
-          builder: (context) =>
-              AlertDialog(
-                content: ListTile(
-                  title: Text(message['default']),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-        );
-        setState(() => myMessage = message['default']);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // TODO optional
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // TODO optional
-      },
-    );
-  }
-
 
   @override
   Widget build(context) {
@@ -127,8 +59,10 @@ Future<void> fetchMessage() async {
                 leading: Icon(Icons.person, color: Colors.black),
                 title: sideBarText('Profile', Colors.black),
                 onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Profile()));
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => Profile()));
                 },
               ),
               Divider(
@@ -138,7 +72,8 @@ Future<void> fetchMessage() async {
                 leading: Icon(Icons.settings, color: Colors.black),
                 title: sideBarText('Settings', Colors.black),
                 onTap: () {
-                  Navigator.push(context,
+                  Navigator.push(
+                      context,
                       new MaterialPageRoute(
                           builder: (context) => Settings()));
                 },
@@ -163,8 +98,10 @@ Future<void> fetchMessage() async {
                 leading: Icon(Icons.help_outline, color: Colors.black),
                 title: sideBarText('Contact', Colors.black),
                 onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Contact()));
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => Contact()));
                 },
               )
             ],
@@ -172,163 +109,133 @@ Future<void> fetchMessage() async {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData()
-            ? Center(child: CircularProgressIndicator())
-            : Stack(
+        child: !ridesProvider.hasData() ? Center(child: CircularProgressIndicator()) :
+        Stack(
           children: <Widget>[
             RefreshIndicator(
                 onRefresh: () async {
-                  await ridesProvider.fetchAllRides(
-                      appConfig, authProvider);
+                  await ridesProvider.fetchAllRides(appConfig, authProvider);
                   setState(() {});
                 },
-                child: CustomScrollView(slivers: [
-                  SliverAppBar(
-                    elevation: 11,
-                    pinned: true,
-                    expandedHeight: 100,
-                    collapsedHeight: 100,
-                    backgroundColor:
-                    Theme
-                        .of(context)
-                        .scaffoldBackgroundColor,
-                    actions: [Container()],
-                    flexibleSpace: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
+                child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 11,
+                        pinned: true,
+                        expandedHeight: 100,
+                        collapsedHeight: 100,
+                        backgroundColor:
+                        Theme.of(context).scaffoldBackgroundColor,
+                        actions: [Container()],
+                        flexibleSpace: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 23),
-                              child: Text(
-                                headerName,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontFamily: 'SFPro',
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 23),
-                              child: Builder(builder: (context) {
-                                return IconButton(
-                                    icon: Icon(Icons.menu,
-                                        color: Colors.black),
-                                    onPressed: () =>
-                                        Scaffold.of(context)
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 23),
+                                  child: Text(
+                                    headerName,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 30,
+                                        fontFamily: 'SFPro',
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 23),
+                                  child: Builder(builder: (context) {
+                                    return IconButton(
+                                        icon: Icon(Icons.menu,
+                                            color: Colors.black),
+                                        onPressed: () => Scaffold.of(context)
                                             .openEndDrawer());
-                              }),
-                            )
+                                  }),
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                      ),
+                      SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Ride',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                      SizedBox(height: 12),
+                                      CurrentRideCard(ridesProvider.currentRide, showCallDriver: true),
+                                    ]),
+                              ),
+                              SizedBox(height: 35),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(children: [
                                   Text(
-                                    'Current Ride',
+                                    'Upcoming Rides',
                                     style: CarriageTheme.subHeading,
                                   ),
-                                  SizedBox(height: 12),
-                                  CurrentRideCard(ridesProvider.currentRide,
-                                      showCallDriver: true),
+                                  Spacer(),
+                                  ridesProvider.upcomingRides.isNotEmpty ? GestureDetector(
+                                      onTap: () => Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) => UpcomingSeeMore())
+                                      ),
+                                      child: Row(children: [
+                                        Text('See More', style: CarriageTheme.seeMoreStyle),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward, size: 16)
+                                      ])
+                                  ) : Container()
                                 ]),
-                          ),
-                          SizedBox(height: 35),
-                          Text("Message: $myMessage", style: TextStyle(
-                              fontSize: 16)),
-                          SizedBox(height: 35),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(children: [
-                              Text(
-                                'Upcoming Rides',
-                                style: CarriageTheme.subHeading,
                               ),
-                              Spacer(),
-                              ridesProvider.upcomingRides.isNotEmpty
-                                  ? GestureDetector(
-                                  onTap: () =>
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UpcomingSeeMore())),
-                                  child: Row(children: [
-                                    Text('See More',
-                                        style:
-                                        CarriageTheme.seeMoreStyle),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.arrow_forward, size: 16)
-                                  ]))
-                                  : Container()
-                            ]),
-                          ),
-                          SizedBox(height: 12),
-                          UpcomingRides(),
-                          SizedBox(height: 36),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(children: [
-                              Text(
-                                'Ride History',
-                                style: CarriageTheme.subHeading,
+                              SizedBox(height: 12),
+                              UpcomingRides(),
+                              SizedBox(height: 36),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(children: [
+                                  Text('Ride History', style: CarriageTheme.subHeading,
+                                  ),
+                                  Spacer(),
+                                  ridesProvider.pastRides.isNotEmpty ? GestureDetector(
+                                      onTap: () => Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) => HistorySeeMore())
+                                      ),
+                                      child: Row(children: [
+                                        Text('See More', style: CarriageTheme.seeMoreStyle),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward, size: 16)
+                                      ])
+                                  ) : Container()
+                                ]),
                               ),
-                              Spacer(),
-                              ridesProvider.pastRides.isNotEmpty
-                                  ? GestureDetector(
-                                  onTap: () =>
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HistorySeeMore())),
-                                  child: Row(children: [
-                                    Text('See More',
-                                        style:
-                                        CarriageTheme.seeMoreStyle),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.arrow_forward, size: 16)
-                                  ]))
-                                  : Container()
-                            ]),
-                          ),
-                          SizedBox(height: 12),
-                          RideHistory(),
-                          SizedBox(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height:
-                            MediaQuery
-                                .of(context)
-                                .size
-                                .height / 8 + 36,
+                              SizedBox(height: 12),
+                              RideHistory(),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height / 8 + 36,
+                              )
+                            ],
                           )
-                        ],
-                      )),
-                ])),
+                      ),
+                    ]
+                )
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 8,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 8,
                 decoration:
                 BoxDecoration(color: Colors.white, boxShadow: [
                   BoxShadow(
@@ -343,10 +250,7 @@ Future<void> fetchMessage() async {
                         alignment: Alignment.center,
                         child: ButtonTheme(
                           minWidth:
-                          MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.8,
+                          MediaQuery.of(context).size.width * 0.8,
                           height: 50.0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
