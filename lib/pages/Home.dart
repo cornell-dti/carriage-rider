@@ -30,6 +30,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  // TODO: figure out if there's been a new notification
+  bool hasNewNotification = true;
+
   @override
   Widget build(context) {
     //TODO: change to get name from rider provider
@@ -82,7 +85,24 @@ class _HomeState extends State<Home> {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: Icon(Icons.notifications, color: Colors.black),
+                leading: Stack(
+                    children: [
+                    Icon(Icons.notifications, color: Colors.black),
+                      hasNewNotification ? Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                              width: 9,
+                              height: 9,
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(100),
+                              )
+                          )
+                      ): Container()
+                    ]
+                ),
                 title: sideBarText('Notifications', Colors.black),
                 onTap: () {
                   Navigator.push(
@@ -149,11 +169,32 @@ class _HomeState extends State<Home> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 23),
                                   child: Builder(builder: (context) {
-                                    return IconButton(
+                                    Widget button = IconButton(
                                         icon: Icon(Icons.menu,
                                             color: Colors.black),
                                         onPressed: () => Scaffold.of(context)
                                             .openEndDrawer());
+                                    if (hasNewNotification) {
+                                      return Stack(
+                                          children: [
+                                            button,
+                                            Positioned(
+                                                top: 12,
+                                                right: 12,
+                                                child: Container(
+                                                    width: 9,
+                                                    height: 9,
+                                                    padding: EdgeInsets.all(1),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius: BorderRadius.circular(100),
+                                                    )
+                                                )
+                                            )
+                                          ]
+                                      );
+                                    }
+                                    return button;
                                   }),
                                 )
                               ],
