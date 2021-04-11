@@ -132,9 +132,6 @@ class Ride {
       endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
           .parse(json['endTime'], true)
           .toLocal(),
-      requestedEndTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(json['requestedEndTime'], true)
-          .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays:
           json['recurringDays'] == null ? [] : List.from(json['recurringDays']),

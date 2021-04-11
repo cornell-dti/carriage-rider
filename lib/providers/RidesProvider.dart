@@ -136,7 +136,6 @@ class RidesProvider with ChangeNotifier {
       'endLocation': endLocation,
       'startTime': startTime.toUtc().toIso8601String(),
       'endTime': endTime.toUtc().toIso8601String(),
-      'requestedEndTime': endTime.toUtc().toIso8601String(),
     };
     if (recurring) {
       request['recurring'] = true;
