@@ -1,5 +1,4 @@
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
