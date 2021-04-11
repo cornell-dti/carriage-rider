@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
@@ -15,21 +16,7 @@ class _ContactState extends State<Contact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Schedule',
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontFamily: 'SFPro'),
-          ),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SingleChildScrollView(
           child:
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

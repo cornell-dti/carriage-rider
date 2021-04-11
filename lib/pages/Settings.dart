@@ -4,6 +4,7 @@ import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/utils/app_config.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,17 +40,7 @@ class _SettingsState extends State<Settings> {
           '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: Center(
             child: SingleChildScrollView(
           child: Column(

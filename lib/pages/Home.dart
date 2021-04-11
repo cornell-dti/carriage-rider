@@ -1,10 +1,10 @@
-import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:provider/provider.dart';

@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
+import 'package:carriage_rider/widgets/RideCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +70,7 @@ class UpcomingSeeMore extends StatelessWidget {
     RecurringRidesGenerator(originalRides);
 
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Colors.white),
+      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(

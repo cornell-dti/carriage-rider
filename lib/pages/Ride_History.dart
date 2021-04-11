@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
+import 'package:carriage_rider/widgets/RideCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
@@ -184,10 +186,9 @@ class HistorySeeMore extends StatelessWidget {
     RidesProvider ridesProvider =
     Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.pastRides;
-    RecurringRidesGenerator ridesGenerator =
-    RecurringRidesGenerator(originalRides);
+    RecurringRidesGenerator ridesGenerator = RecurringRidesGenerator(originalRides);
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Colors.white),
+      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
