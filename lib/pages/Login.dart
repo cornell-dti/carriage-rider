@@ -3,16 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 
-class Login extends StatefulWidget {
-  @override
-  _LoginState createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  @override
-  void initState() {
-    super.initState();
-  }
+class Login extends StatelessWidget {
 
   @override
   Widget build(context) {

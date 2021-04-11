@@ -11,17 +11,7 @@ import 'package:provider/provider.dart';
 import 'dart:core';
 import '../providers/RiderProvider.dart';
 
-class Settings extends StatefulWidget {
-  @override
-  _SettingsState createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class Settings extends StatelessWidget {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);

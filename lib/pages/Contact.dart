@@ -5,15 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-class Contact extends StatefulWidget {
-  Contact({Key key}) : super(key: key);
-
-  @override
-  _ContactState createState() => _ContactState();
-}
-
-class _ContactState extends State<Contact> {
-  @override
+class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),

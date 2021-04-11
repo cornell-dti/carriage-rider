@@ -21,14 +21,7 @@ void main() {
   });
 }
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
-
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
 
   @override
   Widget build(context) {
@@ -115,7 +108,6 @@ class _HomeState extends State<Home> {
             RefreshIndicator(
                 onRefresh: () async {
                   await ridesProvider.fetchAllRides(appConfig, authProvider);
-                  setState(() {});
                 },
                 child: CustomScrollView(
                     slivers: [
