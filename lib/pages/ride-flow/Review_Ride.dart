@@ -197,7 +197,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                       AppConfig.of(context),
                                       context,
                                       riderProvider,
-                                      locationsProvider.isCustom(
+                                      locationsProvider.isPreset(
                                               widget.ride.startLocation)
                                           ? widget.ride.startLocation
                                           : locationsProvider
@@ -205,7 +205,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                                   widget.ride.startLocation)
                                               .id,
                                       locationsProvider
-                                              .isCustom(widget.ride.endLocation)
+                                              .isPreset(widget.ride.endLocation)
                                           ? widget.ride.endLocation
                                           : locationsProvider
                                               .locationByName(

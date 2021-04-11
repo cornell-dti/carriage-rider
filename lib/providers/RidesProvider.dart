@@ -151,10 +151,7 @@ class RidesProvider with ChangeNotifier {
           HttpHeaders.authorizationHeader: 'Bearer $token'
         },
         body: jsonEncode(request));
-    print(request['endDate']);
     if (response.statusCode != 200) {
-      print(response.statusCode);
-      print(response.body);
       throw Exception('Failed to create ride.');
     }
   }

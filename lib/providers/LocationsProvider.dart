@@ -81,9 +81,16 @@ class LocationsProvider with ChangeNotifier {
     return false;
   }
 
+
+
   bool isCustom(String locationName) {
     List<Location> regularLocations = locations.where((e) => e.tag != 'custom').toList();
     return !regularLocations.contains(locationByName(locationName));
+  }
+
+  bool isPreset(String locationName) {
+    List<String> regularLocations = locations.map((e) => e.name).toList();
+    return !regularLocations.contains(locationName);
   }
 
   //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
