@@ -310,10 +310,3 @@ class Ride {
   }
 }
 
-T getOrNull<T>(Map<String, dynamic> map, String key, {T parse(dynamic s)}) {
-  var x = map.containsKey(key) ? map[key] : null;
-  if (x == null) return null;
-  if (parse == null) return x;
-  return parse(x);
-}
-
