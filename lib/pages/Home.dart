@@ -85,10 +85,10 @@ class _HomeState extends State<Home> {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: Stack(
+                leading: hasNewNotification ? Stack(
                     children: [
                     Icon(Icons.notifications, color: Colors.black),
-                      hasNewNotification ? Positioned(
+                       Positioned(
                           top: 0,
                           right: 0,
                           child: Container(
@@ -100,9 +100,9 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(100),
                               )
                           )
-                      ): Container()
+                      )
                     ]
-                ),
+                ) : Icon(Icons.notifications, color: Colors.black),
                 title: sideBarText('Notifications', Colors.black),
                 onTap: () {
                   Navigator.push(
