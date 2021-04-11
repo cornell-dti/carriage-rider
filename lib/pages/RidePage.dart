@@ -23,7 +23,7 @@ class _RidePageState extends State<RidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
@@ -208,19 +208,19 @@ class EditRide extends StatelessWidget {
   }
 }
 
+String noShowMessage = 'No Show';
 class TimeLineRow extends StatelessWidget {
   TimeLineRow(
       {this.text,
         this.infoWidget,
-        this.decorationWidth,
-        this.carIcon,
-        this.currentRide});
+        @required this.useCarIcon,
+        @required this.isCurrentRide});
 
   final String text;
   final Widget infoWidget;
-  final bool carIcon;
-  final bool currentRide;
-  final double decorationWidth;
+  final bool useCarIcon;
+  final bool isCurrentRide;
+
 
   @override
   Widget build(BuildContext context) {
@@ -234,9 +234,9 @@ class TimeLineRow extends StatelessWidget {
               width: circleRadius * 2,
               height: 26,
               decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [CarriageTheme.boxShadow]
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [CarriageTheme.boxShadow]
               )
           ),
           Container(
@@ -252,7 +252,7 @@ class TimeLineRow extends StatelessWidget {
     Widget locationCircle() {
       return Container(
           width: 26,
-          child: carIcon
+          child: useCarIcon
               ? SvgPicture.asset('assets/images/carIcon.svg')
               : stopCircle);
     }
@@ -262,7 +262,8 @@ class TimeLineRow extends StatelessWidget {
       SizedBox(width: 16),
       text == null
           ? infoWidget
-          : currentRide
+          : text == noShowMessage ? Text(noShowMessage, style: TextStyle(fontSize: 16, color: Color(0xFFF44336))) :
+      isCurrentRide
           ? Text(text,
           style: TextStyle(
               fontSize: 16,
@@ -347,27 +348,45 @@ class _TimeLineState extends State<TimeLine> {
                   key: firstRowKey,
                   child: TimeLineRow(
                       text: 'Your driver is on the way.',
-                      decorationWidth: width,
-                      carIcon: widget.isCarIcon,
-                      currentRide: widget.isCurrent),
+                      useCarIcon: widget.isCarIcon,
+                      isCurrentRide: widget.isCurrent),
                 ),
               ),
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
                       child: widget.ride.buildLocationsCard(
-                          context, widget.isIcon, true, true)),
-                  decorationWidth: width,
-                  carIcon: false),
+                          context, widget.isIcon, true, true
+                      )
+                  ),
+                  useCarIcon: false,
+                  isCurrentRide: widget.isCurrent
+              ),
               SizedBox(height: 32),
               Container(
-                key: lastRowKey,
+                key: widget.ride.type != 'past' ? lastRowKey : null,
                 child: TimeLineRow(
                     infoWidget: Expanded(
                         child: widget.ride.buildLocationsCard(
-                            context, widget.isIcon, false, false)),
-                    decorationWidth: width,
-                    carIcon: false),
+                            context, widget.isIcon, false, false
+                        )
+                    ),
+                    useCarIcon: false,
+                    isCurrentRide: widget.isCurrent
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 32),
+                key: widget.ride.type == 'past' ? lastRowKey : null,
+                child: widget.ride.type == 'past' ? widget.ride.status == RideStatus.NO_SHOW ?
+                TimeLineRow(
+                    text: noShowMessage,
+                    useCarIcon: false,
+                    isCurrentRide: widget.isCurrent) :
+                TimeLineRow(
+                    text: 'Arrived!',
+                    useCarIcon: false,
+                    isCurrentRide: widget.isCurrent) : Container(),
               )
             ]),
           ),
@@ -421,8 +440,7 @@ class InformationRow extends StatelessWidget {
 }
 
 class RideAction extends StatelessWidget {
-  const RideAction({Key key, this.text, this.color, this.icon, this.action})
-      : super(key: key);
+  const RideAction({@required this.text, @required this.color, @required this.icon, @required this.action});
   final String text;
   final Color color;
   final IconData icon;
