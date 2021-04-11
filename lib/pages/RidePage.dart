@@ -290,6 +290,7 @@ class _TimeLineState extends State<TimeLine> {
   double width = 26;
   double timelineHeight;
   double firstRowHeight;
+  double lastRowHeight;
   Widget line;
 
   @override
@@ -308,27 +309,34 @@ class _TimeLineState extends State<TimeLine> {
       return lastRowBox.localToGlobal(Offset.zero).dy;
     }
 
+    bool doneRender() => timelineHeight != null &&
+        firstRowKey.currentContext != null &&
+        lastRowKey.currentContext != null &&
+        firstRowHeight != null &&
+        lastRowHeight != null;
+
     Widget buildLine() {
-      double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2);
-      return timelineHeight != null &&
-          firstRowKey.currentContext != null &&
-          lastRowKey.currentContext != null &&
-          firstRowHeight != null
-          ? Container(
-        margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
-        width: 4,
-        height: length + length / 4,
-        color: Color(0xFFECEBED),
-      )
-          : CircularProgressIndicator();
+      if (doneRender()) {
+        double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2) + (lastRowHeight / 2);
+        return Positioned(
+          top: firstRowHeight / 2,
+          child: Container(
+            margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+            width: 4,
+            height: length,
+            color: Color(0xFFECEBED),
+          ),
+        );
+      }
+      return CircularProgressIndicator();
     }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
         children: <Widget>[
-          line != null && firstRowHeight != null
-              ? Positioned(top: firstRowHeight / 2, child: line)
+          line != null && firstRowHeight != null && lastRowHeight != null
+              ? line
               : Container(),
           MeasureSize(
             onChange: (size) {
@@ -362,32 +370,53 @@ class _TimeLineState extends State<TimeLine> {
                   useCarIcon: false,
                   isCurrentRide: widget.isCurrent
               ),
+
               SizedBox(height: 32),
-              Container(
-                key: widget.ride.type != 'past' ? lastRowKey : null,
-                child: TimeLineRow(
-                    infoWidget: Expanded(
-                        child: widget.ride.buildLocationsCard(
-                            context, widget.isIcon, false, false
-                        )
-                    ),
-                    useCarIcon: false,
-                    isCurrentRide: widget.isCurrent
+              MeasureSize(
+                onChange: (size) {
+                  if (widget.ride.type != 'past') {
+                    setState(() {
+                      lastRowHeight = size.height;
+                      line = buildLine();
+                    });
+                  }
+                },
+                child: Container(
+                  key: widget.ride.type != 'past' ? lastRowKey : null,
+                  child: TimeLineRow(
+                      infoWidget: Expanded(
+                          child: widget.ride.buildLocationsCard(
+                              context, widget.isIcon, false, false
+                          )
+                      ),
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent
+                  ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 32),
-                key: widget.ride.type == 'past' ? lastRowKey : null,
-                child: widget.ride.type == 'past' ? widget.ride.status == RideStatus.NO_SHOW ?
-                TimeLineRow(
-                    text: noShowMessage,
-                    useCarIcon: false,
-                    isCurrentRide: widget.isCurrent) :
-                TimeLineRow(
-                    text: 'Arrived!',
-                    useCarIcon: false,
-                    isCurrentRide: widget.isCurrent) : Container(),
-              )
+              widget.ride.type == 'past' ? SizedBox(height: 32) : Container(),
+              MeasureSize(
+                onChange: (size) {
+                  if (widget.ride.type == 'past') {
+                    setState(() {
+                      lastRowHeight = size.height;
+                      line = buildLine();
+                    });
+                  }
+                },
+                child: Container(
+                  key: widget.ride.type == 'past' ? lastRowKey : null,
+                  child: widget.ride.type == 'past' ? widget.ride.status == RideStatus.NO_SHOW ?
+                  TimeLineRow(
+                      text: noShowMessage,
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent) :
+                  TimeLineRow(
+                      text: 'Arrived!',
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent) : Container(),
+                ),
+              ),
             ]),
           ),
         ],
