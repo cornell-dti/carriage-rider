@@ -131,7 +131,7 @@ class RidesProvider with ChangeNotifier {
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
-      'rider': riderProvider.info,
+      'rider': riderProvider.info.id,
       'startLocation': startLocation,
       'endLocation': endLocation,
       'startTime': startTime.toUtc().toIso8601String(),

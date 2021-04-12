@@ -81,8 +81,6 @@ class LocationsProvider with ChangeNotifier {
     return false;
   }
 
-
-
   bool isCustom(String locationName) {
     List<Location> regularLocations = locations.where((e) => e.tag != 'custom').toList();
     return !regularLocations.contains(locationByName(locationName));
