@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
@@ -45,17 +46,7 @@ class Profile extends StatelessWidget {
           '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: Center(
           child: SingleChildScrollView(
               child: Column(
