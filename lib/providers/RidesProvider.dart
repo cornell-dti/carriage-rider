@@ -30,10 +30,12 @@ class RidesProvider with ChangeNotifier {
   bool hasData() {
     return pastRides != null && upcomingRides != null;
   }
+
   /// Fetches past rides, upcoming rides, and current ride from the backend.
   /// Uses AppConfig [config] and AuthProvider [authProvider] to pass in as arguments for each
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
-  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchAllRides(
+      AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     await _fetchCurrentRide(config, authProvider);
