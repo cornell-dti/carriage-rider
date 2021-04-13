@@ -43,7 +43,7 @@ class DriverCard extends StatelessWidget {
                       SizedBox(height: 10),
                       Flexible(
                         child: Text(
-                            locationsProvider.locationByName(ride.startLocation).info,
+                            !locationsProvider.isPreset(ride.startLocation) ? locationsProvider.locationByName(ride.startLocation).info : 'No Location Info',
                             style: TextStyle(fontSize: 16)),
                       )
                     ])
@@ -59,7 +59,7 @@ class DriverCard extends StatelessWidget {
                       SizedBox(height: 10),
                       Flexible(
                           child: Text(
-                              locationsProvider.locationByName(ride.endLocation).info,
+                              !locationsProvider.isPreset(ride.endLocation) ? locationsProvider.locationByName(ride.endLocation).info : 'No Location Info',
                               style: TextStyle(fontSize: 16)))
                     ]),
               ));
