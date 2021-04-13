@@ -10,7 +10,6 @@ import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RidePage extends StatelessWidget {
-
   RidePage(this.ride, {this.parentRideID});
 
   final Ride ride;
@@ -19,7 +18,8 @@ class RidePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
@@ -32,11 +32,11 @@ class RidePage extends StatelessWidget {
                           left: 16, right: 16, bottom: 8, top: 16),
                       child: Text(
                           DateFormat('MMM')
-                              .format(ride.startTime)
-                              .toUpperCase() +
+                                  .format(ride.startTime)
+                                  .toUpperCase() +
                               ' ' +
-                              ordinal(int.parse(DateFormat('d')
-                                  .format(ride.startTime))) +
+                              ordinal(int.parse(
+                                  DateFormat('d').format(ride.startTime))) +
                               ' ' +
                               DateFormat('jm').format(ride.startTime),
                           style: CarriageTheme.largeTitle),
@@ -46,20 +46,25 @@ class RidePage extends StatelessWidget {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          DriverCard(color: ride.type == 'unscheduled' ? CarriageTheme.gray4 : Colors.black, ride: ride, showButtons: false),
+                          DriverCard(
+                              color: ride.type == 'unscheduled'
+                                  ? CarriageTheme.gray4
+                                  : Colors.black,
+                              ride: ride,
+                              showButtons: false),
                           SizedBox(height: 48),
                           TimeLine(ride, true, false, false),
                           SizedBox(height: 50),
                           ride.type == 'past'
                               ? Container()
                               : RideAction(
-                              text: 'Cancel Ride',
-                              color: Colors.red,
-                              icon: Icons.close,
-                              action: () => Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                  builder: (context) =>
-                                      CancelRidePage(ride)))),
+                                  text: 'Cancel Ride',
+                                  color: Colors.red,
+                                  icon: Icons.close,
+                                  action: () => Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CancelRidePage(ride)))),
                           SizedBox(height: 48),
                         ],
                       ),
@@ -207,10 +212,10 @@ class EditRide extends StatelessWidget {
 class TimeLineRow extends StatelessWidget {
   TimeLineRow(
       {this.text,
-        this.infoWidget,
-        this.decorationWidth,
-        this.carIcon,
-        this.currentRide});
+      this.infoWidget,
+      this.decorationWidth,
+      this.carIcon,
+      this.currentRide});
 
   final String text;
   final Widget infoWidget;
@@ -222,28 +227,22 @@ class TimeLineRow extends StatelessWidget {
   Widget build(BuildContext context) {
     double circleRadius = 13;
     Widget stopCircle =
-    Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-              width: circleRadius * 2,
-              height: 26,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [CarriageTheme.boxShadow]
-              )
-          ),
-          Container(
-              width: 8,
-              height: 8,
-              decoration: new BoxDecoration(
-                color: Color(0xFF9B9B9B),
-                shape: BoxShape.circle,
-              )
-          )
-        ]);
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+      Container(
+          width: circleRadius * 2,
+          height: 26,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [CarriageTheme.boxShadow])),
+      Container(
+          width: 8,
+          height: 8,
+          decoration: new BoxDecoration(
+            color: Color(0xFF9B9B9B),
+            shape: BoxShape.circle,
+          ))
+    ]);
 
     Widget locationCircle() {
       return Container(
@@ -259,12 +258,13 @@ class TimeLineRow extends StatelessWidget {
       text == null
           ? infoWidget
           : currentRide
-          ? Text(text,
-          style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold))
-          : Text(text, style: TextStyle(fontSize: 16, color: CarriageTheme.gray4))
+              ? Text(text,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold))
+              : Text(text,
+                  style: TextStyle(fontSize: 16, color: CarriageTheme.gray4))
     ]);
   }
 }
@@ -306,15 +306,15 @@ class _TimeLineState extends State<TimeLine> {
     Widget buildLine() {
       double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2);
       return timelineHeight != null &&
-          firstRowKey.currentContext != null &&
-          lastRowKey.currentContext != null &&
-          firstRowHeight != null
+              firstRowKey.currentContext != null &&
+              lastRowKey.currentContext != null &&
+              firstRowHeight != null
           ? Container(
-        margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
-        width: 4,
-        height: length + length / 4,
-        color: Color(0xFFECEBED),
-      )
+              margin: EdgeInsets.only(left: width / 2 - (lineWidth / 2)),
+              width: 4,
+              height: length + length / 4,
+              color: Color(0xFFECEBED),
+            )
           : CircularProgressIndicator();
     }
 
