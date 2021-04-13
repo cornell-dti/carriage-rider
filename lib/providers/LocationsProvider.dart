@@ -12,8 +12,8 @@ import 'package:carriage_rider/models/Location.dart';
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
 
-  LocationsProvider(
-      BuildContext context, AppConfig config, AuthProvider authProvider) {
+  LocationsProvider(BuildContext context, AppConfig config,
+      AuthProvider authProvider) {
     void Function() callback;
     callback = () {
       if (authProvider.isAuthenticated) {
@@ -31,10 +31,10 @@ class LocationsProvider with ChangeNotifier {
   }
 
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
-  Future<void> fetchLocations(
-      BuildContext context, AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchLocations(BuildContext context, AppConfig config,
+      AuthProvider authProvider) async {
     AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get('${config.baseUrl}/locations',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -52,15 +52,16 @@ class LocationsProvider with ChangeNotifier {
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)['data'];
     List<Location> res =
-        data.map<Location>((e) => Location.fromJson(e)).toList();
+    data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;
   }
 
   //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
   List<String> getSuggestions(String query) {
-    List<String> matches =
-        locations.where((e) => e.tag != 'custom').map((e) => e.name).toList();
-    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+    List<String> matches = locations.where((e) =>
+    e.tag != 'custom' && e.name.toLowerCase().contains(query.toLowerCase()))
+        .map((e) => e.name)
+        .toList();
     return matches;
   }
 
@@ -82,7 +83,8 @@ class LocationsProvider with ChangeNotifier {
   }
 
   bool isCustom(String locationName) {
-    List<Location> regularLocations = locations.where((e) => e.tag != 'custom').toList();
+    List<Location> regularLocations = locations.where((e) => e.tag != 'custom')
+        .toList();
     return !regularLocations.contains(locationByName(locationName));
   }
 

@@ -160,6 +160,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   Widget _buildPickupTimeField() {
     return TextFormField(
       controller: pickUpCtrl,
+      enableInteractiveSelection: false,
       focusNode: AlwaysDisabledFocusNode(),
       decoration: InputDecoration(
           labelText: 'Pickup Time',
@@ -187,6 +188,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
   Widget _buildDropOTimeField() {
     return TextFormField(
       controller: dropOffCtrl,
+      enableInteractiveSelection: false,
       focusNode: AlwaysDisabledFocusNode(),
       decoration: InputDecoration(
           labelText: 'Drop-off Time',
@@ -259,6 +261,7 @@ class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
                   children: <Widget>[
                     TextFormField(
                       controller: dateCtrl,
+                      enableInteractiveSelection: false,
                       focusNode: AlwaysDisabledFocusNode(),
                       decoration: InputDecoration(
                           labelText: 'Date',
@@ -414,6 +417,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         margin: EdgeInsets.only(left: 15.0),
         child: TextFormField(
           focusNode: AlwaysDisabledFocusNode(),
+          enableInteractiveSelection: false,
           controller: pickUpCtrl,
           decoration: InputDecoration(
               errorMaxLines: 3,
@@ -444,6 +448,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         margin: EdgeInsets.only(right: 15.0),
         child: TextFormField(
           focusNode: AlwaysDisabledFocusNode(),
+          enableInteractiveSelection: false,
           controller: dropOffCtrl,
           decoration: InputDecoration(
               errorMaxLines: 3,
@@ -549,6 +554,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                           margin: EdgeInsets.only(left: 15.0),
                           child: TextFormField(
                             controller: startDateCtrl,
+                            enableInteractiveSelection: false,
                             focusNode: AlwaysDisabledFocusNode(),
                             decoration: InputDecoration(
                                 errorMaxLines: 3,
@@ -583,6 +589,7 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                           margin: EdgeInsets.only(right: 15.0),
                           child: TextFormField(
                             focusNode: AlwaysDisabledFocusNode(),
+                            enableInteractiveSelection: false,
                             controller: endDateCtrl,
                             decoration: InputDecoration(
                               errorMaxLines: 3,
@@ -594,11 +601,9 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
                               if (input.isNotEmpty &&
                                   startDateCtrl.text != '' &&
                                   DateFormat('MM/dd/yyyy')
-                                          .parse(startDateCtrl.text)
-                                          .difference(DateFormat('MM/dd/yyyy')
-                                              .parse(endDateCtrl.text))
-                                          .inDays >
-                                      0) {
+                                      .parse(startDateCtrl.text)
+                                      .isAfter(DateFormat('MM/dd/yyyy')
+                                          .parse(endDateCtrl.text))) {
                                 return 'End date must be after start date';
                               }
                               if (input.isEmpty) {

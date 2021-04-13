@@ -111,20 +111,26 @@ class _ReviewRideState extends State<ReviewRide> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('End Date', style: CarriageTheme.labelStyle),
-                          SizedBox(height: 5),
-                          Text(
-                              widget.ride.endDate != null
-                                  ? DateFormat.yMd().format(widget.ride.endDate)
-                                  : 'None',
-                              style: CarriageTheme.infoStyle)
-                        ],
-                      ),
-                    ),
+                    widget.ride.endDate != null
+                        ? Container(
+                            child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('End Date', style: CarriageTheme.labelStyle),
+                              SizedBox(height: 5),
+                              Text(DateFormat.yMd().format(widget.ride.endDate),
+                                  style: CarriageTheme.infoStyle)
+                            ],
+                          ))
+                        : Container(
+                            child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(''),
+                              SizedBox(height: 5),
+                              Text('', style: CarriageTheme.infoStyle)
+                            ],
+                          )),
                     SizedBox(height: 20),
                     Container(
                       child: Column(
@@ -142,24 +148,29 @@ class _ReviewRideState extends State<ReviewRide> {
                 ),
               ],
             ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text('Every', style: CarriageTheme.labelStyle)
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                    widget.ride.recurringDays != null
-                        ? widget.selectedDays
-                        : 'No Recurring Days',
-                    style: CarriageTheme.infoStyle)
-              ],
-            ),
+            widget.ride.recurringDays != null
+                ? Container(
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Every', style: CarriageTheme.labelStyle)
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(widget.selectedDays,
+                              style: CarriageTheme.infoStyle)
+                        ],
+                      )
+                    ],
+                  ))
+                : Container(),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -214,8 +225,8 @@ class _ReviewRideState extends State<ReviewRide> {
                                       widget.ride.startTime,
                                       widget.ride.endTime,
                                       widget.ride.recurring,
-                                  recurringDays: widget.ride.recurringDays,
-                                  endDate: widget.ride.endDate);
+                                      recurringDays: widget.ride.recurringDays,
+                                      endDate: widget.ride.endDate);
                                   Navigator.push(
                                       context,
                                       new MaterialPageRoute(

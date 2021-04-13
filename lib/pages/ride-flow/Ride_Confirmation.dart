@@ -14,20 +14,6 @@ class _RideConfirmationState extends State<RideConfirmation> {
     fontSize: 17,
   );
 
-  void initState() {
-    super.initState();
-    startTime();
-  }
-
-  startTime() async {
-    var duration = new Duration(seconds: 3);
-    return new Timer(duration, route);
-  }
-
-  route() {
-    Navigator.popUntil(context, ModalRoute.withName('/'));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +43,28 @@ class _RideConfirmationState extends State<RideConfirmation> {
                   style: CarriageTheme.descriptionStyle)
             ],
           ),
+          Expanded(
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: ButtonTheme(
+                    minWidth: MediaQuery.of(context).size.width * 0.65,
+                    height: 50.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.popUntil(context, ModalRoute.withName('/'));
+                      },
+                      elevation: 3.0,
+                      color: Colors.black,
+                      textColor: Colors.white,
+                      child: Text('Done', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                )),
+          )
         ],
       ),
     );
