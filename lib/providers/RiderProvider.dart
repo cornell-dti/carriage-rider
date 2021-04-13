@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
@@ -68,7 +69,9 @@ class Rider {
       this.joinDate,
       this.address);
 
-  //Creates a Rider from JSON representation.
+  // Creates a Rider from JSON representation. The query at the end of photoLink is to
+  // force the network images that display it to re-fetch the photo, because it won't
+  // if the URL is the same, and the URL does not change after an upload to backend.
   factory Rider.fromJson(Map<String, dynamic> json) {
     return Rider(
         json['id'],
@@ -77,29 +80,40 @@ class Rider {
         json['firstName'],
         json['lastName'],
         json['pronouns'],
-        List.from(
-          json['accessibility'],
-        ),
+        List.from(json['accessibility']),
         List.from(json['favoriteLocations']),
         json['description'],
-        json['photoLink'],
+        json['photoLink'] == null ? null : 'https://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
         json['joinDate'],
         json['address']);
   }
 
-  //Converts a Rider instance into a map.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'email': email,
-        'phoneNumber': phoneNumber,
-        'firstName': firstName,
-        'lastName': lastName,
-        'pronouns': pronouns,
-        'accessibility': accessibility,
-        'description': description,
-        'photoLink': photoLink,
-        'joinDate': joinDate,
-      };
+  Widget profilePicture(double diameter) {
+    return Container(
+      height: diameter,
+      width: diameter,
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: photoLink == null ? Image.asset(
+              'assets/images/person.png',
+              width: diameter,
+              height: diameter
+          ) : Image.network(
+            this.photoLink,
+            fit: BoxFit.cover,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          )
+      ),
+    );
+  }
 }
 
 //Manage the state of a rider with ChangeNotifier
@@ -231,5 +245,30 @@ class RiderProvider with ChangeNotifier {
     sendUpdate(config, authProvider, <String, dynamic>{
       'favoriteLocations': favoriteLocations,
     });
+  }
+
+  /// Updates the logged in rider's profile picture.
+  Future<void> updateRiderPhoto(AppConfig config, AuthProvider authProvider,
+      String base64Photo) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.post(
+      "${config.baseUrl}/upload",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      },
+      body: jsonEncode(<String, String>{
+        'id': authProvider.id,
+        'tableName': 'Riders',
+        'fileBuffer': base64Photo,
+      }),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      _setInfo(Rider.fromJson(json));
+    } else {
+      print(response.body);
+      throw Exception('Failed to update driver.');
+    }
   }
 }

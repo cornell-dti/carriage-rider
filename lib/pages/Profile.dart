@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
-import 'package:carriage_rider/pages/Upcoming.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
@@ -12,31 +15,7 @@ import '../providers/RiderProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 
-class Profile extends StatefulWidget {
-  @override
-  _ProfileState createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  File _image;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future _getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
+class Profile extends StatelessWidget {
 
   void _editEmail(context) {}
 
@@ -53,10 +32,8 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
-    AuthProvider authProvider = Provider.of(context);
     double _width = MediaQuery.of(context).size.width;
     double _picDiameter = _width * 0.27;
-    double _picRadius = _picDiameter / 2;
     double _picMarginLR = _picDiameter / 6.25;
     double _picMarginTB = _picDiameter / 4;
     double _picBtnDiameter = _picDiameter * 0.39;
@@ -69,141 +46,151 @@ class _ProfileState extends State<Profile> {
           '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: Center(
           child: SingleChildScrollView(
               child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                child: Text('Your Profile',
-                    style: CarriageTheme.largeTitle),
-              ),
-              Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(3),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromARGB(15, 0, 0, 0),
-                          offset: Offset(0, 4.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 1.0)
-                    ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+                    child: Text('Your Profile',
+                        style: CarriageTheme.largeTitle),
                   ),
-                  child: SingleChildScrollView(
-                      child: Row(children: [
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: _picMarginLR,
-                            right: _picMarginLR,
-                            top: _picMarginTB,
-                            bottom: _picMarginTB),
-                        child: Stack(
-                          children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(15, 0, 0, 0),
+                              offset: Offset(0, 4.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 1.0)
+                        ],
+                      ),
+                      child: SingleChildScrollView(
+                          child: Row(children: [
                             Padding(
                                 padding: EdgeInsets.only(
-                                    bottom: _picDiameter * 0.05),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    _image == null
-                                        ? authProvider
-                                            .googleSignIn.currentUser.photoUrl
-                                        : Image.file(_image),
-                                  ),
-                                  radius: _picRadius,
-                                )),
-                            Positioned(
-                                child: Container(
-                                  height: _picBtnDiameter,
-                                  width: _picBtnDiameter,
-                                  child: FittedBox(
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.black,
-                                      child: Icon(Icons.add,
-                                          size: _picBtnDiameter),
-                                      onPressed: () {
-                                        _getImage();
-                                      },
+                                    left: _picMarginLR,
+                                    right: _picMarginLR,
+                                    top: _picMarginTB,
+                                    bottom: _picMarginTB),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: _picDiameter * 0.05),
+                                      child: Container(
+                                        height: _picDiameter,
+                                        width: _picDiameter,
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(100),
+                                            child: riderProvider.info.photoLink == null ? Image.asset(
+                                              'assets/images/person.png',
+                                              width: _picDiameter,
+                                              height: _picDiameter,
+                                            ) : Image.network(
+                                              riderProvider.info.photoLink,
+                                              fit: BoxFit.cover,
+                                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                else {
+                                                  return Center(
+                                                    child: CircularProgressIndicator(),
+                                                  );
+                                                }
+                                              },
+                                            )
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                left: _picDiameter * 0.61,
-                                top: _picDiameter * 0.66)
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(bottom: 30),
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(riderProvider.info.fullName(),
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  IconButton(
-                                    icon: Icon(Icons.edit, size: 20),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditProfileName(
-                                                      riderProvider.info)));
-                                    },
-                                  )
-                                ]),
-                            Positioned(
-                              child:
-                                  Text('Joined ' + riderProvider.info.joinDate,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).accentColor,
-                                      )),
-                              top: 45,
-                            )
-                          ],
-                        ))
-                  ]))),
-              SizedBox(height: 6),
-              ProfileInfo('Account Info', [
-                Icons.mail_outline,
-                Icons.phone
-              ], [
-                riderProvider.info.email,
-                fPhoneNumber == null ? 'Add your number' : fPhoneNumber
-              ], [
-                () => _editEmail(context),
-                () => _editNumber(context)
-              ]),
-              SizedBox(height: 6),
-              ProfileInfo('Personal Info', [
-                Icons.person_outline,
-              ], [
-                riderProvider.info.pronouns == null
-                    ? 'How should we address you?'
-                    : riderProvider.info.pronouns
-              ], [
-                () => _editPronouns(context)
-              ]),
-              SizedBox(height: 120),
-            ],
-          )),
+                                    Positioned(
+                                        child: Container(
+                                          height: _picBtnDiameter,
+                                          width: _picBtnDiameter,
+                                          child: FittedBox(
+                                            child: FloatingActionButton(
+                                              backgroundColor: Colors.black,
+                                              child: Icon(Icons.add,
+                                                  size: _picBtnDiameter),
+                                              onPressed: () async {
+                                                ImagePicker picker = ImagePicker();
+                                                PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
+                                                Uint8List bytes = await File(pickedFile.path).readAsBytes();
+                                                String base64Image = base64Encode(bytes);
+                                                riderProvider.updateRiderPhoto(AppConfig.of(context), Provider.of<AuthProvider>(context, listen: false), base64Image);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        left: _picDiameter * 0.61,
+                                        top: _picDiameter * 0.66)
+                                  ],
+                                )),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 30),
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(riderProvider.info.fullName(),
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          IconButton(
+                                            icon: Icon(Icons.edit, size: 20),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => EditProfileName(riderProvider.info))
+                                              );
+                                            },
+                                          )
+                                        ]),
+                                    Positioned(
+                                      child:
+                                      Text('Joined ' + riderProvider.info.joinDate,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).accentColor,
+                                          )),
+                                      top: 45,
+                                    )
+                                  ],
+                                ))
+                          ]))),
+                  SizedBox(height: 6),
+                  ProfileInfo('Account Info', [
+                    Icons.mail_outline,
+                    Icons.phone
+                  ], [
+                    riderProvider.info.email,
+                    fPhoneNumber == null ? 'Add your number' : fPhoneNumber
+                  ], [
+                        () => _editEmail(context),
+                        () => _editNumber(context)
+                  ]),
+                  SizedBox(height: 6),
+                  ProfileInfo('Personal Info', [
+                    Icons.person_outline,
+                  ], [
+                    riderProvider.info.pronouns == null
+                        ? 'How should we address you?'
+                        : riderProvider.info.pronouns
+                  ], [
+                        () => _editPronouns(context)
+                  ]),
+                  SizedBox(height: 120),
+                ],
+              )),
         ),
       );
     } else {
@@ -341,7 +328,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                 children: <Widget>[
                   Flexible(
                     child:
-                        Text('How should we address you?', style: titleStyle),
+                    Text('How should we address you?', style: titleStyle),
                   )
                 ],
               ),
@@ -408,7 +395,7 @@ class _EditProfileNameState extends State<EditProfileName> {
                     child: Text(
                         'By continuing, I accept the Terms of Services and Privacy Policies',
                         style:
-                            TextStyle(fontSize: 13, color: Colors.grey[500])))
+                        TextStyle(fontSize: 13, color: Colors.grey[500])))
               ]),
               Expanded(
                 child: Align(
@@ -674,84 +661,84 @@ class _ProfileNumberState extends State<ProfileNumber> {
         ),
         body: SafeArea(
             child: Container(
-          color: Colors.white,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                    child: Container(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-                    child: Text('Your Number',
-                        style: CarriageTheme.title1),
-                  ),
-                )),
-                Container(
-                  color: Colors.white,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.all(20),
-                          child: Text(
-                              'For security, please enter your current phone number and then then number you want to change it to.',
-                              style: TextStyle(fontSize: 15)),
+              color: Colors.white,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          child: Padding(
+                            padding:
+                            EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                            child: Text('Your Number',
+                                style: CarriageTheme.title1),
+                          ),
+                        )),
+                    Container(
+                      color: Colors.white,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.all(20),
+                              child: Text(
+                                  'For security, please enter your current phone number and then then number you want to change it to.',
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                            SizedBox(height: 10.0),
+                            _currentNumberField(),
+                            _newNumberField(),
+                            SizedBox(height: 10.0)
+                          ],
                         ),
-                        SizedBox(height: 10.0),
-                        _currentNumberField(),
-                        _newNumberField(),
-                        SizedBox(height: 10.0)
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 80),
-                Expanded(
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Center(
-                            child: Container(
-                          margin: EdgeInsets.only(
-                            left: 30,
-                          ),
-                          child: Text(
-                              'By continuing, you may receive a SMS for verification. Message and data rates apply.',
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.bold)),
-                        )))),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 35.0),
-                        child: ButtonTheme(
-                          minWidth: MediaQuery.of(context).size.width * 0.8,
-                          height: 45.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3)),
-                          child: RaisedButton(
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) => NumberVerify(
-                                            number: newCtrl.text)));
-                              }
-                            },
-                            elevation: 3.0,
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            child: Text('Verify New Number'),
-                          ),
-                        ),
-                      )),
-                )
-              ]),
-        )));
+                    SizedBox(height: 80),
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Center(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: 30,
+                                  ),
+                                  child: Text(
+                                      'By continuing, you may receive a SMS for verification. Message and data rates apply.',
+                                      style: TextStyle(
+                                          fontSize: 13, fontWeight: FontWeight.bold)),
+                                )))),
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 35.0),
+                            child: ButtonTheme(
+                              minWidth: MediaQuery.of(context).size.width * 0.8,
+                              height: 45.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: RaisedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) => NumberVerify(
+                                                number: newCtrl.text)));
+                                  }
+                                },
+                                elevation: 3.0,
+                                color: Colors.black,
+                                textColor: Colors.white,
+                                child: Text('Verify New Number'),
+                              ),
+                            ),
+                          )),
+                    )
+                  ]),
+            )));
   }
 }
 
@@ -784,54 +771,54 @@ class _NumberVerifyState extends State<NumberVerify> {
         ),
         body: SafeArea(
             child: Container(
-          color: Colors.white,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                    child: Container(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
-                    child: Text('Your Number',
-                        style: CarriageTheme.title1),
-                  ),
-                )),
-                Expanded(
-                    child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        VerificationCode(
-                          keyboardType: TextInputType.number,
-                          length: 4,
-                          autofocus: false,
-                          underlineColor: Colors.green,
-                          onCompleted: (String value) {
-                            riderProvider.setPhone(AppConfig.of(context),
-                                authProvider, widget.number);
-                            Navigator.pushReplacement(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => Profile()));
-                            Navigator.pop(context, false);
-                          },
-                          onEditing: (bool value) {
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(height: 20)),
-                )
-              ]),
-        )));
+              color: Colors.white,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          child: Padding(
+                            padding:
+                            EdgeInsets.only(left: 24.0, top: 10.0, bottom: 8.0),
+                            child: Text('Your Number',
+                                style: CarriageTheme.title1),
+                          ),
+                        )),
+                    Expanded(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: <Widget>[
+                                VerificationCode(
+                                  keyboardType: TextInputType.number,
+                                  length: 4,
+                                  autofocus: false,
+                                  underlineColor: Colors.green,
+                                  onCompleted: (String value) {
+                                    riderProvider.setPhone(AppConfig.of(context),
+                                        authProvider, widget.number);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) => Profile()));
+                                    Navigator.pop(context, false);
+                                  },
+                                  onEditing: (bool value) {
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                    Expanded(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(height: 20)),
+                    )
+                  ]),
+            )));
   }
 }

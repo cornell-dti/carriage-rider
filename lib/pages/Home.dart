@@ -3,9 +3,9 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
-import 'package:carriage_rider/pages/Upcoming.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:provider/provider.dart';
@@ -13,20 +13,16 @@ import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
+import 'Upcoming.dart';
+
 void main() {
   MaterialApp(routes: {
     '/': (context) => Home(),
   });
 }
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class Home extends StatelessWidget {
 
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(context) {
     //TODO: change to get name from rider provider
@@ -101,42 +97,80 @@ class _HomeState extends State<Home> {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData()
-            ? Center(child: CircularProgressIndicator())
-            : Stack(
-                children: <Widget>[
-                  RefreshIndicator(
-                      onRefresh: () async {
-                        await ridesProvider.fetchAllRides(
-                            appConfig, authProvider);
-                        setState(() {});
-                      },
-                      child: CustomScrollView(slivers: [
-                        SliverAppBar(
-                          elevation: 11,
-                          pinned: true,
-                          expandedHeight: 100,
-                          collapsedHeight: 100,
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                          actions: [Container()],
-                          flexibleSpace: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 23),
-                                    child: Text(
-                                      headerName,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontFamily: 'SFPro',
-                                          fontWeight: FontWeight.w700),
-                                    ),
+        child: !ridesProvider.hasData() ? Center(child: CircularProgressIndicator()) :
+        Stack(
+          children: <Widget>[
+            RefreshIndicator(
+                onRefresh: () async {
+                  await ridesProvider.fetchAllRides(appConfig, authProvider);
+                },
+                child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 11,
+                        pinned: true,
+                        expandedHeight: 100,
+                        collapsedHeight: 100,
+                        backgroundColor:
+                        Theme.of(context).scaffoldBackgroundColor,
+                        actions: [Container()],
+                        flexibleSpace: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 23),
+                                  child: Text(
+                                    headerName,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 30,
+                                        fontFamily: 'SFPro',
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 23),
+                                  child: Builder(builder: (context) {
+                                    return IconButton(
+                                        icon: Icon(Icons.menu,
+                                            color: Colors.black),
+                                        onPressed: () => Scaffold.of(context)
+                                            .openEndDrawer());
+                                  }),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Ride',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                      SizedBox(height: 12),
+                                      CurrentRideCard(ridesProvider.currentRide, showCallDriver: true),
+                                    ]),
+                              ),
+                              SizedBox(height: 35),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(children: [
+                                  Text(
+                                    'Upcoming Rides',
+                                    style: CarriageTheme.subHeading,
                                   ),
                                   Spacer(),
                                   Padding(

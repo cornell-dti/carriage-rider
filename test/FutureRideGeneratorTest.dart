@@ -7,6 +7,7 @@
 
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
