@@ -46,12 +46,12 @@ class _RideConfirmationState extends State<RideConfirmation> {
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                  padding: const EdgeInsets.only(bottom: 30.0),
                   child: ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width * 0.8,
-                    height: 45.0,
+                    minWidth: MediaQuery.of(context).size.width * 0.65,
+                    height: 50.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
+                        borderRadius: BorderRadius.circular(10)),
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -59,7 +59,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
                       elevation: 3.0,
                       color: Colors.black,
                       textColor: Colors.white,
-                      child: Text('Done'),
+                      child: Text('Done', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 )),
