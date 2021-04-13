@@ -149,51 +149,6 @@ class Home extends StatelessWidget {
                           ),
                         ),
                         SliverList(
-                          delegate: SliverChildListDelegate(
-                            [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Current Ride',
-                                        style: CarriageTheme.subHeading,
-                                      ),
-                                      SizedBox(height: 12),
-                                      CurrentRideCard(ridesProvider.currentRide,
-                                          showCallDriver: true),
-                                    ]),
-                              ),
-                              SizedBox(height: 35),
-                              Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Upcoming Rides',
-                                        style: CarriageTheme.subHeading,
-                                      ),
-                                      Spacer(),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 23),
-                                        child: Builder(builder: (context) {
-                                          return IconButton(
-                                              icon: Icon(Icons.menu,
-                                                  color: Colors.black),
-                                              onPressed: () =>
-                                                  Scaffold.of(context)
-                                                      .openEndDrawer());
-                                        }),
-                                      )
-                                    ],
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SliverList(
                             delegate: SliverChildListDelegate(
                           [
                             Padding(
