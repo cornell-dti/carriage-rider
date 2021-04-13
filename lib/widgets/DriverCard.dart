@@ -2,6 +2,8 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:provider/provider.dart';
 
 class DriverCard extends StatelessWidget {
   final Color color;
@@ -16,6 +18,7 @@ class DriverCard extends StatelessWidget {
       : super(key: key);
 
   void displayBottomSheet(BuildContext context) {
+    LocationsProvider locationsProvider =  Provider.of<LocationsProvider>(context);
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -40,7 +43,7 @@ class DriverCard extends StatelessWidget {
                       SizedBox(height: 10),
                       Flexible(
                         child: Text(
-                            "Atrium entrance off Hoy Road (Phillips/Upson parking area)",
+                            locationsProvider.locationByName(ride.startLocation).info,
                             style: TextStyle(fontSize: 16)),
                       )
                     ])
@@ -56,7 +59,7 @@ class DriverCard extends StatelessWidget {
                       SizedBox(height: 10),
                       Flexible(
                           child: Text(
-                              "Atrium entrance off Hoy Road (Phillips/Upson parking area)",
+                              locationsProvider.locationByName(ride.endLocation).info,
                               style: TextStyle(fontSize: 16)))
                     ]),
               ));
