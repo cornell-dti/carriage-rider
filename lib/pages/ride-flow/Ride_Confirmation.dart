@@ -1,6 +1,5 @@
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class RideConfirmation extends StatefulWidget {
   @override
