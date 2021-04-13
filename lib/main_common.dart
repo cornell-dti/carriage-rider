@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
@@ -7,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'pages/Login.dart';
 import 'pages/Home.dart';
 import 'utils/app_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void mainCommon() {}
 
@@ -93,8 +96,39 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Logic extends StatelessWidget {
+class Logic extends StatefulWidget {
   Logic({Key key}) : super(key: key);
+
+  @override
+  _LogicState createState() => new _LogicState();
+}
+
+class _LogicState extends State<Logic> {
+
+  bool firstTime;
+
+  Future<bool> isFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('first_time');
+    if (isFirstTime != null && !isFirstTime) {
+      prefs.setBool('first_time', false);
+      return false;
+    } else {
+      prefs.setBool('first_time', false);
+      return true;
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      isFirstTime().then((isFirstTime) {
+          firstTime = isFirstTime;
+      });
+    });
+  }
 
   @override
   Widget build(context) {
