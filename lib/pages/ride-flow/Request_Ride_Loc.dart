@@ -353,6 +353,7 @@ class LocationInput extends StatelessWidget {
     return Container(
         child: TextFormField(
       focusNode: AlwaysDisabledFocusNode(),
+          enableInteractiveSelection: false,
       controller: isToLocation ? toCtrl : fromCtrl,
       onTap: () => Navigator.push(
           context,
