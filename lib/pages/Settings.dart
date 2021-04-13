@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
@@ -30,7 +31,8 @@ class Settings extends StatelessWidget {
           '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
-        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: Center(
             child: SingleChildScrollView(
           child: Column(
@@ -38,8 +40,7 @@ class Settings extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                  child: Text('Settings',
-                      style: CarriageTheme.largeTitle),
+                  child: Text('Settings', style: CarriageTheme.largeTitle),
                 ),
                 Container(
                     decoration: BoxDecoration(
@@ -255,8 +256,10 @@ class LocationsInfo extends StatelessWidget {
   void _editFavorites(context) async {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
     Map<String, Location> locations =
-        locationsById(await fetchLocations(context));
+        locationsProvider.locationsById(locationsProvider.locations);
     List<String> res = (await Navigator.push(
             context,
             MaterialPageRoute(
