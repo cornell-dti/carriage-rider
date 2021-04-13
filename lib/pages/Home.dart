@@ -22,7 +22,6 @@ void main() {
 }
 
 class Home extends StatelessWidget {
-
   @override
   Widget build(context) {
     //TODO: change to get name from rider provider
@@ -97,80 +96,41 @@ class Home extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData() ? Center(child: CircularProgressIndicator()) :
-        Stack(
-          children: <Widget>[
-            RefreshIndicator(
-                onRefresh: () async {
-                  await ridesProvider.fetchAllRides(appConfig, authProvider);
-                },
-                child: CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        elevation: 11,
-                        pinned: true,
-                        expandedHeight: 100,
-                        collapsedHeight: 100,
-                        backgroundColor:
-                        Theme.of(context).scaffoldBackgroundColor,
-                        actions: [Container()],
-                        flexibleSpace: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16, bottom: 23),
-                                  child: Text(
-                                    headerName,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 30,
-                                        fontFamily: 'SFPro',
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 23),
-                                  child: Builder(builder: (context) {
-                                    return IconButton(
-                                        icon: Icon(Icons.menu,
-                                            color: Colors.black),
-                                        onPressed: () => Scaffold.of(context)
-                                            .openEndDrawer());
-                                  }),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SliverList(
-                          delegate: SliverChildListDelegate(
-                            [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Current Ride',
-                                        style: CarriageTheme.subHeading,
-                                      ),
-                                      SizedBox(height: 12),
-                                      CurrentRideCard(ridesProvider.currentRide, showCallDriver: true),
-                                    ]),
-                              ),
-                              SizedBox(height: 35),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(children: [
-                                  Text(
-                                    'Upcoming Rides',
-                                    style: CarriageTheme.subHeading,
+        child: !ridesProvider.hasData()
+            ? Center(child: CircularProgressIndicator())
+            : Stack(
+                children: <Widget>[
+                  RefreshIndicator(
+                      onRefresh: () async {
+                        await ridesProvider.fetchAllRides(
+                            appConfig, authProvider);
+                      },
+                      child: CustomScrollView(slivers: [
+                        SliverAppBar(
+                          elevation: 11,
+                          pinned: true,
+                          expandedHeight: 100,
+                          collapsedHeight: 100,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          actions: [Container()],
+                          flexibleSpace: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16, right: 16, bottom: 23),
+                                    child: Text(
+                                      headerName,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                          fontFamily: 'SFPro',
+                                          fontWeight: FontWeight.w700),
+                                    ),
                                   ),
                                   Spacer(),
                                   Padding(
@@ -185,6 +145,51 @@ class Home extends StatelessWidget {
                                   )
                                 ],
                               ),
+                            ],
+                          ),
+                        ),
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Ride',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                      SizedBox(height: 12),
+                                      CurrentRideCard(ridesProvider.currentRide,
+                                          showCallDriver: true),
+                                    ]),
+                              ),
+                              SizedBox(height: 35),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Upcoming Rides',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 23),
+                                        child: Builder(builder: (context) {
+                                          return IconButton(
+                                              icon: Icon(Icons.menu,
+                                                  color: Colors.black),
+                                              onPressed: () =>
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer());
+                                        }),
+                                      )
+                                    ],
+                                  ))
                             ],
                           ),
                         ),

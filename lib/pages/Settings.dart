@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
