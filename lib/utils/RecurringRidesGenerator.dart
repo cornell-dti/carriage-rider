@@ -56,7 +56,6 @@ class RecurringRidesGenerator {
       }
 
       if (originalRide.recurring) {
-        print(originalRide.id);
         Duration rideDuration = originalRide.endTime.difference(originalRide.startTime);
         List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride != null && ride.deleted).toList();
         List<int> days = originalRide.recurringDays;
@@ -68,7 +67,6 @@ class RecurringRidesGenerator {
 
         // generate instances of recurring rides
         while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
-          print(rideStart);
           // create the new ride and keep track of its parent
           Ride rideInstance = Ride(
               id: CarriageTheme.generatedRideID,
@@ -91,7 +89,6 @@ class RecurringRidesGenerator {
           int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
           rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
         }
-        print('exit while');
       }
     }
     return allRides;
