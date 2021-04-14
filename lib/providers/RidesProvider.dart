@@ -35,9 +35,12 @@ class RidesProvider with ChangeNotifier {
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
   Future<void> fetchAllRides(
       AppConfig config, AuthProvider authProvider) async {
+    await _fetchCurrentRide(config, authProvider);
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
-    await _fetchCurrentRide(config, authProvider);
+    if (currentRide != null) {
+      upcomingRides.removeWhere((ride) => ride.id == currentRide.id);
+    }
     notifyListeners();
   }
 
