@@ -65,7 +65,7 @@ class UpcomingSeeMore extends StatelessWidget {
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
     Provider.of<RidesProvider>(context, listen: false);
-    List<Ride> originalRides = ridesProvider.upcomingRides;
+    List<Ride> originalRides = ridesProvider.upcomingRides..addAll(ridesProvider.pastRides);
     RecurringRidesGenerator ridesGenerator =
     RecurringRidesGenerator(originalRides);
 

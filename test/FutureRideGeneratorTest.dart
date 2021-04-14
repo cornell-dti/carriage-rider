@@ -156,6 +156,15 @@ void main() {
     oneTimeRide
   ];
 
+  bool ridesEqualTimeLoc(Ride ride, Ride otherRide) {
+    return (ride.startTime.isAtSameMomentAs(otherRide.startTime) &&
+        ride.endTime.isAtSameMomentAs(otherRide.endTime) &&
+        ride.startLocation == otherRide.startLocation &&
+        ride.endLocation == otherRide.endLocation &&
+        ride.startAddress == otherRide.startAddress &&
+        ride.endAddress == otherRide.endAddress);
+  }
+
   List<Ride> expectedGeneratedRides = [
     editedTimeInstance,
     oneTimeRide,
@@ -184,19 +193,12 @@ void main() {
 
   RecurringRidesGenerator generator = RecurringRidesGenerator(testRides);
 
-  nextDateOnWeekdayTest(String name, DateTime start, weekday, DateTime correct) {
-    test(name, () {
-      DateTime nextDay = generator.nextDateOnWeekday(start, weekday);
-      expect(nextDay.isAtSameMomentAs(correct), true);
-    });
-  }
-
   rideListsEqual(List<Ride> list1, List<Ride> list2) {
     List<Ride> list2Copy = [];
     list2.forEach((ride) => list2Copy.add(ride));
 
     for (Ride r1 in list1) {
-      list2Copy..removeWhere((r2) => generator.ridesEqualTimeLoc(r1, r2));
+      list2Copy..removeWhere((r2) => ridesEqualTimeLoc(r1, r2));
     }
     return list2Copy.isEmpty;
   }
@@ -213,45 +215,30 @@ void main() {
     });
   });
 
-  group('nextDateOnWeekday tests', () {
-    nextDateOnWeekdayTest(
-        'weekday = start day, Monday after 12/14 is 12/14',
-        DateTime(2020, 12, 14, 3, 0), 1, DateTime(2020, 12, 14, 3, 0)
-    );
-    nextDateOnWeekdayTest(
-        'weekday > start day, Thursday after 12/15 is 12/17',
-        DateTime(2020, 12, 15, 3, 0), 4, DateTime(2020, 12, 17, 3, 0)
-    );
-    nextDateOnWeekdayTest(
-        'weekday < start day, Monday after 12/15 is 12/21',
-        DateTime(2020, 12, 18, 14, 0), 1, DateTime(2020, 12, 21, 14, 0)
-    );
-  });
-
   group('ridesEqualTimeLoc tests', () {
     test('ride object is equal to itself', () {
-      expect(generator.ridesEqualTimeLoc(oneTimeRide, oneTimeRide), true);
+      expect(ridesEqualTimeLoc(oneTimeRide, oneTimeRide), true);
     });
     test('different ride objects with all fields the same are equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascCopy), true);
+      expect(ridesEqualTimeLoc(urisCasc, urisCascCopy), true);
     });
     test('rides with start time different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascStart), false);
+      expect(ridesEqualTimeLoc(urisCasc, urisCascStart), false);
     });
     test('rides with end time different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascEnd), false);
+      expect(ridesEqualTimeLoc(urisCasc, urisCascEnd), false);
     });
     test('rides with start location different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, balchCasc), false);
+      expect(ridesEqualTimeLoc(urisCasc, balchCasc), false);
     });
     test('rides with end location different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisBalch), false);
+      expect(ridesEqualTimeLoc(urisCasc, urisBalch), false);
     });
     test('rides with start address different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascStartAddress), false);
+      expect(ridesEqualTimeLoc(urisCasc, urisCascStartAddress), false);
     });
     test('rides with end address different are not equal', () {
-      expect(generator.ridesEqualTimeLoc(urisCasc, urisCascEndAddress), false);
+      expect(ridesEqualTimeLoc(urisCasc, urisCascEndAddress), false);
     });
   });
 
