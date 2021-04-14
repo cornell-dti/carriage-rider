@@ -1,3 +1,5 @@
+import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
+import 'package:carriage_rider/providers/CreateRideProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
@@ -19,7 +22,7 @@ class RidePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
@@ -69,7 +72,7 @@ class RidePage extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: ride.type == 'past' ? Container() : EditRide(),
+                child: ride.type == 'past' ? Container() : EditRide(ride),
               )
             ],
           ),
@@ -160,10 +163,13 @@ class CustomDivider extends StatelessWidget {
 }
 
 class EditRide extends StatelessWidget {
-  const EditRide({Key key}) : super(key: key);
+  const EditRide(this.ride);
+  final Ride ride;
 
   @override
   Widget build(BuildContext context) {
+    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -186,13 +192,20 @@ class EditRide extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: RaisedButton.icon(
                     onPressed: () {
-                      //TODO: navigate to edit flow
+                      createRideProvider.setLocControllers(ride.startLocation, ride.endLocation);
+                      createRideProvider.setPickupTimeCtrl(TimeOfDay.fromDateTime(ride.startTime).format(context));
+                      createRideProvider.setDropoffTimeCtrl(TimeOfDay.fromDateTime(ride.endTime).format(context));
+                      createRideProvider.setStartDateCtrl(ride.startTime);
+
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => RequestRideLoc(ride: ride, editing: true))
+                      );
                     },
                     elevation: 3.0,
                     color: Colors.black,
                     textColor: Colors.white,
                     icon: Icon(Icons.edit),
-                    label: Text('Edit Ride',
+                    label: Text('Edit Recurring Ride',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.bold))),
               ),
@@ -230,9 +243,9 @@ class TimeLineRow extends StatelessWidget {
               width: circleRadius * 2,
               height: 26,
               decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [CarriageTheme.boxShadow]
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [CarriageTheme.boxShadow]
               )
           ),
           Container(

@@ -3,6 +3,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
+import 'package:carriage_rider/providers/CreateRideProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
@@ -40,6 +41,7 @@ class Home extends StatelessWidget {
 
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
+    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -252,12 +254,14 @@ class Home extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10)),
                                 child: RaisedButton.icon(
                                   onPressed: () {
+                                    createRideProvider.setLocControllers('', '');
                                     Navigator.push(
                                         context,
                                         new MaterialPageRoute(
                                             builder: (context) =>
                                                 RequestRideLoc(
-                                                    ride: new Ride())));
+                                                    ride: new Ride(),
+                                                editing: false)));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,

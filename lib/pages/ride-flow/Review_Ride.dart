@@ -1,20 +1,19 @@
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
+import 'package:carriage_rider/providers/CreateRideProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
-import '../../providers/RidesProvider.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class ReviewRide extends StatefulWidget {
   final Ride ride;
-  final String selectedDays;
 
-  ReviewRide({Key key, this.ride, this.selectedDays}) : super(key: key);
+  ReviewRide({Key key, this.ride}) : super(key: key);
 
   @override
   _ReviewRideState createState() => _ReviewRideState();
@@ -23,11 +22,11 @@ class ReviewRide extends StatefulWidget {
 class _ReviewRideState extends State<ReviewRide> {
   @override
   Widget build(context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-
-    RidesProvider rideProvider = Provider.of<RidesProvider>(context);
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
+    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+
+    print(widget.ride.recurring);
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
@@ -113,24 +112,24 @@ class _ReviewRideState extends State<ReviewRide> {
                   children: [
                     widget.ride.endDate != null
                         ? Container(
-                            child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('End Date', style: CarriageTheme.labelStyle),
-                              SizedBox(height: 5),
-                              Text(DateFormat.yMd().format(widget.ride.endDate),
-                                  style: CarriageTheme.infoStyle)
-                            ],
-                          ))
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('End Date', style: CarriageTheme.labelStyle),
+                            SizedBox(height: 5),
+                            Text(DateFormat.yMd().format(widget.ride.endDate),
+                                style: CarriageTheme.infoStyle)
+                          ],
+                        ))
                         : Container(
-                            child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(''),
-                              SizedBox(height: 5),
-                              Text('', style: CarriageTheme.infoStyle)
-                            ],
-                          )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(''),
+                            SizedBox(height: 5),
+                            Text('', style: CarriageTheme.infoStyle)
+                          ],
+                        )),
                     SizedBox(height: 20),
                     Container(
                       child: Column(
@@ -148,28 +147,30 @@ class _ReviewRideState extends State<ReviewRide> {
                 ),
               ],
             ),
-            widget.ride.recurringDays != null
-                ? Container(
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Every', style: CarriageTheme.labelStyle)
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(widget.selectedDays,
-                              style: CarriageTheme.infoStyle)
-                        ],
-                      )
-                    ],
-                  ))
+            widget.ride.recurring ? Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Every', style: CarriageTheme.labelStyle)
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(widget.ride.recurringDays.map((day) {
+                          List<String> days = ['M', 'T', 'W', 'Th', 'F'];
+                          return days[day-1];
+                        }).toList().join(' '),
+                            style: CarriageTheme.infoStyle)
+                      ],
+                    )
+                  ],
+                ))
                 : Container(),
             SizedBox(height: 15),
             Row(
@@ -202,26 +203,25 @@ class _ReviewRideState extends State<ReviewRide> {
                             child: Expanded(
                               child: RaisedButton(
                                 onPressed: () async {
-                                  fromCtrl.clear();
-                                  toCtrl.clear();
-                                  await rideProvider.createRide(
+                                  createRideProvider.clearControllers();
+                                  await createRideProvider.createRide(
                                       AppConfig.of(context),
                                       context,
                                       riderProvider,
                                       locationsProvider.isPreset(
-                                              widget.ride.startLocation)
+                                          widget.ride.startLocation)
                                           ? widget.ride.startLocation
                                           : locationsProvider
-                                              .locationByName(
-                                                  widget.ride.startLocation)
-                                              .id,
+                                          .locationByName(
+                                          widget.ride.startLocation)
+                                          .id,
                                       locationsProvider
-                                              .isPreset(widget.ride.endLocation)
+                                          .isPreset(widget.ride.endLocation)
                                           ? widget.ride.endLocation
                                           : locationsProvider
-                                              .locationByName(
-                                                  widget.ride.endLocation)
-                                              .id,
+                                          .locationByName(
+                                          widget.ride.endLocation)
+                                          .id,
                                       widget.ride.startTime,
                                       widget.ride.endTime,
                                       widget.ride.recurring,
@@ -238,7 +238,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                 textColor: Colors.white,
                                 child: Text('Send Request',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
+                                    TextStyle(fontWeight: FontWeight.bold)),
                               ),
                             )),
                       ]))),

@@ -1,10 +1,7 @@
+import 'package:carriage_rider/providers/CreateRideProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-
-TextEditingController fromCtrl = TextEditingController();
-TextEditingController toCtrl = TextEditingController();
-
-bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
+import 'package:provider/provider.dart';
 
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
@@ -16,6 +13,8 @@ class FlowCancel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -23,8 +22,8 @@ class FlowCancel extends StatelessWidget {
           child: InkWell(
             child: Text('Cancel', style: CarriageTheme.cancelStyle),
             onTap: () {
-              fromCtrl.clear();
-              toCtrl.clear();
+              createRideProvider.fromCtrl.clear();
+              createRideProvider.toCtrl.clear();
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
@@ -72,6 +71,7 @@ class SelectionButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: RaisedButton(
           onPressed: () {
+            onPressed();
             Navigator.push(
                 context, new MaterialPageRoute(builder: (context) => page));
           },
@@ -82,7 +82,7 @@ class SelectionButton extends StatelessWidget {
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
         ),
       ),
-      onPressed: onPressed,
+      onPressed: () {},
     );
   }
 }
