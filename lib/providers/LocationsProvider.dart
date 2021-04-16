@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:io';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import '../utils/app_config.dart';
@@ -11,23 +12,29 @@ import 'package:carriage_rider/models/Location.dart';
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
-
+  List<Location> favLocations;
+  
   LocationsProvider(BuildContext context, AppConfig config,
-      AuthProvider authProvider) {
+      AuthProvider authProvider, RiderProvider riderProvider) {
     void Function() callback;
-    callback = () {
-      if (authProvider.isAuthenticated) {
-        fetchLocations(context, config, authProvider);
+    callback = () async {
+      if (authProvider.isAuthenticated && riderProvider.hasInfo()) {
+        await fetchLocations(context, config, authProvider);
+        await fetchFavoriteLocations(context, config, authProvider);
       }
     };
     callback();
-    authProvider.addListener(callback);
+    riderProvider.addListener(callback);
   }
 
   final retryDelay = Duration(seconds: 30);
 
   bool hasLocations() {
     return locations != null;
+  }
+
+  bool hasFavLocations() {
+    return favLocations != null;
   }
 
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
@@ -45,6 +52,23 @@ class LocationsProvider with ChangeNotifier {
     } else {
       await Future.delayed(retryDelay);
       fetchLocations(context, config, authProvider);
+    }
+  }
+
+  //Fetches the rider's favorite locations from the backend.
+  Future<void> fetchFavoriteLocations(BuildContext context, AppConfig config, AuthProvider authProvider) async {
+    AuthProvider authProvider =
+    Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get('${config.baseUrl}/riders/${authProvider.id}/favorites',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      String responseBody = response.body;
+      favLocations = _locationsFromJson(responseBody);
+      notifyListeners();
+    } else {
+      await Future.delayed(retryDelay);
+      fetchFavoriteLocations(context, config, authProvider);
     }
   }
 
