@@ -1,5 +1,6 @@
-import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
-import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/pages/OnBoarding.dart';
+//import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
+//import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
@@ -256,8 +257,7 @@ class Home extends StatelessWidget {
                                         context,
                                         new MaterialPageRoute(
                                             builder: (context) =>
-                                                RequestRideLoc(
-                                                    ride: new Ride())));
+                                                OnBoarding()));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,

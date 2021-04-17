@@ -37,6 +37,8 @@ dependencies:
   custom_refresh_indicator: ^0.9.0
   shared_preferences:
   introduction_screen: ^1.0.9
+  dots_indicator: ^1.2.0
+  transformer_page_view:
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +56,10 @@ flutter:
         - asset: fonts/SF-Pro-Display.ttf
   assets:
     - assets/images/
+    - assets/images/onboard_1/
+    - assets/images/onboard_2/
+    - assets/images/onboard_3/
+    - assets/images/onboard_4/
 
 flutter_icons:
   ios: true
