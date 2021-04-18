@@ -49,7 +49,8 @@ class UpcomingRides extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    List<Ride> upcomingRides = ridesProvider.upcomingRides;
+    List<Ride> originalRides = ridesProvider.upcomingRides..addAll(ridesProvider.pastRides);
+    List<Ride> upcomingRides = RecurringRidesGenerator(originalRides).generateRideInstances();
 
     if (upcomingRides.length == 0) {
       return _emptyUpcomingRides(context);
@@ -63,11 +64,9 @@ class UpcomingRides extends StatelessWidget {
 class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider =
-    Provider.of<RidesProvider>(context, listen: false);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     List<Ride> originalRides = ridesProvider.upcomingRides..addAll(ridesProvider.pastRides);
-    RecurringRidesGenerator ridesGenerator =
-    RecurringRidesGenerator(originalRides);
+    RecurringRidesGenerator ridesGenerator = RecurringRidesGenerator(originalRides);
 
     return Scaffold(
       appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
