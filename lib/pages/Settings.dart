@@ -1,26 +1,18 @@
 import 'dart:ui';
 import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/utils/app_config.dart';
+import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 import '../providers/RiderProvider.dart';
 
-class Settings extends StatefulWidget {
-  @override
-  _SettingsState createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class Settings extends StatelessWidget {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
@@ -39,17 +31,8 @@ class _SettingsState extends State<Settings> {
           '-' +
           phoneNumber.substring(6, 10);
       return Scaffold(
-        appBar: AppBar(
-          title: PageTitle(title: 'Schedule'),
-          backgroundColor: Colors.white,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-        ),
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: Center(
             child: SingleChildScrollView(
           child: Column(
@@ -57,8 +40,7 @@ class _SettingsState extends State<Settings> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                  child: Text('Settings',
-                      style: CarriageTheme.largeTitle),
+                  child: Text('Settings', style: CarriageTheme.largeTitle),
                 ),
                 Container(
                     decoration: BoxDecoration(
@@ -274,8 +256,10 @@ class LocationsInfo extends StatelessWidget {
   void _editFavorites(context) async {
     RiderProvider riderProvider =
         Provider.of<RiderProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
     Map<String, Location> locations =
-        locationsById(await fetchLocations(context));
+        locationsProvider.locationsById(locationsProvider.locations);
     List<String> res = (await Navigator.push(
             context,
             MaterialPageRoute(

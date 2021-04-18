@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
-import '../utils/app_config.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'AuthProvider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
@@ -30,10 +29,12 @@ class RidesProvider with ChangeNotifier {
   bool hasData() {
     return pastRides != null && upcomingRides != null;
   }
+
   /// Fetches past rides, upcoming rides, and current ride from the backend.
   /// Uses AppConfig [config] and AuthProvider [authProvider] to pass in as arguments for each
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
-  Future<void> fetchAllRides(AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchAllRides(
+      AppConfig config, AuthProvider authProvider) async {
     await _fetchPastRides(config, authProvider);
     await _fetchUpcomingRides(config, authProvider);
     await _fetchCurrentRide(config, authProvider);
@@ -121,25 +122,34 @@ class RidesProvider with ChangeNotifier {
       RiderProvider riderProvider,
       String startLocation,
       String endLocation,
-      String startTime,
-      String endTime) async {
+      DateTime startTime,
+      DateTime endTime,
+      bool recurring,
+      {DateTime endDate,
+      List<int> recurringDays}) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.post(
-      '${config.baseUrl}/rides',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token'
-      },
-      body: jsonEncode(<String, dynamic>{
-        'rider': riderProvider.info,
-        'startLocation': startLocation,
-        'endLocation': endLocation,
-        'startTime': startTime,
-        'requestedEndTime': endTime,
-      }),
-    );
+    Map<String, dynamic> request = <String, dynamic>{
+      'rider': riderProvider.info.id,
+      'startLocation': startLocation,
+      'endLocation': endLocation,
+      'startTime': startTime.toUtc().toIso8601String(),
+      'endTime': endTime.toUtc().toIso8601String(),
+    };
+    if (recurring) {
+      request['recurring'] = true;
+      request['endDate'] = DateTime.parse(DateFormat('y-MM-dd').format(endDate))
+          .toIso8601String()
+          .substring(0, 10);
+      request['recurringDays'] = recurringDays;
+    }
+    final response = await http.post('${config.baseUrl}/rides',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
     if (response.statusCode != 200) {
       throw Exception('Failed to create ride.');
     }

@@ -9,17 +9,13 @@ import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
-class RidePage extends StatefulWidget {
+class RidePage extends StatelessWidget {
+
   RidePage(this.ride, {this.parentRideID});
 
   final Ride ride;
   final String parentRideID;
 
-  @override
-  _RidePageState createState() => _RidePageState();
-}
-
-class _RidePageState extends State<RidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +32,13 @@ class _RidePageState extends State<RidePage> {
                           left: 16, right: 16, bottom: 8, top: 16),
                       child: Text(
                           DateFormat('MMM')
-                              .format(widget.ride.startTime)
+                              .format(ride.startTime)
                               .toUpperCase() +
                               ' ' +
                               ordinal(int.parse(DateFormat('d')
-                                  .format(widget.ride.startTime))) +
+                                  .format(ride.startTime))) +
                               ' ' +
-                              DateFormat('jm').format(widget.ride.startTime),
+                              DateFormat('jm').format(ride.startTime),
                           style: CarriageTheme.largeTitle),
                     ),
                     Container(
@@ -50,11 +46,11 @@ class _RidePageState extends State<RidePage> {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          DriverCard(color: widget.ride.type == 'unscheduled' ? CarriageTheme.gray4 : Colors.black, ride: widget.ride, showButtons: false),
+                          DriverCard(color: ride.type == 'unscheduled' ? CarriageTheme.gray4 : Colors.black, ride: ride, showButtons: false),
                           SizedBox(height: 48),
-                          TimeLine(widget.ride, true, false, false),
+                          TimeLine(ride, true, false, false),
                           SizedBox(height: 50),
-                          widget.ride.type == 'past'
+                          ride.type == 'past'
                               ? Container()
                               : RideAction(
                               text: 'Cancel Ride',
@@ -63,7 +59,7 @@ class _RidePageState extends State<RidePage> {
                               action: () => Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
                                   builder: (context) =>
-                                      CancelRidePage(widget.ride)))),
+                                      CancelRidePage(ride)))),
                           SizedBox(height: 48),
                         ],
                       ),
@@ -73,7 +69,7 @@ class _RidePageState extends State<RidePage> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: widget.ride.type == 'past' ? Container() : EditRide(),
+                child: ride.type == 'past' ? Container() : EditRide(),
               )
             ],
           ),
