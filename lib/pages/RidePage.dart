@@ -10,7 +10,6 @@ import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class RidePage extends StatelessWidget {
-
   RidePage(this.ride, {this.parentRideID});
 
   final Ride ride;
@@ -19,7 +18,8 @@ class RidePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
           child: Stack(
             children: <Widget>[
@@ -32,11 +32,11 @@ class RidePage extends StatelessWidget {
                           left: 16, right: 16, bottom: 8, top: 16),
                       child: Text(
                           DateFormat('MMM')
-                              .format(ride.startTime)
-                              .toUpperCase() +
+                                  .format(ride.startTime)
+                                  .toUpperCase() +
                               ' ' +
-                              ordinal(int.parse(DateFormat('d')
-                                  .format(ride.startTime))) +
+                              ordinal(int.parse(
+                                  DateFormat('d').format(ride.startTime))) +
                               ' ' +
                               DateFormat('jm').format(ride.startTime),
                           style: CarriageTheme.largeTitle),
@@ -46,20 +46,25 @@ class RidePage extends StatelessWidget {
                       child: Column(
                         children: [
                           SizedBox(height: 32),
-                          DriverCard(color: ride.type == 'unscheduled' ? CarriageTheme.gray4 : Colors.black, ride: ride, showButtons: false),
+                          DriverCard(
+                              color: ride.type == 'unscheduled'
+                                  ? CarriageTheme.gray4
+                                  : Colors.black,
+                              ride: ride,
+                              showButtons: false),
                           SizedBox(height: 48),
                           TimeLine(ride, true, false, false),
                           SizedBox(height: 50),
                           ride.type == 'past'
                               ? Container()
                               : RideAction(
-                              text: 'Cancel Ride',
-                              color: Colors.red,
-                              icon: Icons.close,
-                              action: () => Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                  builder: (context) =>
-                                      CancelRidePage(ride)))),
+                                  text: 'Cancel Ride',
+                                  color: Colors.red,
+                                  icon: Icons.close,
+                                  action: () => Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CancelRidePage(ride)))),
                           SizedBox(height: 48),
                         ],
                       ),
@@ -68,9 +73,8 @@ class RidePage extends StatelessWidget {
                 ),
               ),
               Align(
-                alignment: Alignment.bottomCenter,
-                child: ride.type == 'past' ? Container() : EditRide(),
-              )
+                  alignment: Alignment.bottomCenter,
+                  child: ride.type == 'unscheduled' ? EditRide() : Container()),
             ],
           ),
         ));
@@ -205,45 +209,39 @@ class EditRide extends StatelessWidget {
 }
 
 String noShowMessage = 'No Show';
+
 class TimeLineRow extends StatelessWidget {
   TimeLineRow(
       {this.text,
-        this.infoWidget,
-        @required this.useCarIcon,
-        @required this.isCurrentRide});
+      this.infoWidget,
+      @required this.useCarIcon,
+      @required this.isCurrentRide});
 
   final String text;
   final Widget infoWidget;
   final bool useCarIcon;
   final bool isCurrentRide;
 
-
   @override
   Widget build(BuildContext context) {
     double circleRadius = 13;
     Widget stopCircle =
-    Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-              width: circleRadius * 2,
-              height: 26,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [CarriageTheme.boxShadow]
-              )
-          ),
-          Container(
-              width: 8,
-              height: 8,
-              decoration: new BoxDecoration(
-                color: Color(0xFF9B9B9B),
-                shape: BoxShape.circle,
-              )
-          )
-        ]);
+        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+      Container(
+          width: circleRadius * 2,
+          height: 26,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [CarriageTheme.boxShadow])),
+      Container(
+          width: 8,
+          height: 8,
+          decoration: new BoxDecoration(
+            color: Color(0xFF9B9B9B),
+            shape: BoxShape.circle,
+          ))
+    ]);
 
     Widget locationCircle() {
       return Container(
@@ -258,14 +256,18 @@ class TimeLineRow extends StatelessWidget {
       SizedBox(width: 16),
       text == null
           ? infoWidget
-          : text == noShowMessage ? Text(noShowMessage, style: TextStyle(fontSize: 16, color: Color(0xFFF44336))) :
-      isCurrentRide
-          ? Text(text,
-          style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold))
-          : Text(text, style: TextStyle(fontSize: 16, color: CarriageTheme.gray4))
+          : text == noShowMessage
+              ? Text(noShowMessage,
+                  style: TextStyle(fontSize: 16, color: Color(0xFFF44336)))
+              : isCurrentRide
+                  ? Text(text,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold))
+                  : Text(text,
+                      style:
+                          TextStyle(fontSize: 16, color: CarriageTheme.gray4))
     ]);
   }
 }
@@ -305,7 +307,8 @@ class _TimeLineState extends State<TimeLine> {
       return lastRowBox.localToGlobal(Offset.zero).dy;
     }
 
-    bool doneRender() => timelineHeight != null &&
+    bool doneRender() =>
+        timelineHeight != null &&
         firstRowKey.currentContext != null &&
         lastRowKey.currentContext != null &&
         firstRowHeight != null &&
@@ -313,7 +316,10 @@ class _TimeLineState extends State<TimeLine> {
 
     Widget buildLine() {
       if (doneRender()) {
-        double length = getLastRowPos() - getFirstRowPos() - (firstRowHeight / 2) + (lastRowHeight / 2);
+        double length = getLastRowPos() -
+            getFirstRowPos() -
+            (firstRowHeight / 2) +
+            (lastRowHeight / 2);
         return Positioned(
           top: firstRowHeight / 2,
           child: Container(
@@ -360,13 +366,9 @@ class _TimeLineState extends State<TimeLine> {
               TimeLineRow(
                   infoWidget: Expanded(
                       child: widget.ride.buildLocationsCard(
-                          context, widget.isIcon, true, true
-                      )
-                  ),
+                          context, widget.isIcon, true, true)),
                   useCarIcon: false,
-                  isCurrentRide: widget.isCurrent
-              ),
-
+                  isCurrentRide: widget.isCurrent),
               SizedBox(height: 32),
               MeasureSize(
                 onChange: (size) {
@@ -382,12 +384,9 @@ class _TimeLineState extends State<TimeLine> {
                   child: TimeLineRow(
                       infoWidget: Expanded(
                           child: widget.ride.buildLocationsCard(
-                              context, widget.isIcon, false, false
-                          )
-                      ),
+                              context, widget.isIcon, false, false)),
                       useCarIcon: false,
-                      isCurrentRide: widget.isCurrent
-                  ),
+                      isCurrentRide: widget.isCurrent),
                 ),
               ),
               widget.ride.type == 'past' ? SizedBox(height: 32) : Container(),
@@ -402,15 +401,17 @@ class _TimeLineState extends State<TimeLine> {
                 },
                 child: Container(
                   key: widget.ride.type == 'past' ? lastRowKey : null,
-                  child: widget.ride.type == 'past' ? widget.ride.status == RideStatus.NO_SHOW ?
-                  TimeLineRow(
-                      text: noShowMessage,
-                      useCarIcon: false,
-                      isCurrentRide: widget.isCurrent) :
-                  TimeLineRow(
-                      text: 'Arrived!',
-                      useCarIcon: false,
-                      isCurrentRide: widget.isCurrent) : Container(),
+                  child: widget.ride.type == 'past'
+                      ? widget.ride.status == RideStatus.NO_SHOW
+                          ? TimeLineRow(
+                              text: noShowMessage,
+                              useCarIcon: false,
+                              isCurrentRide: widget.isCurrent)
+                          : TimeLineRow(
+                              text: 'Arrived!',
+                              useCarIcon: false,
+                              isCurrentRide: widget.isCurrent)
+                      : Container(),
                 ),
               ),
             ]),
@@ -465,7 +466,11 @@ class InformationRow extends StatelessWidget {
 }
 
 class RideAction extends StatelessWidget {
-  const RideAction({@required this.text, @required this.color, @required this.icon, @required this.action});
+  const RideAction(
+      {@required this.text,
+      @required this.color,
+      @required this.icon,
+      @required this.action});
   final String text;
   final Color color;
   final IconData icon;
