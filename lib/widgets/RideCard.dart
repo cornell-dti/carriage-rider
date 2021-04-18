@@ -52,6 +52,9 @@ class RideCard extends StatelessWidget {
                           style: confirmationStyle.copyWith(
                               color: Color(0xFFFF9800))))
                           : Container(),
+                      ride.status == RideStatus.NO_SHOW ? Text('No Show',
+                          style: confirmationStyle.copyWith(
+                              color: Color(0xFFF44336))) : Container(),
                       SizedBox(height: 4),
                       ride.buildStartTime(),
                       SizedBox(height: 16),
