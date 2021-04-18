@@ -1,12 +1,9 @@
 import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/widgets/RideCard.dart';
-import 'package:flutter/material.dart';
-import 'CarriageTheme.dart';
 
 class RecurringRidesGenerator {
-  RecurringRidesGenerator(this.originalRides);
-  List<Ride> originalRides;
+  RecurringRidesGenerator(this.parentRides);
+  List<Ride> parentRides;
 
   bool sameDay(DateTime dateTime, DateTime other) {
     return dateTime.year == other.year &&
@@ -29,88 +26,62 @@ class RecurringRidesGenerator {
     return days;
   }
 
-  /// Returns whether [deletedRides], representing a list of deleted rides from backend, contains a ride with the
-  /// same date as [generatedRide], representing a frontend-generated instance of a repeating ride that does not
-  /// exist in backend yet.
-  bool wasDeleted(Ride generatedRide, List<Ride> deletedRides) {
-    return deletedRides.where((deletedRide) => sameDay(deletedRide.startTime, generatedRide.startTime)).isNotEmpty;
+  /// Returns whether the recurring ride from backend [parentRide]'s list of deleted dates contains the start date of [generatedRide],
+  /// representing a frontend-generated instance of a repeating ride that does not exist in backend yet.
+  ///
+  /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
+  bool wasDeleted(Ride generatedRide, Ride parentRide) {
+    return parentRide.deletedInstanceDates.where((date) => sameDay(date, generatedRide.startTime)).isNotEmpty;
   }
 
-  /// Returns a list of all single-time rides and all future instances of repeating rides, based on [originalRides].
+  /// Returns a list of all single-time rides and all future instances of repeating rides, based on [parentRides].
   ///
   /// Instances of repeating rides that do not exist yet use a temporary ID. Their parent rides, meaning the rides
   /// in backend that they are generated from, will be used for editing instances of repeating rides that do not
   /// exist in backend yet.
-  List<Ride> generateRideInstances() {
-    List<Ride> allRides = [];
+  List<Ride> generateRecurringRides() {
+    List<Ride> generatedRides = [];
     Map<String, Ride> originalRidesByID = Map();
-    Map<Ride, String> rideInstanceParentIDs = Map();
 
-    for (Ride originalRide in originalRides) {
+    for (Ride originalRide in parentRides) {
       originalRidesByID[originalRide.id] = originalRide;
     }
-    for (Ride originalRide in originalRides) {
-      // add one time rides
-      if (!originalRide.deleted && !originalRide.recurring) {
-        allRides.add(originalRide);
-      }
+    for (Ride originalRide in parentRides) {
+      DateTime origStart = originalRide.startTime;
+      Duration rideDuration = originalRide.endTime.difference(origStart);
+      List<int> days = originalRide.recurringDays;
 
-      if (originalRide.recurring) {
-        Duration rideDuration = originalRide.endTime.difference(originalRide.startTime);
-        List<Ride> deletedInstances = originalRide.edits.map((rideID) => originalRidesByID[rideID]).where((ride) => ride != null && ride.deleted).toList();
-        List<int> days = originalRide.recurringDays;
+      // find first occurrence
+      DateTime now = DateTime.now();
+      DateTime today = DateTime(now.year, now.month, now.day, origStart.hour, origStart.minute);
+      DateTime firstPossibleDate = origStart.isBefore(today) ? today : originalRide.startTime;
+      int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(firstPossibleDate, day)).reduce(min);
+      DateTime rideStart = firstPossibleDate.add(Duration(days: daysUntilFirstOccurrence));
+      int dayIndex = days.indexOf(rideStart.weekday);
 
-        // find first occurrence
-        int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(originalRide.startTime, day)).reduce(min);
-        DateTime rideStart = originalRide.startTime.add(Duration(days: daysUntilFirstOccurrence));
-        int dayIndex = days.indexOf(rideStart.weekday);
+      // generate instances of recurring rides
+      while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
+        // create the new ride and keep track of its parent to help with editing
+        Ride rideInstance = Ride(
+            parentID: originalRide.id,
+            startLocation: originalRide.startLocation,
+            startAddress: originalRide.startAddress,
+            endLocation: originalRide.endLocation,
+            endAddress: originalRide.endAddress,
+            startTime: rideStart,
+            endTime: rideStart.add(rideDuration)
+        );
 
-        // generate instances of recurring rides
-        while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
-          // create the new ride and keep track of its parent
-          Ride rideInstance = Ride(
-              id: CarriageTheme.generatedRideID,
-              startLocation: originalRide.startLocation,
-              startAddress: originalRide.startAddress,
-              endLocation: originalRide.endLocation,
-              endAddress: originalRide.endAddress,
-              startTime: rideStart,
-              endTime: rideStart.add(rideDuration)
-          );
-          rideInstanceParentIDs[rideInstance] = originalRide.id;
-
-          // if all ride info is equal to a deleted ride, don't add it because it was edited
-          if (!wasDeleted(rideInstance, deletedInstances)) {
-            allRides.add(rideInstance);
-          }
-
-          // find the next occurrence
-          dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
-          int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
-          rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
+        if (!wasDeleted(rideInstance, originalRide)) {
+          generatedRides.add(rideInstance);
         }
+
+        // find the next occurrence
+        dayIndex = dayIndex == days.length - 1 ? 0 : dayIndex + 1;
+        int daysUntilNextOccurrence = daysUntilWeekday(rideStart, days[dayIndex]);
+        rideStart = rideStart.add(Duration(days: daysUntilNextOccurrence));
       }
     }
-    return allRides;
-  }
-
-  ListView buildUpcomingRidesList() {
-    List futureRides = generateRideInstances().where((ride) => ride.type != 'past').toList()..sort((r1, r2) => r1.startTime.isBefore(r2.startTime) ? -1 : 1);
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: futureRides.length,
-      itemBuilder: (context, index) {
-        return RideCard(
-          futureRides[index],
-          showConfirmation: true,
-          showCallDriver: false,
-          showArrow: true,
-        );
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 16);
-      },
-    );
+    return generatedRides..sort((r1, r2) => r1.startTime.isBefore(r2.startTime) ? -1 : 1);
   }
 }

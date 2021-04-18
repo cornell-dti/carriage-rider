@@ -74,9 +74,6 @@ class Ride {
   //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
   List<int> recurringDays;
 
-  //Indicates whether a ride is deleted. Will be null if ride is not recurring.
-  bool deleted;
-
   //The requested end time of a ride. Will be null if ride is not recurring.
   DateTime requestedEndTime;
 
@@ -92,8 +89,15 @@ class Ride {
   //The IDs of rides corresponding to edits
   List<String> edits;
 
+  // The ID of the parent ride in backend, if this is a generated instance of a repeating ride
+  String parentID;
+
+  // The dates of deleted instances of a recurring ride
+  List<DateTime> deletedInstanceDates;
+
   Ride(
       {this.id,
+        this.parentID,
         this.type,
         this.rider,
         this.status,
@@ -106,7 +110,7 @@ class Ride {
         this.requestedEndTime,
         this.recurring,
         this.recurringDays,
-        this.deleted,
+        this.deletedInstanceDates,
         this.late,
         this.edits,
         this.endDate,
@@ -130,12 +134,11 @@ class Ride {
           .parse(json['endTime'], true)
           .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
-      recurringDays:
-      json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
-      deleted: json['deleted'] == null ? false : json['deleted'],
+      recurringDays: json['recurringDays'] == null ? null : List.from(json['recurringDays']),
+      deletedInstanceDates: json['deletedDates'] == null ? null : List<String>.from(json['deletedDates']).map((String d) => DateFormat('yyyy-MM-ddTHH:mm:ss').parse(d, true).toLocal()).toList(),
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
-      edits: json['edits'] == null ? [] : List.from(json['edits']),
+      edits: json['edits'] == null ? null : List.from(json['edits']),
       endDate: json['endDate'] == null
           ? null
           : DateFormat('yyyy-MM-dd').parse(json['endDate']),
