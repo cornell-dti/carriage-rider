@@ -39,78 +39,78 @@ RideStatus getStatusEnum(String status) {
 //Model for a ride.
 class Ride {
   //The ride's id in the backend.
-  final String id;
+  String id;
 
   //The ride type. Can only be 'active', 'past', or 'unscheduled'.
-  final String type;
+  String type;
 
   //The starting location of a ride.
-  final String startLocation;
+  String startLocation;
 
   //The starting address of a ride.
-  final String startAddress;
+  String startAddress;
 
   //The ending location of a ride.
-  final String endLocation;
+  String endLocation;
 
   //The ending address of a ride.
-  final String endAddress;
+  String endAddress;
 
   //The ending date of a recurring ride. Will be null if ride is not recurring.
-  final DateTime endDate;
+  DateTime endDate;
 
   //The starting time of a ride.
-  final DateTime startTime;
+  DateTime startTime;
 
   //The ending time of a ride
-  final DateTime endTime;
+  DateTime endTime;
 
   //The rider associated with this ride.
-  final Rider rider;
+  Rider rider;
 
   //Indicates whether a ride is recurring or not. Will be null if ride is not recurring.
-  final bool recurring;
+  bool recurring;
 
   //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
-  final List<int> recurringDays;
+  List<int> recurringDays;
 
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
-  final bool deleted;
+  bool deleted;
 
   //The requested end time of a ride. Will be null if ride is not recurring.
-  final DateTime requestedEndTime;
+  DateTime requestedEndTime;
 
   //The ride status. Can only be 'not_started', 'on_the_way', 'picked_up', 'no_show', or 'completed'.
   RideStatus status;
 
   //Indicates whether a ride is late
-  final bool late;
+  bool late;
 
   //The driver associated with this ride
-  final Driver driver;
+  Driver driver;
 
   //The IDs of rides corresponding to edits
-  final List<String> edits;
+  List<String> edits;
 
   Ride(
       {this.id,
-        this.type,
-        this.rider,
-        this.status,
-        this.startLocation,
-        this.startAddress,
-        this.endLocation,
-        this.endAddress,
-        this.startTime,
-        this.endTime,
-        this.requestedEndTime,
-        this.recurring,
-        this.recurringDays,
-        this.deleted,
-        this.late,
-        this.edits,
-        this.endDate,
-        this.driver});
+      this.type,
+      this.rider,
+      this.status,
+      this.startLocation,
+      this.startAddress,
+      this.endLocation,
+      this.endAddress,
+      this.startTime,
+      this.endTime,
+      this.requestedEndTime,
+      this.recurring,
+      this.recurringDays,
+      this.deleted,
+      this.late,
+      this.edits,
+      this.endDate,
+      this.driver});
 
   //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -131,7 +131,7 @@ class Ride {
           .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays:
-      json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
+          json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
       deleted: json['deleted'] == null ? false : json['deleted'],
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
@@ -151,7 +151,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -167,26 +167,22 @@ class Ride {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              CarriageTheme.boxShadow
-            ]),
+            boxShadow: [CarriageTheme.boxShadow]),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(isStart ? startLocation : endLocation,
-                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: cardInfo(context, isStart, isIcon)),
-                SizedBox(height: 16),
-                Text(
-                    'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
-                        DateFormat('jm').format(isStart ? startTime : endTime),
-                    style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-              ]),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(isStart ? startLocation : endLocation,
+                style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                child: cardInfo(context, isStart, isIcon)),
+            SizedBox(height: 16),
+            Text(
+                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
+                    DateFormat('jm').format(isStart ? startTime : endTime),
+                style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+          ]),
         ));
   }
 
@@ -199,8 +195,8 @@ class Ride {
       ),
       isIcon
           ? Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Icon(Icons.location_on))
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(Icons.location_on))
           : Container()
     ]);
     return addressInfo;
@@ -306,4 +302,3 @@ class Ride {
     ]);
   }
 }
-
