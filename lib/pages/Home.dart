@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/pages/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
 import 'package:carriage_rider/utils/NotificationService.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Contact.dart';
-import '../models/RideObject.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'Upcoming.dart';
 
@@ -147,6 +147,7 @@ class _HomeState extends State<Home> {
     AppConfig appConfig = AppConfig.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
         child: Drawer(
           child: ListView(
@@ -208,7 +209,6 @@ class _HomeState extends State<Home> {
                       onRefresh: () async {
                         await ridesProvider.fetchAllRides(
                             appConfig, authProvider);
-                        setState(() {});
                       },
                       child: CustomScrollView(slivers: [
                         SliverAppBar(
@@ -362,7 +362,7 @@ class _HomeState extends State<Home> {
                                         new MaterialPageRoute(
                                             builder: (context) =>
                                                 RequestRideLoc(
-                                                    ride: new RideObject())));
+                                                    ride: new Ride())));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,

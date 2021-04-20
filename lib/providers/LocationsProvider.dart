@@ -6,35 +6,14 @@ import '../utils/app_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-//The type for a location.
-class Location {
-  //The id of a location
-  final String id;
-
-  //The name of a location
-  final String name;
-
-  //The address of a location
-  final String address;
-
-  Location({
-    this.id,
-    this.name,
-    this.address,
-  });
-
-  //Creates a location from JSON representation.
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-        id: json['id'], name: json['name'], address: json['address']);
-  }
-}
+import 'package:carriage_rider/models/Location.dart';
 
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
-  LocationsProvider(
-      BuildContext context, AppConfig config, AuthProvider authProvider) {
+  List<Location> locations;
+
+  LocationsProvider(BuildContext context, AppConfig config,
+      AuthProvider authProvider) {
     void Function() callback;
     callback = () {
       if (authProvider.isAuthenticated) {
@@ -45,20 +24,27 @@ class LocationsProvider with ChangeNotifier {
     authProvider.addListener(callback);
   }
 
+  final retryDelay = Duration(seconds: 30);
+
+  bool hasLocations() {
+    return locations != null;
+  }
+
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
-  Future<List<Location>> fetchLocations(
-      BuildContext context, AppConfig config, AuthProvider authProvider) async {
+  Future<void> fetchLocations(BuildContext context, AppConfig config,
+      AuthProvider authProvider) async {
     AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get('${config.baseUrl}/locations',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;
-      List<Location> locations = _locationsFromJson(responseBody);
-      return locations;
+      locations = _locationsFromJson(responseBody);
+      notifyListeners();
     } else {
-      throw Exception('Failed to load locations.');
+      await Future.delayed(retryDelay);
+      fetchLocations(context, config, authProvider);
     }
   }
 
@@ -66,14 +52,53 @@ class LocationsProvider with ChangeNotifier {
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)['data'];
     List<Location> res =
-        data.map<Location>((e) => Location.fromJson(e)).toList();
+    data.map<Location>((e) => Location.fromJson(e)).toList();
     return res;
   }
 
   //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
-  static List<String> getSuggestions(String query, List<Location> locations) {
-    List<String> matches = locations.map((e) => e.name).toList();
-    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+  List<String> getSuggestions(String query) {
+    List<String> matches = locations.where((e) =>
+    e.tag != 'custom' && e.name.toLowerCase().contains(query.toLowerCase()))
+        .map((e) => e.name)
+        .toList();
     return matches;
+  }
+
+  Location locationByName(String location) {
+    int index;
+    if (locations != null) {
+      index = locations.indexWhere((e) => e.name == location);
+    }
+    return index == null ? null : locations[index];
+  }
+
+  bool checkLocation(String location) {
+    int index;
+    if (locations != null) {
+      index = locations.indexWhere((e) => e.name == location);
+      return index == -1 ? false : locations.contains(locations[index]);
+    }
+    return false;
+  }
+
+  bool isCustom(String locationName) {
+    List<Location> regularLocations = locations.where((e) => e.tag != 'custom')
+        .toList();
+    return !regularLocations.contains(locationByName(locationName));
+  }
+
+  bool isPreset(String locationName) {
+    List<String> regularLocations = locations.map((e) => e.name).toList();
+    return !regularLocations.contains(locationName);
+  }
+
+  //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
+  Map<String, Location> locationsById(List<Location> locations) {
+    Map<String, Location> res = {};
+    locations.forEach((element) {
+      res[element.id] = element;
+    });
+    return res;
   }
 }
