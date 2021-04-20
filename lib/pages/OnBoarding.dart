@@ -63,7 +63,7 @@ class _OnBoardingState extends State<OnBoarding> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: 650.0,
+                  height: 600.0,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -80,7 +80,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15,
+                                    MediaQuery.of(context).size.height * 0.10,
                               ),
                               Text(
                                 text[_slideIndex],
@@ -140,7 +140,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15,
+                                    MediaQuery.of(context).size.height * 0.10,
                               ),
                               Text(
                                 text[_slideIndex],
@@ -200,7 +200,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15,
+                                    MediaQuery.of(context).size.height * 0.10,
                               ),
                               Text(
                                 text[_slideIndex],
@@ -260,7 +260,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15,
+                                    MediaQuery.of(context).size.height * 0.10,
                               ),
                               Text(
                                 text[_slideIndex],
@@ -311,7 +311,7 @@ class _OnBoardingState extends State<OnBoarding> {
                         child: Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
-                              height: MediaQuery.of(context).size.height * 0.20,
+                              height: MediaQuery.of(context).size.height,
                               color: Colors.black,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

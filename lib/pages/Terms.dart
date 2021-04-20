@@ -3,8 +3,7 @@ import 'package:carriage_rider/pages/Login.dart';
 
 class TermsOfService extends StatelessWidget {
   Widget acceptButton(BuildContext context) {
-    return Expanded(
-      child: Align(
+    return Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 30.0),
@@ -24,9 +23,7 @@ class TermsOfService extends StatelessWidget {
                   child: Text('Accept All',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 17)))),
-        ),
-      ),
-    );
+        ));
   }
 
   void displayBottomSheet(BuildContext context) {
@@ -37,13 +34,11 @@ class TermsOfService extends StatelessWidget {
         context: context,
         builder: (ctx) {
           return Stack(
-            alignment: Alignment.center,
             children: [
               Positioned(
                   child: Container(
-                      height: MediaQuery.of(context).size.height * 0.80,
-                      child: Expanded(
-                          child: Padding(
+                      height: MediaQuery.of(context).size.height * 0.9,
+                      child: Padding(
                         padding:
                             EdgeInsets.only(top: 15.0, left: 15.0, right: 15),
                         child: Column(
@@ -60,15 +55,12 @@ class TermsOfService extends StatelessWidget {
                                   child: Text(
                                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quam aliquam vestibulum egestas amet euismod tellus. '
                                       'Augue suspendisse nunc vitae suspendisse fringilla. Nisl semper sed vehicula volutpat risus, id. Vitae,'
-                                      ' malesuada euismod lectus duis nibh. Lorem fames nunc porttitor vulputate molestie est. Eu id lorem egestas in id '
-                                      'iaculis tristique. A tristique phasellus sapien tempus, urna, nisl. Commodo pretium lectus egestas sit in ut et, '
-                                      'ornare amet. Fringilla integer senectus egestas viverra sed cursus ac pellentesque diam. Pharetra volutpat aliquam '
-                                      'eget velit, accumsan eleifend lorem. Eu vitae turpis turpis id sollicitudin leo mauris ut curabitur. Massa rutrum '
-                                      'eu in nunc aliquet. Pellentesque rhoncus mollis tortor diam. Sapien senectus posuere libero urna tempus, in proin morbi tempus.',
+                                      ' malesuada euismod lectus duis nibh. ',
                                       style: TextStyle(fontSize: 17))),
                             ]),
-                      )))),
-              Positioned(bottom: 0, child: acceptButton(context))
+                      ))),
+              Positioned(
+                  bottom: 0, left: 0, right: 0, child: acceptButton(context))
             ],
           );
         });
@@ -113,7 +105,7 @@ class TermsOfService extends StatelessWidget {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Image(image: AssetImage('assets/images/readingman.png')),
-              acceptButton(context)
+              Expanded(child: acceptButton(context))
             ],
           ),
         )));
