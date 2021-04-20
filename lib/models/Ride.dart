@@ -93,7 +93,7 @@ class Ride {
   String parentID;
 
   // The dates of deleted instances of a recurring ride
-  List<DateTime> deletedInstanceDates;
+  List<DateTime> deleted;
 
   Ride(
       {this.id,
@@ -110,7 +110,7 @@ class Ride {
         this.requestedEndTime,
         this.recurring,
         this.recurringDays,
-        this.deletedInstanceDates,
+        this.deleted,
         this.late,
         this.edits,
         this.endDate,
@@ -135,7 +135,7 @@ class Ride {
           .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays: json['recurringDays'] == null ? null : List.from(json['recurringDays']),
-      deletedInstanceDates: json['deletedDates'] == null ? null : List<String>.from(json['deletedDates']).map((String d) => DateFormat('yyyy-MM-ddTHH:mm:ss').parse(d, true).toLocal()).toList(),
+      deleted: json['deleted'] == null ? null : List<String>.from(json['deleted']).map((String d) => DateFormat('yyyy-MM-dd').parse(d, true).toLocal()).toList(),
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
       edits: json['edits'] == null ? null : List.from(json['edits']),

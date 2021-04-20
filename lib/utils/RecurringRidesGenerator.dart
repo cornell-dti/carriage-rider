@@ -31,7 +31,7 @@ class RecurringRidesGenerator {
   ///
   /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
   bool wasDeleted(Ride generatedRide, Ride parentRide) {
-    return parentRide.deletedInstanceDates.where((date) => sameDay(date, generatedRide.startTime)).isNotEmpty;
+    return parentRide.deleted.where((date) => sameDay(date, generatedRide.startTime)).isNotEmpty;
   }
 
   /// Returns a list of all single-time rides and all future instances of repeating rides, based on [parentRides].
@@ -53,6 +53,8 @@ class RecurringRidesGenerator {
 
       // find first occurrence
       DateTime now = DateTime.now();
+      DateTime rideCreationTime = DateTime(now.year, now.month, now.day, 10, 5);
+
       DateTime today = DateTime(now.year, now.month, now.day, origStart.hour, origStart.minute);
       DateTime firstPossibleDate = origStart.isBefore(today) ? today : originalRide.startTime;
       int daysUntilFirstOccurrence = days.map((day) => daysUntilWeekday(firstPossibleDate, day)).reduce(min);
@@ -72,7 +74,8 @@ class RecurringRidesGenerator {
             endTime: rideStart.add(rideDuration)
         );
 
-        if (!wasDeleted(rideInstance, originalRide)) {
+        bool rideAlreadyExists = sameDay(rideStart, today) || (now.isAfter(rideCreationTime) && sameDay(rideStart, today.add(Duration(days: 1))));
+        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide)) {
           generatedRides.add(rideInstance);
         }
 
