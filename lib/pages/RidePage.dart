@@ -77,7 +77,7 @@ class RidePage extends StatelessWidget {
               ),
               Align(
                   alignment: Alignment.bottomCenter,
-                  child: ride.type == 'unscheduled' ? EditRide() : Container()),
+                  child: ride.type == 'unscheduled' ? EditRide(ride) : Container()),
             ],
           ),
         ));
