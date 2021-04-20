@@ -66,6 +66,8 @@ class RecurringRidesGenerator {
         // create the new ride and keep track of its parent to help with editing
         Ride rideInstance = Ride(
             parentID: originalRide.id,
+            status: RideStatus.NOT_STARTED,
+            type: originalRide.type == 'unscheduled' ? 'unscheduled' : 'active',
             origDate: rideStart,
             startLocation: originalRide.startLocation,
             startAddress: originalRide.startAddress,
