@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carriage_rider/pages/OnBoarding.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
@@ -104,7 +105,6 @@ class Logic extends StatefulWidget {
 }
 
 class _LogicState extends State<Logic> {
-
   bool firstTime;
 
   Future<bool> isFirstTime() async {
@@ -119,13 +119,12 @@ class _LogicState extends State<Logic> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
       isFirstTime().then((isFirstTime) {
-          firstTime = isFirstTime;
+        firstTime = isFirstTime;
       });
     });
   }
@@ -133,6 +132,10 @@ class _LogicState extends State<Logic> {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
-    return authProvider.isAuthenticated ? Home() : Login();
+    return firstTime != null && firstTime
+        ? OnBoarding()
+        : authProvider.isAuthenticated
+            ? Home()
+            : Login();
   }
 }
