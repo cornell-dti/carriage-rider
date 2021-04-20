@@ -1,5 +1,5 @@
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
-import 'package:carriage_rider/providers/CreateRideProvider.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
@@ -168,7 +168,7 @@ class EditRide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
+    RideFlowProvider createRideProvider = Provider.of<RideFlowProvider>(context);
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -196,16 +196,16 @@ class EditRide extends StatelessWidget {
                       createRideProvider.setPickupTimeCtrl(TimeOfDay.fromDateTime(ride.startTime).format(context));
                       createRideProvider.setDropoffTimeCtrl(TimeOfDay.fromDateTime(ride.endTime).format(context));
                       createRideProvider.setStartDateCtrl(ride.startTime);
-
+                      createRideProvider.setEditing(true);
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => RequestRideLoc(ride: ride, editing: true))
+                          builder: (context) => RequestRideLoc(ride: ride.copy()))
                       );
                     },
                     elevation: 3.0,
                     color: Colors.black,
                     textColor: Colors.white,
                     icon: Icon(Icons.edit),
-                    label: Text('Edit Recurring Ride',
+                    label: Text('Edit Ride',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.bold))),
               ),

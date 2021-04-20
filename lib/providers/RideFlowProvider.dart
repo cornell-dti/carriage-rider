@@ -4,14 +4,13 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
-import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
-class CreateRideProvider with ChangeNotifier {
-  Ride ride;
+class RideFlowProvider with ChangeNotifier {
+  bool editing;
   TextEditingController fromCtrl = TextEditingController();
   TextEditingController toCtrl = TextEditingController();
   TextEditingController startDateCtrl = TextEditingController();
@@ -19,7 +18,12 @@ class CreateRideProvider with ChangeNotifier {
   TextEditingController pickUpCtrl = TextEditingController();
   TextEditingController dropOffCtrl = TextEditingController();
 
-  bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
+  bool locationsFinished() => fromCtrl.text != null && fromCtrl.text != '' && toCtrl.text != null && toCtrl.text != '';
+
+  void setEditing(bool isEditing) {
+    editing = isEditing;
+    notifyListeners();
+  }
 
   void setStartDateCtrl(DateTime date) {
     startDateCtrl.text = DateFormat('yMd').format(date);
@@ -57,14 +61,11 @@ class CreateRideProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a ride in the backend by an HTTP POST request with the following fields:
-  /// the location id if [startLocation] or [endLocation] is an already existing location or
-  /// just the location name if it is a new location (not in backend yet) and
-  /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
-  Future<void> createRide(
+  Future<void> updateRecurringRide(
       AppConfig config,
       BuildContext context,
-      RiderProvider riderProvider,
+      String parentRideID,
+      DateTime origDate,
       String startLocation,
       String endLocation,
       DateTime startTime,
@@ -73,6 +74,86 @@ class CreateRideProvider with ChangeNotifier {
       {DateTime endDate,
         List<int> recurringDays}) async {
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    Map<String, dynamic> request = <String, dynamic>{
+      'id': parentRideID,
+      'deleteOnly': false,
+      'origDate': DateFormat('yyyy-MM-dd').format(origDate),
+      'startLocation': startLocation,
+      'endLocation': endLocation,
+      'startTime': startTime.toUtc().toIso8601String(),
+      'endTime': endTime.toUtc().toIso8601String(),
+    };
+    print(request);
+    final response = await http.put('${config.baseUrl}/rides/$parentRideID/edits',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to edit instance of recurring ride: ${response.body}');
+    }
+    clearControllers();
+    notifyListeners();
+  }
+
+  Future<void> updateRide(
+      AppConfig config,
+      BuildContext context,
+      String rideID,
+      String startLocation,
+      String endLocation,
+      DateTime startTime,
+      DateTime endTime,
+      bool recurring,
+      {DateTime endDate,
+        List<int> recurringDays}) async {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    Map<String, dynamic> request = <String, dynamic>{
+      'startLocation': startLocation,
+      'endLocation': endLocation,
+      'startTime': startTime.toUtc().toIso8601String(),
+      'endTime': endTime.toUtc().toIso8601String(),
+    };
+    if (recurring) {
+      request['recurring'] = true;
+      request['endDate'] = DateTime.parse(DateFormat('y-MM-dd').format(endDate))
+          .toIso8601String()
+          .substring(0, 10);
+      request['recurringDays'] = recurringDays;
+    }
+    print(request);
+    final response = await http.put('${config.baseUrl}/rides/$rideID',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update ride: ${response.body}');
+    }
+    clearControllers();
+    notifyListeners();
+  }
+
+  /// Creates a ride in the backend by an HTTP POST request with the following fields:
+  /// the location id if [startLocation] or [endLocation] is an already existing location or
+  /// just the location name if it is a new location (not in backend yet) and
+  /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
+  Future<void> createRide(
+      AppConfig config,
+      BuildContext context,
+      String startLocation,
+      String endLocation,
+      DateTime startTime,
+      DateTime endTime,
+      bool recurring,
+      {DateTime endDate,
+        List<int> recurringDays}) async {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
       'rider': riderProvider.info.id,
@@ -88,6 +169,7 @@ class CreateRideProvider with ChangeNotifier {
           .substring(0, 10);
       request['recurringDays'] = recurringDays;
     }
+    print(request);
     final response = await http.post('${config.baseUrl}/rides',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -95,7 +177,7 @@ class CreateRideProvider with ChangeNotifier {
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to create ride.');
+      throw Exception('Failed to create ride: ${response.body}');
     }
     clearControllers();
     notifyListeners();

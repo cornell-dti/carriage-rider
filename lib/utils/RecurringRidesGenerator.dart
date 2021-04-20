@@ -66,12 +66,14 @@ class RecurringRidesGenerator {
         // create the new ride and keep track of its parent to help with editing
         Ride rideInstance = Ride(
             parentID: originalRide.id,
+            origDate: rideStart,
             startLocation: originalRide.startLocation,
             startAddress: originalRide.startAddress,
             endLocation: originalRide.endLocation,
             endAddress: originalRide.endAddress,
             startTime: rideStart,
-            endTime: rideStart.add(rideDuration)
+            endTime: rideStart.add(rideDuration),
+            recurring: false
         );
 
         bool rideAlreadyExists = sameDay(rideStart, today) || (now.isAfter(rideCreationTime) && sameDay(rideStart, today.add(Duration(days: 1))));

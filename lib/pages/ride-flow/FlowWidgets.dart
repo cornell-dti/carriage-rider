@@ -1,4 +1,4 @@
-import 'package:carriage_rider/providers/CreateRideProvider.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class FlowCancel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -22,8 +22,7 @@ class FlowCancel extends StatelessWidget {
           child: InkWell(
             child: Text('Cancel', style: CarriageTheme.cancelStyle),
             onTap: () {
-              createRideProvider.fromCtrl.clear();
-              createRideProvider.toCtrl.clear();
+              rideFlowProvider.clearControllers();
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
@@ -110,12 +109,15 @@ class FlowBack extends StatelessWidget {
                       },
                       elevation: 2.0,
                       color: Colors.white,
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_back_ios),
-                        ],
-                      )
+                      child: Semantics(
+                        label: 'Back',
+                        child: Row(
+                          children: [
+                            SizedBox(width: 10),
+                            Icon(Icons.arrow_back_ios),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -130,22 +132,25 @@ class FlowBackDuo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.05,
-      height: 50.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        elevation: 2.0,
-        color: Colors.white,
-        child: Row(
-          children: [
-            SizedBox(width: 5),
-            Icon(Icons.arrow_back_ios),
-          ],
+        minWidth: MediaQuery.of(context).size.width * 0.05,
+        height: 50.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          elevation: 2.0,
+          color: Colors.white,
+          child: Semantics(
+              label: 'Back',
+              child: Row(
+                children: [
+                  SizedBox(width: 5),
+                  Icon(Icons.arrow_back_ios),
+                ],
+              )
+          ),
         )
-      ),
     );
   }
 }
@@ -175,10 +180,10 @@ class TabBarTop extends StatelessWidget {
         Expanded(
           child: new Container(
               child: Divider(
-            color: colorTwo,
-            height: 50,
-            thickness: 5,
-          )),
+                color: colorTwo,
+                height: 50,
+                thickness: 5,
+              )),
         ),
         Expanded(
           child: new Container(

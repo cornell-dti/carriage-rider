@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'dart:io';
 import 'package:carriage_rider/utils/app_config.dart';

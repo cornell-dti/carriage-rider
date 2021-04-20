@@ -1,5 +1,5 @@
 import 'package:carriage_rider/providers/AuthProvider.dart';
-import 'package:carriage_rider/providers/CreateRideProvider.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
@@ -44,9 +44,9 @@ class MyApp extends StatelessWidget {
                 Provider.of<AuthProvider>(context, listen: false),
               );
             },
-            child: ChangeNotifierProvider<CreateRideProvider>(
+            child: ChangeNotifierProvider<RideFlowProvider>(
               create: (context) {
-                return CreateRideProvider();
+                return RideFlowProvider();
               },
               child: MaterialApp(
                 title: 'Carriage Rider',

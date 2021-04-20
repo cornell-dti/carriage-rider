@@ -92,12 +92,16 @@ class Ride {
   // The ID of the parent ride in backend, if this is a generated instance of a repeating ride
   String parentID;
 
+  // The original date of this ride, if this is a generated instance of a repeating ride
+  DateTime origDate;
+
   // The dates of deleted instances of a recurring ride
   List<DateTime> deleted;
 
   Ride(
       {this.id,
         this.parentID,
+        this.origDate,
         this.type,
         this.rider,
         this.status,
@@ -307,6 +311,30 @@ class Ride {
         ],
       ),
     ]);
+  }
+
+  Ride copy() {
+    return Ride(
+        id: this.id,
+        parentID: this.parentID,
+        origDate: this.origDate,
+        type: this.type,
+        rider: this.rider,
+        status: this.status,
+        startLocation: this.startLocation,
+        startAddress: this.startAddress,
+        endLocation: this.endLocation,
+        endAddress: this.endAddress,
+        startTime: this.startTime,
+        endTime:  this.endTime,
+        recurring: this.recurring,
+        recurringDays: this.recurringDays,
+        deleted: this.deleted,
+        late: this.late,
+        edits:  this.edits,
+        endDate: this.endDate,
+        driver: this.driver
+    );
   }
 }
 

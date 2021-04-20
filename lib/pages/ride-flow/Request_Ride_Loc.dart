@@ -1,6 +1,6 @@
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
-import 'package:carriage_rider/providers/CreateRideProvider.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
@@ -11,9 +11,8 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
-  final bool editing;
 
-  RequestRideLoc({Key key, @required this.ride, @required this.editing}) : super(key: key);
+  RequestRideLoc({Key key, @required this.ride}) : super(key: key);
 
   @override
   _RequestRideLocState createState() => _RequestRideLocState();
@@ -25,9 +24,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   @override
   Widget build(context) {
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
-    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
-    TextEditingController fromCtrl = createRideProvider.fromCtrl;
-    TextEditingController toCtrl = createRideProvider.toCtrl;
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -57,7 +56,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                   Row(
                     children: <Widget>[
                       Flexible(
-                        child: Text((createRideProvider.isFinished() ? 'Review your ' : 'Set your ') + 'pickup and dropoff location',
+                        child: Text((rideFlowProvider.locationsFinished() ? 'Review your ' : 'Set your ') + 'pickup and dropoff location',
                             style: CarriageTheme.title1),
                       )
                     ],
@@ -72,9 +71,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                           fromCtrl: fromCtrl,
                           label: 'From',
                           ride: widget.ride,
-                          finished: createRideProvider.isFinished(),
+                          finished: rideFlowProvider.locationsFinished(),
                           isToLocation: false,
-                          editing: widget.editing,
                         ),
                         SizedBox(height: 10.0),
                         Text(
@@ -94,9 +92,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                           toCtrl: toCtrl,
                           label: 'To',
                           ride: widget.ride,
-                          finished: createRideProvider.isFinished(),
+                          finished: rideFlowProvider.locationsFinished(),
                           isToLocation: true,
-                          editing: widget.editing,
                         ),
                         SizedBox(height: 10.0),
                         Text(
@@ -119,7 +116,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
-                            child: createRideProvider.isFinished() ? Row(
+                            child: rideFlowProvider.locationsFinished() ? Row(
                                 children: <Widget>[
                                   FlowBackDuo(),
                                   SizedBox(width: 50),
@@ -133,11 +130,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                                             onPressed: () {
                                               if (_formKey.currentState.validate()) {
                                                 Navigator.push(context, MaterialPageRoute(
-                                                        builder: (context) => widget.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
+                                                        builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
                                                 )
                                                 );
-                                                widget.ride.startLocation =
-                                                    fromCtrl.text;
+                                                widget.ride.startLocation = fromCtrl.text;
                                                 widget.ride.endLocation = toCtrl.text;
                                               }
                                             },
@@ -192,9 +188,9 @@ class _RequestLocState extends State<RequestLoc> {
 
   @override
   Widget build(BuildContext context) {
-    CreateRideProvider createRideProvider = Provider.of<CreateRideProvider>(context);
-    TextEditingController fromCtrl = createRideProvider.fromCtrl;
-    TextEditingController toCtrl = createRideProvider.toCtrl;
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -242,7 +238,6 @@ class LocationInput extends StatelessWidget {
   final String label;
   final bool finished;
   final bool isToLocation;
-  final bool editing;
 
   LocationInput(
       {Key key,
@@ -251,27 +246,36 @@ class LocationInput extends StatelessWidget {
         this.ride,
         this.label,
         this.finished,
-        this.isToLocation,
-      this.editing})
+        this.isToLocation})
       : super(key: key);
 
-  Widget _locationInputField(BuildContext context, bool editing) {
-    return Container(
-        child: TextFormField(
-          focusNode: AlwaysDisabledFocusNode(),
-          enableInteractiveSelection: false,
-          controller: isToLocation ? toCtrl : fromCtrl,
-          onTap: () => Navigator.push(
-              context,
-              new MaterialPageRoute(
-                builder: (context) => RequestLoc(
+  Widget _locationInputField(BuildContext context) {
+    void onTap () {
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) =>
+                RequestLoc(
                     ride: ride,
                     fromCtrl: fromCtrl,
                     toCtrl: toCtrl,
                     label: label,
                     isToLocation: isToLocation,
-                    page: RequestRideLoc(ride: ride, editing: editing)),
-              )),
+                    page: RequestRideLoc(ride: ride)),
+          )
+      );
+    }
+
+    return Semantics(
+      label: isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
+      (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location'),
+      focusable: true,
+      onTap: onTap,
+      child: IgnorePointer(
+        child: TextFormField(
+          focusNode: AlwaysDisabledFocusNode(),
+          enableInteractiveSelection: false,
+          controller: isToLocation ? toCtrl : fromCtrl,
           decoration: InputDecoration(
               labelText: label,
               labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -285,12 +289,14 @@ class LocationInput extends StatelessWidget {
           },
           style: TextStyle(color: Colors.black, fontSize: 17),
           onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-        ));
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _locationInputField(context, editing);
+    return _locationInputField(context);
   }
 }
 
