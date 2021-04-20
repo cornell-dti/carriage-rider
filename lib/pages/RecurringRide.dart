@@ -45,14 +45,17 @@ class _NoRecurringRideState extends State<NoRecurringRide> {
   Widget build(BuildContext context) {
     return Container(
         child: Column(
-      children: <Widget>[
-        OccurrenceTitle(),
-        NoRecurringText(),
-        SizedBox(height: 20),
-        RideAction(
-            text: 'Repeat Ride', color: Colors.black, icon: Icons.repeat),
-      ],
-    ));
+          children: <Widget>[
+            OccurrenceTitle(),
+            NoRecurringText(),
+            SizedBox(height: 20),
+            RideAction(
+                text: 'Repeat Ride', color: Colors.black, icon: Icons.repeat,
+                action: () {
+                  //TODO: add repeat ride functionality
+                }),
+          ],
+        ));
   }
 }
 
