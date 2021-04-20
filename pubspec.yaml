@@ -36,9 +36,6 @@ dependencies:
   pull_to_refresh: 1.6.3
   custom_refresh_indicator: ^0.9.0
   shared_preferences:
-  introduction_screen: ^1.0.9
-  dots_indicator: ^1.2.0
-  transformer_page_view:
 
 dev_dependencies:
   flutter_test:
