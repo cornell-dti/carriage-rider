@@ -68,6 +68,7 @@ class RecurringRidesGenerator {
             parentID: originalRide.id,
             status: RideStatus.NOT_STARTED,
             type: originalRide.type == 'unscheduled' ? 'unscheduled' : 'active',
+            driver: originalRide.driver,
             origDate: rideStart,
             startLocation: originalRide.startLocation,
             startAddress: originalRide.startAddress,
