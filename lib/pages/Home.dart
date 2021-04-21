@@ -52,8 +52,18 @@ class _HomeState extends State<Home> {
 
   static Future<dynamic> backgroundHandle(
     Map<String, dynamic> message,
-  ) {
-    print('onBackgroundMessage received: $message');
+  ) async {
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+      print("_backgroundMessageHandler data: ${data}");
+    }
+
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification'];
+      print("_backgroundMessageHandler notification: ${notification}");
+    }
     return Future<void>.value();
   }
 
@@ -75,6 +85,7 @@ class _HomeState extends State<Home> {
     PushNotificationMessageIOS iosNotification;
 
     _fcm.configure(
+      onBackgroundMessage: backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         if (Platform.isAndroid) {
@@ -107,6 +118,8 @@ class _HomeState extends State<Home> {
         if (Platform.isIOS) {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => Notifications()));
         setState(() {
           _totalNotifications++;
         });
@@ -120,6 +133,8 @@ class _HomeState extends State<Home> {
         if (Platform.isIOS) {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => Notifications()));
         setState(() {
           _totalNotifications++;
         });

@@ -1,37 +1,4 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
-class NotificationService {
-
-  final FirebaseMessaging _fcm;
-
-  NotificationService(this._fcm);
-
-
-  StreamSubscription iosSubscription; // ignore: cancel_subscriptions
-
-  _registerOnFirebase() async {
-    _fcm.subscribeToTopic('all');
-    await _fcm.getToken().then((token) => print(token));
-  }
-
-  void initialize() {
-    _registerOnFirebase();
-    if (Platform.isIOS) {
-      iosSubscription =
-          _fcm.onIosSettingsRegistered.listen((data) {
-            // save the token  OR subscribe to a topic here
-            _fcm.subscribeToTopic('all');
-          });
-
-      _fcm.requestNotificationPermissions(
-          IosNotificationSettings(sound: true, badge: true, alert: true));
-    }
-  }
-
-}
 
 class PushNotificationMessageAndroid {
   final String title;
@@ -42,7 +9,7 @@ class PushNotificationMessageAndroid {
   });
 
   factory PushNotificationMessageAndroid.fromJson(Map<String, dynamic> json) {
-    // temporary parsing
+    // temporary parsing for console messages
     return PushNotificationMessageAndroid(
       title: json["data"]["default"],
       body: json["data"]["default"],
