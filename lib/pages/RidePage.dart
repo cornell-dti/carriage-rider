@@ -20,6 +20,11 @@ class RidePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    DateTime dayBeforeRide = ride.startTime.subtract(Duration(days: 1));
+    DateTime dayBeforeRide10 = DateTime(dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
+    bool beforeEditDeadline = DateTime.now().isBefore(dayBeforeRide10);
+
     return Scaffold(
         appBar: ScheduleBar(
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
@@ -77,7 +82,7 @@ class RidePage extends StatelessWidget {
               ),
               Align(
                   alignment: Alignment.bottomCenter,
-                  child: ride.type == 'unscheduled' ? EditRide(ride) : Container()),
+                  child: ride.type == 'unscheduled' && beforeEditDeadline ? EditRide(ride) : Container()),
             ],
           ),
         ));
