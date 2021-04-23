@@ -1,10 +1,15 @@
 import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecurringRidesGenerator {
-  RecurringRidesGenerator(this.parentRides);
+  RecurringRidesGenerator(this.parentRides, this.singleRides);
   List<Ride> parentRides;
+  List<Ride> singleRides;
 
+  /// Returns whether [dateTime] and [other] fall on the same day, regardless of time.
   bool sameDay(DateTime dateTime, DateTime other) {
     return dateTime.year == other.year &&
         dateTime.month == other.month &&
@@ -34,6 +39,18 @@ class RecurringRidesGenerator {
     return parentRide.deleted.where((date) => sameDay(date, generatedRide.startTime)).isNotEmpty;
   }
 
+  /// Returns whether [generatedRide], representing a frontend-generated instance of a repeating ride that does not exist in backend yet,
+  /// was edited and has a real copy in backend.
+  ///
+  /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
+  bool wasEdited(Ride generatedRide, Ride parentRide) {
+    print(generatedRide.startTime);
+    print(parentRide.edits.map((id) => singleRides.where((regularRide) => regularRide.id == id).single.startTime));
+    return parentRide.edits.map((id) => singleRides.where((regularRide) => regularRide.id == id).single)
+        .where((ride) => sameDay(ride.startTime, generatedRide.startTime))
+        .isNotEmpty;
+  }
+
   /// Returns a list of all single-time rides and all future instances of repeating rides, based on [parentRides].
   ///
   /// Instances of repeating rides that do not exist yet use a temporary ID. Their parent rides, meaning the rides
@@ -41,11 +58,7 @@ class RecurringRidesGenerator {
   /// exist in backend yet.
   List<Ride> generateRecurringRides() {
     List<Ride> generatedRides = [];
-    Map<String, Ride> originalRidesByID = Map();
 
-    for (Ride originalRide in parentRides) {
-      originalRidesByID[originalRide.id] = originalRide;
-    }
     for (Ride originalRide in parentRides) {
       DateTime origStart = originalRide.startTime;
       Duration rideDuration = originalRide.endTime.difference(origStart);
@@ -63,7 +76,6 @@ class RecurringRidesGenerator {
 
       // generate instances of recurring rides
       while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
-        // create the new ride and keep track of its parent to help with editing
         Ride rideInstance = Ride(
             parentID: originalRide.id,
             status: RideStatus.NOT_STARTED,
@@ -80,7 +92,7 @@ class RecurringRidesGenerator {
         );
 
         bool rideAlreadyExists = sameDay(rideStart, today) || (now.isAfter(rideCreationTime) && sameDay(rideStart, today.add(Duration(days: 1))));
-        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide)) {
+        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide) && !wasEdited(rideInstance, originalRide)) {
           generatedRides.add(rideInstance);
         }
 

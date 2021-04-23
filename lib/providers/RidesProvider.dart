@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 class RidesProvider with ChangeNotifier {
   Ride currentRide;
   List<Ride> pastRides;
-  List<Ride> _upcomingSingleRides;
+  List<Ride> upcomingSingleRides;
   List<Ride> _parentRecurringRides;
   List<Ride> upcomingRides;
 
@@ -31,15 +31,15 @@ class RidesProvider with ChangeNotifier {
 
   bool hasData() {
     return pastRides != null &&
-        _upcomingSingleRides != null &&
+        upcomingSingleRides != null &&
         _parentRecurringRides != null &&
         upcomingRides != null;
   }
 
   _generateUpcomingRides() {
     List<Ride> recurringRides =
-    RecurringRidesGenerator(_parentRecurringRides).generateRecurringRides();
-    upcomingRides = _upcomingSingleRides;
+    RecurringRidesGenerator(_parentRecurringRides, upcomingSingleRides).generateRecurringRides();
+    upcomingRides = upcomingSingleRides;
     upcomingRides.addAll(recurringRides);
     upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
   }
@@ -54,7 +54,7 @@ class RidesProvider with ChangeNotifier {
     await _fetchUpcomingSingleRides(config, authProvider);
     await _fetchParentRecurringRides(config, authProvider);
     if (currentRide != null) {
-      _upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
+      upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
     }
     _generateUpcomingRides();
     notifyListeners();
@@ -129,7 +129,7 @@ class RidesProvider with ChangeNotifier {
           .where((ride) => !ride.recurring)
           .toList();
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
-      _upcomingSingleRides = rides;
+      upcomingSingleRides = rides;
     }
   }
 
