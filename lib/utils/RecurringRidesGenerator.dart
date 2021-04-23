@@ -40,10 +40,8 @@ class RecurringRidesGenerator {
   /// was edited and has a real copy in backend.
   ///
   /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
-  bool wasEdited(Ride generatedRide, Ride parentRide) {
-    return parentRide.edits.map((id) => singleRides.where((regularRide) => regularRide.id == id).single)
-        .where((ride) => sameDay(ride.startTime, generatedRide.startTime))
-        .isNotEmpty;
+  bool wasEdited(Ride generatedRide, List<Ride> editedRides) {
+    return editedRides.where((ride) => sameDay(ride.startTime, generatedRide.startTime)).isNotEmpty;
   }
 
   /// Returns a list of all single-time rides and all future instances of repeating rides, based on [parentRides].
@@ -52,6 +50,8 @@ class RecurringRidesGenerator {
   /// in backend that they are generated from, will be used for editing instances of repeating rides that do not
   /// exist in backend yet.
   List<Ride> generateRecurringRides() {
+    Map<String, Ride> singleRidesByID = Map();
+    singleRides.forEach((singleRide) => singleRidesByID[singleRide.id] = singleRide);
     List<Ride> generatedRides = [];
 
     for (Ride originalRide in parentRides) {
@@ -87,7 +87,8 @@ class RecurringRidesGenerator {
         );
 
         bool rideAlreadyExists = sameDay(rideStart, today) || (now.isAfter(rideCreationTime) && sameDay(rideStart, today.add(Duration(days: 1))));
-        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide) && !wasEdited(rideInstance, originalRide)) {
+        List<Ride> rideEdits = originalRide.edits.map((id) => singleRidesByID[id]).toList();
+        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide) && !wasEdited(rideInstance, rideEdits)) {
           generatedRides.add(rideInstance);
         }
 
