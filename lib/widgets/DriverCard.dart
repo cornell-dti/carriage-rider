@@ -2,8 +2,6 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:provider/provider.dart';
 
 class DriverCard extends StatelessWidget {
   final Color color;
@@ -16,79 +14,6 @@ class DriverCard extends StatelessWidget {
       @required this.ride,
       @required this.showButtons})
       : super(key: key);
-
-  void displayBottomSheet(BuildContext context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context, listen: false);
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (ctx) {
-          return Container(
-              height: MediaQuery.of(context).size.height * 0.15,
-              child: Padding(
-                padding: EdgeInsets.only(top: 15.0, left: 10.0),
-                child: ride.status == RideStatus.NOT_STARTED ||
-                        ride.status == RideStatus.ON_THE_WAY
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                            Flexible(
-                              child: Text(ride.startLocation,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18)),
-                            ),
-                            SizedBox(height: 10),
-                            Flexible(
-                              child: Text(
-                                  !locationsProvider
-                                          .isPreset(ride.startLocation)
-                                      ? locationsProvider
-                                                  .locationByName(
-                                                      ride.startLocation)
-                                                  .info !=
-                                              null
-                                          ? locationsProvider
-                                              .locationByName(
-                                                  ride.startLocation)
-                                              .info
-                                          : 'No Location Info'
-                                      : 'No Location Info',
-                                  style: TextStyle(fontSize: 16)),
-                            )
-                          ])
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                            Flexible(
-                              child: Text(ride.endLocation,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18)),
-                            ),
-                            SizedBox(height: 10),
-                            Flexible(
-                              child: Text(
-                                  !locationsProvider.isPreset(ride.endLocation)
-                                      ? locationsProvider
-                                                  .locationByName(
-                                                      ride.endLocation)
-                                                  .info !=
-                                              null
-                                          ? locationsProvider
-                                              .locationByName(ride.endLocation)
-                                              .info
-                                          : 'No Location Info'
-                                      : 'No Location Info',
-                                  style: TextStyle(fontSize: 16)),
-                            )
-                          ]),
-              ));
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +31,8 @@ class DriverCard extends StatelessWidget {
               : ride.driver.profilePicture(70),
           SizedBox(width: 15),
           Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
                   ride.driver == null ? 'Driver TBD' : ride.driver.fullName(),
@@ -118,9 +43,10 @@ class DriverCard extends StatelessWidget {
                 showButtons
                     ? Row(
                         children: [
+                          SizedBox(width: 20),
                           Container(
-                            width: 33,
-                            height: 33,
+                            width: 40,
+                            height: 40,
                             decoration: buttonDecoration,
                             child: IconButton(
                               icon: Icon(Icons.phone, size: 16),
@@ -130,18 +56,6 @@ class DriverCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 8),
-                          Container(
-                            width: 33,
-                            height: 33,
-                            decoration: buttonDecoration,
-                            child: IconButton(
-                              icon: Icon(Icons.warning, size: 16),
-                              color: color,
-                              onPressed: () {
-                                displayBottomSheet(context);
-                              },
-                            ),
-                          ),
                         ],
                       )
                     : Container(),
