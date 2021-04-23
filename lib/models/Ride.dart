@@ -141,7 +141,7 @@ class Ride {
           ? null
           : List<String>.from(json['deleted'])
           .map((String d) =>
-          DateFormat('yyyy-MM-dd').parse(d, true).toLocal())
+          DateFormat('yyyy-MM-dd').parse(d, true))
           .toList(),
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
