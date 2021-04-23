@@ -1,8 +1,5 @@
 import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/providers/RidesProvider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RecurringRidesGenerator {
   RecurringRidesGenerator(this.parentRides, this.singleRides);
@@ -44,8 +41,6 @@ class RecurringRidesGenerator {
   ///
   /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
   bool wasEdited(Ride generatedRide, Ride parentRide) {
-    print(generatedRide.startTime);
-    print(parentRide.edits.map((id) => singleRides.where((regularRide) => regularRide.id == id).single.startTime));
     return parentRide.edits.map((id) => singleRides.where((regularRide) => regularRide.id == id).single)
         .where((ride) => sameDay(ride.startTime, generatedRide.startTime))
         .isNotEmpty;
