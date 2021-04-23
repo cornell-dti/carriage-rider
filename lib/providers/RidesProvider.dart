@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
+import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'dart:io';
-import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
   Ride currentRide;
   List<Ride> pastRides;
+  List<Ride> _upcomingSingleRides;
+  List<Ride> _parentRecurringRides;
   List<Ride> upcomingRides;
 
   RidesProvider(AppConfig config, AuthProvider authProvider) {
@@ -27,7 +30,18 @@ class RidesProvider with ChangeNotifier {
   }
 
   bool hasData() {
-    return pastRides != null && upcomingRides != null;
+    return pastRides != null &&
+        _upcomingSingleRides != null &&
+        _parentRecurringRides != null &&
+        upcomingRides != null;
+  }
+
+  _generateUpcomingRides() {
+    List<Ride> recurringRides =
+    RecurringRidesGenerator(_parentRecurringRides).generateRecurringRides();
+    upcomingRides = _upcomingSingleRides;
+    upcomingRides.addAll(recurringRides);
+    upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
   }
 
   /// Fetches past rides, upcoming rides, and current ride from the backend.
@@ -35,9 +49,14 @@ class RidesProvider with ChangeNotifier {
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
   Future<void> fetchAllRides(
       AppConfig config, AuthProvider authProvider) async {
-    await _fetchPastRides(config, authProvider);
-    await _fetchUpcomingRides(config, authProvider);
     await _fetchCurrentRide(config, authProvider);
+    await _fetchPastRides(config, authProvider);
+    await _fetchUpcomingSingleRides(config, authProvider);
+    await _fetchParentRecurringRides(config, authProvider);
+    if (currentRide != null) {
+      _upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
+    }
+    _generateUpcomingRides();
     notifyListeners();
   }
 
@@ -97,22 +116,38 @@ class RidesProvider with ChangeNotifier {
   }
 
   /// Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
-  /// Past rides are sorted from closest in time to farthest back in time,
+  /// Upcoming rides are sorted from closest in time to farthest forward in time,
   /// so upcoming rides has the soonest ride first.
-  Future<void> _fetchUpcomingRides(
+  Future<void> _fetchUpcomingSingleRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      List<Ride> rides = _ridesFromJson(response.body);
+      List<Ride> rides = _ridesFromJson(response.body)
+          .where((ride) => !ride.recurring)
+          .toList();
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
-      upcomingRides = rides;
+      _upcomingSingleRides = rides;
     }
   }
 
-  /// Creates a ride in the backend by an HTTP POST request with the following fields:
+  /// Fetches a list of recurring rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
+  Future<void> _fetchParentRecurringRides(
+      AppConfig config, AuthProvider authProvider) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        '${config.baseUrl}/rides/repeating?rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      List<Ride> rides = _ridesFromJson(response.body);
+      rides.sort((a, b) => a.startTime.compareTo(b.startTime));
+      _parentRecurringRides = rides;
+    }
+  }
+
+/// Creates a ride in the backend by an HTTP POST request with the following fields:
   /// the location id if [startLocation] or [endLocation] is an already existing location or
   /// just the location name if it is a new location (not in backend yet) and
   /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
