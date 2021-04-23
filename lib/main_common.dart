@@ -132,10 +132,32 @@ class _LogicState extends State<Logic> {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
-    return firstTime != null && firstTime
-        ? OnBoarding()
-        : authProvider.isAuthenticated
-            ? Home()
-            : Login();
+    return authProvider.isAuthenticated ? HomeOrOnBoarding() : Login();
+  }
+}
+
+class HomeOrOnBoarding extends StatelessWidget {
+  HomeOrOnBoarding({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Future<bool> isFirstTime() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool firstLogin = prefs.getBool('firstTime') == null;
+      if (firstLogin) {
+        await prefs.setBool('firstTime', true);
+      }
+      return firstLogin;
+    }
+
+    return FutureBuilder<bool>(
+        future: isFirstTime(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            bool firstLogin = snapshot.data;
+            return firstLogin ? OnBoarding() : Home();
+          }
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }
