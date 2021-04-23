@@ -75,7 +75,7 @@ class Ride {
   List<int> recurringDays;
 
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
-  bool deleted;
+  List<DateTime> deleted;
 
   //The requested end time of a ride. Will be null if ride is not recurring.
   DateTime requestedEndTime;
@@ -91,6 +91,9 @@ class Ride {
 
   //The IDs of rides corresponding to edits
   List<String> edits;
+
+  String parentID;
+  DateTime origDate;
 
   Ride(
       {this.id,
@@ -110,7 +113,9 @@ class Ride {
       this.late,
       this.edits,
       this.endDate,
-      this.driver});
+      this.driver,
+      this.parentID,
+      this.origDate});
 
   //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -132,7 +137,12 @@ class Ride {
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays:
           json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
-      deleted: json['deleted'] == null ? false : json['deleted'],
+      deleted: json['deleted'] == null
+          ? null
+          : List<String>.from(json['deleted'])
+          .map((String d) =>
+          DateFormat('yyyy-MM-dd').parse(d, true).toLocal())
+          .toList(),
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
       edits: json['edits'] == null ? [] : List.from(json['edits']),
