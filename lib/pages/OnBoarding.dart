@@ -1,5 +1,6 @@
 import 'package:carriage_rider/pages/Terms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -109,23 +110,23 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 350,
                               right: 100,
-                              child: Image.asset(
-                                  'assets/images/onboard_1/c2.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_1/c2.svg')),
                           Positioned(
                               bottom: 250,
                               left: 50,
-                              child: Image.asset(
-                                  'assets/images/onboard_1/c1.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_1/c1.svg')),
                           Positioned(
                               bottom: 0,
                               left: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_1/Group 4 Copy.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_1/Group 4 Copy.svg')),
                           Positioned(
                               bottom: 0,
                               left: 125,
-                              child: Image.asset(
-                                  'assets/images/onboard_1/t1.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_1/t1.svg')),
                           Positioned(
                               bottom: 0,
                               right: 0,
@@ -169,23 +170,24 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 350,
                               left: 50,
-                              child: Image.asset(
-                                  'assets/images/onboard_2/c2.png')),
+                              child: SvgPicture.asset(
+                                'assets/images/onboard_2/c2.svg',
+                              )),
                           Positioned(
                               bottom: 400,
                               right: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_2/c3.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_2/c3.svg')),
                           Positioned(
                               bottom: 0,
                               left: 20,
-                              child: Image.asset(
-                                  'assets/images/onboard_2/t1.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_2/t1.svg')),
                           Positioned(
                               bottom: 0,
                               left: 5,
-                              child: Image.asset(
-                                  'assets/images/onboard_2/Group 4 Copy.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_2/Group 4 Copy.svg')),
                           Positioned(
                               bottom: 0,
                               right: 30,
@@ -229,18 +231,18 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 400,
                               left: 75,
-                              child: Image.asset(
-                                  'assets/images/onboard_3/c3.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_3/c3.svg')),
                           Positioned(
                               bottom: 225,
                               right: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_3/c4.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_3/c4.svg')),
                           Positioned(
                               bottom: 0,
                               right: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_3/tree2.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_3/tree2.svg')),
                           Positioned(
                               bottom: 0,
                               left: 20,
@@ -249,8 +251,8 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 0,
                               left: 125,
-                              child: Image.asset(
-                                  'assets/images/onboard_3/Group 4 Copy.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_3/Group 4 Copy.svg')),
                         ],
                       ),
                       Stack(
@@ -289,18 +291,18 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 225,
                               left: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_4/c4.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_4/c4.svg')),
                           Positioned(
                               bottom: 0,
                               left: 100,
-                              child: Image.asset(
-                                  'assets/images/onboard_4/tree2.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_4/tree2.svg')),
                           Positioned(
                               bottom: 0,
                               right: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_4/Group 4 Copy.png')),
+                              child: SvgPicture.asset(
+                                  'assets/images/onboard_4/Group 4 Copy.svg')),
                         ],
                       ),
                     ],
