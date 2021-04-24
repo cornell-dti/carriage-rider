@@ -26,11 +26,16 @@ class RideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (ride.id != null)
+          print('id: ' + ride.id);
+        if (ride.parentRide != null)
+          print('parent id: ' + ride.parentRide.id);
         Navigator.push(
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    RidePage(ride, parentRideID: parentRideID)));
+                    RidePage(ride))
+        );
       },
       child: Container(
         margin: EdgeInsets.all(2),

@@ -208,11 +208,11 @@ class _ReviewRideState extends State<ReviewRide> {
                                         : locationsProvider.locationByName(widget.ride.endLocation).id;
                                     if (rideFlowProvider.editing) {
                                       // fake instance for recurring ride
-                                      if (widget.ride.parentID != null) {
+                                      if (widget.ride.parentRide != null) {
                                         await rideFlowProvider.updateRecurringRide(
                                             AppConfig.of(context),
                                             context,
-                                            widget.ride.parentID,
+                                            widget.ride.parentRide.id,
                                             widget.ride.origDate,
                                             startLoc,
                                             endLoc,

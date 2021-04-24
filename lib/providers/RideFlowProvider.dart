@@ -84,6 +84,7 @@ class RideFlowProvider with ChangeNotifier {
       'startTime': startTime.toUtc().toIso8601String(),
       'endTime': endTime.toUtc().toIso8601String(),
     };
+    print('update recurring');
     print(request);
     final response = await http.put('${config.baseUrl}/rides/$parentRideID/edits',
         headers: <String, String>{
@@ -124,6 +125,7 @@ class RideFlowProvider with ChangeNotifier {
           .substring(0, 10);
       request['recurringDays'] = recurringDays;
     }
+    print('update single');
     print(request);
     final response = await http.put('${config.baseUrl}/rides/$rideID',
         headers: <String, String>{
@@ -169,6 +171,7 @@ class RideFlowProvider with ChangeNotifier {
           .substring(0, 10);
       request['recurringDays'] = recurringDays;
     }
+    print('create ride');
     print(request);
     final response = await http.post('${config.baseUrl}/rides',
         headers: <String, String>{

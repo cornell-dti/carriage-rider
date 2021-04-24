@@ -65,7 +65,7 @@ class RecurringRidesGenerator {
       while (rideStart.isBefore(originalRide.endDate) || rideStart.isAtSameMomentAs(originalRide.endDate)) {
         // create the new ride and keep track of its parent to help with editing
         Ride rideInstance = Ride(
-            parentID: originalRide.id,
+            parentRide: originalRide,
             status: RideStatus.NOT_STARTED,
             type: originalRide.type == 'unscheduled' ? 'unscheduled' : 'active',
             driver: originalRide.driver,
