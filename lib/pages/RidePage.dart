@@ -28,7 +28,6 @@ class _RidePageState extends State<RidePage> {
 
   @override
   Widget build(BuildContext context) {
-
     DateTime dayBeforeRide = widget.ride.startTime.subtract(Duration(days: 1));
     DateTime dayBeforeRide10 = DateTime(dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
     bool beforeEditDeadline = DateTime.now().isBefore(dayBeforeRide10);
@@ -39,6 +38,7 @@ class _RidePageState extends State<RidePage> {
       });
     }
 
+    print(widget.ride.type);
     return Scaffold(
         key: scaffoldKey,
         appBar: ScheduleBar(
@@ -90,6 +90,7 @@ class _RidePageState extends State<RidePage> {
                   child: showRideActions && widget.ride.type == 'unscheduled' && beforeEditDeadline ? MeasureSize(
                     child: RideActions(widget.ride, setRideActionVisibility, scaffoldKey),
                     onChange: (size) {
+                      print(rideActionsHeight);
                       setState(() {
                         rideActionsHeight = size.height;
                       });

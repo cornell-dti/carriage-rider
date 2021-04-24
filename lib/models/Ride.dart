@@ -102,56 +102,59 @@ class Ride {
 
   Ride(
       {this.id,
-      this.parentRide,
-      this.origDate,
-      this.type,
-      this.rider,
-      this.status,
-      this.startLocation,
-      this.startAddress,
-      this.endLocation,
-      this.endAddress,
-      this.startTime,
-      this.endTime,
-      this.requestedEndTime,
-      this.recurring,
-      this.recurringDays,
-      this.deleted,
-      this.late,
-      this.edits,
-      this.isEdit,
-      this.endDate,
-      this.driver});
+        this.parentRide,
+        this.origDate,
+        this.type,
+        this.rider,
+        this.status,
+        this.startLocation,
+        this.startAddress,
+        this.endLocation,
+        this.endAddress,
+        this.startTime,
+        this.endTime,
+        this.requestedEndTime,
+        this.recurring,
+        this.recurringDays,
+        this.deleted,
+        this.late,
+        this.edits,
+        this.isEdit,
+        this.endDate,
+        this.driver});
 
-  Ride({
-    this.id,
-    rider: Rider.fromJson(json['rider']),
-    status: getStatusEnum(json['status']),
-    startLocation: json['startLocation']['name'],
-    startAddress: json['startLocation']['address'],
-    endLocation: json['endLocation']['name'],
-    endAddress: json['endLocation']['address'],
-    startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-        .parse(json['startTime'], true)
-        .toLocal(),
-    endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-        .parse(json['endTime'], true)
-        .toLocal(),
-    recurring: json['recurring'] == null ? false : json['recurring'],
-    recurringDays:
+  factory Ride.fromJson(Map<String, dynamic> json) {
+    return Ride(
+        id: json['id'],
+        type: json['type'],
+        rider: Rider.fromJson(json['rider']),
+        status: getStatusEnum(json['status']),
+        startLocation: json['startLocation']['name'],
+        startAddress: json['startLocation']['address'],
+        endLocation: json['endLocation']['name'],
+        endAddress: json['endLocation']['address'],
+        startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['startTime'], true)
+            .toLocal(),
+        endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['endTime'], true)
+            .toLocal(),
+        recurring: json['recurring'] == null ? false : json['recurring'],
+        recurringDays:
         json['recurringDays'] == null ? null : List.from(json['recurringDays']),
-    deleted: json['deleted'] == null
-        ? null
-        : List<String>.from(json['deleted'])
+        deleted: json['deleted'] == null
+            ? null
+            : List<String>.from(json['deleted'])
             .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
             .toList(),
-    late: json['late'],
-    driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
-    edits: json['edits'] == null ? null : List.from(json['edits']),
-    endDate: json['endDate'] == null
-        ? null
-        : DateFormat('yyyy-MM-dd').parse(json['endDate']),
-  });
+        late: json['late'],
+        driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
+        edits: json['edits'] == null ? null : List.from(json['edits']),
+        endDate: json['endDate'] == null
+            ? null
+            : DateFormat('yyyy-MM-dd').parse(json['endDate'])
+    );
+  }
 
   //Widget displaying the start time of a ride using DateFormat.
   Widget buildStartTime() {
@@ -162,7 +165,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -182,7 +185,7 @@ class Ride {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(isStart ? startLocation : endLocation,
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
@@ -206,8 +209,8 @@ class Ride {
       ),
       isIcon
           ? Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(Icons.location_on))
+          padding: EdgeInsets.only(left: 10),
+          child: Icon(Icons.location_on))
           : Container()
     ]);
     return addressInfo;
