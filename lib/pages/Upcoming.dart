@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'package:carriage_rider/widgets/RideCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
@@ -51,11 +50,18 @@ class UpcomingRides extends StatelessWidget {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
-    if (upcomingRides.length == 0) {
+    if (!ridesProvider.hasData()) {
+      return Center(
+          child: CircularProgressIndicator()
+      );
+    }
+    else if (upcomingRides.length == 0) {
       return _emptyUpcomingRides(context);
-    } else {
+    }
+    else {
       return _mainUpcoming(
-          context, upcomingRides.sublist(0, min(5, upcomingRides.length)));
+          context, upcomingRides.sublist(0, min(5, upcomingRides.length))
+      );
     }
   }
 }
@@ -63,14 +69,11 @@ class UpcomingRides extends StatelessWidget {
 class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider =
-    Provider.of<RidesProvider>(context, listen: false);
-    List<Ride> originalRides = ridesProvider.upcomingRides;
-    RecurringRidesGenerator ridesGenerator =
-    RecurringRidesGenerator(originalRides);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -87,11 +90,28 @@ class UpcomingSeeMore extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ridesGenerator.buildUpcomingRidesList(),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: upcomingRides.length,
+                            itemBuilder: (context, index) {
+                              return RideCard(
+                                upcomingRides[index],
+                                showConfirmation: true,
+                                showCallDriver: false,
+                                showArrow: true,
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 16);
+                            },
+                          ),
                         ),
                       ),
                     )
                   ]),
-            )));
+            )
+        )
+    );
   }
 }
