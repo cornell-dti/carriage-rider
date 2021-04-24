@@ -266,32 +266,37 @@ class LocationInput extends StatelessWidget {
       );
     }
 
-    return Semantics(
+    bool screenReader = MediaQuery.of(context).accessibleNavigation;
+
+    Widget textField = TextFormField(
+      focusNode: AlwaysDisabledFocusNode(),
+      enableInteractiveSelection: false,
+      onTap: onTap,
+      controller: isToLocation ? toCtrl : fromCtrl,
+      decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+          floatingLabelBehavior: FloatingLabelBehavior.never),
+      textInputAction: TextInputAction.next,
+      validator: (input) {
+        if (input.isEmpty) {
+          return 'Please enter your location';
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.black, fontSize: 17),
+      onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
+    );
+
+    return screenReader ? Semantics(
       label: isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
       (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location'),
       focusable: true,
       onTap: onTap,
       child: IgnorePointer(
-        child: TextFormField(
-          focusNode: AlwaysDisabledFocusNode(),
-          enableInteractiveSelection: false,
-          controller: isToLocation ? toCtrl : fromCtrl,
-          decoration: InputDecoration(
-              labelText: label,
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-              floatingLabelBehavior: FloatingLabelBehavior.never),
-          textInputAction: TextInputAction.next,
-          validator: (input) {
-            if (input.isEmpty) {
-              return 'Please enter your location';
-            }
-            return null;
-          },
-          style: TextStyle(color: Colors.black, fontSize: 17),
-          onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-        ),
+        child: textField
       ),
-    );
+    ) : textField;
   }
 
   @override

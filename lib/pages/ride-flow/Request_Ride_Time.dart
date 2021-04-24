@@ -175,26 +175,30 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       String labelInfo = hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
       String errorInfo = hasErrors ? validator(ctrl.text) : '';
       String semanticsLabel = labelInfo + '. ' + (errorInfo == null ? '' : errorInfo);
-      return Semantics(
+      bool screenReader = MediaQuery.of(context).accessibleNavigation;
+
+      Widget textField = TextFormField(
+        controller: ctrl,
+        enableInteractiveSelection: false,
+        focusNode: AlwaysDisabledFocusNode(),
+        onTap: onTap,
+        decoration: InputDecoration(
+            errorMaxLines: 3,
+            labelText: label,
+            labelStyle: TextStyle(
+                color: Colors.grey, fontSize: 17)),
+        validator: validator,
+        style: TextStyle(color: Colors.black, fontSize: 15),
+      );
+
+      return screenReader ? Semantics(
           label: semanticsLabel,
           focusable: true,
           onTap: onTap,
           child: IgnorePointer(
-            child: TextFormField(
-              controller: ctrl,
-              enableInteractiveSelection: false,
-              focusNode: AlwaysDisabledFocusNode(),
-              decoration: InputDecoration(
-                  errorMaxLines: 3,
-                  labelText: label,
-                  labelStyle: TextStyle(
-                      color: Colors.grey, fontSize: 17)),
-              validator: validator,
-
-              style: TextStyle(color: Colors.black, fontSize: 15),
-            ),
+              child: textField
           )
-      );
+      ) : textField;
     }
 
     String validateStartDate(input) {
