@@ -38,7 +38,6 @@ class _RidePageState extends State<RidePage> {
       });
     }
 
-    print(widget.ride.type);
     return Scaffold(
         key: scaffoldKey,
         appBar: ScheduleBar(
@@ -90,7 +89,6 @@ class _RidePageState extends State<RidePage> {
                   child: showRideActions && widget.ride.type == 'unscheduled' && beforeEditDeadline ? MeasureSize(
                     child: RideActions(widget.ride, setRideActionVisibility, scaffoldKey),
                     onChange: (size) {
-                      print(rideActionsHeight);
                       setState(() {
                         rideActionsHeight = size.height;
                       });
@@ -194,7 +192,7 @@ class RideActions extends StatelessWidget {
   Widget build(BuildContext context) {
     RideFlowProvider createRideProvider = Provider.of<RideFlowProvider>(context);
 
-    void editSingle(Ride ride) {
+    void editSingle(BuildContext context, Ride ride) {
       createRideProvider.setLocControllers(
           ride.startLocation, ride.endLocation);
       createRideProvider.setPickupTimeCtrl(
@@ -211,19 +209,19 @@ class RideActions extends StatelessWidget {
       );
     }
 
-    void editAll(Ride ride) {
+    void editAll(BuildContext context, Ride parentRide) {
       createRideProvider.setLocControllers(
-          ride.parentRide.startLocation, ride.parentRide.endLocation);
+          parentRide.startLocation, parentRide.endLocation);
       createRideProvider.setPickupTimeCtrl(
-          TimeOfDay.fromDateTime(ride.parentRide.startTime)
+          TimeOfDay.fromDateTime(parentRide.startTime)
               .format(context));
       createRideProvider.setDropoffTimeCtrl(
-          TimeOfDay.fromDateTime(ride.parentRide.endTime).format(context));
-      createRideProvider.setStartDateCtrl(ride.parentRide.startTime);
-      createRideProvider.setEndDateCtrl(ride.parentRide.endDate);
+          TimeOfDay.fromDateTime(parentRide.endTime).format(context));
+      createRideProvider.setStartDateCtrl(parentRide.startTime);
+      createRideProvider.setEndDateCtrl(parentRide.endDate);
       createRideProvider.setEditing(true);
       Navigator.push(context, MaterialPageRoute(
-          builder: (context) => RequestRideLoc(ride: ride.parentRide.copy())
+          builder: (context) => RequestRideLoc(ride: parentRide.copy())
       )
       );
     }
@@ -278,7 +276,7 @@ class RideActions extends StatelessWidget {
               )
           ),
           onPressed: () {
-            editAll(ride.parentRide);
+            editAll(context, ride.parentRide);
           },
         )
     );
@@ -349,12 +347,11 @@ class RideActions extends StatelessWidget {
                   padding: EdgeInsets.only(top: 18),
                   child: RaisedButton.icon(
                       onPressed: () async {
-                        print(ride.parentRide);
                         if (ride.parentRide != null) {
                           showEditDialog();
                         }
                         else {
-                          editSingle(ride);
+                          editSingle(context, ride);
                         }
                       },
                       elevation: 3.0,
