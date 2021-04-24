@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'dart:io';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -6,12 +7,14 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
   Ride currentRide;
   List<Ride> pastRides;
-  List<Ride> _upcomingSingleRides;
+  List<Ride> upcomingSingleRides;
   List<Ride> _parentRecurringRides;
   List<Ride> upcomingRides;
 
@@ -28,15 +31,12 @@ class RidesProvider with ChangeNotifier {
 
   bool hasData() {
     return pastRides != null &&
-        _upcomingSingleRides != null &&
-        _parentRecurringRides != null &&
-        upcomingRides != null;
+        upcomingSingleRides != null &&
   }
-
   _generateUpcomingRides() {
     List<Ride> recurringRides =
-        RecurringRidesGenerator(_parentRecurringRides).generateRecurringRides();
-    upcomingRides = _upcomingSingleRides;
+    RecurringRidesGenerator(_parentRecurringRides, upcomingSingleRides).generateRecurringRides();
+    upcomingRides = upcomingSingleRides;
     upcomingRides.addAll(recurringRides);
     upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
   }
@@ -51,12 +51,8 @@ class RidesProvider with ChangeNotifier {
     await _fetchUpcomingSingleRides(config, authProvider);
     await _fetchParentRecurringRides(config, authProvider);
     if (currentRide != null) {
-      _upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
-    }
-    _generateUpcomingRides();
-    notifyListeners();
+      upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
   }
-
   /// Returns a list of rides that are decoded from the response body of a HTTP request [json].
   /// Each ride is displayed in the order that they are presented in [json].
   List<Ride> _ridesFromJson(String json) {
@@ -126,13 +122,41 @@ class RidesProvider with ChangeNotifier {
           .where((ride) => !ride.recurring)
           .toList();
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
-      _upcomingSingleRides = rides;
+      upcomingSingleRides = rides;
     }
   }
 
   /// Fetches a list of recurring rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
   Future<void> _fetchParentRecurringRides(
       AppConfig config, AuthProvider authProvider) async {
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get(
+        '${config.baseUrl}/rides/repeating?rider=${authProvider.id}',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      List<Ride> rides = _ridesFromJson(response.body);
+      rides.sort((a, b) => a.startTime.compareTo(b.startTime));
+      _parentRecurringRides = rides;
+    }
+  }
+
+/// Creates a ride in the backend by an HTTP POST request with the following fields:
+  /// the location id if [startLocation] or [endLocation] is an already existing location or
+  /// just the location name if it is a new location (not in backend yet) and
+  /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
+  Future<void> createRide(
+      AppConfig config,
+      BuildContext context,
+      RiderProvider riderProvider,
+      String startLocation,
+      String endLocation,
+      DateTime startTime,
+      DateTime endTime,
+      bool recurring,
+      {DateTime endDate,
+      List<int> recurringDays}) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides/repeating?rider=${authProvider.id}',
