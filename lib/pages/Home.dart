@@ -1,6 +1,7 @@
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -39,6 +40,7 @@ class Home extends StatelessWidget {
     }
 
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
 
     return Scaffold(
@@ -96,7 +98,7 @@ class Home extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData()
+        child: !ridesProvider.hasData() || !locationsProvider.hasLocations()
             ? Center(child: CircularProgressIndicator())
             : Stack(
                 children: <Widget>[
