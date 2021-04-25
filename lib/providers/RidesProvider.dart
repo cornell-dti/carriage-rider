@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'dart:io';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -7,8 +6,6 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {

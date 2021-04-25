@@ -117,8 +117,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
     if (widget.ride.endTime != null) {
       setState(() {
-        endDate = widget.ride.endTime;
-        _dropOffTime = TimeOfDay(hour: endDate.hour, minute: endDate.minute);
+        _dropOffTime = TimeOfDay(hour: widget.ride.endTime.hour, minute: widget.ride.endTime.minute);
+      });
+    }
+    if (widget.ride.endDate != null) {
+      setState(() {
+        endDate = widget.ride.endDate;
       });
     }
     if (widget.ride.recurring && widget.ride.recurringDays != null) {
