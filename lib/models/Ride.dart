@@ -75,7 +75,7 @@ class Ride {
   List<int> recurringDays;
 
   //Indicates whether a ride is deleted. Will be null if ride is not recurring.
-  bool deleted;
+  List<DateTime> deleted;
 
   //The requested end time of a ride. Will be null if ride is not recurring.
   DateTime requestedEndTime;
@@ -92,25 +92,30 @@ class Ride {
   //The IDs of rides corresponding to edits
   List<String> edits;
 
+  String parentID;
+  DateTime origDate;
+
   Ride(
       {this.id,
-        this.type,
-        this.rider,
-        this.status,
-        this.startLocation,
-        this.startAddress,
-        this.endLocation,
-        this.endAddress,
-        this.startTime,
-        this.endTime,
-        this.requestedEndTime,
-        this.recurring,
-        this.recurringDays,
-        this.deleted,
-        this.late,
-        this.edits,
-        this.endDate,
-        this.driver});
+      this.type,
+      this.rider,
+      this.status,
+      this.startLocation,
+      this.startAddress,
+      this.endLocation,
+      this.endAddress,
+      this.startTime,
+      this.endTime,
+      this.requestedEndTime,
+      this.recurring,
+      this.recurringDays,
+      this.deleted,
+      this.late,
+      this.edits,
+      this.endDate,
+      this.driver,
+      this.parentID,
+      this.origDate});
 
   //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
@@ -131,8 +136,13 @@ class Ride {
           .toLocal(),
       recurring: json['recurring'] == null ? false : json['recurring'],
       recurringDays:
-      json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
-      deleted: json['deleted'] == null ? false : json['deleted'],
+          json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
+      deleted: json['deleted'] == null
+          ? null
+          : List<String>.from(json['deleted'])
+          .map((String d) =>
+          DateFormat('yyyy-MM-dd').parse(d, true))
+          .toList(),
       late: json['late'],
       driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
       edits: json['edits'] == null ? [] : List.from(json['edits']),
@@ -151,7 +161,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -167,26 +177,22 @@ class Ride {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              CarriageTheme.boxShadow
-            ]),
+            boxShadow: [CarriageTheme.boxShadow]),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(isStart ? startLocation : endLocation,
-                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: cardInfo(context, isStart, isIcon)),
-                SizedBox(height: 16),
-                Text(
-                    'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
-                        DateFormat('jm').format(isStart ? startTime : endTime),
-                    style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-              ]),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(isStart ? startLocation : endLocation,
+                style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                child: cardInfo(context, isStart, isIcon)),
+            SizedBox(height: 16),
+            Text(
+                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
+                    DateFormat('jm').format(isStart ? startTime : endTime),
+                style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+          ]),
         ));
   }
 
@@ -199,8 +205,8 @@ class Ride {
       ),
       isIcon
           ? Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Icon(Icons.location_on))
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(Icons.location_on))
           : Container()
     ]);
     return addressInfo;
@@ -306,4 +312,3 @@ class Ride {
     ]);
   }
 }
-
