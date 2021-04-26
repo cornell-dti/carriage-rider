@@ -180,24 +180,33 @@ class Home extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Row(children: [
-                                  Text(
-                                    'Upcoming Rides',
-                                    style: CarriageTheme.subHeading,
+                                  Semantics(
+                                    container: true,
+                                    header: true,
+                                    child: Text(
+                                      'Upcoming Rides',
+                                      style: CarriageTheme.subHeading,
+                                    ),
                                   ),
                                   Spacer(),
                                   ridesProvider.upcomingRides.isNotEmpty
-                                      ? GestureDetector(
-                                      onTap: () => Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UpcomingSeeMore())),
-                                      child: Row(children: [
-                                        Text('See More',
-                                            style:
-                                            CarriageTheme.seeMoreStyle),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward, size: 16)
-                                      ]))
+                                      ? Semantics(
+                                    button: true,
+                                    container: true,
+                                    child: GestureDetector(
+                                        onTap: () => Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UpcomingSeeMore())),
+                                        child: Row(children: [
+                                          Text('See More',
+                                            style: CarriageTheme.seeMoreStyle,
+                                            semanticsLabel: 'See more upcoming rides',
+                                          ),
+                                          SizedBox(width: 4),
+                                          Icon(Icons.arrow_forward, size: 16)
+                                        ])),
+                                  )
                                       : Container()
                                 ]),
                               ),
@@ -207,24 +216,34 @@ class Home extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Row(children: [
-                                  Text(
-                                    'Ride History',
-                                    style: CarriageTheme.subHeading,
+                                  Semantics(
+                                    container: true,
+                                    header: true,
+                                    child: Text(
+                                      'Ride History',
+                                      style: CarriageTheme.subHeading,
+                                    ),
                                   ),
                                   Spacer(),
                                   ridesProvider.pastRides.isNotEmpty
-                                      ? GestureDetector(
-                                      onTap: () => Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HistorySeeMore())),
-                                      child: Row(children: [
-                                        Text('See More',
-                                            style:
-                                            CarriageTheme.seeMoreStyle),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward, size: 16)
-                                      ]))
+                                      ? Semantics(
+                                    container: true,
+                                    button: true,
+                                    child: GestureDetector(
+                                        onTap: () => Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HistorySeeMore())),
+                                        child: Row(children: [
+                                          Text('See More',
+                                            style: CarriageTheme.seeMoreStyle,
+                                            semanticsLabel: 'See more past rides',
+
+                                          ),
+                                          SizedBox(width: 4),
+                                          Icon(Icons.arrow_forward, size: 16)
+                                        ])),
+                                  )
                                       : Container()
                                 ]),
                               ),
