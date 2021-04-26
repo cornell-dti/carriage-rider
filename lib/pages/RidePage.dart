@@ -296,6 +296,25 @@ class _TimeLineState extends State<TimeLine> {
   void displayBottomSheet(BuildContext context, Ride ride, bool isStart) {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context, listen: false);
+
+    String info = 'No Location Info';
+    if (isStart) {
+      if (!locationsProvider.isPreset(ride.startLocation)) {
+        String potentialStartInfo =
+            locationsProvider.locationByName(ride.startLocation).info;
+        if (potentialStartInfo != null) {
+          info = potentialStartInfo;
+        }
+      }
+    } else {
+      if (!locationsProvider.isPreset(ride.endLocation)) {
+        String potentialEndInfo =
+            locationsProvider.locationByName(ride.endLocation).info;
+        if (potentialEndInfo != null) {
+          info = potentialEndInfo;
+        }
+      }
+    }
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -317,36 +336,8 @@ class _TimeLineState extends State<TimeLine> {
                         ),
                         SizedBox(height: 10),
                         Flexible(
-                          child: Text(
-                              isStart
-                                  ? !locationsProvider
-                                          .isPreset(ride.startLocation)
-                                      ? locationsProvider
-                                                  .locationByName(
-                                                      ride.startLocation)
-                                                  .info !=
-                                              null
-                                          ? locationsProvider
-                                              .locationByName(
-                                                  ride.startLocation)
-                                              .info
-                                          : 'No Location Info'
-                                      : 'No Location Info'
-                                  : !locationsProvider
-                                          .isPreset(ride.endLocation)
-                                      ? locationsProvider
-                                                  .locationByName(
-                                                      ride.endLocation)
-                                                  .info !=
-                                              null
-                                          ? locationsProvider
-                                              .locationByName(
-                                                  ride.startLocation)
-                                              .info
-                                          : 'No Location Info'
-                                      : 'No Location Info',
-                              style: TextStyle(fontSize: 16)),
-                        )
+                          child: Text(info, style: TextStyle(fontSize: 16)),
+                        ),
                       ])));
         });
   }
