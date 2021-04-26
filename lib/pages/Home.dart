@@ -4,6 +4,7 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
@@ -40,6 +41,8 @@ class Home extends StatelessWidget {
     }
 
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+
     AppConfig appConfig = AppConfig.of(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
@@ -98,7 +101,7 @@ class Home extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData()
+        child: !ridesProvider.hasData() || !riderProvider.hasInfo()
             ? Center(child: CircularProgressIndicator())
             : Stack(
                 children: <Widget>[
