@@ -10,6 +10,7 @@ import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Contact.dart';
@@ -24,13 +25,14 @@ void main() {
 }
 
 class Home extends StatelessWidget {
+
   @override
   Widget build(context) {
-    //TODO: change to get name from rider provider
-    AuthProvider authProvider = Provider.of(context);
-    final String headerName = 'Hi ' +
-        authProvider.googleSignIn.currentUser.displayName.split(' ')[0] +
-        '! ☀';
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    AppConfig appConfig = AppConfig.of(context);
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -39,12 +41,6 @@ class Home extends StatelessWidget {
         style: TextStyle(color: color, fontFamily: 'SFPro'),
       );
     }
-
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
-
-    AppConfig appConfig = AppConfig.of(context);
-    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -106,6 +102,7 @@ class Home extends StatelessWidget {
             : Stack(
                 children: <Widget>[
                   RefreshIndicator(
+                    semanticsLabel: 'Refreshing rides',
                       onRefresh: () async {
                         await ridesProvider.fetchAllRides(
                             appConfig, authProvider);
@@ -123,32 +120,42 @@ class Home extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 23),
-                                    child: Text(
-                                      headerName,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontFamily: 'SFPro',
-                                          fontWeight: FontWeight.w700),
+                              MergeSemantics(
+                                child: Row(
+                                  children: [
+                                    Semantics(
+                                      label: 'Hi ${riderProvider.info.firstName}!',
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 16, bottom: 23),
+                                        child: ExcludeSemantics(
+                                          child: Text(
+                                            'Hi ' + riderProvider.info.firstName + '! ☀',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 30,
+                                                fontFamily: 'SFPro',
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 23),
-                                    child: Builder(builder: (context) {
-                                      return IconButton(
-                                          icon: Icon(Icons.menu,
-                                              color: Colors.black),
-                                          onPressed: () => Scaffold.of(context)
-                                              .openEndDrawer());
-                                    }),
-                                  )
-                                ],
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 23),
+                                      child: Builder(builder: (context) {
+                                        return Semantics(
+                                          label: 'Menu',
+                                          child: IconButton(
+                                              icon: Icon(Icons.menu,
+                                                  color: Colors.black),
+                                              onPressed: () => Scaffold.of(context)
+                                                  .openEndDrawer()),
+                                        );
+                                      }),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
