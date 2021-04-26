@@ -140,12 +140,12 @@ class CurrentRideCard extends StatelessWidget {
                 ],
               ),
             )
-                : GestureDetector(
-              onTap: () {
-                Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
+                : Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                  Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
               },
-              child: Expanded(
-                child: Column(
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 10),
@@ -154,23 +154,26 @@ class CurrentRideCard extends StatelessWidget {
                       showCallDriver
                           ? Row(
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () => UrlLauncher.launch(
-                                'tel://${ride.driver.phoneNumber}'),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(100),
-                                    border: Border.all(
-                                        width: 0.5,
-                                        color: Colors.black
-                                            .withOpacity(0.25))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Icon(Icons.phone,
-                                      size: 20,
-                                      color: Color(0xFF4CAF50)),
-                                )),
+                          Semantics(
+                            label: 'Call driver',
+                            child: GestureDetector(
+                              onTap: () => UrlLauncher.launch(
+                                  'tel://${ride.driver.phoneNumber}'),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+                                      border: Border.all(
+                                          width: 0.5,
+                                          color: Colors.black
+                                              .withOpacity(0.25))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Icon(Icons.phone,
+                                        size: 20,
+                                        color: Color(0xFF4CAF50)),
+                                  )),
+                            ),
                           ),
                           SizedBox(width: 8),
                           Column(
@@ -189,8 +192,8 @@ class CurrentRideCard extends StatelessWidget {
                           : Container(),
                       SizedBox(height: 10),
                     ]),
-              ),
-            ),
+                  ),
+                ),
           ],
         ),
       ),
