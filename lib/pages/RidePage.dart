@@ -425,8 +425,12 @@ class _TimeLineState extends State<TimeLine> {
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
-                      child: widget.ride.buildLocationsCard(
-                          context, widget.isIcon, true, true)),
+                    child: GestureDetector(
+                        onTap: () =>
+                            displayBottomSheet(context, widget.ride, true),
+                        child: widget.ride.buildLocationsCard(
+                            context, widget.isIcon, true, true)),
+                  ),
                   useCarIcon: false,
                   isCurrentRide: widget.isCurrent),
               SizedBox(height: 32),
@@ -443,8 +447,12 @@ class _TimeLineState extends State<TimeLine> {
                   key: widget.ride.type != 'past' ? lastRowKey : null,
                   child: TimeLineRow(
                       infoWidget: Expanded(
-                          child: widget.ride.buildLocationsCard(
-                              context, widget.isIcon, false, false)),
+                        child: GestureDetector(
+                            onTap: () =>
+                                displayBottomSheet(context, widget.ride, false),
+                            child: widget.ride.buildLocationsCard(
+                                context, widget.isIcon, false, false)),
+                      ),
                       useCarIcon: false,
                       isCurrentRide: widget.isCurrent),
                 ),
@@ -531,6 +539,7 @@ class RideAction extends StatelessWidget {
       @required this.color,
       @required this.icon,
       @required this.action});
+
   final String text;
   final Color color;
   final IconData icon;
