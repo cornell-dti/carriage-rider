@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/pages/Login.dart';
+import 'package:carriage_rider/pages/Home.dart';
 
 class TermsOfService extends StatelessWidget {
   Widget acceptButton(BuildContext context) {
@@ -15,7 +15,7 @@ class TermsOfService extends StatelessWidget {
               child: RaisedButton(
                   onPressed: () {
                     Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => Login()));
+                        new MaterialPageRoute(builder: (context) => Home()));
                   },
                   elevation: 2.0,
                   color: Colors.black,
