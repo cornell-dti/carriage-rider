@@ -141,11 +141,11 @@ class CurrentRideCard extends StatelessWidget {
               ),
             )
                 : Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+              child: GestureDetector(
+                onTap: () {
                   Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
-              },
-                    child: Column(
+                },
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 10),
@@ -160,6 +160,8 @@ class CurrentRideCard extends StatelessWidget {
                               onTap: () => UrlLauncher.launch(
                                   'tel://${ride.driver.phoneNumber}'),
                               child: Container(
+                                  width: 48,
+                                  height: 48,
                                   decoration: BoxDecoration(
                                       borderRadius:
                                       BorderRadius.circular(100),
@@ -170,7 +172,7 @@ class CurrentRideCard extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(5),
                                     child: Icon(Icons.phone,
-                                        size: 20,
+                                        size: 24,
                                         color: Color(0xFF4CAF50)),
                                   )),
                             ),
@@ -192,8 +194,8 @@ class CurrentRideCard extends StatelessWidget {
                           : Container(),
                       SizedBox(height: 10),
                     ]),
-                  ),
-                ),
+              ),
+            ),
           ],
         ),
       ),
