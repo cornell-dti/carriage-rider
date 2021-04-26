@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:carriage_rider/providers/RiderProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -96,6 +97,8 @@ class RideFlowProvider with ChangeNotifier {
       throw Exception('Failed to edit instance of recurring ride: ${response.body}');
     }
     clearControllers();
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
   }
 
@@ -137,6 +140,8 @@ class RideFlowProvider with ChangeNotifier {
       throw Exception('Failed to update ride: ${response.body}');
     }
     clearControllers();
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
   }
 
@@ -171,8 +176,7 @@ class RideFlowProvider with ChangeNotifier {
           .substring(0, 10);
       request['recurringDays'] = recurringDays;
     }
-    print('create ride');
-    print(request);
+
     final response = await http.post('${config.baseUrl}/rides',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -183,6 +187,8 @@ class RideFlowProvider with ChangeNotifier {
       throw Exception('Failed to create ride: ${response.body}');
     }
     clearControllers();
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
   }
 }
