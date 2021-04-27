@@ -218,7 +218,6 @@ class RideActions extends StatelessWidget {
       createRideProvider.setDropoffTimeCtrl(
           TimeOfDay.fromDateTime(parentRide.endTime).format(context));
       createRideProvider.setStartDateCtrl(parentRide.startTime);
-      print(parentRide.endDate);
       createRideProvider.setEndDateCtrl(parentRide.endDate);
       createRideProvider.setEditing(true);
       Navigator.push(context, MaterialPageRoute(

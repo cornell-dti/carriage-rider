@@ -21,6 +21,7 @@ class ToggleButton extends StatelessWidget {
       ),
       fillColor: selected ? Colors.black : Colors.white,
       child: Semantics(
+        checked: selected,
         child: Text(
           text,
           semanticsLabel: semanticLabel,
