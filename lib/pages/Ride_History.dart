@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:carriage_rider/utils/RecurringRidesGenerator.dart';
 import 'package:carriage_rider/widgets/RideCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
@@ -60,12 +59,11 @@ class RideHistory extends StatelessWidget {
 class HistorySeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider =
-    Provider.of<RidesProvider>(context, listen: false);
-    List<Ride> originalRides = ridesProvider.pastRides;
-    RecurringRidesGenerator ridesGenerator = RecurringRidesGenerator(originalRides);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    List<Ride> pastRides = ridesProvider.pastRides;
+
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -82,8 +80,23 @@ class HistorySeeMore extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ridesGenerator.buildPastRidesList(),
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: pastRides.length,
+                              itemBuilder: (context, index) {
+                                return RideCard(
+                                  pastRides[index],
+                                  showConfirmation: false,
+                                  showCallDriver: false,
+                                  showArrow: true,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 16);
+                              },
+                            )
                         ),
                       ),
                     )
