@@ -63,25 +63,22 @@ class SelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RawMaterialButton(
-      child: ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.4,
-        height: 50.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: RaisedButton(
-          onPressed: () {
-            onPressed();
-            Navigator.push(
-                context, new MaterialPageRoute(builder: (context) => page));
-          },
-          elevation: 3.0,
-          color: Colors.white,
-          textColor: Colors.black,
-          child: Text(text,
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-        ),
+    return ButtonTheme(
+      minWidth: MediaQuery.of(context).size.width * 0.4,
+      height: 50.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: RaisedButton(
+        onPressed: () {
+          onPressed();
+          Navigator.push(
+              context, new MaterialPageRoute(builder: (context) => page));
+        },
+        elevation: 3.0,
+        color: Colors.white,
+        textColor: Colors.black,
+        child: Text(text,
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
       ),
-      onPressed: () {},
     );
   }
 }
