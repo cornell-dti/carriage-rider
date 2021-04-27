@@ -193,7 +193,11 @@ class _ReviewRideState extends State<ReviewRide> {
                                 List<String> days = ['M', 'T', 'W', 'Th', 'F'];
                                 return days[day-1];
                               }).toList().join(' '),
-                                  style: CarriageTheme.infoStyle)
+                                  style: CarriageTheme.infoStyle,
+                              semanticsLabel: widget.ride.recurringDays.map((day) {
+                                List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                                return days[day-1];
+                              }).toList().join(' '),)
                             ],
                           )
                         ],
