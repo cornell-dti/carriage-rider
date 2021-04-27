@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:provider/provider.dart';
 
 class RidePage extends StatelessWidget {
   RidePage(this.ride, {this.parentRideID});
@@ -291,6 +293,55 @@ class _TimeLineState extends State<TimeLine> {
   double lastRowHeight;
   Widget line;
 
+  void displayBottomSheet(BuildContext context, Ride ride, bool isStart) {
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
+
+    String info = 'No Location Info';
+    if (isStart) {
+      if (!locationsProvider.isPreset(ride.startLocation)) {
+        String potentialStartInfo =
+            locationsProvider.locationByName(ride.startLocation).info;
+        if (potentialStartInfo != null) {
+          info = potentialStartInfo;
+        }
+      }
+    } else {
+      if (!locationsProvider.isPreset(ride.endLocation)) {
+        String potentialEndInfo =
+            locationsProvider.locationByName(ride.endLocation).info;
+        if (potentialEndInfo != null) {
+          info = potentialEndInfo;
+        }
+      }
+    }
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (ctx) {
+          return Container(
+              height: MediaQuery.of(context).size.height * 0.15,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 15.0, left: 10.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                              isStart ? ride.startLocation : ride.endLocation,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                        SizedBox(height: 10),
+                        Flexible(
+                          child: Text(info, style: TextStyle(fontSize: 16)),
+                        ),
+                      ])));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double lineWidth = 4;
@@ -365,8 +416,12 @@ class _TimeLineState extends State<TimeLine> {
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
-                      child: widget.ride.buildLocationsCard(
-                          context, widget.isIcon, true, true)),
+                    child: GestureDetector(
+                        onTap: () =>
+                            displayBottomSheet(context, widget.ride, true),
+                        child: widget.ride.buildLocationsCard(
+                            context, widget.isIcon, true, true)),
+                  ),
                   useCarIcon: false,
                   isCurrentRide: widget.isCurrent),
               SizedBox(height: 32),
@@ -383,8 +438,12 @@ class _TimeLineState extends State<TimeLine> {
                   key: widget.ride.type != 'past' ? lastRowKey : null,
                   child: TimeLineRow(
                       infoWidget: Expanded(
-                          child: widget.ride.buildLocationsCard(
-                              context, widget.isIcon, false, false)),
+                        child: GestureDetector(
+                            onTap: () =>
+                                displayBottomSheet(context, widget.ride, false),
+                            child: widget.ride.buildLocationsCard(
+                                context, widget.isIcon, false, false)),
+                      ),
                       useCarIcon: false,
                       isCurrentRide: widget.isCurrent),
                 ),
@@ -471,6 +530,7 @@ class RideAction extends StatelessWidget {
       @required this.color,
       @required this.icon,
       @required this.action});
+
   final String text;
   final Color color;
   final IconData icon;
