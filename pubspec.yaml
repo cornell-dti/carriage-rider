@@ -35,6 +35,7 @@ dependencies:
   flutter_svg: ^0.18.0
   pull_to_refresh: 1.6.3
   custom_refresh_indicator: ^0.9.0
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,10 @@ flutter:
         - asset: fonts/SF-Pro-Display.ttf
   assets:
     - assets/images/
+    - assets/images/onboard_1/
+    - assets/images/onboard_2/
+    - assets/images/onboard_3/
+    - assets/images/onboard_4/
 
 flutter_icons:
   ios: true

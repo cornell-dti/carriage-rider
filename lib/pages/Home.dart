@@ -258,8 +258,7 @@ class Home extends StatelessWidget {
                                         context,
                                         new MaterialPageRoute(
                                             builder: (context) =>
-                                                RequestRideLoc(
-                                                    ride: new Ride())));
+                                                RequestRideLoc(ride: new Ride())));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,
