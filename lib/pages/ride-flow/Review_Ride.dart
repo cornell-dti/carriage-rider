@@ -2,9 +2,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -27,7 +25,6 @@ class _ReviewRideState extends State<ReviewRide> {
   Widget build(context) {
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
 
     return Scaffold(
       body: LoadingOverlay(
@@ -56,175 +53,7 @@ class _ReviewRideState extends State<ReviewRide> {
                     colorTwo: Colors.green,
                     colorThree: Colors.black),
                 SizedBox(height: 30),
-                MergeSemantics(
-                  child: Column(
-                    children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                        Text('From', style: CarriageTheme.labelStyle)
-                      ]),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                              child: Text(widget.ride.startLocation,
-                                  style: CarriageTheme.infoStyle))
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 15),
-                MergeSemantics(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[Text('To', style: CarriageTheme.labelStyle)],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                              child: Text(widget.ride.endLocation,
-                                  style: CarriageTheme.infoStyle))
-                        ],
-                      ),
-                    ]
-                  )
-                ),
-                SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          child: MergeSemantics(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('Start Date', style: CarriageTheme.labelStyle),
-                                SizedBox(height: 5),
-                                Text(DateFormat.yMd().format(widget.ride.startTime),
-                                    style: CarriageTheme.infoStyle)
-                              ],
-                            ),
-                          )
-                        ),
-                        SizedBox(height: 20),
-                        MergeSemantics(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Pickup Time', style: CarriageTheme.labelStyle),
-                              SizedBox(height: 5),
-                              Text(DateFormat.jm().format(widget.ride.startTime),
-                                  style: CarriageTheme.infoStyle)
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        widget.ride.endDate != null
-                            ? Container(
-                            child: MergeSemantics(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('End Date', style: CarriageTheme.labelStyle),
-                                  SizedBox(height: 5),
-                                  Text(DateFormat.yMd().format(widget.ride.endDate),
-                                      style: CarriageTheme.infoStyle)
-                                ],
-                              ),
-                            ))
-                            : Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(''),
-                                SizedBox(height: 5),
-                                Text('', style: CarriageTheme.infoStyle)
-                              ],
-                            )),
-                        SizedBox(height: 20),
-                        Container(
-                          child: MergeSemantics(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('Drop-off Time',
-                                    style: CarriageTheme.labelStyle),
-                                SizedBox(height: 5),
-                                Text(DateFormat.jm().format(widget.ride.endTime),
-                                    style: CarriageTheme.infoStyle)
-                              ],
-                            ),
-                          )
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                widget.ride.recurring ? Container(
-                    child: MergeSemantics(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Every', style: CarriageTheme.labelStyle)
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(widget.ride.recurringDays.map((day) {
-                                List<String> days = ['M', 'T', 'W', 'Th', 'F'];
-                                return days[day-1];
-                              }).toList().join(' '),
-                                  style: CarriageTheme.infoStyle,
-                              semanticsLabel: widget.ride.recurringDays.map((day) {
-                                List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-                                return days[day-1];
-                              }).toList().join(' '),)
-                            ],
-                          )
-                        ],
-                      ),
-                    ))
-                    : Container(),
-                SizedBox(height: 15),
-                MergeSemantics(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Accessibility Requirement',
-                              style: CarriageTheme.labelStyle)
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(riderProvider.info.accessibilityStr(), style: CarriageTheme.infoStyle)
-                        ],
-                      ),
-                    ]
-                  )
-                ),
+                widget.ride.buildSummary(context),
                 Expanded(
                   child: Align(
                       alignment: Alignment.bottomCenter,
