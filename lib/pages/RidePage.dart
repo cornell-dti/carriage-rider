@@ -12,7 +12,6 @@ import 'Cancel_Ride.dart';
 import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:provider/provider.dart';
 
 class RidePage extends StatefulWidget {
   RidePage(this.ride);
