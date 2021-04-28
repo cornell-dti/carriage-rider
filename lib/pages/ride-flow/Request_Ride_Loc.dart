@@ -35,6 +35,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
             child: Container(
               margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   FlowCancel(),
                   SizedBox(height: 20.0),
@@ -62,6 +63,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       )
                     ],
                   ),
+                  rideFlowProvider.requestHadError ? Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text('Invalid location(s), please try again.', style: TextStyle(color: Colors.red, fontSize: 16)),
+                  ) : Container(),
                   SizedBox(height: 20),
                   Form(
                     key: _formKey,
@@ -69,7 +74,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         LocationInput(
-                          fromCtrl: fromCtrl,
                           label: 'From',
                           ride: widget.ride,
                           finished: rideFlowProvider.locationsFinished(),
@@ -90,7 +94,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                             style: TextStyle(fontSize: 14, color: Colors.grey)),
                         SizedBox(height: 30.0),
                         LocationInput(
-                          toCtrl: toCtrl,
                           label: 'To',
                           ride: widget.ride,
                           finished: rideFlowProvider.locationsFinished(),
@@ -116,41 +119,39 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: rideFlowProvider.locationsFinished() ? Row(
-                                children: <Widget>[
-                                  FlowBackDuo(),
-                                  SizedBox(width: 50),
-                                  ButtonTheme(
-                                    minWidth: MediaQuery.of(context).size.width * 0.65,
-                                    height: 50.0,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    child: Expanded(
-                                        child: RaisedButton(
-                                            onPressed: () {
-                                              if (_formKey.currentState.validate()) {
-                                                Navigator.push(context, MaterialPageRoute(
-                                                    builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
-                                                )
-                                                );
-                                                widget.ride.startLocation = fromCtrl.text;
-                                                widget.ride.endLocation = toCtrl.text;
-                                              }
-                                            },
-                                            elevation: 2.0,
-                                            color: Colors.black,
-                                            textColor: Colors.white,
-                                            child: Text('Set Location',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold)
-                                            )
-                                        )
-                                    ),
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: rideFlowProvider.locationsFinished() ? Row(
+                              children: <Widget>[
+                                //FlowBackDuo(),
+                                //SizedBox(width: 50),
+                                ButtonTheme(
+                                  minWidth: MediaQuery.of(context).size.width * 0.65,
+                                  height: 50.0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Expanded(
+                                      child: RaisedButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState.validate()) {
+                                              Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
+                                              )
+                                              );
+                                              widget.ride.startLocation = fromCtrl.text;
+                                              widget.ride.endLocation = toCtrl.text;
+                                            }
+                                          },
+                                          elevation: 2.0,
+                                          color: Colors.black,
+                                          textColor: Colors.white,
+                                          child: Text('Set Location',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)
+                                          )
+                                      )
                                   ),
-                                ]) : Row(
-                                children: [FlowBack()]
-                            )
+                                ),
+                              ]) : Container(),
                         )
                     ),
                   )
@@ -162,14 +163,14 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   }
 }
 
-class RequestLoc extends StatefulWidget {
+class SelectLocationPage extends StatefulWidget {
   final Ride ride;
   final bool isToLocation;
   final String label;
   final Widget page;
   final List<String> initSuggestions;
 
-  RequestLoc(
+  SelectLocationPage(
       {Key key,
         this.ride,
         this.isToLocation,
@@ -179,10 +180,10 @@ class RequestLoc extends StatefulWidget {
       : super(key: key);
 
   @override
-  _RequestLocState createState() => _RequestLocState();
+  _SelectLocationPageState createState() => _SelectLocationPageState();
 }
 
-class _RequestLocState extends State<RequestLoc> {
+class _SelectLocationPageState extends State<SelectLocationPage> {
   List<String> suggestions;
 
   @override
@@ -198,33 +199,37 @@ class _RequestLocState extends State<RequestLoc> {
     TextEditingController toCtrl = rideFlowProvider.toCtrl;
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
 
-    Widget customLocationOption = GestureDetector(
-      onTap: () => {
-        Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => widget.page))
-      },
-      child: Container(
-          child: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.isToLocation ? toCtrl.text : fromCtrl.text,
-                      style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold
-                      )
-                  ),
-                  Text('Ithaca, NY 14850',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12
-                      )
-                  ),
-                  Divider(),
-                ],
-              )
-          )
-      ),
+    Widget customLocationOption = Column(
+        children: [
+          InkWell(
+            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) => widget.page
+            )),
+            child: Container(
+                width: double.infinity,
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.isToLocation ? toCtrl.text : fromCtrl.text,
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold
+                            )
+                        ),
+                        Text('Ithaca, NY 14850',
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12
+                            )
+                        ),
+                      ],
+                    )
+                )
+            ),
+          ),
+          Divider()
+        ]
     );
 
     ListView suggestionList = ListView.builder(
@@ -240,12 +245,12 @@ class _RequestLocState extends State<RequestLoc> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    SizedBox(height: 12),
-                    Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                    Text(locationsProvider.locationByName(suggestions[index]).address,
-                        style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    SizedBox(height: 12),
-                  ]
+                      SizedBox(height: 12),
+                      Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text(locationsProvider.locationByName(suggestions[index]).address,
+                          style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      SizedBox(height: 12),
+                    ]
                 ),
               ),
               onTap: () {
@@ -255,9 +260,9 @@ class _RequestLocState extends State<RequestLoc> {
                 else {
                   fromCtrl.text = suggestions[index];
                 }
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => widget.page)
-                );
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) => widget.page
+                ));
               },
             ),
             Divider()
@@ -307,154 +312,7 @@ class _RequestLocState extends State<RequestLoc> {
   }
 }
 
-class RequestRideLocConfirm extends StatefulWidget {
-  final Ride ride;
-
-  RequestRideLocConfirm({Key key, this.ride})
-      : super(key: key);
-
-  @override
-  _RequestRideLocConfirmState createState() => _RequestRideLocConfirmState();
-}
-
-class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
-    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
-    TextEditingController toCtrl = rideFlowProvider.toCtrl;
-
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-              child: Column(
-                children: <Widget>[
-                  FlowCancel(),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text('Location', style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  TabBarTop(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  TabBarBot(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text('Review your pickup and dropoff location',
-                            style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        LocationInput(
-                          fromCtrl: fromCtrl,
-                          label: 'From',
-                          ride: widget.ride,
-                          finished: rideFlowProvider.locationsFinished(),
-                          isToLocation: false,
-                        ),
-                        SizedBox(height: 10.0),
-                        Text(
-                            locationsProvider.checkLocation(fromCtrl.text)
-                                ? locationsProvider
-                                .locationByName(fromCtrl.text)
-                                .info ==
-                                null
-                                ? ' '
-                                : locationsProvider
-                                .locationByName(fromCtrl.text)
-                                .info
-                                : ' ',
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        SizedBox(height: 30.0),
-                        LocationInput(
-                            toCtrl: toCtrl,
-                            label: 'To',
-                            ride: widget.ride,
-                            finished: rideFlowProvider.locationsFinished(),
-                            isToLocation: true),
-                        SizedBox(height: 10.0),
-                        Text(
-                            locationsProvider.checkLocation(toCtrl.text)
-                                ? locationsProvider
-                                .locationByName(toCtrl.text)
-                                .info ==
-                                null
-                                ? ' '
-                                : locationsProvider
-                                .locationByName(toCtrl.text)
-                                .info
-                                : ' ',
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                            padding: const EdgeInsets.only(bottom: 30.0),
-                            child: Row(children: <Widget>[
-                              FlowBackDuo(),
-                              SizedBox(width: 50),
-                              ButtonTheme(
-                                minWidth: MediaQuery.of(context).size.width * 0.65,
-                                height: 50.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Expanded(
-                                    child: RaisedButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState.validate()) {
-                                            Navigator.push(
-                                                context,
-                                                new MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RequestRideType(
-                                                            ride: widget.ride)));
-                                            widget.ride.startLocation =
-                                                fromCtrl.text;
-                                            widget.ride.endLocation = toCtrl.text;
-                                          }
-                                        },
-                                        elevation: 2.0,
-                                        color: Colors.black,
-                                        textColor: Colors.white,
-                                        child: Text('Set Location',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))),
-                              ),
-                            ]))),
-                  ),
-                ],
-              ),
-            )));
-  }
-}
-
 class LocationInput extends StatelessWidget {
-  final TextEditingController fromCtrl;
-  final TextEditingController toCtrl;
   final Ride ride;
   final String label;
   final bool finished;
@@ -462,8 +320,6 @@ class LocationInput extends StatelessWidget {
 
   LocationInput(
       {Key key,
-        this.fromCtrl,
-        this.toCtrl,
         this.ride,
         this.label,
         this.finished,
@@ -473,16 +329,13 @@ class LocationInput extends StatelessWidget {
   Widget _locationInputField(BuildContext context) {
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
 
     List<String> initSuggestions;
-    if (locationsProvider.hasLocations() && locationsProvider.hasFavLocations()) {
+    if (locationsProvider.hasLocations()) {
       initSuggestions = [];
-      List<String> favLocations = locationsProvider.favLocations
-          .map((loc) => loc.name)
-          .toList();
-      initSuggestions.addAll(favLocations);
-      print(favLocations);
-
       if (initSuggestions.length < 5) {
         List<Ride> pastRides = ridesProvider.pastRides;
         List<String> pastLocations = pastRides
@@ -505,18 +358,21 @@ class LocationInput extends StatelessWidget {
 
     bool screenReader = MediaQuery.of(context).accessibleNavigation;
 
-    void onTap () => Navigator.push(
-        context,
-        new MaterialPageRoute(
-          builder: (context) => RequestLoc(
-              ride: ride,
-              label: label,
-              isToLocation: isToLocation,
-              page: RequestRideLoc(ride: ride),
-              initSuggestions: initSuggestions
-          ),
-        )
-    );
+    void onTap () {
+      rideFlowProvider.setError(false);
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => SelectLocationPage(
+                ride: ride,
+                label: label,
+                isToLocation: isToLocation,
+                page: RequestRideLoc(ride: ride),
+                initSuggestions: initSuggestions
+            ),
+          )
+      );
+    }
 
     Widget textField = TextFormField(
       focusNode: AlwaysDisabledFocusNode(),

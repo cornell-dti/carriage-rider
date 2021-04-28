@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'dart:io';
@@ -19,7 +20,10 @@ class RideFlowProvider with ChangeNotifier {
   TextEditingController pickUpCtrl = TextEditingController();
   TextEditingController dropOffCtrl = TextEditingController();
 
+  bool requestHadError = false;
+
   bool locationsFinished() => fromCtrl.text != null && fromCtrl.text != '' && toCtrl.text != null && toCtrl.text != '';
+  bool locationsEmpty() => (fromCtrl.text == null || fromCtrl.text == '') && (toCtrl.text == null || toCtrl.text == '');
 
   void setEditing(bool isEditing) {
     editing = isEditing;
@@ -62,7 +66,12 @@ class RideFlowProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateRecurringRide(
+  void setError(bool hadError) {
+    requestHadError = hadError;
+    notifyListeners();
+  }
+
+  Future<bool> updateRecurringRide(
       AppConfig config,
       BuildContext context,
       String parentRideID,
@@ -92,15 +101,19 @@ class RideFlowProvider with ChangeNotifier {
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to edit instance of recurring ride: ${response.body}');
+      print('Failed to edit instance of recurring ride: ${response.body}');
+      return false;
     }
     clearControllers();
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
+    return true;
   }
 
-  Future<void> updateRide(
+  Future<bool> updateRide(
       AppConfig config,
       BuildContext context,
       String rideID,
@@ -133,19 +146,24 @@ class RideFlowProvider with ChangeNotifier {
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to update ride: ${response.body}');
+      print('Failed to update ride: ${response.body}');
+      return false;
     }
     clearControllers();
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
+    return true;
   }
 
   /// Creates a ride in the backend by an HTTP POST request with the following fields:
   /// the location id if [startLocation] or [endLocation] is an already existing location or
   /// just the location name if it is a new location (not in backend yet) and
   /// a DateTime string converted into UTC time zone for [startTime] and [endTime].
-  Future<void> createRide(
+  /// Returns whether the request was successful or not.
+  Future<bool> createRide(
       AppConfig config,
       BuildContext context,
       String startLocation,
@@ -180,11 +198,15 @@ class RideFlowProvider with ChangeNotifier {
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to create ride: ${response.body}');
+      print('Failed to create ride: ${response.body}');
+      return false;
     }
     clearControllers();
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
+    return true;
   }
 }
