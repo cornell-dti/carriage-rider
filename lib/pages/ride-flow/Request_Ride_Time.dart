@@ -1,10 +1,11 @@
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/ToggleButton.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+import 'package:provider/provider.dart';
 
 double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
@@ -16,382 +17,138 @@ DateTime assignDate() {
       : DateTime(now.year, now.month, now.day);
 }
 
-class RequestRideTime extends StatefulWidget {
+class RequestRideType extends StatefulWidget {
   final Ride ride;
 
-  RequestRideTime({Key key, this.ride}) : super(key: key);
+  RequestRideType({Key key, this.ride}) : super(key: key);
 
   @override
-  _RequestRideTimeState createState() => _RequestRideTimeState();
+  _RequestRideTypeState createState() => _RequestRideTypeState();
 }
 
-class _RequestRideTimeState extends State<RequestRideTime> {
+class _RequestRideTypeState extends State<RequestRideType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
+              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+              child: Column(
                 children: <Widget>[
-                  Flexible(
-                    child: Text('Date & Time', style: CarriageTheme.title1),
-                  )
+                  FlowCancel(),
+                  SizedBox(height: 20.0),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text('Date & Time', style: CarriageTheme.title1),
+                      )
+                    ],
+                  ),
+                  TabBarTop(
+                      colorOne: Colors.black,
+                      colorTwo: Colors.black,
+                      colorThree: Colors.grey[350]),
+                  TabBarBot(
+                      colorOne: Colors.green,
+                      colorTwo: Colors.black,
+                      colorThree: Colors.grey[350]),
+                  SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text('Is this a repeating ride? (1/2)',
+                            style: CarriageTheme.title1),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 40.0),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SelectionButton(
+                            text: 'Yes',
+                            onPressed: () {
+                              widget.ride.recurring = true;
+                            },
+                            page: RequestRideDateTime(ride: widget.ride)),
+                        SizedBox(width: 30.0),
+                        SelectionButton(
+                            text: 'No',
+                            onPressed: () {
+                              widget.ride.recurring = false;
+                            },
+                            page: RequestRideDateTime(ride: widget.ride))
+                      ]),
+                  FlowBack()
                 ],
               ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.green,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text('Is this a repeating ride? (1/2)',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 40.0),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SelectionButton(
-                        text: 'Yes',
-                        page: RequestRideRepeat(ride: widget.ride)),
-                    SizedBox(width: 30.0),
-                    SelectionButton(
-                        text: 'No',
-                        page: RequestRideNoRepeat(ride: widget.ride))
-                  ]),
-              FlowBack()
-            ],
-          ),
-        )));
+            )));
   }
 }
 
-class RequestRideNoRepeat extends StatefulWidget {
+class RequestRideDateTime extends StatefulWidget {
   final Ride ride;
 
-  RequestRideNoRepeat({Key key, this.ride}) : super(key: key);
+  RequestRideDateTime({Key key, @required this.ride}) : super(key: key);
 
   @override
-  _RequestRideNoRepeatState createState() => _RequestRideNoRepeatState();
+  _RequestRideDateTimeState createState() => _RequestRideDateTimeState();
 }
 
-class _RequestRideNoRepeatState extends State<RequestRideNoRepeat> {
-  final _formKey = GlobalKey<FormState>();
-  FocusNode focusNode = FocusNode();
-  DateTime selectedDate = assignDate();
-  TimeOfDay _pickUpTime = TimeOfDay.now();
-  TimeOfDay _dropOffTime = TimeOfDay.now();
-
-  TextEditingController dateCtrl = TextEditingController();
-  TextEditingController pickUpCtrl = TextEditingController();
-  TextEditingController dropOffCtrl = TextEditingController();
-
-  Future<Null> selectPickUpTime(BuildContext context) async {
-    final now = selectedDate;
-    _pickUpTime = await showTimePicker(
-      context: context,
-      initialTime: _pickUpTime,
-    );
-    if (_pickUpTime != null) {
-      setState(() {
-        widget.ride.startTime = new DateTime(
-            now.year, now.month, now.day, _pickUpTime.hour, _pickUpTime.minute);
-        pickUpCtrl.text = '${_pickUpTime.format(context)}';
-      });
-    }
-  }
-
-  Future<Null> selectDropOffTime(BuildContext context) async {
-    final now = selectedDate;
-    _dropOffTime = await showTimePicker(
-      context: context,
-      initialTime: _dropOffTime,
-    );
-    if (_dropOffTime != null) {
-      setState(() {
-        widget.ride.endTime = new DateTime(now.year, now.month, now.day,
-            _dropOffTime.hour, _dropOffTime.minute);
-        dropOffCtrl.text = '${_dropOffTime.format(context)}';
-      });
-    }
-  }
-
-  String format(String date) {
-    var dates = date.split('-');
-    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
-    return formatDate;
-  }
-
-  _selectDate(BuildContext context) async {
-    DateTime date = selectedDate;
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: date,
-      lastDate: DateTime(date.year + 1),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light(),
-          child: child,
-        );
-      },
-    );
-    if (picked != null)
-      setState(() {
-        selectedDate = picked;
-        dateCtrl.text = format('$selectedDate'.split(' ')[0]);
-      });
-  }
-
-  Widget _buildPickupTimeField() {
-    return TextFormField(
-      controller: pickUpCtrl,
-      enableInteractiveSelection: false,
-      focusNode: AlwaysDisabledFocusNode(),
-      decoration: InputDecoration(
-          labelText: 'Pickup Time',
-          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-          floatingLabelBehavior: FloatingLabelBehavior.never),
-      validator: (input) {
-        if (input.isNotEmpty) {
-          if (_dropOffTime != null &&
-              toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
-            return 'Start time must be before pick up time';
-          }
-          return null;
-        }
-        if (input.isEmpty) {
-          return 'Please enter your pickup time';
-        }
-        return null;
-      },
-      textInputAction: TextInputAction.next,
-      onTap: () => selectPickUpTime(context),
-      style: TextStyle(color: Colors.black, fontSize: 15),
-    );
-  }
-
-  Widget _buildDropOTimeField() {
-    return TextFormField(
-      controller: dropOffCtrl,
-      enableInteractiveSelection: false,
-      focusNode: AlwaysDisabledFocusNode(),
-      decoration: InputDecoration(
-          labelText: 'Drop-off Time',
-          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-          floatingLabelBehavior: FloatingLabelBehavior.never),
-      validator: (input) {
-        if (input.isNotEmpty) {
-          if (_pickUpTime != null &&
-              toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
-            return 'End time must be after start time';
-          }
-          return null;
-        }
-        if (input.isEmpty) {
-          return 'Please enter your drop-off time';
-        }
-        return null;
-      },
-      textInputAction: TextInputAction.done,
-      onTap: () => selectDropOffTime(context),
-      style: TextStyle(color: Colors.black, fontSize: 15),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Date & Time', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.green,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('When is your ride? (2/2)',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 30.0),
-              Row(
-                children: <Widget>[
-                  Text('Date & Time',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: dateCtrl,
-                      enableInteractiveSelection: false,
-                      focusNode: AlwaysDisabledFocusNode(),
-                      decoration: InputDecoration(
-                          labelText: 'Date',
-                          labelStyle:
-                              TextStyle(color: Colors.grey, fontSize: 17),
-                          floatingLabelBehavior: FloatingLabelBehavior.never),
-                      validator: (input) {
-                        if (input.isEmpty) {
-                          return 'Please enter the date';
-                        }
-                        return null;
-                      },
-                      textInputAction: TextInputAction.next,
-                      onTap: () => _selectDate(context),
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                    SizedBox(height: 20.0),
-                    _buildPickupTimeField(),
-                    SizedBox(height: 20.0),
-                    _buildDropOTimeField(),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(width: 40),
-                          ButtonTheme(
-                              minWidth:
-                                  MediaQuery.of(context).size.width * 0.65,
-                              height: 50.0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Expanded(
-                                child: RaisedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReviewRide(
-                                                        ride: widget.ride)));
-                                        widget.ride.recurring = false;
-                                      }
-                                    },
-                                    elevation: 2.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    child: Text('Set Date & Time',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                              )),
-                        ]))),
-              ),
-            ],
-          ),
-        ));
-  }
-}
-
-class RequestRideRepeat extends StatefulWidget {
-  final Ride ride;
-
-  RequestRideRepeat({Key key, this.ride}) : super(key: key);
-
-  @override
-  _RequestRideRepeatState createState() => _RequestRideRepeatState();
-}
-
-class _RequestRideRepeatState extends State<RequestRideRepeat> {
+class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
   DateTime startDate = assignDate();
   DateTime endDate = assignDate();
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
+  List<bool> isSelected = List.filled(5, false);
+  bool hasErrors = false;
 
-  TextEditingController startDateCtrl = TextEditingController();
-  TextEditingController endDateCtrl = TextEditingController();
-  TextEditingController pickUpCtrl = TextEditingController();
-  TextEditingController dropOffCtrl = TextEditingController();
-
-  Future<Null> selectPickUpTime(BuildContext context) async {
-    final now = startDate;
-    _pickUpTime = await showTimePicker(
-      context: context,
-      initialTime: _pickUpTime,
-    );
-    if (_pickUpTime != null) {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.ride.startTime != null) {
       setState(() {
-        widget.ride.startTime = new DateTime(
-            now.year, now.month, now.day, _pickUpTime.hour, _pickUpTime.minute);
-        pickUpCtrl.text = '${_pickUpTime.format(context)}';
+        startDate = widget.ride.startTime;
+        _pickUpTime = TimeOfDay(hour: startDate.hour, minute: startDate.minute);
       });
+    }
+    if (widget.ride.endTime != null) {
+      setState(() {
+        _dropOffTime = TimeOfDay(hour: widget.ride.endTime.hour, minute: widget.ride.endTime.minute);
+      });
+    }
+    if (widget.ride.endDate != null) {
+      setState(() {
+        endDate = widget.ride.endDate;
+      });
+    }
+    if (widget.ride.recurring && widget.ride.recurringDays != null) {
+      for (int day in widget.ride.recurringDays) {
+        setState(() {
+          isSelected[day-1] = true;
+        });
+      }
     }
   }
 
-  Future<Null> selectDropOffTime(BuildContext context) async {
-    final now = startDate;
-    _dropOffTime = await showTimePicker(
+  Future<void> selectTime(BuildContext context, TimeOfDay init, Function selectCallback) async {
+    TimeOfDay selection = await showTimePicker(
       context: context,
-      initialTime: _dropOffTime,
+      initialTime: init,
     );
-    if (_dropOffTime != null) {
-      setState(() {
-        widget.ride.endTime = new DateTime(now.year, now.month, now.day,
-            _dropOffTime.hour, _dropOffTime.minute);
-        dropOffCtrl.text = '${_dropOffTime.format(context)}';
-      });
+    if (selection != null) {
+      selectCallback(selection);
     }
   }
 
-  String format(String date) {
-    var dates = date.split('-');
-    String formatDate = dates[1] + '/' + dates[2] + '/' + dates[0];
-    return formatDate;
-  }
-
-  _selectDate(
-      BuildContext context, DateTime date, TextEditingController ctrl) async {
-    DateTime init = startDate;
-    final DateTime picked = await showDatePicker(
+  Future<void> selectDate(BuildContext context, DateTime init, Function selectCallback) async {
+    final DateTime selection = await showDatePicker(
       context: context,
-      initialDate: date,
-      firstDate: init,
+      initialDate: init,
+      firstDate: assignDate(),
       lastDate: DateTime(init.year + 1),
       builder: (context, child) {
         return Theme(
@@ -400,304 +157,337 @@ class _RequestRideRepeatState extends State<RequestRideRepeat> {
         );
       },
     );
-
-    if (picked != null)
-      setState(() {
-        date = picked;
-        if (ctrl == endDateCtrl) {
-          widget.ride.endDate = date;
-        }
-        ctrl.text = format('$date'.split(' ')[0]);
-      });
-  }
-
-  Widget _buildPickupTimeField() {
-    return Container(
-        width: MediaQuery.of(context).size.width / 3,
-        margin: EdgeInsets.only(left: 15.0),
-        child: TextFormField(
-          focusNode: AlwaysDisabledFocusNode(),
-          enableInteractiveSelection: false,
-          controller: pickUpCtrl,
-          decoration: InputDecoration(
-              errorMaxLines: 3,
-              labelText: 'Pickup Time',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17)),
-          validator: (input) {
-            if (input.isNotEmpty) {
-              if (_dropOffTime != null &&
-                  toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
-                return 'Start time must be before pick up time';
-              }
-              return null;
-            }
-            if (input.isEmpty) {
-              return 'Please enter your pickup time';
-            }
-            return null;
-          },
-          textInputAction: TextInputAction.next,
-          onTap: () => selectPickUpTime(context),
-          style: TextStyle(color: Colors.black, fontSize: 15),
-        ));
-  }
-
-  Widget _buildDropOTimeField() {
-    return Container(
-        width: MediaQuery.of(context).size.width / 3,
-        margin: EdgeInsets.only(right: 15.0),
-        child: TextFormField(
-          focusNode: AlwaysDisabledFocusNode(),
-          enableInteractiveSelection: false,
-          controller: dropOffCtrl,
-          decoration: InputDecoration(
-              errorMaxLines: 3,
-              labelText: 'Drop-off Time',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17)),
-          validator: (input) {
-            if (input.isNotEmpty) {
-              if (_pickUpTime != null &&
-                  toDouble(_dropOffTime) < toDouble(_pickUpTime)) {
-                return 'End time must be after start time';
-              }
-              return null;
-            }
-            if (input.isEmpty) {
-              return 'Please enter your drop-off time';
-            }
-            return null;
-          },
-          textInputAction: TextInputAction.done,
-          onTap: () => selectDropOffTime(context),
-          style: TextStyle(color: Colors.black, fontSize: 15),
-        ));
-  }
-
-  List<bool> isSelected = List.filled(5, false);
-  final List<String> days = ['M', 'T', 'W', 'Th', 'F'];
-  String selectedDays = '';
-  List<int> recurringDays = [];
-
-  List<int> setRecurringDays(List<int> rDays) {
-    rDays = [];
-    for (int i = 0; i < isSelected.length; i++) {
-      if (isSelected[i]) {
-        rDays.add(i + 1);
-      }
+    if (selection != null) {
+      selectCallback(selection);
     }
-    return rDays;
   }
 
-  String setSelectedDays(String sDays) {
-    sDays = '';
-    for (int i = 0; i < isSelected.length; i++) {
-      if (isSelected[i]) {
-        sDays += days[i] + ' ';
-      }
-    }
-    if (sDays.length == 0) {
-      return sDays;
-    }
-    return sDays.substring(0, sDays.length - 1);
+  void toggle(int index) {
+    setState(() {
+      isSelected[index] = !isSelected[index];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController startDateCtrl = rideFlowProvider.startDateCtrl;
+    TextEditingController endDateCtrl = rideFlowProvider.endDateCtrl;
+
+    Widget buildInputField(TextEditingController ctrl, String label, Function validator, Function onTap) {
+      bool hasText = ctrl.text != null && ctrl.text != '';
+      String labelInfo = hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
+      String errorInfo = hasErrors ? validator(ctrl.text) : '';
+      String semanticsLabel = labelInfo + '. ' + (errorInfo == null ? '' : errorInfo);
+      bool screenReader = MediaQuery.of(context).accessibleNavigation;
+
+      Widget textField = TextFormField(
+        controller: ctrl,
+        enableInteractiveSelection: false,
+        focusNode: AlwaysDisabledFocusNode(),
+        onTap: onTap,
+        decoration: InputDecoration(
+            errorMaxLines: 3,
+            labelText: label,
+            labelStyle: TextStyle(
+                color: Colors.grey, fontSize: 17)),
+        validator: validator,
+        style: TextStyle(color: Colors.black, fontSize: 15),
+      );
+
+      return screenReader ? Semantics(
+          label: semanticsLabel,
+          focusable: true,
+          onTap: onTap,
+          child: IgnorePointer(
+              child: textField
+          )
+      ) : textField;
+    }
+
+    String validateStartDate(input) {
+      if (widget.ride.recurring && input.isNotEmpty && startDate.isAfter(endDate)) {
+        return 'Start date must be before end date';
+      }
+      if (input.isEmpty) {
+        return 'Please enter the ' + (widget.ride.recurring ? 'start date' : 'date');
+      }
+      return null;
+    }
+
+    void selectStartDate() {
+      selectDate(context, startDate, (selection) {
+        setState(() {
+          startDate = selection;
+        });
+        rideFlowProvider.setStartDateCtrl(selection);
+      });
+    }
+
+    String validateEndDate(input) {
+      if (input.isNotEmpty && startDate.isAfter(endDate)) {
+        return 'End date must be after start date';
+      }
+      if (input.isEmpty) {
+        return 'Please enter the end date';
+      }
+      return null;
+    }
+
+    void selectEndDate() {
+      selectDate(context, endDate, (selection) {
+        setState(() {
+          endDate = selection;
+        });
+        rideFlowProvider.setEndDateCtrl(selection);
+      });
+    }
+
+    String validateStartTime(input) {
+      if (input.isNotEmpty && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+        return 'Start time must be before end time';
+      }
+      if (input.isEmpty) {
+        return 'Please enter your pickup time';
+      }
+      return null;
+    }
+
+    void selectStartTime() {
+      selectTime(context, _pickUpTime, (TimeOfDay selection) {
+        setState(() {
+          _pickUpTime = selection;
+        });
+        rideFlowProvider.setPickupTimeCtrl(selection.format(context));
+      });
+    }
+
+    String validateEndTime(input) {
+      if (input.isNotEmpty && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+        return 'End time must be after start time';
+      }
+      if (input.isEmpty) {
+        return 'Please enter your drop-off time';
+      }
+      return null;
+    }
+
+    void selectEndTime() {
+      selectTime(context, _dropOffTime, (selection) {
+        setState(() {
+          _dropOffTime = selection;
+        });
+        rideFlowProvider.setDropoffTimeCtrl(selection.format(context));
+      });
+    }
+
+    Widget startDateInput = buildInputField(
+        startDateCtrl,
+        widget.ride.recurring ? 'Start Date' : 'Date',
+        validateStartDate,
+        selectStartDate
+    );
+
+    Widget endDateInput = buildInputField(
+        endDateCtrl,
+        'End Date',
+        validateEndDate,
+        selectEndDate
+    );
+
+    Widget startTimeInput = buildInputField(
+        rideFlowProvider.pickUpCtrl,
+        'Pickup Time',
+        validateStartTime,
+        selectStartTime
+    );
+
+    Widget endTimeInput = buildInputField(
+        rideFlowProvider.dropOffCtrl,
+        'Dropoff Time',
+        validateEndTime,
+        selectEndTime
+    );
+
+    DateTime assembleStartTime() {
+      return DateTime(startDate.year, startDate.month, startDate.day, _pickUpTime.hour, _pickUpTime.minute);
+    }
+
+    DateTime assembleEndTime() {
+      return DateTime(startDate.year, startDate.month, startDate.day, _dropOffTime.hour, _dropOffTime.minute);
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Date & Time', style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.green,
-                  colorTwo: Colors.black,
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('When is your ride? (2/2)',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 30.0),
-              Row(
-                children: <Widget>[
-                  Text('Date & Time',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+            child: Column(
+              children: <Widget>[
+                FlowCancel(),
+                SizedBox(height: 20.0),
+                Row(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width / 3,
-                          margin: EdgeInsets.only(left: 15.0),
-                          child: TextFormField(
-                            controller: startDateCtrl,
-                            enableInteractiveSelection: false,
-                            focusNode: AlwaysDisabledFocusNode(),
-                            decoration: InputDecoration(
-                                errorMaxLines: 3,
-                                labelText: 'Start Date',
-                                labelStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 17)),
-                            validator: (input) {
-                              if (input.isNotEmpty &&
-                                  endDateCtrl.text != '' &&
-                                  DateFormat('MM/dd/yyyy')
-                                          .parse(startDateCtrl.text)
-                                          .difference(DateFormat('MM/dd/yyyy')
-                                              .parse(endDateCtrl.text))
-                                          .inDays >
-                                      0) {
-                                return 'Start date must be before end date';
-                              }
-                              if (input.isEmpty) {
-                                return 'Please enter the date';
-                              }
-                              return null;
-                            },
-                            textInputAction: TextInputAction.next,
-                            onTap: () =>
-                                _selectDate(context, startDate, startDateCtrl),
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                          ),
-                        ),
-                        SizedBox(width: 30),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 3,
-                          margin: EdgeInsets.only(right: 15.0),
-                          child: TextFormField(
-                            focusNode: AlwaysDisabledFocusNode(),
-                            enableInteractiveSelection: false,
-                            controller: endDateCtrl,
-                            decoration: InputDecoration(
-                              errorMaxLines: 3,
-                              labelText: 'End Date',
-                              labelStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 17),
-                            ),
-                            validator: (input) {
-                              if (input.isNotEmpty &&
-                                  startDateCtrl.text != '' &&
-                                  DateFormat('MM/dd/yyyy')
-                                      .parse(startDateCtrl.text)
-                                      .isAfter(DateFormat('MM/dd/yyyy')
-                                          .parse(endDateCtrl.text))) {
-                                return 'End date must be after start date';
-                              }
-                              if (input.isEmpty) {
-                                return 'Please enter the date';
-                              }
-                              return null;
-                            },
-                            textInputAction: TextInputAction.next,
-                            onTap: () =>
-                                _selectDate(context, endDate, endDateCtrl),
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Row(
-                      children: <Widget>[
-                        _buildPickupTimeField(),
-                        SizedBox(width: 30.0),
-                        _buildDropOTimeField(),
-                      ],
+                    Flexible(
+                      child: Text('Date & Time', style: CarriageTheme.title1),
                     )
                   ],
                 ),
-              ),
-              SizedBox(height: 30.0),
-              Row(
-                children: <Widget>[
-                  Text('Repeat Days',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  ToggleButton(0, 'M', isSelected),
-                  SizedBox(width: 15),
-                  ToggleButton(1, 'T', isSelected),
-                  SizedBox(width: 15),
-                  ToggleButton(2, 'W', isSelected),
-                  SizedBox(width: 15),
-                  ToggleButton(3, 'Th', isSelected),
-                  SizedBox(width: 15),
-                  ToggleButton(4, 'F', isSelected),
-                ],
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(width: 40),
-                          ButtonTheme(
-                              minWidth:
-                                  MediaQuery.of(context).size.width * 0.65,
-                              height: 50.0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Expanded(
-                                child: RaisedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReviewRide(
-                                                      ride: widget.ride,
-                                                      selectedDays:
-                                                          selectedDays,
-                                                    )));
-                                        selectedDays =
-                                            setSelectedDays(selectedDays);
-                                        recurringDays =
-                                            setRecurringDays(recurringDays);
-                                        widget.ride.recurring = true;
-                                        widget.ride.recurringDays =
-                                            recurringDays;
-                                      }
-                                    },
-                                    elevation: 2.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    child: Text('Set Date & Time',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                              )),
-                        ]))),
-              ),
-            ],
+                TabBarTop(
+                    colorOne: Colors.black,
+                    colorTwo: Colors.black,
+                    colorThree: Colors.grey[350]),
+                TabBarBot(
+                    colorOne: Colors.green,
+                    colorTwo: Colors.black,
+                    colorThree: Colors.grey[350]),
+                SizedBox(height: 15.0),
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: Text('When is your ride? (2/2)',
+                          style: CarriageTheme.title1),
+                    )
+                  ],
+                ),
+                SizedBox(height: 30.0),
+                Row(
+                  children: <Widget>[
+                    Text('Date & Time',
+                        style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Form(
+                  key: _formKey,
+                  child: widget.ride.recurring ? Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              margin: EdgeInsets.only(left: 15.0),
+                              child: startDateInput
+                          ),
+                          SizedBox(width: 30),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              margin: EdgeInsets.only(right: 15.0),
+                              child: endDateInput
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              margin: EdgeInsets.only(left: 15.0),
+                              child: startTimeInput),
+                          SizedBox(width: 30.0),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              margin: EdgeInsets.only(right: 15.0),
+                              child: endTimeInput),
+                        ],
+                      )
+                    ],
+                  ) : Column(
+                    children: [
+                      startDateInput,
+                      SizedBox(height: 20.0),
+                      startTimeInput,
+                      SizedBox(height: 20.0),
+                      endTimeInput
+                    ],
+                  ),
+                ),
+                widget.ride.recurring ? Column(
+                    children: [
+                      SizedBox(height: 30.0),
+                      Row(
+                        children: <Widget>[
+                          Text('Repeat Days',
+                              style:
+                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          ToggleButton(isSelected[0], () => toggle(0), 'M', 'Mondays'),
+                          SizedBox(width: 15),
+                          ToggleButton(isSelected[1], () => toggle(1), 'T', 'Tuesdays'),
+                          SizedBox(width: 15),
+                          ToggleButton(isSelected[2], () => toggle(2), 'W', 'Wednesdays'),
+                          SizedBox(width: 15),
+                          ToggleButton(isSelected[3], () => toggle(3), 'Th', 'Thursdays'),
+                          SizedBox(width: 15),
+                          ToggleButton(isSelected[4], () => toggle(4), 'F', 'Fridays'),
+                        ],
+                      ),
+                      isSelected.indexOf(true) == -1 ? Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: Text('Select at least one day.', style: TextStyle(color: Colors.red)),
+                      ) : Container()
+                    ]
+                ) : Container(),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                          padding: const EdgeInsets.only(bottom: 30.0),
+                          child: Row(children: <Widget>[
+                            FlowBackDuo(),
+                            SizedBox(width: 40),
+                            ButtonTheme(
+                                minWidth:
+                                MediaQuery.of(context).size.width * 0.65,
+                                height: 50.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Expanded(
+                                  child: RaisedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState.validate() && (widget.ride.recurring ? isSelected.indexOf(true) >= 0 : true)) {
+                                          widget.ride.startTime = assembleStartTime();
+                                          widget.ride.endTime = assembleEndTime();
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReviewRide(
+                                                          ride: widget.ride
+                                                      )
+                                              )
+                                          );
+                                          if (widget.ride.recurring) {
+                                            List<int> selectedDays = [];
+                                            for (int i = 0; i < isSelected.length; i++) {
+                                              if (isSelected[i]) {
+                                                selectedDays.add(i);
+                                              }
+                                            }
+                                            widget.ride.recurringDays = selectedDays.map((index) => index+1).toList();
+                                            widget.ride.endDate = endDate;
+                                          }
+                                        }
+                                        else {
+                                          setState(() {
+                                            hasErrors = true;
+                                          });
+                                        }
+                                      },
+                                      elevation: 2.0,
+                                      color: Colors.black,
+                                      textColor: Colors.white,
+                                      child: Text('Set Date & Time',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
+                                )),
+                          ]))),
+                ),
+              ],
+            ),
           ),
         ));
   }

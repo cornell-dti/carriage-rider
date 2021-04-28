@@ -8,17 +8,19 @@ class DriverCard extends StatelessWidget {
   final Ride ride;
   final bool showButtons;
 
-  const DriverCard({Key key, @required this.color, @required this.ride, @required this.showButtons}) : super(key: key);
+  const DriverCard(
+      {Key key,
+      @required this.color,
+      @required this.ride,
+      @required this.showButtons})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     BoxDecoration buttonDecoration = BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        boxShadow: [
-          CarriageTheme.boxShadow
-        ]
-    );
+        boxShadow: [CarriageTheme.boxShadow]);
 
     return Container(
       margin: EdgeInsets.only(left: 15),
@@ -29,8 +31,8 @@ class DriverCard extends StatelessWidget {
               : ride.driver.profilePicture(70),
           SizedBox(width: 15),
           Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
                   ride.driver == null ? 'Driver TBD' : ride.driver.fullName(),
@@ -38,34 +40,25 @@ class DriverCard extends StatelessWidget {
                       color: color, fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: 8),
-                showButtons ? Row(
-                  children: [
-                    Container(
-                      width: 33,
-                      height: 33,
-                      decoration: buttonDecoration,
-                      child: IconButton(
-                        icon: Icon(Icons.phone, size: 16),
-                        color: color,
-                        onPressed: () => launch(
-                            'tel://${ride.driver.phoneNumber}'),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      width: 33,
-                      height: 33,
-                      decoration: buttonDecoration,
-                      child: IconButton(
-                        icon: Icon(Icons.warning, size: 16),
-                        color: color,
-                        onPressed: () {
-                          //TODO: add action on press
-                        },
-                      ),
-                    ),
-                  ],
-                ) : Container(),
+                showButtons
+                    ? Row(
+                        children: [
+                          SizedBox(width: 20),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: buttonDecoration,
+                            child: IconButton(
+                              icon: Icon(Icons.phone, size: 16),
+                              color: color,
+                              onPressed: () =>
+                                  launch('tel://${ride.driver.phoneNumber}'),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                        ],
+                      )
+                    : Container(),
               ],
             ),
           ),
