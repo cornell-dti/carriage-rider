@@ -183,7 +183,6 @@ class RequestLoc extends StatefulWidget {
 }
 
 class _RequestLocState extends State<RequestLoc> {
-  final _formKey = GlobalKey<FormState>();
   List<String> suggestions;
 
   @override
@@ -520,7 +519,9 @@ class LocationInput extends StatelessWidget {
               ride: ride,
               label: label,
               isToLocation: isToLocation,
-              page: RequestRideLoc(ride: ride)),
+              page: RequestRideLoc(ride: ride),
+              initSuggestions: initSuggestions
+          ),
         )
     );
 
