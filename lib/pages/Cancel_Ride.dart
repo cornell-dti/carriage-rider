@@ -1,16 +1,10 @@
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import '../utils/app_config.dart';
 import '../models/Ride.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-import 'dart:convert';
 
 class CancelRidePage extends StatefulWidget {
   CancelRidePage(this.ride);
