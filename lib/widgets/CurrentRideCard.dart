@@ -114,40 +114,37 @@ class CurrentRideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (ride != null) {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => Current(ride)));
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.all(2),
-        decoration: CarriageTheme.cardDecoration,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Row(
-            children: [
-              ride == null
-                  ? Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20),
-                    Icon(
-                      Icons.directions_car_rounded,
-                      size: 32,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 10),
-                    Text('No current ride',
-                        style: CarriageTheme.body
-                            .copyWith(color: Colors.grey)),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              )
-                  : Expanded(
+    return Container(
+      margin: EdgeInsets.all(2),
+      decoration: CarriageTheme.cardDecoration,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Row(
+          children: [
+            ride == null
+                ? Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 20),
+                  Icon(
+                    Icons.directions_car_rounded,
+                    size: 32,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(height: 10),
+                  Text('No current ride',
+                      style: CarriageTheme.body
+                          .copyWith(color: Colors.grey)),
+                  SizedBox(height: 20),
+                ],
+              ),
+            )
+                : Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
+                },
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -157,23 +154,28 @@ class CurrentRideCard extends StatelessWidget {
                       showCallDriver
                           ? Row(
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () => UrlLauncher.launch(
-                                'tel://${ride.driver.phoneNumber}'),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(100),
-                                    border: Border.all(
-                                        width: 0.5,
-                                        color: Colors.black
-                                            .withOpacity(0.25))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Icon(Icons.phone,
-                                      size: 20,
-                                      color: Color(0xFF4CAF50)),
-                                )),
+                          Semantics(
+                            label: 'Call driver',
+                            child: GestureDetector(
+                              onTap: () => UrlLauncher.launch(
+                                  'tel://${ride.driver.phoneNumber}'),
+                              child: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+                                      border: Border.all(
+                                          width: 0.5,
+                                          color: Colors.black
+                                              .withOpacity(0.25))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Icon(Icons.phone,
+                                        size: 24,
+                                        color: Color(0xFF4CAF50)),
+                                  )),
+                            ),
                           ),
                           SizedBox(width: 8),
                           Column(
@@ -193,8 +195,8 @@ class CurrentRideCard extends StatelessWidget {
                       SizedBox(height: 10),
                     ]),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

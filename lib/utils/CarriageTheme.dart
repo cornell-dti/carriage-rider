@@ -96,9 +96,6 @@ class CarriageTheme {
     fontSize: 15,
   );
 
-  static final descriptionStyle =
-      TextStyle(color: Colors.grey, fontWeight: FontWeight.w100, fontSize: 13);
-
   static final labelStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
 

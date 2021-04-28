@@ -74,9 +74,6 @@ class Ride {
   //The days of the week that a ride will repeat on. Will be null if ride is not recurring.
   List<int> recurringDays;
 
-  //Indicates whether a ride is deleted. Will be null if ride is not recurring.
-  List<DateTime> deleted;
-
   //The requested end time of a ride. Will be null if ride is not recurring.
   DateTime requestedEndTime;
 
@@ -92,63 +89,70 @@ class Ride {
   //The IDs of rides corresponding to edits
   List<String> edits;
 
-  String parentID;
+  // The parent ride, if this is a generated instance of a repeating ride
+  Ride parentRide;
+
+  // The original date of this ride, if this is a generated instance of a repeating ride
   DateTime origDate;
+  // The dates of deleted instances of a recurring ride
+  List<DateTime> deleted;
+
+  // Whether this is an edited instance of a recurring ride (its ID appears in the edits field for a recurring ride
+  bool isEdit;
 
   Ride(
       {this.id,
-      this.type,
-      this.rider,
-      this.status,
-      this.startLocation,
-      this.startAddress,
-      this.endLocation,
-      this.endAddress,
-      this.startTime,
-      this.endTime,
-      this.requestedEndTime,
-      this.recurring,
-      this.recurringDays,
-      this.deleted,
-      this.late,
-      this.edits,
-      this.endDate,
-      this.driver,
-      this.parentID,
-      this.origDate});
+        this.parentRide,
+        this.origDate,
+        this.type,
+        this.rider,
+        this.status,
+        this.startLocation,
+        this.startAddress,
+        this.endLocation,
+        this.endAddress,
+        this.startTime,
+        this.endTime,
+        this.requestedEndTime,
+        this.recurring,
+        this.recurringDays,
+        this.deleted,
+        this.late,
+        this.edits,
+        this.isEdit,
+        this.endDate,
+        this.driver});
 
-  //Creates a ride from JSON representation
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-      id: json['id'],
-      type: json['type'],
-      rider: Rider.fromJson(json['rider']),
-      status: getStatusEnum(json['status']),
-      startLocation: json['startLocation']['name'],
-      startAddress: json['startLocation']['address'],
-      endLocation: json['endLocation']['name'],
-      endAddress: json['endLocation']['address'],
-      startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(json['startTime'], true)
-          .toLocal(),
-      endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(json['endTime'], true)
-          .toLocal(),
-      recurring: json['recurring'] == null ? false : json['recurring'],
-      recurringDays:
-          json['recurringDays'] == null ? [] : List.from(json['recurringDays']),
-      deleted: json['deleted'] == null
-          ? null
-          : List<String>.from(json['deleted'])
-          .map((String d) =>
-          DateFormat('yyyy-MM-dd').parse(d, true))
-          .toList(),
-      late: json['late'],
-      driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
-      edits: json['edits'] == null ? [] : List.from(json['edits']),
-      endDate: json['endDate'] == null
-          ? null
-          : DateFormat('yyyy-MM-dd').parse(json['endDate']),
+        id: json['id'],
+        type: json['type'],
+        rider: Rider.fromJson(json['rider']),
+        status: getStatusEnum(json['status']),
+        startLocation: json['startLocation']['name'],
+        startAddress: json['startLocation']['address'],
+        endLocation: json['endLocation']['name'],
+        endAddress: json['endLocation']['address'],
+        startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['startTime'], true)
+            .toLocal(),
+        endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['endTime'], true)
+            .toLocal(),
+        recurring: json['recurring'] == null ? false : json['recurring'],
+        recurringDays:
+        json['recurringDays'] == null ? null : List.from(json['recurringDays']),
+        deleted: json['deleted'] == null
+            ? null
+            : List<String>.from(json['deleted'])
+            .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
+            .toList(),
+        late: json['late'],
+        driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
+        edits: json['edits'] == null ? null : List.from(json['edits']),
+        endDate: json['endDate'] == null
+            ? null
+            : DateFormat('yyyy-MM-dd').parse(json['endDate'])
     );
   }
 
@@ -161,7 +165,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -181,7 +185,7 @@ class Ride {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(isStart ? startLocation : endLocation,
                 style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
             Container(
@@ -205,8 +209,8 @@ class Ride {
       ),
       isIcon
           ? Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(Icons.location_on))
+          padding: EdgeInsets.only(left: 10),
+          child: Icon(Icons.location_on))
           : Container()
     ]);
     return addressInfo;
@@ -310,5 +314,28 @@ class Ride {
         ],
       ),
     ]);
+  }
+
+  Ride copy() {
+    return Ride(
+        id: this.id,
+        parentRide: this.parentRide,
+        origDate: this.origDate,
+        type: this.type,
+        rider: this.rider,
+        status: this.status,
+        startLocation: this.startLocation,
+        startAddress: this.startAddress,
+        endLocation: this.endLocation,
+        endAddress: this.endAddress,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        recurring: this.recurring,
+        recurringDays: this.recurringDays,
+        deleted: this.deleted,
+        late: this.late,
+        edits: this.edits,
+        endDate: this.endDate,
+        driver: this.driver);
   }
 }

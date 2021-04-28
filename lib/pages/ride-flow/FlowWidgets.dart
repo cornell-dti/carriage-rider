@@ -1,10 +1,7 @@
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-
-TextEditingController fromCtrl = TextEditingController();
-TextEditingController toCtrl = TextEditingController();
-
-bool isFinished() => fromCtrl.text != '' || toCtrl.text != '';
+import 'package:provider/provider.dart';
 
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
@@ -16,6 +13,8 @@ class FlowCancel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -23,8 +22,7 @@ class FlowCancel extends StatelessWidget {
           child: InkWell(
             child: Text('Cancel', style: CarriageTheme.cancelStyle),
             onTap: () {
-              fromCtrl.clear();
-              toCtrl.clear();
+              rideFlowProvider.clearControllers();
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
@@ -65,24 +63,22 @@ class SelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RawMaterialButton(
-      child: ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.4,
-        height: 50.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.push(
-                context, new MaterialPageRoute(builder: (context) => page));
-          },
-          elevation: 3.0,
-          color: Colors.white,
-          textColor: Colors.black,
-          child: Text(text,
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-        ),
+    return ButtonTheme(
+      minWidth: MediaQuery.of(context).size.width * 0.4,
+      height: 50.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: RaisedButton(
+        onPressed: () {
+          onPressed();
+          Navigator.push(
+              context, new MaterialPageRoute(builder: (context) => page));
+        },
+        elevation: 3.0,
+        color: Colors.white,
+        textColor: Colors.black,
+        child: Text(text,
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
       ),
-      onPressed: onPressed,
     );
   }
 }
@@ -110,12 +106,15 @@ class FlowBack extends StatelessWidget {
                       },
                       elevation: 2.0,
                       color: Colors.white,
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_back_ios),
-                        ],
-                      )
+                      child: Semantics(
+                        label: 'Back',
+                        child: Row(
+                          children: [
+                            SizedBox(width: 10),
+                            Icon(Icons.arrow_back_ios),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -130,22 +129,25 @@ class FlowBackDuo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.05,
-      height: 50.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        elevation: 2.0,
-        color: Colors.white,
-        child: Row(
-          children: [
-            SizedBox(width: 5),
-            Icon(Icons.arrow_back_ios),
-          ],
+        minWidth: MediaQuery.of(context).size.width * 0.05,
+        height: 50.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          elevation: 2.0,
+          color: Colors.white,
+          child: Semantics(
+              label: 'Back',
+              child: Row(
+                children: [
+                  SizedBox(width: 5),
+                  Icon(Icons.arrow_back_ios),
+                ],
+              )
+          ),
         )
-      ),
     );
   }
 }
@@ -175,10 +177,10 @@ class TabBarTop extends StatelessWidget {
         Expanded(
           child: new Container(
               child: Divider(
-            color: colorTwo,
-            height: 50,
-            thickness: 5,
-          )),
+                color: colorTwo,
+                height: 50,
+                thickness: 5,
+              )),
         ),
         Expanded(
           child: new Container(
