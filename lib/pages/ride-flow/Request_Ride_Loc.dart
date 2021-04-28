@@ -334,7 +334,13 @@ class LocationInput extends StatelessWidget {
     TextEditingController toCtrl = rideFlowProvider.toCtrl;
 
     List<String> initSuggestions;
-    if (locationsProvider.hasLocations()) {
+    if (isToLocation && toCtrl.text != null && toCtrl.text != '') {
+      initSuggestions = locationsProvider.getSuggestions(toCtrl.text);
+    }
+    else if (!isToLocation && fromCtrl.text != null && fromCtrl.text != '') {
+      initSuggestions = locationsProvider.getSuggestions(fromCtrl.text);
+    }
+    else {
       initSuggestions = [];
       if (initSuggestions.length < 5) {
         List<Ride> pastRides = ridesProvider.pastRides;
