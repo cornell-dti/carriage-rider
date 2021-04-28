@@ -197,7 +197,6 @@ class _RequestLocState extends State<RequestLoc> {
     TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
     TextEditingController toCtrl = rideFlowProvider.toCtrl;
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
-    List<String> locationNames = locationsProvider.favLocations.map((loc) => loc.name).toList();
 
     Widget customLocationOption = GestureDetector(
       onTap: () => {
@@ -232,41 +231,37 @@ class _RequestLocState extends State<RequestLoc> {
       shrinkWrap: true,
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
-        bool isFavorite = locationNames.contains(suggestions[index]);
-        return GestureDetector(
-            onTap: () {
-              if (widget.isToLocation) {
-                toCtrl.text = suggestions[index];
-              }
-              else {
-                fromCtrl.text = suggestions[index];
-              }
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => widget.page)
-              );
-            },
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 12),
-                            Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                            Text(locationsProvider.locationByName(suggestions[index]).address,
-                                style: TextStyle(color: Colors.grey, fontSize: 12)),
-                            SizedBox(height: 12),
-                          ],
-                        ),
-                        isFavorite ? Spacer() : Container(),
-                        isFavorite ? Icon(Icons.star, size: 16) : Container()
-                      ]
-                  ),
-                  Divider(),
-                ]
-            )
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    SizedBox(height: 12),
+                    Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text(locationsProvider.locationByName(suggestions[index]).address,
+                        style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    SizedBox(height: 12),
+                  ]
+                ),
+              ),
+              onTap: () {
+                if (widget.isToLocation) {
+                  toCtrl.text = suggestions[index];
+                }
+                else {
+                  fromCtrl.text = suggestions[index];
+                }
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => widget.page)
+                );
+              },
+            ),
+            Divider()
+          ],
         );
       },
     );
@@ -495,7 +490,6 @@ class LocationInput extends StatelessWidget {
             .map((ride) => isToLocation ? ride.endLocation : ride.startLocation)
             .where((loc) => !initSuggestions.contains(loc))
             .toList();
-        print(pastLocations);
         initSuggestions.addAll(pastLocations);
       }
 
@@ -506,7 +500,6 @@ class LocationInput extends StatelessWidget {
             .where((loc) => !initSuggestions.contains(loc))
             .toList();
         initSuggestions.addAll(alphabeticalLocations);
-        print(alphabeticalLocations);
       }
     }
 
