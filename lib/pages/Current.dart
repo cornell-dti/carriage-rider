@@ -3,7 +3,7 @@ import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/pages/RecurringRide.dart';
+import 'package:carriage_rider/pages/RecurringRideInfo.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class Current extends StatelessWidget {
@@ -35,8 +35,8 @@ class Current extends StatelessWidget {
                   CustomDivider(),
                   SizedBox(height: 20),
                   ride.recurring
-                      ? RecurringRide(ride)
-                      : NoRecurringRide(ride),
+                      ? RecurringRideInfo(ride)
+                      : NonRecurringRideInfo(ride),
                   SizedBox(height: MediaQuery.of(context).size.height / 8),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:carriage_rider/pages/RecurringRideInfo.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
@@ -78,9 +79,15 @@ class _RidePageState extends State<RidePage> {
                               showButtons: false),
                           SizedBox(height: 48),
                           TimeLine(widget.ride, true, false, false),
-                          SizedBox(height: 50)
+                          SizedBox(height: 32),
                         ],
                       ),
+                    ),
+                    Container(height: 6, color: Theme.of(context).scaffoldBackgroundColor),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      color: Colors.white,
+                      child: widget.ride.parentRide != null ? RecurringRideInfo(widget.ride.parentRide) : NonRecurringRideInfo(widget.ride),
                     ),
                     SizedBox(height: rideActionsHeight)
                   ],
