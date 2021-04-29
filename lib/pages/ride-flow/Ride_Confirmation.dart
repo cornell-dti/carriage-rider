@@ -64,6 +64,8 @@ class _RideConfirmationState extends State<RideConfirmation> {
                         borderRadius: BorderRadius.circular(10)),
                     child: RaisedButton(
                       onPressed: () {
+                        rideFlowProvider.setEditing(false);
+                        rideFlowProvider.setChangingToRecurring(false);
                         Navigator.popUntil(context, ModalRoute.withName('/'));
                       },
                       elevation: 3.0,

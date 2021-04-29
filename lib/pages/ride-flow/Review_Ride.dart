@@ -304,7 +304,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                     elevation: 2.0,
                                     color: Colors.black,
                                     textColor: Colors.white,
-                                    child: Text(rideFlowProvider.editing ? 'Update Request' : 'Send Request',
+                                    child: Text(rideFlowProvider.editing || rideFlowProvider.changingToRecurring ? 'Update Request' : 'Send Request',
                                         style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                   ),
