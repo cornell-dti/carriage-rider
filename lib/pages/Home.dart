@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
@@ -39,6 +41,7 @@ class _HomeState extends State<Home> {
   static final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   int _totalNotifications;
+  String deviceToken;
 
   @override
   void initState() {
@@ -50,7 +53,13 @@ class _HomeState extends State<Home> {
 
   _registerOnFirebase() async {
     _fcm.subscribeToTopic('all');
-    await _fcm.getToken().then((token) => print(token));
+    await _fcm.getToken().then((token) => deviceToken = token);
+    if (deviceToken != null) {
+     subscribe(deviceToken);
+    }
+    _fcm.onTokenRefresh.listen((newToken) {
+      subscribe(newToken);
+    });
   }
 
   static Future<dynamic> backgroundHandle(
@@ -83,6 +92,29 @@ class _HomeState extends State<Home> {
     }
   }
 
+  subscribe(String token) async {
+    print(token);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String authToken = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.post(
+      "${AppConfig.of(context).baseUrl}/notification/subscribe",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $authToken"
+      },
+      body: jsonEncode(<String, String>{
+        'platform': 'android',
+        'token': token,
+      }),
+    );
+    if (response.statusCode != 200) {
+      print(response.statusCode);
+      print(response.body);
+      throw Exception('Failed to subscribe.');
+    }
+  }
+
   void getMessage() async {
     PushNotificationMessageAndroid androidNotification;
     PushNotificationMessageIOS iosNotification;
@@ -98,6 +130,7 @@ class _HomeState extends State<Home> {
         if (Platform.isIOS) {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
+        print(androidNotification.title);
         showSimpleNotification(
           Text(Platform.isIOS
               ? iosNotification.title
@@ -106,8 +139,9 @@ class _HomeState extends State<Home> {
           subtitle: Text(
               Platform.isIOS ? iosNotification.body : androidNotification.body),
           background: Colors.cyan[700],
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 5),
         );
+
         setState(() {
           _totalNotifications++;
         });
