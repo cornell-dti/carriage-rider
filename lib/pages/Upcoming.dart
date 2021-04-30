@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/RideCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class UpcomingRides extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.65,
         child: RideCard(rides[i],
             showConfirmation: true,
-            showCallDriver: rides[i].type == 'active',
+            showCallDriver: false,
             showArrow: false),
       ));
       rideCards.add(SizedBox(width: 16));
@@ -49,7 +50,9 @@ class UpcomingRides extends StatelessWidget {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
-    if (upcomingRides.length == 0) {
+    if (!ridesProvider.hasData()) {
+      return Center(child: CircularProgressIndicator());
+    } else if (upcomingRides.length == 0) {
       return _emptyUpcomingRides(context);
     } else {
       return _mainUpcoming(
@@ -62,34 +65,47 @@ class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider =
-    Provider.of<RidesProvider>(context, listen: false);
-    List<Ride> originalRides = ridesProvider.upcomingRides;
-    RecurringRidesGenerator ridesGenerator =
-    RecurringRidesGenerator(originalRides);
+        Provider.of<RidesProvider>(context, listen: false);
+    List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Colors.white),
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                      const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-                      child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ridesGenerator.buildUpcomingRidesList(),
-                        ),
-                      ),
-                    )
-                  ]),
-            )));
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 16, bottom: 8),
+              child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
+            ),
+            Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: upcomingRides.length,
+                    itemBuilder: (context, index) {
+                      return RideCard(
+                        upcomingRides[index],
+                        showConfirmation: true,
+                        showCallDriver: false,
+                        showArrow: true,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 16);
+                    },
+                  ),
+                ),
+              ),
+            )
+          ]),
+        )));
   }
 }
