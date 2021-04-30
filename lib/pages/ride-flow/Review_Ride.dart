@@ -244,10 +244,8 @@ class _ReviewRideState extends State<ReviewRide> {
                                       setState(() {
                                         requestLoading = true;
                                       });
-                                      String startLoc = locationsProvider.isPreset(widget.ride.startLocation) ? widget.ride.startLocation
-                                          : locationsProvider.locationByName(widget.ride.startLocation).id;
-                                      String endLoc = locationsProvider.isPreset(widget.ride.endLocation) ? widget.ride.endLocation
-                                          : locationsProvider.locationByName(widget.ride.endLocation).id;
+                                      String startLoc = locationsProvider.isPreset(widget.ride.startLocation) ? locationsProvider.locationByName(widget.ride.startLocation).id : widget.ride.startLocation;
+                                      String endLoc = locationsProvider.isPreset(widget.ride.endLocation) ? locationsProvider.locationByName(widget.ride.endLocation).id : widget.ride.endLocation;
                                       bool successfulRequest;
                                       if (rideFlowProvider.editing) {
                                         // fake instance for recurring ride

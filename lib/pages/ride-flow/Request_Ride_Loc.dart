@@ -81,7 +81,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         ),
                         SizedBox(height: 10.0),
                         Text(
-                            locationsProvider.checkLocation(fromCtrl.text)
+                            locationsProvider.isPreset(fromCtrl.text)
                                 ? locationsProvider
                                 .locationByName(fromCtrl.text)
                                 .info ==
@@ -101,7 +101,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         ),
                         SizedBox(height: 10.0),
                         Text(
-                            locationsProvider.checkLocation(toCtrl.text)
+                            locationsProvider.isPreset(toCtrl.text)
                                 ? locationsProvider
                                 .locationByName(toCtrl.text)
                                 .info ==
@@ -247,7 +247,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                     children: [
                       SizedBox(height: 12),
                       Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      Text(locationsProvider.locationByName(suggestions[index]).address,
+                      Text(locationsProvider.isPreset(suggestions[index]) ? locationsProvider.addressByName(suggestions[index]) : suggestions[index] + ', Ithaca, NY 14850',
                           style: TextStyle(color: Colors.grey, fontSize: 12)),
                       SizedBox(height: 12),
                     ]
@@ -345,20 +345,20 @@ class LocationInput extends StatelessWidget {
       if (initSuggestions.length < 5) {
         List<Ride> pastRides = ridesProvider.pastRides;
         List<String> pastLocations = pastRides
-            .sublist(0, min(5 - initSuggestions.length + 1, pastRides.length))
             .map((ride) => isToLocation ? ride.endLocation : ride.startLocation)
             .where((loc) => !initSuggestions.contains(loc))
+            .toSet()
             .toList();
-        initSuggestions.addAll(pastLocations);
+        List<String> suggestedPastLocations = pastLocations.sublist(0, min(5 - initSuggestions.length, pastLocations.length));
+        initSuggestions.addAll(suggestedPastLocations);
       }
-
       if (initSuggestions.length < 5) {
         List<String> locations = locationsProvider.locations.map((loc) => loc.name).toList()..sort();
         List<String> alphabeticalLocations = locations
-            .sublist(0, min(5 - initSuggestions.length + 1, locations.length))
             .where((loc) => !initSuggestions.contains(loc))
             .toList();
-        initSuggestions.addAll(alphabeticalLocations);
+        List<String> suggestedAlphabeticalLocations = alphabeticalLocations.sublist(0, min(5 - initSuggestions.length, alphabeticalLocations.length));
+        initSuggestions.addAll(suggestedAlphabeticalLocations);
       }
     }
 

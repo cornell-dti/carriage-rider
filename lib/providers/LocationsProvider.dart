@@ -13,6 +13,7 @@ import 'package:carriage_rider/models/Location.dart';
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
   List<Location> favLocations;
+  Map<String, Location> locationsByName = Map();
   
   LocationsProvider(BuildContext context, AppConfig config,
       AuthProvider authProvider, RiderProvider riderProvider) {
@@ -21,6 +22,7 @@ class LocationsProvider with ChangeNotifier {
       if (authProvider.isAuthenticated && riderProvider.hasInfo()) {
         await fetchLocations(context, config, authProvider);
         await fetchFavoriteLocations(context, config, authProvider);
+        locations.forEach((loc) => locationsByName[loc.name] = loc);
       }
     };
     callback();
@@ -80,41 +82,36 @@ class LocationsProvider with ChangeNotifier {
     return res;
   }
 
-  //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
+  //Returns a map from name to address of locations that match with [query].
   List<String> getSuggestions(String query) {
-    List<String> matches = locations.where((e) =>
-    e.tag != 'custom' && e.name.toLowerCase().contains(query.toLowerCase()))
-        .map((e) => e.name)
-        .toList();
-    return matches;
-  }
-
-  Location locationByName(String location) {
-    int index;
-    if (locations != null) {
-      index = locations.indexWhere((e) => e.name == location);
+    if (query == '') {
+      return locations.map((loc) => loc.name).toList()..sort((a, b) => a.compareTo(b));
     }
-    return index == null ? null : locations[index];
+    String lowerCaseQuery = query.toLowerCase();
+    bool exact(Location loc) => loc.name.toLowerCase() == lowerCaseQuery;
+    int containsIndex(Location loc) => loc.name.toLowerCase().indexOf(lowerCaseQuery);
+
+    List<Location> exactQuery = locations.where((loc) => exact(loc)).toList();
+    List<Location> startsWithQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) == 0).toList();
+    List<Location> containsQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) != 0 && loc.name.contains(lowerCaseQuery)).toList();
+    List<Location> matches = exactQuery..addAll(startsWithQuery)..addAll(containsQuery);
+    return matches.map((loc) => loc.name).toList();
   }
 
-  bool checkLocation(String location) {
-    int index;
-    if (locations != null) {
-      index = locations.indexWhere((e) => e.name == location);
-      return index == -1 ? false : locations.contains(locations[index]);
-    }
-    return false;
+  Location locationByName(String name) {
+    return locationsByName[name];
   }
 
-  bool isCustom(String locationName) {
-    List<Location> regularLocations = locations.where((e) => e.tag != 'custom')
-        .toList();
-    return !regularLocations.contains(locationByName(locationName));
+  String addressByName(String name) {
+    return locationsByName[name].address;
   }
 
-  bool isPreset(String locationName) {
-    List<String> regularLocations = locations.map((e) => e.name).toList();
-    return !regularLocations.contains(locationName);
+  String locationIDByName(String name) {
+    return locationsByName[name].id;
+  }
+
+  bool isPreset(String name) {
+    return locationsByName[name] != null;
   }
 
   //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
