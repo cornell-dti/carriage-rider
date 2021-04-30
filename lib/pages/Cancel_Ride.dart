@@ -126,7 +126,7 @@ class CancelConfirmation extends StatelessWidget {
         body: SafeArea(
             child: Column(children: [
               SizedBox(height: 176),
-              Image.asset('assets/images/cancel_ride_confirmed.png'),
+              ExcludeSemantics(child: Image.asset('assets/images/cancel_ride_confirmed.png')),
               SizedBox(height: 32),
               Center(
                   child: Text('Your ride is cancelled!',
