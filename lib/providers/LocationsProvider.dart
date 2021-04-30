@@ -93,7 +93,7 @@ class LocationsProvider with ChangeNotifier {
 
     List<Location> exactQuery = locations.where((loc) => exact(loc)).toList();
     List<Location> startsWithQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) == 0).toList();
-    List<Location> containsQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) != 0 && loc.name.contains(lowerCaseQuery)).toList();
+    List<Location> containsQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) != 0 && loc.name.toLowerCase().contains(lowerCaseQuery)).toList();
     List<Location> matches = exactQuery..addAll(startsWithQuery)..addAll(containsQuery);
     return matches.map((loc) => loc.name).toList();
   }

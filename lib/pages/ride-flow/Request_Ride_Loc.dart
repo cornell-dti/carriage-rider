@@ -199,33 +199,41 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     TextEditingController toCtrl = rideFlowProvider.toCtrl;
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
 
+    String input = widget.isToLocation ? toCtrl.text : fromCtrl.text;
+    String ithaca = 'Ithaca, NY 14850';
+    
     Widget customLocationOption = Column(
         children: [
           InkWell(
             onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) => widget.page
             )),
-            child: Container(
-                width: double.infinity,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.isToLocation ? toCtrl.text : fromCtrl.text,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold
-                            )
+            child: Semantics(
+              label: input + ', ' + ithaca,
+              child: Container(
+                  width: double.infinity,
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: ExcludeSemantics(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(input,
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold
+                                )
+                            ),
+                            Text(ithaca,
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12
+                                )
+                            ),
+                          ],
                         ),
-                        Text('Ithaca, NY 14850',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12
-                            )
-                        ),
-                      ],
-                    )
-                )
+                      )
+                  )
+              ),
             ),
           ),
           Divider()
