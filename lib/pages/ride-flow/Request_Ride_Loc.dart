@@ -236,21 +236,27 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
       shrinkWrap: true,
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
+        String name = suggestions[index];
+        String address = locationsProvider.isPreset(suggestions[index]) ? locationsProvider.addressByName(suggestions[index]) : 'Ithaca, NY 14850';
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
               child: Container(
                 width: double.infinity,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 12),
-                      Text(suggestions[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      Text(locationsProvider.isPreset(suggestions[index]) ? locationsProvider.addressByName(suggestions[index]) : suggestions[index] + ', Ithaca, NY 14850',
-                          style: TextStyle(color: Colors.grey, fontSize: 12)),
-                      SizedBox(height: 12),
-                    ]
+                child: Semantics(
+                  label: name + ', ' + address,
+                  child: ExcludeSemantics(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 12),
+                          Text(name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          Text(address, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                          SizedBox(height: 12),
+                        ]
+                    ),
+                  ),
                 ),
               ),
               onTap: () {
