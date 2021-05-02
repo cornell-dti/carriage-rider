@@ -100,33 +100,32 @@ class Profile extends StatelessWidget {
                                   height: _picBtnDiameter,
                                   width: _picBtnDiameter,
                                   child: FittedBox(
-                                    child: Semantics(
-                                      label: 'Add Profile Picture',
-                                      child: FloatingActionButton(
-                                        backgroundColor: Colors.black,
-                                        child: Icon(Icons.add,
-                                            size: _picBtnDiameter),
-                                        onPressed: () async {
-                                          ImagePicker picker = ImagePicker();
-                                          PickedFile pickedFile =
-                                          await picker.getImage(
-                                              source: ImageSource.gallery,
-                                              maxHeight: 200,
-                                              maxWidth: 200);
-                                          Uint8List bytes =
-                                          await File(pickedFile.path)
-                                              .readAsBytes();
-                                          String base64Image =
-                                          base64Encode(bytes);
-                                          riderProvider.updateRiderPhoto(
-                                              AppConfig.of(context),
-                                              Provider.of<AuthProvider>(context,
-                                                  listen: false),
-                                              base64Image);
-                                        },
-                                      ),
-                                    )
-                                  ),
+                                      child: Semantics(
+                                    label: 'Add Profile Picture',
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.black,
+                                      child: Icon(Icons.add,
+                                          size: _picBtnDiameter),
+                                      onPressed: () async {
+                                        ImagePicker picker = ImagePicker();
+                                        PickedFile pickedFile =
+                                            await picker.getImage(
+                                                source: ImageSource.gallery,
+                                                maxHeight: 200,
+                                                maxWidth: 200);
+                                        Uint8List bytes =
+                                            await File(pickedFile.path)
+                                                .readAsBytes();
+                                        String base64Image =
+                                            base64Encode(bytes);
+                                        riderProvider.updateRiderPhoto(
+                                            AppConfig.of(context),
+                                            Provider.of<AuthProvider>(context,
+                                                listen: false),
+                                            base64Image);
+                                      },
+                                    ),
+                                  )),
                                 ),
                                 left: _picDiameter * 0.61,
                                 top: _picDiameter * 0.66)
@@ -427,22 +426,36 @@ class _EditNameState extends State<EditName> {
               Spacer(),
               Container(
                   width: double.infinity,
-                  child: MaterialButton(
-                    child: Text('Update Name'),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        setState(() {
-                          requestedUpdate = true;
-                        });
-                        userInfoProvider.setNames(
-                            AppConfig.of(context),
-                            Provider.of<AuthProvider>(context, listen: false),
-                            firstNameCtrl.text,
-                            lastNameCtrl.text);
-                        Navigator.pop(context);
-                      }
-                    },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ButtonTheme(
+                      minWidth: MediaQuery.of(context).size.width * 0.8,
+                      height: 50.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: RaisedButton(
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              setState(() {
+                                requestedUpdate = true;
+                              });
+                              userInfoProvider.setNames(
+                                  AppConfig.of(context),
+                                  Provider.of<AuthProvider>(context,
+                                      listen: false),
+                                  firstNameCtrl.text,
+                                  lastNameCtrl.text);
+                              Navigator.pop(context);
+                            }
+                          },
+                          elevation: 3.0,
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          child: Text('Update Name',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold))),
+                    ),
                   ))
             ])),
       ),
@@ -520,21 +533,35 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
               Spacer(),
               Container(
                   width: double.infinity,
-                  child: MaterialButton(
-                    child: Text('Update Phone Number'),
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        setState(() {
-                          requestedUpdate = true;
-                        });
-                        riderProvider.setPhone(
-                            AppConfig.of(context),
-                            Provider.of<AuthProvider>(context, listen: false),
-                            phoneNumberCtrl.text);
-                        Navigator.pop(context);
-                      }
-                    },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ButtonTheme(
+                      minWidth: MediaQuery.of(context).size.width * 0.8,
+                      height: 50.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: RaisedButton(
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              setState(() {
+                                requestedUpdate = true;
+                              });
+                              riderProvider.setPhone(
+                                  AppConfig.of(context),
+                                  Provider.of<AuthProvider>(context,
+                                      listen: false),
+                                  phoneNumberCtrl.text);
+                              Navigator.pop(context);
+                            }
+                          },
+                          elevation: 3.0,
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          child: Text('Update Phone Number',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold))),
+                    ),
                   ))
             ])),
       ),
@@ -547,7 +574,13 @@ class ProfileBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-          width: 24, height: 24, child: Icon(Icons.arrow_back_ios, size: 16)),
+          width: 24,
+          height: 24,
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 24,
+            color: Colors.black,
+          )),
       onTap: () {
         Navigator.of(context).pop();
       },
