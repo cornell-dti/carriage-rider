@@ -3,7 +3,7 @@ import 'package:carriage_rider/pages/RidePage.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/pages/RecurringRideInfo.dart';
+import 'file:///C:/Users/85hal/Documents/Projects/carriage-rider/lib/widgets/RecurringRideInfo.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class Current extends StatelessWidget {
@@ -36,7 +36,7 @@ class Current extends StatelessWidget {
                   SizedBox(height: 20),
                   ride.recurring
                       ? RecurringRideInfo(ride)
-                      : NonRecurringRideInfo(ride),
+                      : Container(),
                   SizedBox(height: MediaQuery.of(context).size.height / 8),
                 ],
               ),
