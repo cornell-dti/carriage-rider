@@ -6,6 +6,8 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RidesProvider with ChangeNotifier {
@@ -143,5 +145,42 @@ class RidesProvider with ChangeNotifier {
       upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
     }
     notifyListeners();
+  }
+
+  Future<void> cancelRide(BuildContext context, Ride ride) async {
+    AppConfig config = AppConfig.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    http.Response response = await http.delete(
+        config.baseUrl + '/rides/${ride.id}',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        });
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete instance of recurring ride: ${response.body}');
+    }
+    fetchAllRides(config, authProvider);
+  }
+
+  Future<void> cancelRepeatingRideOccurrence(BuildContext context, Ride ride) async {
+    AppConfig config = AppConfig.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    Map<String, dynamic> request = <String, dynamic>{
+      'id': ride.id,
+      'deleteOnly': true,
+      'origDate': DateFormat('yyyy-MM-dd').format(ride.origDate),
+    };
+    final response = await http.put('${config.baseUrl}/rides/${ride.parentRide.id}/edits',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete instance of recurring ride: ${response.body}');
+    }
+    fetchAllRides(config, authProvider);
   }
 }
