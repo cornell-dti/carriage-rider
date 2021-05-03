@@ -26,6 +26,16 @@ class Profile extends StatelessWidget {
 
     Widget sectionDivider = Container(height: 6, color: Colors.grey[200]);
 
+    void selectImage() async {
+      ImagePicker picker = ImagePicker();
+      PickedFile pickedFile = await picker.getImage(
+          source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
+      Uint8List bytes = await File(pickedFile.path).readAsBytes();
+      String base64Image = base64Encode(bytes);
+      riderProvider.updateRiderPhoto(AppConfig.of(context),
+          Provider.of<AuthProvider>(context, listen: false), base64Image);
+    }
+
     if (riderProvider.hasInfo()) {
       return Scaffold(
         appBar: ScheduleBar(
@@ -74,10 +84,12 @@ class Profile extends StatelessWidget {
                                             'assets/images/person.png',
                                             width: _picDiameter,
                                             height: _picDiameter,
+                                            semanticLabel: 'your profile',
                                           )
                                         : Image.network(
                                             riderProvider.info.photoLink,
                                             fit: BoxFit.cover,
+                                            semanticLabel: 'your profile',
                                             loadingBuilder:
                                                 (BuildContext context,
                                                     Widget child,
@@ -101,29 +113,16 @@ class Profile extends StatelessWidget {
                                   width: _picBtnDiameter,
                                   child: FittedBox(
                                       child: Semantics(
+                                    button: true,
+                                    onTap: selectImage,
                                     label: 'Add Profile Picture',
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.black,
-                                      child: Icon(Icons.add,
-                                          size: _picBtnDiameter),
-                                      onPressed: () async {
-                                        ImagePicker picker = ImagePicker();
-                                        PickedFile pickedFile =
-                                            await picker.getImage(
-                                                source: ImageSource.gallery,
-                                                maxHeight: 200,
-                                                maxWidth: 200);
-                                        Uint8List bytes =
-                                            await File(pickedFile.path)
-                                                .readAsBytes();
-                                        String base64Image =
-                                            base64Encode(bytes);
-                                        riderProvider.updateRiderPhoto(
-                                            AppConfig.of(context),
-                                            Provider.of<AuthProvider>(context,
-                                                listen: false),
-                                            base64Image);
-                                      },
+                                    child: ExcludeSemantics(
+                                      child: FloatingActionButton(
+                                        backgroundColor: Colors.black,
+                                        child: Icon(Icons.add,
+                                            size: _picBtnDiameter),
+                                        onPressed: selectImage,
+                                      ),
                                     ),
                                   )),
                                 ),
@@ -152,7 +151,7 @@ class Profile extends StatelessWidget {
                                         fontSize: 14,
                                         color: Theme.of(context).accentColor,
                                       )),
-                              top: 45,
+                              top: 30,
                             )
                           ],
                         ))
@@ -181,8 +180,6 @@ class Profile extends StatelessWidget {
               sectionDivider,
               SizedBox(height: 8),
               //TODO: implement these pages
-              SettingRow(
-                  'Privacy', 'Choose what data you share with us', Container()),
               SettingRow(
                   'Legal', 'Terms of Service & Privacy Policy', Container()),
               sectionDivider,
