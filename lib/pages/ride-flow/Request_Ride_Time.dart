@@ -11,10 +11,10 @@ double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
 DateTime assignDate() {
   DateTime now = DateTime.now();
-  DateTime compare = DateTime(now.year, now.month, now.day, 10);
-  return now.difference(compare).inMinutes >= 0
+  DateTime today10AM = DateTime(now.year, now.month, now.day, 10);
+  return now.isAfter(today10AM)
       ? DateTime(now.year, now.month, now.day + 2)
-      : DateTime(now.year, now.month, now.day);
+      : DateTime(now.year, now.month, now.day + 1);
 }
 
 class RequestRideType extends StatefulWidget {
