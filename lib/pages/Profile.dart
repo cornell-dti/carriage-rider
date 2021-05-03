@@ -130,31 +130,24 @@ class Profile extends StatelessWidget {
                                 top: _picDiameter * 0.66)
                           ],
                         )),
-                    Padding(
-                        padding: EdgeInsets.only(bottom: 30),
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(riderProvider.info.fullName(),
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ]),
-                            Positioned(
-                              child:
-                                  Text('Joined ' + riderProvider.info.joinDate,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).accentColor,
-                                      )),
-                              top: 30,
-                            )
-                          ],
-                        ))
+                    Column(
+                      children: [
+                        Text(riderProvider.info.fullName(),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        SizedBox(height: 4),
+                        Semantics(
+                          container: true,
+                          child: Text('Joined ' + riderProvider.info.joinDate,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).accentColor,
+                              )),
+                        )
+                      ],
+                    )
                   ]))),
               sectionDivider,
               InfoGroup(
@@ -376,18 +369,24 @@ class _EditNameState extends State<EditName> {
                             focus.nextFocus();
                           },
                           decoration: InputDecoration(
-                            labelText: 'First Name',
-                            labelStyle: TextStyle(color: CarriageTheme.gray2),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            suffixIcon: IconButton(
-                              onPressed: firstNameCtrl.clear,
-                              icon: Icon(Icons.cancel_outlined,
-                                  size: 16, color: Colors.black),
-                            ),
-                          ),
+                              labelText: 'First Name',
+                              labelStyle: TextStyle(color: CarriageTheme.gray2),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: Semantics(
+                                button: true,
+                                container: true,
+                                label: 'Clear input for first name',
+                                child: ExcludeSemantics(
+                                  child: IconButton(
+                                    onPressed: firstNameCtrl.clear,
+                                    icon: Icon(Icons.cancel_outlined,
+                                        size: 16, color: Colors.black),
+                                  ),
+                                ),
+                              )),
                           validator: (input) {
                             if (input.isEmpty) {
                               return 'Please enter your first name.';
@@ -400,18 +399,24 @@ class _EditNameState extends State<EditName> {
                           controller: lastNameCtrl,
                           textInputAction: TextInputAction.go,
                           decoration: InputDecoration(
-                            labelText: 'Last Name',
-                            labelStyle: TextStyle(color: CarriageTheme.gray2),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            suffixIcon: IconButton(
-                              onPressed: lastNameCtrl.clear,
-                              icon: Icon(Icons.cancel_outlined,
-                                  size: 16, color: Colors.black),
-                            ),
-                          ),
+                              labelText: 'Last Name',
+                              labelStyle: TextStyle(color: CarriageTheme.gray2),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: Semantics(
+                                button: true,
+                                container: true,
+                                label: 'Clear input for last name',
+                                child: ExcludeSemantics(
+                                  child: IconButton(
+                                    onPressed: lastNameCtrl.clear,
+                                    icon: Icon(Icons.cancel_outlined,
+                                        size: 16, color: Colors.black),
+                                  ),
+                                ),
+                              )),
                           validator: (input) {
                             if (input.isEmpty) {
                               return 'Please enter your last name.';
@@ -504,18 +509,24 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
                     textInputAction: TextInputAction.go,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Phone Number',
-                      labelStyle: TextStyle(color: CarriageTheme.gray2),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      suffixIcon: IconButton(
-                        onPressed: phoneNumberCtrl.clear,
-                        icon: Icon(Icons.cancel_outlined,
-                            size: 16, color: Colors.black),
-                      ),
-                    ),
+                        labelText: 'Phone Number',
+                        labelStyle: TextStyle(color: CarriageTheme.gray2),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        suffixIcon: Semantics(
+                          button: true,
+                          container: true,
+                          label: 'Clear input for phone number',
+                          child: ExcludeSemantics(
+                            child: IconButton(
+                              onPressed: phoneNumberCtrl.clear,
+                              icon: Icon(Icons.cancel_outlined,
+                                  size: 16, color: Colors.black),
+                            ),
+                          ),
+                        )),
                     validator: (input) {
                       if (input.isEmpty) {
                         return 'Please enter your phone number.';
@@ -569,18 +580,21 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
 class ProfileBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-          width: 24,
-          height: 24,
-          child: Icon(
+    return Semantics(
+      button: true,
+      label: 'Back',
+      child: ExcludeSemantics(
+        child: IconButton(
+          icon: Icon(
             Icons.arrow_back_ios,
             size: 24,
             color: Colors.black,
-          )),
-      onTap: () {
-        Navigator.of(context).pop();
-      },
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
     );
   }
 }
