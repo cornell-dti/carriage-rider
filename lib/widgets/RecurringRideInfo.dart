@@ -101,15 +101,17 @@ class DateDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(' ', style: TextStyle(color: Colors.black, fontSize: 14)),
-        Text(
-          '~',
-          style: TextStyle(color: CarriageTheme.gray1, fontSize: 20),
-        )
-      ],
+    return ExcludeSemantics(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(' ', style: TextStyle(color: Colors.black, fontSize: 14)),
+          Text(
+            '~',
+            style: TextStyle(color: CarriageTheme.gray1, fontSize: 20),
+          )
+        ],
+      ),
     );
   }
 }
