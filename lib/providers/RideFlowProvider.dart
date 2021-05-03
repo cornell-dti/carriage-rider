@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 
 /// Manage the state of rides with ChangeNotifier.
 class RideFlowProvider with ChangeNotifier {
-  bool editing = false;
-  bool changingToRecurring = false;
+  bool editing;
   TextEditingController fromCtrl = TextEditingController();
   TextEditingController toCtrl = TextEditingController();
   TextEditingController startDateCtrl = TextEditingController();
@@ -24,11 +23,6 @@ class RideFlowProvider with ChangeNotifier {
 
   void setEditing(bool isEditing) {
     editing = isEditing;
-    notifyListeners();
-  }
-
-  void setChangingToRecurring(bool isChangingToRecurring) {
-    changingToRecurring = isChangingToRecurring;
     notifyListeners();
   }
 

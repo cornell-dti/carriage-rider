@@ -1,10 +1,8 @@
 import 'package:carriage_rider/models/Ride.dart';
-import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
-import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:carriage_rider/pages/RidePage.dart';
 
 class OccurrenceTitle extends StatelessWidget {
   const OccurrenceTitle({Key key}) : super(key: key);
@@ -25,15 +23,18 @@ class OccurrenceTitle extends StatelessWidget {
   }
 }
 
-class NonRecurringRideInfo extends StatelessWidget {
+class NonRecurringRideInfo extends StatefulWidget {
   NonRecurringRideInfo(this.ride);
 
   final Ride ride;
 
   @override
-  Widget build(BuildContext context) {
-    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+  _NonRecurringRideInfoState createState() => _NonRecurringRideInfoState();
+}
 
+class _NonRecurringRideInfoState extends State<NonRecurringRideInfo> {
+  @override
+  Widget build(BuildContext context) {
     return Container(
         child: Column(
           children: <Widget>[
@@ -49,21 +50,7 @@ class NonRecurringRideInfo extends StatelessWidget {
                       Text('Repeat This Ride', style: CarriageTheme.button.copyWith(color: Colors.black))
                     ]
                 ) ,
-                onPressed: () {
-                  rideFlowProvider.setChangingToRecurring(true);
-                  Ride copy = ride.copy();
-                  copy.recurring = true;
-                  rideFlowProvider.setPickupTimeCtrl(TimeOfDay.fromDateTime(copy.startTime).format(context));
-                  rideFlowProvider.setDropoffTimeCtrl(TimeOfDay.fromDateTime(copy.endTime).format(context));
-                  Navigator.push(context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              RequestRideDateTime(
-                                  ride: copy
-                              )
-                      )
-                  );
-                }
+                onPressed: () {}
             ),
           ],
         ));

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
-DateTime firstPossibleDate() {
+DateTime assignDate() {
   DateTime now = DateTime.now();
   DateTime compare = DateTime(now.year, now.month, now.day, 10);
   return now.difference(compare).inMinutes >= 0
@@ -99,8 +99,8 @@ class RequestRideDateTime extends StatefulWidget {
 class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  DateTime startDate = firstPossibleDate();
-  DateTime endDate = firstPossibleDate();
+  DateTime startDate = assignDate();
+  DateTime endDate = assignDate();
   TimeOfDay _pickUpTime = TimeOfDay.now();
   TimeOfDay _dropOffTime = TimeOfDay.now();
   List<bool> isSelected = List.filled(5, false);
@@ -111,15 +111,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     super.initState();
     if (widget.ride.startTime != null) {
       setState(() {
-        if (widget.ride.startTime.isAfter(firstPossibleDate())) {
-          startDate = widget.ride.startTime;
-        }
-        _pickUpTime = TimeOfDay.fromDateTime(widget.ride.startTime);
+        startDate = widget.ride.startTime;
+        _pickUpTime = TimeOfDay(hour: startDate.hour, minute: startDate.minute);
       });
     }
     if (widget.ride.endTime != null) {
       setState(() {
-        _dropOffTime = TimeOfDay.fromDateTime(widget.ride.endTime);
+        _dropOffTime = TimeOfDay(hour: widget.ride.endTime.hour, minute: widget.ride.endTime.minute);
       });
     }
     if (widget.ride.endDate != null) {
@@ -150,7 +148,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     final DateTime selection = await showDatePicker(
       context: context,
       initialDate: init,
-      firstDate: firstPossibleDate(),
+      firstDate: assignDate(),
       lastDate: DateTime(init.year + 1),
       builder: (context, child) {
         return Theme(
