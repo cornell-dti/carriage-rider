@@ -222,96 +222,174 @@ class Ride {
   Widget buildSummary(context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Column(children: [
-      Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[Text('From', style: CarriageTheme.caption2)]),
-      SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(startLocation, style: CarriageTheme.infoStyle)],
-      ),
-      SizedBox(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('To', style: CarriageTheme.caption2)],
-      ),
-      SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text(endLocation, style: CarriageTheme.infoStyle)],
-      ),
-      SizedBox(height: 15),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Date', style: CarriageTheme.caption2)],
-      ),
-      SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text(DateFormat('yMd').format(startTime),
-              style: CarriageTheme.infoStyle)
-        ],
-      ),
-      SizedBox(height: 15),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      MergeSemantics(
+        child: Column(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Text('From', style: CarriageTheme.labelStyle)
+            ]),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Pickup Time', style: CarriageTheme.caption2),
-                SizedBox(height: 5),
-                Text(DateFormat('jm').format(startTime),
-                    style: CarriageTheme.infoStyle)
+                Flexible(
+                    child: Text(startLocation,
+                        style: CarriageTheme.infoStyle))
               ],
             ),
-          ),
-          SizedBox(width: 30),
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Drop-off Time', style: CarriageTheme.caption2),
+          ],
+        ),
+      ),
+      SizedBox(height: 15),
+      MergeSemantics(
+          child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[Text('To', style: CarriageTheme.labelStyle)],
+                ),
                 SizedBox(height: 5),
-                Text(DateFormat('jm').format(endTime),
-                    style: CarriageTheme.infoStyle)
-              ],
-            ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Flexible(
+                        child: Text(endLocation,
+                            style: CarriageTheme.infoStyle))
+                  ],
+                ),
+              ]
           )
-        ],
-      ),
-      SizedBox(height: 15),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[Text('Every', style: CarriageTheme.caption2)],
-      ),
-      SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          //TODO: change to have repeating rides info
-          Text('M W F', style: CarriageTheme.infoStyle)
-        ],
       ),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text('Accessibility Request', style: CarriageTheme.caption2)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  child: MergeSemantics(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Start Date', style: CarriageTheme.labelStyle),
+                        SizedBox(height: 5),
+                        Text(DateFormat.yMd().format(startTime),
+                            style: CarriageTheme.infoStyle)
+                      ],
+                    ),
+                  )
+              ),
+              SizedBox(height: 20),
+              MergeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Pickup Time', style: CarriageTheme.labelStyle),
+                    SizedBox(height: 5),
+                    Text(DateFormat.jm().format(startTime),
+                        style: CarriageTheme.infoStyle)
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              endDate != null
+                  ? Container(
+                  child: MergeSemantics(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('End Date', style: CarriageTheme.labelStyle),
+                        SizedBox(height: 5),
+                        Text(DateFormat.yMd().format(endDate),
+                            style: CarriageTheme.infoStyle)
+                      ],
+                    ),
+                  ))
+                  : Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(''),
+                      SizedBox(height: 5),
+                      Text('', style: CarriageTheme.infoStyle)
+                    ],
+                  )),
+              SizedBox(height: 20),
+              Container(
+                  child: MergeSemantics(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Drop-off Time',
+                            style: CarriageTheme.labelStyle),
+                        SizedBox(height: 5),
+                        Text(DateFormat.jm().format(endTime),
+                            style: CarriageTheme.infoStyle)
+                      ],
+                    ),
+                  )
+              )
+            ],
+          ),
         ],
       ),
-      SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text(
-              riderProvider.hasInfo()
-                  ? riderProvider.info.accessibilityStr()
-                  : '',
-              style: CarriageTheme.infoStyle)
-        ],
+      recurring ? Container(
+          child: MergeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Every', style: CarriageTheme.labelStyle)
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(recurringDays.map((day) {
+                      List<String> days = ['M', 'T', 'W', 'Th', 'F'];
+                      return days[day-1];
+                    }).toList().join(' '),
+                      style: CarriageTheme.infoStyle,
+                      semanticsLabel: recurringDays.map((day) {
+                        List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                        return days[day-1];
+                      }).toList().join(' '),)
+                  ],
+                )
+              ],
+            ),
+          ))
+          : Container(),
+      SizedBox(height: 15),
+      MergeSemantics(
+          child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Accessibility Requirement',
+                        style: CarriageTheme.labelStyle)
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(riderProvider.info.accessibilityStr(), style: CarriageTheme.infoStyle)
+                  ],
+                ),
+              ]
+          )
       ),
     ]);
   }
