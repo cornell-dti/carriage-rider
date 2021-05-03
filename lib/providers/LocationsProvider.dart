@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:io';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import '../utils/app_config.dart';
@@ -11,23 +12,31 @@ import 'package:carriage_rider/models/Location.dart';
 //Manage the state of locations with ChangeNotifier
 class LocationsProvider with ChangeNotifier {
   List<Location> locations;
-
+  List<Location> favLocations;
+  Map<String, Location> locationsByName = Map();
+  
   LocationsProvider(BuildContext context, AppConfig config,
-      AuthProvider authProvider) {
+      AuthProvider authProvider, RiderProvider riderProvider) {
     void Function() callback;
-    callback = () {
-      if (authProvider.isAuthenticated) {
-        fetchLocations(context, config, authProvider);
+    callback = () async {
+      if (authProvider.isAuthenticated && riderProvider.hasInfo()) {
+        await fetchLocations(context, config, authProvider);
+        await fetchFavoriteLocations(context, config, authProvider);
+        locations.forEach((loc) => locationsByName[loc.name] = loc);
       }
     };
     callback();
-    authProvider.addListener(callback);
+    riderProvider.addListener(callback);
   }
 
   final retryDelay = Duration(seconds: 30);
 
   bool hasLocations() {
     return locations != null;
+  }
+
+  bool hasFavLocations() {
+    return favLocations != null;
   }
 
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
@@ -48,6 +57,23 @@ class LocationsProvider with ChangeNotifier {
     }
   }
 
+  //Fetches the rider's favorite locations from the backend.
+  Future<void> fetchFavoriteLocations(BuildContext context, AppConfig config, AuthProvider authProvider) async {
+    AuthProvider authProvider =
+    Provider.of<AuthProvider>(context, listen: false);
+    String token = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.get('${config.baseUrl}/riders/${authProvider.id}/favorites',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      String responseBody = response.body;
+      favLocations = _locationsFromJson(responseBody);
+      notifyListeners();
+    } else {
+      await Future.delayed(retryDelay);
+      fetchFavoriteLocations(context, config, authProvider);
+    }
+  }
+
   //Decodes the string [json] of locations into a list representation of the locations.
   List<Location> _locationsFromJson(String json) {
     var data = jsonDecode(json)['data'];
@@ -56,41 +82,36 @@ class LocationsProvider with ChangeNotifier {
     return res;
   }
 
-  //Converts the list [locations] given by the results of [query] to a list of strings containing their names.
+  //Returns a map from name to address of locations that match with [query].
   List<String> getSuggestions(String query) {
-    List<String> matches = locations.where((e) =>
-    e.tag != 'custom' && e.name.toLowerCase().contains(query.toLowerCase()))
-        .map((e) => e.name)
-        .toList();
-    return matches;
-  }
-
-  Location locationByName(String location) {
-    int index;
-    if (locations != null) {
-      index = locations.indexWhere((e) => e.name == location);
+    if (query == '') {
+      return locations.map((loc) => loc.name).toList()..sort((a, b) => a.compareTo(b));
     }
-    return index == null ? null : locations[index];
+    String lowerCaseQuery = query.toLowerCase();
+    bool exact(Location loc) => loc.name.toLowerCase() == lowerCaseQuery;
+    int containsIndex(Location loc) => loc.name.toLowerCase().indexOf(lowerCaseQuery);
+
+    List<Location> exactQuery = locations.where((loc) => exact(loc)).toList();
+    List<Location> startsWithQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) == 0).toList();
+    List<Location> containsQuery = locations.where((loc) => !exact(loc) && containsIndex(loc) != 0 && loc.name.toLowerCase().contains(lowerCaseQuery)).toList();
+    List<Location> matches = exactQuery..addAll(startsWithQuery)..addAll(containsQuery);
+    return matches.map((loc) => loc.name).toList();
   }
 
-  bool checkLocation(String location) {
-    int index;
-    if (locations != null) {
-      index = locations.indexWhere((e) => e.name == location);
-      return index == -1 ? false : locations.contains(locations[index]);
-    }
-    return false;
+  Location locationByName(String name) {
+    return locationsByName[name];
   }
 
-  bool isCustom(String locationName) {
-    List<Location> regularLocations = locations.where((e) => e.tag != 'custom')
-        .toList();
-    return !regularLocations.contains(locationByName(locationName));
+  String addressByName(String name) {
+    return locationsByName[name].address;
   }
 
-  bool isPreset(String locationName) {
-    List<String> regularLocations = locations.map((e) => e.name).toList();
-    return !regularLocations.contains(locationName);
+  String locationIDByName(String name) {
+    return locationsByName[name].id;
+  }
+
+  bool isPreset(String name) {
+    return locationsByName[name] != null;
   }
 
   //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).

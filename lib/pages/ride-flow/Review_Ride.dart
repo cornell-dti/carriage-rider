@@ -244,15 +244,13 @@ class _ReviewRideState extends State<ReviewRide> {
                                       setState(() {
                                         requestLoading = true;
                                       });
-                                      rideFlowProvider.clearControllers();
-                                      String startLoc = locationsProvider.isPreset(widget.ride.startLocation) ? widget.ride.startLocation
-                                          : locationsProvider.locationByName(widget.ride.startLocation).id;
-                                      String endLoc = locationsProvider.isPreset(widget.ride.endLocation) ? widget.ride.endLocation
-                                          : locationsProvider.locationByName(widget.ride.endLocation).id;
+                                      String startLoc = locationsProvider.isPreset(widget.ride.startLocation) ? locationsProvider.locationByName(widget.ride.startLocation).id : widget.ride.startLocation;
+                                      String endLoc = locationsProvider.isPreset(widget.ride.endLocation) ? locationsProvider.locationByName(widget.ride.endLocation).id : widget.ride.endLocation;
+                                      bool successfulRequest;
                                       if (rideFlowProvider.editing) {
                                         // fake instance for recurring ride
                                         if (widget.ride.parentRide != null) {
-                                          await rideFlowProvider.updateRecurringRide(
+                                          successfulRequest = await rideFlowProvider.updateRecurringRide(
                                               AppConfig.of(context),
                                               context,
                                               widget.ride.parentRide.id,
@@ -268,7 +266,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                         }
                                         // real instance
                                         else {
-                                          await rideFlowProvider.updateRide(
+                                          successfulRequest = await rideFlowProvider.updateRide(
                                               AppConfig.of(context),
                                               context,
                                               widget.ride.id,
@@ -283,7 +281,7 @@ class _ReviewRideState extends State<ReviewRide> {
                                         }
                                       }
                                       else {
-                                        await rideFlowProvider.createRide(
+                                        successfulRequest = await rideFlowProvider.createRide(
                                             AppConfig.of(context),
                                             context,
                                             startLoc,
@@ -295,11 +293,18 @@ class _ReviewRideState extends State<ReviewRide> {
                                             endDate: widget.ride.endDate
                                         );
                                       }
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RideConfirmation()));
+                                      if (successfulRequest) {
+                                        rideFlowProvider.clearControllers();
+                                        Navigator.push(context, MaterialPageRoute(
+                                                builder: (context) => RideConfirmation()
+                                        ));
+                                      }
+                                      else {
+                                        rideFlowProvider.setError(true);
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                     elevation: 2.0,
                                     color: Colors.black,
