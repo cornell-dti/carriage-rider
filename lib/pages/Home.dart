@@ -8,7 +8,6 @@ import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
-import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
@@ -42,9 +41,6 @@ class Home extends StatelessWidget {
         style: TextStyle(color: color, fontFamily: 'SFPro'),
       );
     }
-
-    double requestButtonHeight = 48;
-    double requestButtonVerticalPadding = 24;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -278,7 +274,7 @@ class Home extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(horizontal: 34, vertical: requestButtonVerticalPadding),
+                      height: MediaQuery.of(context).size.height / 8,
                       decoration:
                           BoxDecoration(color: Colors.white, boxShadow: [
                         BoxShadow(
@@ -287,21 +283,37 @@ class Home extends StatelessWidget {
                             spreadRadius: 5,
                             color: Colors.black.withOpacity(0.11))
                       ]),
-                      child: CButton(
-                        text: 'Request Ride',
-                        height: requestButtonHeight,
-                        onPressed: () {
-                          rideFlowProvider.setLocControllers('', '');
-                          rideFlowProvider.setEditing(false);
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      RequestRideLoc(
-                                        ride: new Ride(),
-                                      )
-                              )
-                          );
-                        },
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                              alignment: Alignment.center,
+                              child: ButtonTheme(
+                                minWidth:
+                                    MediaQuery.of(context).size.width * 0.8,
+                                height: 50.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: RaisedButton.icon(
+                                  onPressed: () {
+                                    rideFlowProvider.setLocControllers('', '');
+                                    rideFlowProvider.setEditing(false);
+                                    Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) =>
+                                                RequestRideLoc(
+                                                  ride: new Ride(),
+                                                )));
+                                  },
+                                  elevation: 3.0,
+                                  color: Colors.black,
+                                  textColor: Colors.white,
+                                  icon: Icon(Icons.add),
+                                  label: Text('Request Ride',
+                                      style: TextStyle(fontSize: 18)),
+                                ),
+                              )),
+                        ],
                       ),
                     ),
                   ),

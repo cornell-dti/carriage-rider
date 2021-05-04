@@ -125,6 +125,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   TimeOfDay _dropOffTime = TimeOfDay.now();
   List<bool> isSelected = List.filled(5, false);
   bool hasErrors = false;
+  bool showSelectionError = false;
 
   @override
   void initState() {
@@ -184,6 +185,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
   void toggle(int index) {
     setState(() {
+      showSelectionError = false;
       isSelected[index] = !isSelected[index];
     });
   }
@@ -452,7 +454,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                                 ToggleButton(isSelected[4], () => toggle(4), 'F', 'Fridays'),
                               ],
                             ),
-                            isSelected.indexOf(true) == -1 ? Padding(
+                            showSelectionError && isSelected.indexOf(true) == -1 ? Padding(
                               padding: EdgeInsets.only(top: 8),
                               child: Text('Select at least one day.', style: TextStyle(color: Colors.red)),
                             ) : Container(),
@@ -485,6 +487,9 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                             text: 'Set Date & Time',
                             height: buttonsHeight,
                             onPressed: () {
+                              setState(() {
+                                showSelectionError = true;
+                              });
                               if (_formKey.currentState.validate() && (widget.ride.recurring ? isSelected.indexOf(true) >= 0 : true)) {
                                 widget.ride.startTime = assembleStartTime();
                                 widget.ride.endTime = assembleEndTime();

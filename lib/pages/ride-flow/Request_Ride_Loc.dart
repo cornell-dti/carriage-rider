@@ -406,7 +406,7 @@ class LocationInput extends StatelessWidget {
       textInputAction: TextInputAction.next,
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your location';
+          return 'Please enter your ' + (isToLocation ? 'drop off' : 'pick up') + ' location';
         }
         return null;
       },
