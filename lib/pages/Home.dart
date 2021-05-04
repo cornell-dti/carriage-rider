@@ -4,6 +4,8 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
@@ -12,7 +14,6 @@ import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-
 import 'Upcoming.dart';
 
 void main() {
@@ -24,11 +25,13 @@ void main() {
 class Home extends StatelessWidget {
   @override
   Widget build(context) {
-    //TODO: change to get name from rider provider
-    AuthProvider authProvider = Provider.of(context);
-    final String headerName = 'Hi ' +
-        authProvider.googleSignIn.currentUser.displayName.split(' ')[0] +
-        '! ☀';
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    AppConfig appConfig = AppConfig.of(context);
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -87,17 +90,21 @@ class Home extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: !ridesProvider.hasData() || !locationsProvider.hasLocations()
+        child: !ridesProvider.hasData() ||
+                !locationsProvider.hasLocations() ||
+                !riderProvider.hasInfo()
             ? Center(child: CircularProgressIndicator())
             : Stack(
                 children: <Widget>[
                   RefreshIndicator(
+                      semanticsLabel: 'Refreshing rides',
                       onRefresh: () async {
                         await ridesProvider.fetchAllRides(
                             appConfig, authProvider);
                       },
                       child: CustomScrollView(slivers: [
                         SliverAppBar(
+                          excludeHeaderSemantics: true,
                           elevation: 11,
                           pinned: true,
                           expandedHeight: 100,
@@ -111,27 +118,39 @@ class Home extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 23),
-                                    child: Text(
-                                      headerName,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontFamily: 'SFPro',
-                                          fontWeight: FontWeight.w700),
+                                  Semantics(
+                                    header: true,
+                                    label: 'Hi ' + riderProvider.info.firstName,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16, bottom: 23),
+                                      child: ExcludeSemantics(
+                                        child: Text(
+                                          'Hi ' +
+                                              riderProvider.info.firstName +
+                                              '! ☀',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 30,
+                                              fontFamily: 'SFPro',
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 23),
                                     child: Builder(builder: (context) {
-                                      return IconButton(
-                                          icon: Icon(Icons.menu,
-                                              color: Colors.black),
-                                          onPressed: () => Scaffold.of(context)
-                                              .openEndDrawer());
+                                      return Semantics(
+                                        label: 'Menu',
+                                        child: IconButton(
+                                            icon: Icon(Icons.menu,
+                                                color: Colors.black),
+                                            onPressed: () =>
+                                                Scaffold.of(context)
+                                                    .openEndDrawer()),
+                                      );
                                     }),
                                   )
                                 ],
@@ -160,24 +179,37 @@ class Home extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(children: [
-                                Text(
-                                  'Upcoming Rides',
-                                  style: CarriageTheme.subHeading,
+                                Semantics(
+                                  container: true,
+                                  header: true,
+                                  child: Text(
+                                    'Upcoming Rides',
+                                    style: CarriageTheme.subHeading,
+                                  ),
                                 ),
                                 Spacer(),
                                 ridesProvider.upcomingRides.isNotEmpty
-                                    ? GestureDetector(
-                                        onTap: () => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UpcomingSeeMore())),
-                                        child: Row(children: [
-                                          Text('See More',
-                                              style:
-                                                  CarriageTheme.seeMoreStyle),
-                                          SizedBox(width: 4),
-                                          Icon(Icons.arrow_forward, size: 16)
-                                        ]))
+                                    ? Semantics(
+                                        button: true,
+                                        container: true,
+                                        child: GestureDetector(
+                                            onTap: () => Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UpcomingSeeMore())),
+                                            child: Row(children: [
+                                              Text(
+                                                'See More',
+                                                style:
+                                                    CarriageTheme.seeMoreStyle,
+                                                semanticsLabel:
+                                                    'See more upcoming rides',
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(Icons.arrow_forward,
+                                                  size: 16)
+                                            ])),
+                                      )
                                     : Container()
                               ]),
                             ),
@@ -187,24 +219,37 @@ class Home extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(children: [
-                                Text(
-                                  'Ride History',
-                                  style: CarriageTheme.subHeading,
+                                Semantics(
+                                  container: true,
+                                  header: true,
+                                  child: Text(
+                                    'Ride History',
+                                    style: CarriageTheme.subHeading,
+                                  ),
                                 ),
                                 Spacer(),
                                 ridesProvider.pastRides.isNotEmpty
-                                    ? GestureDetector(
-                                        onTap: () => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HistorySeeMore())),
-                                        child: Row(children: [
-                                          Text('See More',
-                                              style:
-                                                  CarriageTheme.seeMoreStyle),
-                                          SizedBox(width: 4),
-                                          Icon(Icons.arrow_forward, size: 16)
-                                        ]))
+                                    ? Semantics(
+                                        container: true,
+                                        button: true,
+                                        child: GestureDetector(
+                                            onTap: () => Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistorySeeMore())),
+                                            child: Row(children: [
+                                              Text(
+                                                'See More',
+                                                style:
+                                                    CarriageTheme.seeMoreStyle,
+                                                semanticsLabel:
+                                                    'See more past rides',
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(Icons.arrow_forward,
+                                                  size: 16)
+                                            ])),
+                                      )
                                     : Container()
                               ]),
                             ),
@@ -240,9 +285,11 @@ class Home extends StatelessWidget {
                                     MediaQuery.of(context).size.width * 0.8,
                                 height: 50.0,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
+                                    borderRadius: BorderRadius.circular(12)),
                                 child: RaisedButton.icon(
                                   onPressed: () {
+                                    rideFlowProvider.setLocControllers('', '');
+                                    rideFlowProvider.setEditing(false);
                                     Navigator.push(
                                         context,
                                         new MaterialPageRoute(

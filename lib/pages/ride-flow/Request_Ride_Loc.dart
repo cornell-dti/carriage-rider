@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
+import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
@@ -11,7 +13,7 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 class RequestRideLoc extends StatefulWidget {
   final Ride ride;
 
-  RequestRideLoc({Key key, this.ride}) : super(key: key);
+  RequestRideLoc({Key key, @required this.ride}) : super(key: key);
 
   @override
   _RequestRideLocState createState() => _RequestRideLocState();
@@ -22,318 +24,309 @@ class _RequestRideLocState extends State<RequestRideLoc> {
 
   @override
   Widget build(context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
+              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
+                  FlowCancel(),
+                  SizedBox(height: 20.0),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text('Location', style: CarriageTheme.title1),
+                      )
+                    ],
+                  ),
+                  TabBarTop(
+                      colorOne: Colors.black,
+                      colorTwo: Colors.grey[350],
+                      colorThree: Colors.grey[350]),
+                  TabBarBot(
+                      colorOne: Colors.black,
+                      colorTwo: Colors.grey[350],
+                      colorThree: Colors.grey[350]),
+                  SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text((rideFlowProvider.locationsFinished() ? 'Review your ' : 'Set your ') + 'pickup and dropoff location',
+                            style: CarriageTheme.title1),
+                      )
+                    ],
+                  ),
+                  rideFlowProvider.requestHadError ? Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text('Invalid location(s), please try again.', style: TextStyle(color: Colors.red, fontSize: 16)),
+                  ) : Container(),
+                  SizedBox(height: 20),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        LocationInput(
+                          label: 'From',
+                          ride: widget.ride,
+                          finished: rideFlowProvider.locationsFinished(),
+                          isToLocation: false,
+                        ),
+                        SizedBox(height: 10.0),
+                        Text(
+                            locationsProvider.isPreset(fromCtrl.text)
+                                ? locationsProvider
+                                .locationByName(fromCtrl.text)
+                                .info ==
+                                null
+                                ? ' '
+                                : locationsProvider
+                                .locationByName(fromCtrl.text)
+                                .info
+                                : ' ',
+                            style: TextStyle(fontSize: 14, color: Colors.grey)),
+                        SizedBox(height: 30.0),
+                        LocationInput(
+                          label: 'To',
+                          ride: widget.ride,
+                          finished: rideFlowProvider.locationsFinished(),
+                          isToLocation: true,
+                        ),
+                        SizedBox(height: 10.0),
+                        Text(
+                            locationsProvider.isPreset(toCtrl.text)
+                                ? locationsProvider
+                                .locationByName(toCtrl.text)
+                                .info ==
+                                null
+                                ? ' '
+                                : locationsProvider
+                                .locationByName(toCtrl.text)
+                                .info
+                                : ' ',
+                            style: TextStyle(fontSize: 14, color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: rideFlowProvider.locationsFinished() ? Row(
+                              children: <Widget>[
+                                //FlowBackDuo(),
+                                //SizedBox(width: 50),
+                                ButtonTheme(
+                                  minWidth: MediaQuery.of(context).size.width * 0.65,
+                                  height: 50.0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Expanded(
+                                      child: RaisedButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState.validate()) {
+                                              Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
+                                              )
+                                              );
+                                              widget.ride.startLocation = fromCtrl.text;
+                                              widget.ride.endLocation = toCtrl.text;
+                                            }
+                                          },
+                                          elevation: 2.0,
+                                          color: Colors.black,
+                                          textColor: Colors.white,
+                                          child: Text('Set Location',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)
+                                          )
+                                      )
+                                  ),
+                                ),
+                              ]) : Container(),
+                        )
+                    ),
                   )
                 ],
               ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Set your pickup and dropoff location',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    LocationInput(
-                      fromCtrl: fromCtrl,
-                      label: 'From',
-                      ride: widget.ride,
-                      finished: isFinished(),
-                      isToLocation: false,
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                        locationsProvider.checkLocation(fromCtrl.text)
-                            ? locationsProvider
-                                        .locationByName(fromCtrl.text)
-                                        .info ==
-                                    null
-                                ? ' '
-                                : locationsProvider
-                                    .locationByName(fromCtrl.text)
-                                    .info
-                            : ' ',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    SizedBox(height: 30.0),
-                    LocationInput(
-                      toCtrl: toCtrl,
-                      label: 'To',
-                      ride: widget.ride,
-                      finished: isFinished(),
-                      isToLocation: true,
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                        locationsProvider.checkLocation(toCtrl.text)
-                            ? locationsProvider
-                                        .locationByName(toCtrl.text)
-                                        .info ==
-                                    null
-                                ? ' '
-                                : locationsProvider
-                                    .locationByName(toCtrl.text)
-                                    .info
-                            : ' ',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                  ],
-                ),
-              ),
-              isFinished() ? Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: Row(children: <Widget>[FlowBack()]))),
-              ) : Container(),
-            ],
-          ),
-        )));
+            )
+        )
+    );
   }
 }
 
-class RequestLoc extends StatefulWidget {
+class SelectLocationPage extends StatefulWidget {
   final Ride ride;
-  final TextEditingController fromCtrl;
-  final TextEditingController toCtrl;
   final bool isToLocation;
   final String label;
   final Widget page;
+  final List<String> initSuggestions;
 
-  RequestLoc(
+  SelectLocationPage(
       {Key key,
-      this.ride,
-      this.fromCtrl,
-      this.toCtrl,
-      this.isToLocation,
-      this.label,
-      this.page})
+        this.ride,
+        this.isToLocation,
+        this.label,
+        this.page,
+        this.initSuggestions})
       : super(key: key);
 
   @override
-  _RequestLocState createState() => _RequestLocState();
+  _SelectLocationPageState createState() => _SelectLocationPageState();
 }
 
-class _RequestLocState extends State<RequestLoc> {
-  final _formKey = GlobalKey<FormState>();
+class _SelectLocationPageState extends State<SelectLocationPage> {
+  List<String> suggestions;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              BackText(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: widget.isToLocation
-                        ? Text('Where do you want to be dropped off?',
-                            style: CarriageTheme.title1)
-                        : Text('Where do you want to be picked up?',
-                            style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    LocationField(
-                      ctrl: widget.isToLocation ? toCtrl : fromCtrl,
-                      label: widget.label,
-                      page: widget.page,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )));
+  void initState() {
+    super.initState();
+    suggestions = widget.initSuggestions;
   }
-}
-
-class RequestRideLocConfirm extends StatefulWidget {
-  final TextEditingController fromCtrl;
-  final TextEditingController toCtrl;
-  final Ride ride;
-
-  RequestRideLocConfirm({Key key, this.ride, this.fromCtrl, this.toCtrl})
-      : super(key: key);
-
-  @override
-  _RequestRideLocConfirmState createState() => _RequestRideLocConfirmState();
-}
-
-class _RequestRideLocConfirmState extends State<RequestRideLocConfirm> {
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
 
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            children: <Widget>[
-              FlowCancel(),
-              SizedBox(height: 20.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Location', style: CarriageTheme.title1),
+    String input = widget.isToLocation ? toCtrl.text : fromCtrl.text;
+    String ithaca = 'Ithaca, NY 14850';
+    
+    Widget customLocationOption = Column(
+        children: [
+          InkWell(
+            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) => widget.page
+            )),
+            child: Semantics(
+              label: input + ', ' + ithaca,
+              child: Container(
+                  width: double.infinity,
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: ExcludeSemantics(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(input,
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold
+                                )
+                            ),
+                            Text(ithaca,
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12
+                                )
+                            ),
+                          ],
+                        ),
+                      )
                   )
-                ],
               ),
-              TabBarTop(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              TabBarBot(
-                  colorOne: Colors.black,
-                  colorTwo: Colors.grey[350],
-                  colorThree: Colors.grey[350]),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Text('Review your pickup and dropoff location',
-                        style: CarriageTheme.title1),
-                  )
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    LocationInput(
-                      fromCtrl: fromCtrl,
-                      label: 'From',
-                      ride: widget.ride,
-                      finished: isFinished(),
-                      isToLocation: false,
+            ),
+          ),
+          Divider()
+        ]
+    );
+
+    ListView suggestionList = ListView.builder(
+      shrinkWrap: true,
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        String name = suggestions[index];
+        String address = locationsProvider.isPreset(suggestions[index]) ? locationsProvider.addressByName(suggestions[index]) : 'Ithaca, NY 14850';
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              child: Container(
+                width: double.infinity,
+                child: Semantics(
+                  label: name + ', ' + address,
+                  child: ExcludeSemantics(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 12),
+                          Text(name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          Text(address, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                          SizedBox(height: 12),
+                        ]
                     ),
-                    SizedBox(height: 10.0),
-                    Text(
-                        locationsProvider.checkLocation(fromCtrl.text)
-                            ? locationsProvider
-                                        .locationByName(fromCtrl.text)
-                                        .info ==
-                                    null
-                                ? ' '
-                                : locationsProvider
-                                    .locationByName(fromCtrl.text)
-                                    .info
-                            : ' ',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    SizedBox(height: 30.0),
-                    LocationInput(
-                        toCtrl: toCtrl,
-                        label: 'To',
-                        ride: widget.ride,
-                        finished: isFinished(),
-                        isToLocation: true),
-                    SizedBox(height: 10.0),
-                    Text(
-                        locationsProvider.checkLocation(toCtrl.text)
-                            ? locationsProvider
-                                        .locationByName(toCtrl.text)
-                                        .info ==
-                                    null
-                                ? ' '
-                                : locationsProvider
-                                    .locationByName(toCtrl.text)
-                                    .info
-                            : ' ',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                  ],
+                  ),
                 ),
               ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        child: Row(children: <Widget>[
-                          FlowBackDuo(),
-                          SizedBox(width: 50),
-                          ButtonTheme(
-                            minWidth: MediaQuery.of(context).size.width * 0.65,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Expanded(
-                                child: RaisedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RequestRideTime(
-                                                        ride: widget.ride)));
-                                        widget.ride.startLocation =
-                                            fromCtrl.text;
-                                        widget.ride.endLocation = toCtrl.text;
-                                      }
-                                    },
-                                    elevation: 2.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    child: Text('Set Location',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)))),
-                          ),
-                        ]))),
-              ),
-            ],
+              onTap: () {
+                if (widget.isToLocation) {
+                  toCtrl.text = suggestions[index];
+                }
+                else {
+                  fromCtrl.text = suggestions[index];
+                }
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) => widget.page
+                ));
+              },
+            ),
+            Divider()
+          ],
+        );
+      },
+    );
+
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+            child: Column(
+              children: <Widget>[
+                BackText(),
+                SizedBox(height: 20.0),
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: widget.isToLocation
+                          ? Text('Where do you want to be dropped off?',
+                          style: CarriageTheme.title1)
+                          : Text('Where do you want to be picked up?',
+                          style: CarriageTheme.title1),
+                    )
+                  ],
+                ),
+                SizedBox(height: 20.0),
+                LocationField(
+                  ctrl: widget.isToLocation ? toCtrl : fromCtrl,
+                  label: widget.label,
+                  page: widget.page,
+                  updateSuggestions: (input) {
+                    setState(() {
+                      suggestions = locationsProvider.getSuggestions(input);
+                    });
+                  },
+                ),
+                SizedBox(height: 24),
+                suggestions.isEmpty ? customLocationOption : Expanded(child: suggestionList)
+              ],
+            ),
           ),
-        )));
+        )
+    );
   }
 }
 
 class LocationInput extends StatelessWidget {
-  final TextEditingController fromCtrl;
-  final TextEditingController toCtrl;
   final Ride ride;
   final String label;
   final bool finished;
@@ -341,37 +334,71 @@ class LocationInput extends StatelessWidget {
 
   LocationInput(
       {Key key,
-      this.fromCtrl,
-      this.toCtrl,
-      this.ride,
-      this.label,
-      this.finished,
-      this.isToLocation})
+        this.ride,
+        this.label,
+        this.finished,
+        this.isToLocation})
       : super(key: key);
 
   Widget _locationInputField(BuildContext context) {
-    return Container(
-        child: TextFormField(
-      focusNode: AlwaysDisabledFocusNode(),
-          enableInteractiveSelection: false,
-      controller: isToLocation ? toCtrl : fromCtrl,
-      onTap: () => Navigator.push(
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
+    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+
+    List<String> initSuggestions;
+    if (isToLocation && toCtrl.text != null && toCtrl.text != '') {
+      initSuggestions = locationsProvider.getSuggestions(toCtrl.text);
+    }
+    else if (!isToLocation && fromCtrl.text != null && fromCtrl.text != '') {
+      initSuggestions = locationsProvider.getSuggestions(fromCtrl.text);
+    }
+    else {
+      initSuggestions = [];
+      if (initSuggestions.length < 5) {
+        List<Ride> pastRides = ridesProvider.pastRides;
+        List<String> pastLocations = pastRides
+            .map((ride) => isToLocation ? ride.endLocation : ride.startLocation)
+            .where((loc) => !initSuggestions.contains(loc))
+            .toSet()
+            .toList();
+        List<String> suggestedPastLocations = pastLocations.sublist(0, min(5 - initSuggestions.length, pastLocations.length));
+        initSuggestions.addAll(suggestedPastLocations);
+      }
+      if (initSuggestions.length < 5) {
+        List<String> locations = locationsProvider.locations.map((loc) => loc.name).toList()..sort();
+        List<String> alphabeticalLocations = locations
+            .where((loc) => !initSuggestions.contains(loc))
+            .toList();
+        List<String> suggestedAlphabeticalLocations = alphabeticalLocations.sublist(0, min(5 - initSuggestions.length, alphabeticalLocations.length));
+        initSuggestions.addAll(suggestedAlphabeticalLocations);
+      }
+    }
+
+    bool screenReader = MediaQuery.of(context).accessibleNavigation;
+
+    void onTap () {
+      rideFlowProvider.setError(false);
+      Navigator.push(
           context,
           new MaterialPageRoute(
-            builder: (context) => RequestLoc(
+            builder: (context) => SelectLocationPage(
                 ride: ride,
-                fromCtrl: fromCtrl,
-                toCtrl: toCtrl,
                 label: label,
                 isToLocation: isToLocation,
-                page: finished
-                    ? RequestRideLocConfirm(
-                        ride: ride,
-                        fromCtrl: fromCtrl,
-                        toCtrl: toCtrl,
-                      )
-                    : RequestRideLoc(ride: ride)),
-          )),
+                page: RequestRideLoc(ride: ride),
+                initSuggestions: initSuggestions
+            ),
+          )
+      );
+    }
+
+    Widget textField = TextFormField(
+      focusNode: AlwaysDisabledFocusNode(),
+      enableInteractiveSelection: false,
+      onTap: onTap,
+      controller: isToLocation ? toCtrl : fromCtrl,
       decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
@@ -385,7 +412,17 @@ class LocationInput extends StatelessWidget {
       },
       style: TextStyle(color: Colors.black, fontSize: 17),
       onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
-    ));
+    );
+
+    return screenReader ? Semantics(
+      label: isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
+      (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location'),
+      focusable: true,
+      onTap: onTap,
+      child: IgnorePointer(
+          child: textField
+      ),
+    ) : textField;
   }
 
   @override
@@ -400,71 +437,26 @@ class LocationField extends StatelessWidget {
   final String label;
   final Function navigator;
   final Widget page;
+  final Function updateSuggestions;
 
   LocationField(
-      {Key key, this.ctrl, this.filled, this.label, this.navigator, this.page})
+      {Key key, this.ctrl, this.filled, this.label, this.navigator, this.page, this.updateSuggestions})
       : super(key: key);
 
   @override
   Widget build(context) {
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    return TypeAheadFormField(
-        textFieldConfiguration: TextFieldConfiguration(
-            controller: ctrl,
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2),
-              ),
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelText: label,
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
-            )),
-        suggestionsCallback: (pattern) {
-          return locationsProvider.getSuggestions(pattern);
-        },
-        itemBuilder: (context, suggestion) {
-          return ListTile(
-              title: Container(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                Text(suggestion, style: TextStyle(fontSize: 14)),
-                Text(locationsProvider.locationByName(suggestion).address,
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
-                Divider(),
-              ])));
-        },
-        noItemsFoundBuilder: (context) => GestureDetector(
-              onTap: () => {
-                Navigator.push(
-                    context, new MaterialPageRoute(builder: (context) => page))
-              },
-              child: Container(
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 10, left: 20, bottom: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(ctrl.text,
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold)),
-                          Text('Ithaca NY',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold)),
-                          Divider(),
-                        ],
-                      ))),
-            ),
-        transitionBuilder: (context, suggestionsBox, controller) {
-          return suggestionsBox;
-        },
-        onSuggestionSelected: (suggestion) {
-          ctrl.text = suggestion;
-          Navigator.push(
-              context, new MaterialPageRoute(builder: (context) => page));
+    return TextFormField(
+        controller: ctrl,
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 2),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+        ),
+        onChanged: (input) {
+          updateSuggestions(input);
         },
         validator: (value) {
           if (value.isEmpty) {

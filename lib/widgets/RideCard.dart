@@ -30,7 +30,8 @@ class RideCard extends StatelessWidget {
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    RidePage(ride, parentRideID: parentRideID)));
+                    RidePage(ride))
+        );
       },
       child: Container(
         margin: EdgeInsets.all(2),
