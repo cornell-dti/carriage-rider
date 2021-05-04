@@ -494,7 +494,7 @@ class _TimeLineState extends State<TimeLine> {
 
     String info = 'No Location Info';
     if (isStart) {
-      if (!locationsProvider.isPreset(ride.startLocation)) {
+      if (locationsProvider.isPreset(ride.startLocation)) {
         String potentialStartInfo =
             locationsProvider.locationByName(ride.startLocation).info;
         if (potentialStartInfo != null) {
@@ -502,7 +502,7 @@ class _TimeLineState extends State<TimeLine> {
         }
       }
     } else {
-      if (!locationsProvider.isPreset(ride.endLocation)) {
+      if (locationsProvider.isPreset(ride.endLocation)) {
         String potentialEndInfo =
             locationsProvider.locationByName(ride.endLocation).info;
         if (potentialEndInfo != null) {

@@ -3,25 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:intl/intl.dart';
 
-class OccurrenceTitle extends StatelessWidget {
-  const OccurrenceTitle({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: <Widget>[
-      Expanded(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, bottom: 15),
-          child: Text(
-            'Occurrence',
-            style: CarriageTheme.title3,
-          ),
-        ),
-      ),
-    ]);
-  }
-}
-
 class RecurringRideInfo extends StatelessWidget {
   RecurringRideInfo(this.ride);
   final Ride ride;
