@@ -447,7 +447,7 @@ class _HomeState extends State<Home> {
                                     MediaQuery.of(context).size.width * 0.8,
                                 height: 50.0,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
+                                    borderRadius: BorderRadius.circular(12)),
                                 child: RaisedButton.icon(
                                   onPressed: () {
                                     rideFlowProvider.setLocControllers('', '');

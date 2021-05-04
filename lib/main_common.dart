@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
                   context,
                   appConfig,
                   Provider.of<AuthProvider>(context, listen: false),
+                  Provider.of<RiderProvider>(context, listen: false),
                 );
               },
               child: ChangeNotifierProvider<RideFlowProvider>(

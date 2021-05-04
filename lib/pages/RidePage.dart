@@ -13,6 +13,7 @@ import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 
+
 class RidePage extends StatefulWidget {
   RidePage(this.ride);
 
@@ -30,9 +31,12 @@ class _RidePageState extends State<RidePage> {
   @override
   Widget build(BuildContext context) {
     DateTime dayBeforeRide = widget.ride.startTime.subtract(Duration(days: 1));
-    DateTime dayBeforeRide10 = DateTime(
-        dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
+    DateTime dayBeforeRide10 = DateTime(dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
+    DateTime hourBeforeRide = widget.ride.startTime.subtract(Duration(hours: 1));
     bool beforeEditDeadline = DateTime.now().isBefore(dayBeforeRide10);
+
+    bool editable = widget.ride.type == 'unscheduled' && beforeEditDeadline;
+    bool cancellable = DateTime.now().isBefore(hourBeforeRide);
 
     void setRideActionVisibility(bool visible) {
       setState(() {
@@ -56,8 +60,8 @@ class _RidePageState extends State<RidePage> {
                           left: 16, right: 16, bottom: 8, top: 16),
                       child: Text(
                           DateFormat('MMM')
-                                  .format(widget.ride.startTime)
-                                  .toUpperCase() +
+                              .format(widget.ride.startTime)
+                              .toUpperCase() +
                               ' ' +
                               ordinal(int.parse(DateFormat('d')
                                   .format(widget.ride.startTime))) +
@@ -78,32 +82,32 @@ class _RidePageState extends State<RidePage> {
                               showButtons: false),
                           SizedBox(height: 48),
                           TimeLine(widget.ride, true, false, false),
-                          SizedBox(height: 50)
+                          showRideActions && !editable && cancellable ? Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: CancelRideButton(widget.ride),
+                          ) : SizedBox(height: 50),
                         ],
                       ),
                     ),
-                    SizedBox(height: rideActionsHeight)
+                    showRideActions ? SizedBox(height: rideActionsHeight) : Container()
                   ],
                 ),
               ),
-              Align(
+              showRideActions && editable && cancellable ? Align(
                   alignment: Alignment.bottomCenter,
-                  child: showRideActions &&
-                          widget.ride.type == 'unscheduled' &&
-                          beforeEditDeadline
-                      ? MeasureSize(
-                          child: RideActions(widget.ride,
-                              setRideActionVisibility, scaffoldKey),
-                          onChange: (size) {
-                            setState(() {
-                              rideActionsHeight = size.height;
-                            });
-                          },
-                        )
-                      : Container()),
+                  child: MeasureSize(
+                    child: RideActions(widget.ride, setRideActionVisibility, scaffoldKey),
+                    onChange: (size) {
+                      setState(() {
+                        rideActionsHeight = size.height;
+                      });
+                    },
+                  )
+              ) : Container(),
             ],
           ),
-        ));
+        )
+    );
   }
 }
 
@@ -189,6 +193,27 @@ class CustomDivider extends StatelessWidget {
   }
 }
 
+class CancelRideButton extends StatelessWidget {
+  CancelRideButton(this.ride);
+  final Ride ride;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 22, bottom: 22),
+      child: RideAction(
+          text: 'Cancel Ride',
+          color: Colors.red,
+          icon: Icons.close,
+          action: () async {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CancelRidePage(ride))
+            );
+          }
+      ),
+    );
+  }
+}
 class RideActions extends StatelessWidget {
   const RideActions(this.ride, this.visibilityCallback, this.scaffoldKey);
   final Ride ride;
@@ -198,7 +223,7 @@ class RideActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RideFlowProvider createRideProvider =
-        Provider.of<RideFlowProvider>(context);
+    Provider.of<RideFlowProvider>(context);
 
     void editSingle(BuildContext context, Ride ride) {
       createRideProvider.setLocControllers(
@@ -257,7 +282,8 @@ class RideActions extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => RequestRideLoc(ride: ride.copy())));
           },
-        ));
+        )
+    );
 
     Widget editAllButton(BuildContext context) => ButtonTheme(
         minWidth: MediaQuery.of(context).size.width * 0.8,
@@ -275,7 +301,8 @@ class RideActions extends StatelessWidget {
           onPressed: () {
             editAll(context, ride.parentRide);
           },
-        ));
+        )
+    );
 
     Future<void> showEditDialog() async {
       visibilityCallback(false);
@@ -312,7 +339,8 @@ class RideActions extends StatelessWidget {
                     )),
               ),
             ]);
-          });
+          }
+      );
     }
 
     return Container(
@@ -352,18 +380,7 @@ class RideActions extends StatelessWidget {
                               fontSize: 17, fontWeight: FontWeight.bold))),
                 ),
               ),
-              ride.type == 'past'
-                  ? Container()
-                  : Padding(
-                      padding: EdgeInsets.only(top: 22, bottom: 22),
-                      child: RideAction(
-                          text: 'Cancel Ride',
-                          color: Colors.red,
-                          icon: Icons.close,
-                          action: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CancelRidePage(ride)))),
-                    ),
+              CancelRideButton(ride)
             ],
           )
         ],
@@ -377,9 +394,9 @@ String noShowMessage = 'No Show';
 class TimeLineRow extends StatelessWidget {
   TimeLineRow(
       {this.text,
-      this.infoWidget,
-      @required this.useCarIcon,
-      @required this.isCurrentRide});
+        this.infoWidget,
+        @required this.useCarIcon,
+        @required this.isCurrentRide});
 
   final String text;
   final Widget infoWidget;
@@ -390,7 +407,7 @@ class TimeLineRow extends StatelessWidget {
   Widget build(BuildContext context) {
     double circleRadius = 13;
     Widget stopCircle =
-        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+    Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
       Container(
           width: circleRadius * 2,
           height: 26,
@@ -421,17 +438,17 @@ class TimeLineRow extends StatelessWidget {
       text == null
           ? infoWidget
           : text == noShowMessage
-              ? Text(noShowMessage,
-                  style: TextStyle(fontSize: 16, color: Color(0xFFF44336)))
-              : isCurrentRide
-                  ? Text(text,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold))
-                  : Text(text,
-                      style:
-                          TextStyle(fontSize: 16, color: CarriageTheme.gray4))
+          ? Text(noShowMessage,
+          style: TextStyle(fontSize: 16, color: Color(0xFFF44336)))
+          : isCurrentRide
+          ? Text(text,
+          style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold))
+          : Text(text,
+          style:
+          TextStyle(fontSize: 16, color: CarriageTheme.gray4))
     ]);
   }
 }
@@ -457,7 +474,7 @@ class _TimeLineState extends State<TimeLine> {
 
   void displayBottomSheet(BuildContext context, Ride ride, bool isStart) {
     LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context, listen: false);
+    Provider.of<LocationsProvider>(context, listen: false);
 
     String info = 'No Location Info';
     if (isStart) {
@@ -522,10 +539,10 @@ class _TimeLineState extends State<TimeLine> {
 
     bool doneRender() =>
         timelineHeight != null &&
-        firstRowKey.currentContext != null &&
-        lastRowKey.currentContext != null &&
-        firstRowHeight != null &&
-        lastRowHeight != null;
+            firstRowKey.currentContext != null &&
+            lastRowKey.currentContext != null &&
+            firstRowHeight != null &&
+            lastRowHeight != null;
 
     Widget buildLine() {
       if (doneRender()) {
@@ -624,14 +641,14 @@ class _TimeLineState extends State<TimeLine> {
                   key: widget.ride.type == 'past' ? lastRowKey : null,
                   child: widget.ride.type == 'past'
                       ? widget.ride.status == RideStatus.NO_SHOW
-                          ? TimeLineRow(
-                              text: noShowMessage,
-                              useCarIcon: false,
-                              isCurrentRide: widget.isCurrent)
-                          : TimeLineRow(
-                              text: 'Arrived!',
-                              useCarIcon: false,
-                              isCurrentRide: widget.isCurrent)
+                      ? TimeLineRow(
+                      text: noShowMessage,
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent)
+                      : TimeLineRow(
+                      text: 'Arrived!',
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent)
                       : Container(),
                 ),
               ),
@@ -689,9 +706,9 @@ class InformationRow extends StatelessWidget {
 class RideAction extends StatelessWidget {
   const RideAction(
       {@required this.text,
-      @required this.color,
-      @required this.icon,
-      @required this.action});
+        @required this.color,
+        @required this.icon,
+        @required this.action});
   final String text;
   final Color color;
   final IconData icon;
