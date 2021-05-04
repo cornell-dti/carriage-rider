@@ -2,6 +2,7 @@ import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
+import 'package:carriage_rider/widgets/RecurringRideInfo.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -45,68 +46,83 @@ class _RidePageState extends State<RidePage> {
     }
 
     return Scaffold(
-        key: scaffoldKey,
-        appBar: ScheduleBar(
-            Colors.black, Theme.of(context).scaffoldBackgroundColor),
-        body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 8, top: 16),
-                      child: Text(
-                          DateFormat('MMM')
-                              .format(widget.ride.startTime)
-                              .toUpperCase() +
-                              ' ' +
-                              ordinal(int.parse(DateFormat('d')
-                                  .format(widget.ride.startTime))) +
-                              ' ' +
-                              DateFormat('jm').format(widget.ride.startTime),
-                          style: CarriageTheme.largeTitle),
+      key: scaffoldKey,
+      appBar: ScheduleBar(
+          Colors.black, Theme.of(context).scaffoldBackgroundColor),
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, bottom: 8, top: 16),
+                    child: Text(
+                        DateFormat('MMM')
+                            .format(widget.ride.startTime)
+                            .toUpperCase() +
+                            ' ' +
+                            ordinal(int.parse(DateFormat('d')
+                                .format(widget.ride.startTime))) +
+                            ' ' +
+                            DateFormat('jm').format(widget.ride.startTime),
+                        style: CarriageTheme.largeTitle),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 32),
+                        DriverCard(
+                            color: widget.ride.type == 'unscheduled'
+                                ? CarriageTheme.gray4
+                                : Colors.black,
+                            ride: widget.ride,
+                            showButtons: false),
+                        SizedBox(height: 48),
+                        TimeLine(widget.ride, true, false, false),
+                        SizedBox(height: 32),
+                      ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 32),
-                          DriverCard(
-                              color: widget.ride.type == 'unscheduled'
-                                  ? CarriageTheme.gray4
-                                  : Colors.black,
-                              ride: widget.ride,
-                              showButtons: false),
-                          SizedBox(height: 48),
-                          TimeLine(widget.ride, true, false, false),
-                          showRideActions && !editable && cancellable ? Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: CancelRideButton(widget.ride),
-                          ) : SizedBox(height: 50),
-                        ],
-                      ),
-                    ),
-                    showRideActions ? SizedBox(height: rideActionsHeight) : Container()
-                  ],
-                ),
+                  ),
+                  widget.ride.parentRide != null ? Column(
+                      children: [
+                        Container(height: 6, color: Theme.of(context).scaffoldBackgroundColor),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          color: Colors.white,
+                          child:  RecurringRideInfo(widget.ride.parentRide) ,
+                        ),
+                      ]
+                  ) : Container(),
+                  showRideActions && !editable && cancellable ? Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: CancelRideButton(widget.ride),
+                  ) : Container(),
+                  showRideActions ? SizedBox(height: rideActionsHeight) : Container()
+                ],
               ),
-              showRideActions && editable && cancellable ? Align(
-                  alignment: Alignment.bottomCenter,
-                  child: MeasureSize(
-                    child: RideActions(widget.ride, setRideActionVisibility, scaffoldKey),
-                    onChange: (size) {
-                      setState(() {
-                        rideActionsHeight = size.height;
-                      });
-                    },
-                  )
-              ) : Container(),
-            ],
-          ),
-        )
+            ),
+            showRideActions && editable && cancellable ? Align(
+                alignment: Alignment.bottomCenter,
+                child: showRideActions &&
+                    widget.ride.type == 'unscheduled' &&
+                    beforeEditDeadline
+                    ? MeasureSize(
+                  child: RideActions(widget.ride,
+                      setRideActionVisibility, scaffoldKey),
+                  onChange: (size) {
+                    setState(() {
+                      rideActionsHeight = size.height;
+                    });
+                  },
+                ) : Container()
+            ) : Container()
+          ],
+        ),
+      ),
     );
   }
 }
@@ -478,7 +494,7 @@ class _TimeLineState extends State<TimeLine> {
 
     String info = 'No Location Info';
     if (isStart) {
-      if (!locationsProvider.isPreset(ride.startLocation)) {
+      if (locationsProvider.isPreset(ride.startLocation)) {
         String potentialStartInfo =
             locationsProvider.locationByName(ride.startLocation).info;
         if (potentialStartInfo != null) {
@@ -486,7 +502,7 @@ class _TimeLineState extends State<TimeLine> {
         }
       }
     } else {
-      if (!locationsProvider.isPreset(ride.endLocation)) {
+      if (locationsProvider.isPreset(ride.endLocation)) {
         String potentialEndInfo =
             locationsProvider.locationByName(ride.endLocation).info;
         if (potentialEndInfo != null) {
