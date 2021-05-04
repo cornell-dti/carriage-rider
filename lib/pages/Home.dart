@@ -19,7 +19,6 @@ import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/pages/Settings.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'Upcoming.dart';
@@ -210,17 +209,6 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Profile()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.settings, color: Colors.black),
-                title: sideBarText('Settings', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Settings()));
                 },
               ),
               Divider(
@@ -457,8 +445,7 @@ class _HomeState extends State<Home> {
                                         new MaterialPageRoute(
                                             builder: (context) =>
                                                 RequestRideLoc(
-                                                  ride: new Ride(),
-                                                )));
+                                                    ride: new Ride())));
                                   },
                                   elevation: 3.0,
                                   color: Colors.black,

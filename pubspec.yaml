@@ -38,6 +38,7 @@ dependencies:
   overlay_support:
   firebase_messaging:
   loading_overlay: ^0.2.1
+  loading_overlay:
   shared_preferences:
 
 dev_dependencies:
