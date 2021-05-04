@@ -41,11 +41,6 @@ class Home extends StatelessWidget {
       );
     }
 
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
-    AppConfig appConfig = AppConfig.of(context);
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
