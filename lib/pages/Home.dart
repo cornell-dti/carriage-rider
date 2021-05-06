@@ -67,13 +67,13 @@ class _HomeState extends State<Home> {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data'];
-      print("_backgroundMessageHandler data: ${data}");
+      print("_backgroundMessageHandler data: $data");
     }
 
     if (message.containsKey('notification')) {
       // Handle notification message
       final dynamic notification = message['notification'];
-      print("_backgroundMessageHandler notification: ${notification}");
+      print("_backgroundMessageHandler notification: $notification");
     }
     return Future<void>.value();
   }
