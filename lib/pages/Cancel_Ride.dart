@@ -1,6 +1,7 @@
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../models/Ride.dart';
@@ -32,87 +33,98 @@ class _CancelRidePageState extends State<CancelRidePage> {
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
 
+    double buttonHeight = 48;
+    double buttonVerticalPadding = 16;
     return Scaffold(
         body: LoadingOverlay(
           color: Colors.white,
           isLoading: requestedCancel,
           child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                BackText(),
-                SizedBox(height: 20),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Text('Cancel your ride', style: CarriageTheme.title1),
-                    )
-                  ],
-                ),
-                TabBarTop(
-                    colorOne: Colors.black,
-                    colorTwo: Colors.black,
-                    colorThree: Colors.black),
-                TabBarBot(
-                    colorOne: Colors.green,
-                    colorTwo: Colors.green,
-                    colorThree: Colors.black),
-                SizedBox(height: 30),
-                widget.ride.buildSummary(context),
-                SizedBox(height: 32),
-                widget.ride.parentRide != null ? CheckboxListTile(
-                    activeColor: CarriageTheme.gray2,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: cancelRepeating,
-                    onChanged: (bool newValue) {
-                      setState(() {
-                        cancelRepeating = newValue;
-                      });
-                    },
-                    title: Text('Cancel all repeating rides',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: CarriageTheme.gray2,
-                            fontWeight: FontWeight.normal))
-                ) : Container(),
-                Spacer(),
-                Center(
-                  child: ButtonTheme(
-                    minWidth:
-                    MediaQuery.of(context).size.width * 0.8,
-                    height: 50.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    child: RaisedButton(
-                      onPressed: () async {
-                        setState(() {
-                          requestedCancel = true;
-                        });
-                        if (cancelRepeating) {
-                          await ridesProvider.cancelRide(context, widget.ride.parentRide);
-                        }
-                        else {
-                          if (widget.ride.parentRide != null) {
-                            await ridesProvider.cancelRepeatingRideOccurrence(context, widget.ride);
-                          }
-                          else {
-                            await ridesProvider.cancelRide(context, widget.ride);
-                          }
-                        }
-
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => CancelConfirmation())
-                        );
-                      },
-                      elevation: 3.0,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                      child: Text('Cancel Ride', style: CarriageTheme.button),
-                    ),
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonHeight + 2*buttonVerticalPadding + 40),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      BackText(),
+                      SizedBox(height: 20),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Text('Cancel your ride', style: CarriageTheme.title1),
+                          )
+                        ],
+                      ),
+                      TabBarTop(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.black,
+                          colorThree: Colors.black),
+                      TabBarBot(
+                          colorOne: Colors.green,
+                          colorTwo: Colors.green,
+                          colorThree: Colors.black),
+                      SizedBox(height: 30),
+                      widget.ride.buildSummary(context),
+                      SizedBox(height: 16),
+                      widget.ride.parentRide != null ? CheckboxListTile(
+                          activeColor: CarriageTheme.gray2,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: cancelRepeating,
+                          onChanged: (bool newValue) {
+                            setState(() {
+                              cancelRepeating = newValue;
+                            });
+                          },
+                          title: Text('Cancel all repeating rides',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: CarriageTheme.gray2,
+                                  fontWeight: FontWeight.normal))
+                      ) : Container(),
+                    ]),
                   ),
+                ),
+                Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 34, vertical: buttonVerticalPadding),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 5,
+                                  blurRadius: 11,
+                                  color: Colors.black.withOpacity(0.11))
+                            ]
+                        ),
+                        child: CButton(
+                          text: 'Cancel Ride',
+                          height: buttonHeight,
+                          onPressed: () async {
+                            setState(() {
+                              requestedCancel = true;
+                            });
+                            if (cancelRepeating) {
+                              await ridesProvider.cancelRide(context, widget.ride.parentRide);
+                            }
+                            else {
+                              if (widget.ride.parentRide != null) {
+                                await ridesProvider.cancelRepeatingRideOccurrence(context, widget.ride);
+                              }
+                              else {
+                                await ridesProvider.cancelRide(context, widget.ride);
+                              }
+                            }
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => CancelConfirmation())
+                            );
+                          },
+                        )
+                    )
                 )
-              ]),
+              ],
             ),
           ),
         ));

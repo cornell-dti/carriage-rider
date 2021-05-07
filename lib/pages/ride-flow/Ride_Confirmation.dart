@@ -1,5 +1,6 @@
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,24 +56,19 @@ class _RideConfirmationState extends State<RideConfirmation> {
           Expanded(
             child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 30.0),
-                  child: ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width * 0.8,
-                    height: 50.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
-                      },
-                      elevation: 3.0,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                      child: Text('Done', style: CarriageTheme.button),
-                    ),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(left: 34, right: 34, bottom: 30.0),
+
+                  child: CButton(
+                    text: 'Done',
+                    height: 50,
+                    onPressed: () {
+                      Navigator.popUntil(context, ModalRoute.withName('/'));
+                    },
                   ),
-                )),
+                )
+            ),
           )
         ],
       ),
