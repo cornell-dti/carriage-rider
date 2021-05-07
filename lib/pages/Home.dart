@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
@@ -38,44 +38,43 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static final FirebaseMessaging _fcm = FirebaseMessaging();
+  static FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
-  int _totalNotifications;
   String deviceToken;
 
   @override
   void initState() {
-    _totalNotifications = 0;
+    final AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final initializationSettingsIOS = IOSInitializationSettings();
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    notificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
     initialize();
     getMessage();
     super.initState();
+  }
+
+  Future<void> onSelectNotification(String payload) {
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => Notifications()));
+    return Future<void>.value();
   }
 
   _registerOnFirebase() async {
     _fcm.subscribeToTopic('all');
     await _fcm.getToken().then((token) => deviceToken = token);
     if (deviceToken != null) {
-     subscribe(deviceToken);
+      subscribe(deviceToken);
     }
     _fcm.onTokenRefresh.listen((newToken) {
       subscribe(newToken);
     });
-  }
-
-  static Future<dynamic> backgroundHandle(
-    Map<String, dynamic> message,
-  ) async {
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-      print("_backgroundMessageHandler data: $data");
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-      print("_backgroundMessageHandler notification: $notification");
-    }
-    return Future<void>.value();
   }
 
   void initialize() async {
@@ -85,33 +84,38 @@ class _HomeState extends State<Home> {
         // save the token  OR subscribe to a topic here
         _fcm.subscribeToTopic('all');
       });
-
       await _fcm.requestNotificationPermissions(
           IosNotificationSettings(sound: true, badge: true, alert: true));
     }
   }
 
-  subscribe(String token) async {
-    print(token);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    String authToken = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.post(
-      "${AppConfig.of(context).baseUrl}/notification/subscribe",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: "Bearer $authToken"
-      },
-      body: jsonEncode(<String, String>{
-        'platform': 'android',
-        'token': token,
-      }),
+  static void showNotification(String notification) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        await getAndroidNotificationDetails(notification);
+    final IOSNotificationDetails iOSPlatformChannelSpecifics =
+        IOSNotificationDetails();
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    await notificationsPlugin.show(
+      0,
+      'Carriage Rider',
+      notification,
+      platformChannelSpecifics,
     );
-    if (response.statusCode != 200) {
-      print(response.statusCode);
-      print(response.body);
-      throw Exception('Failed to subscribe.');
-    }
+  }
+
+  static Future<AndroidNotificationDetails> getAndroidNotificationDetails(
+      dynamic notification) async {
+    return AndroidNotificationDetails('general', 'General notifications',
+        'General notifications that are not sorted to any specific topics.',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false,
+        category: 'General',
+        icon: '@mipmap/ic_launcher',
+        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'));
   }
 
   void getMessage() async {
@@ -129,21 +133,10 @@ class _HomeState extends State<Home> {
         if (Platform.isIOS) {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
-        print(androidNotification.title);
-        showSimpleNotification(
-          Text(Platform.isIOS
-              ? iosNotification.title
-              : androidNotification.title),
-          leading: NotificationBadge(totalNotifications: _totalNotifications),
-          subtitle: Text(
-              Platform.isIOS ? iosNotification.body : androidNotification.body),
-          background: Colors.cyan[700],
-          duration: Duration(seconds: 5),
-        );
-
-        setState(() {
-          _totalNotifications++;
-        });
+        Platform.isIOS
+            ? showNotification(iosNotification.body)
+            : showNotification(androidNotification.body);
+        setState(() {});
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
@@ -156,9 +149,7 @@ class _HomeState extends State<Home> {
         }
         Navigator.push(context,
             new MaterialPageRoute(builder: (context) => Notifications()));
-        setState(() {
-          _totalNotifications++;
-        });
+        setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
@@ -171,11 +162,47 @@ class _HomeState extends State<Home> {
         }
         Navigator.push(context,
             new MaterialPageRoute(builder: (context) => Notifications()));
-        setState(() {
-          _totalNotifications++;
-        });
+        setState(() {});
       },
     );
+  }
+
+  static Future<dynamic> backgroundHandle(
+    Map<String, dynamic> message,
+  ) async {
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data']['default'];
+      showNotification('$data');
+      print("_backgroundMessageHandler data: $data");
+    }
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification']['body'];
+      showNotification('$notification');
+      print("_backgroundMessageHandler notification: $notification");
+    }
+    return Future<void>.value();
+  }
+
+  subscribe(String token) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    String authToken = await authProvider.secureStorage.read(key: 'token');
+    final response = await http.post(
+      "${AppConfig.of(context).baseUrl}/notification/subscribe",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer $authToken"
+      },
+      body: jsonEncode(<String, String>{
+        'platform': Platform.isIOS ? 'ios' : 'android',
+        'token': token,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to subscribe.');
+    }
   }
 
   @override
