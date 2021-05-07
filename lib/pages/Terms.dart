@@ -6,7 +6,7 @@ class TermsOfService extends StatelessWidget {
     return Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
+          padding: const EdgeInsets.only(bottom: 20.0),
           child: ButtonTheme(
               minWidth: MediaQuery.of(context).size.width * 0.8,
               height: 50.0,
