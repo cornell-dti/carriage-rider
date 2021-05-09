@@ -22,26 +22,94 @@ void main() {
   });
 }
 
-class Home extends StatefulWidget {
+class HomeHeader extends StatefulWidget {
+  final ScrollController homeScrollCtrl;
+  final double height;
+  HomeHeader(this.homeScrollCtrl, this.height);
+
   @override
-  _HomeState createState() => _HomeState();
+  _HomeHeaderState createState() => _HomeHeaderState();
 }
 
-class _HomeState extends State<Home> {
-  ScrollController scrollCtrl;
+class _HomeHeaderState extends State<HomeHeader> {
   bool scrollAtTop;
 
   @override
   void initState() {
     super.initState();
-    scrollCtrl = ScrollController();
     scrollAtTop = true;
-    scrollCtrl.addListener(() {
+    widget.homeScrollCtrl.addListener(() {
       setState(() {
-        scrollAtTop = scrollCtrl.position.pixels == 0;
+        scrollAtTop = widget.homeScrollCtrl.position.pixels == 0;
       });
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+
+    return Container(
+      height: widget.height,
+      decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: scrollAtTop ? [] : [BoxShadow(
+              offset: Offset(0,2),
+              blurRadius: 11,
+              color: Colors.black.withOpacity(0.15)
+          )]
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              Semantics(
+                header: true,
+                label: 'Hi ' + riderProvider.info.firstName,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, bottom: 23),
+                  child: ExcludeSemantics(
+                    child: Text(
+                      'Hi ' +
+                          riderProvider.info.firstName +
+                          '! ☀',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontFamily: 'SFPro',
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 23),
+                child: Builder(builder: (context) {
+                  return Semantics(
+                    label: 'Menu',
+                    child: IconButton(
+                        icon: Icon(Icons.menu,
+                            color: Colors.black),
+                        onPressed: () =>
+                            Scaffold.of(context)
+                                .openEndDrawer()),
+                  );
+                }),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  ScrollController scrollCtrl = ScrollController();
 
   @override
   Widget build(context) {
@@ -229,62 +297,7 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: headerHeight,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            boxShadow: scrollAtTop ? [] : [BoxShadow(
-                                offset: Offset(0,2),
-                                blurRadius: 11,
-                                color: Colors.black.withOpacity(0.15)
-                            )]
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                Semantics(
-                                  header: true,
-                                  label: 'Hi ' + riderProvider.info.firstName,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 23),
-                                    child: ExcludeSemantics(
-                                      child: Text(
-                                        'Hi ' +
-                                            riderProvider.info.firstName +
-                                            '! ☀',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 30,
-                                            fontFamily: 'SFPro',
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 23),
-                                  child: Builder(builder: (context) {
-                                    return Semantics(
-                                      label: 'Menu',
-                                      child: IconButton(
-                                          icon: Icon(Icons.menu,
-                                              color: Colors.black),
-                                          onPressed: () =>
-                                              Scaffold.of(context)
-                                                  .openEndDrawer()),
-                                    );
-                                  }),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                      HomeHeader(scrollCtrl, headerHeight)
                     ]
                 )
             ),
