@@ -207,30 +207,35 @@ class _HomeState extends State<Home> {
                                 ? Semantics(
                               button: true,
                               container: true,
-                              child: GestureDetector(
-                                  onTap: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          UpcomingSeeMore())),
-                                  child: Row(children: [
-                                    Text(
-                                      'See More',
-                                      style:
-                                      CarriageTheme.seeMoreStyle,
-                                      semanticsLabel:
-                                      'See more upcoming rides',
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.arrow_forward,
-                                        size: 16)
-                                  ])),
+                              child: Container(
+                                height: 48,
+                                child: InkWell(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpcomingSeeMore())),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Row(children: [
+                                        Text(
+                                          'See More',
+                                          style:
+                                          CarriageTheme.seeMoreStyle,
+                                          semanticsLabel:
+                                          'See more upcoming rides',
+                                        ),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward,
+                                            size: 16)
+                                      ]),
+                                    )),
+                              ),
                             )
                                 : Container()
                           ]),
                         ),
-                        SizedBox(height: 12),
                         UpcomingRides(),
-                        SizedBox(height: 36),
+                        SizedBox(height: 16),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Row(children: [
@@ -247,23 +252,29 @@ class _HomeState extends State<Home> {
                                 ? Semantics(
                               container: true,
                               button: true,
-                              child: GestureDetector(
-                                  onTap: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          HistorySeeMore())),
-                                  child: Row(children: [
-                                    Text(
-                                      'See More',
-                                      style:
-                                      CarriageTheme.seeMoreStyle,
-                                      semanticsLabel:
-                                      'See more past rides',
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.arrow_forward,
-                                        size: 16)
-                                  ])),
+                              child: Container(
+                                height: 48,
+                                child: InkWell(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            HistorySeeMore())),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Row(children: [
+                                        Text(
+                                          'See More',
+                                          style:
+                                          CarriageTheme.seeMoreStyle,
+                                          semanticsLabel:
+                                          'See more past rides',
+                                        ),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward,
+                                            size: 16)
+                                      ]),
+                                    )),
+                              ),
                             )
                                 : Container()
                           ]),

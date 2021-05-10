@@ -114,94 +114,110 @@ class CurrentRideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(2),
-      decoration: CarriageTheme.cardDecoration,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Row(
-          children: [
-            ride == null
-                ? Expanded(
-                  child: MergeSemantics(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20),
-                    Icon(
-                      Icons.directions_car_rounded,
-                      size: 32,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 10),
-                    Text('No current ride',
-                        style: CarriageTheme.body
-                            .copyWith(color: Colors.grey)),
-                    SizedBox(height: 20),
-                  ],
-                ),
-                  ),
-                )
-                : Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
-                },
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      currentCardInstruction(context, ride),
-                      SizedBox(height: 15),
-                      showCallDriver
-                          ? Row(
-                        children: <Widget>[
-                          Semantics(
-                            label: 'Call driver',
-                            button: true,
-                            child: GestureDetector(
-                              onTap: () => UrlLauncher.launch(
-                                  'tel://${ride.driver.phoneNumber}'),
-                              child: Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(100),
-                                      border: Border.all(
-                                          width: 0.5,
-                                          color: Colors.black
-                                              .withOpacity(0.25))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Icon(Icons.phone,
-                                        size: 24,
-                                        color: Color(0xFF4CAF50)),
-                                  )),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Driver',
-                                  style: TextStyle(fontSize: 11)),
-                              Text(ride.driver.fullName(),
-                                  style:
-                                  CarriageTheme.rideInfoStyle)
-                            ],
-                          )
-                        ],
-                      )
-                          : Container(),
-                      SizedBox(height: 10),
-                    ]),
-              ),
+    Widget rideDetails = ride == null ? Expanded(
+      child: MergeSemantics(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 20),
+            Icon(
+              Icons.directions_car_rounded,
+              size: 32,
+              color: Colors.grey,
             ),
+            SizedBox(height: 10),
+            Text('No current ride',
+                style: CarriageTheme.body
+                    .copyWith(color: Colors.grey)),
+            SizedBox(height: 20),
           ],
         ),
       ),
+    ) : Expanded(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10),
+            currentCardInstruction(context, ride),
+            SizedBox(height: 15),
+            showCallDriver
+                ? Row(
+              children: <Widget>[
+                Semantics(
+                  label: 'Call driver',
+                  button: true,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                      onTap: () => UrlLauncher.launch(
+                          'tel://${ride.driver.phoneNumber}'),
+                      child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(100),
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.black
+                                      .withOpacity(0.25))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Icon(Icons.phone,
+                                size: 24,
+                                color: Color(0xFF4CAF50)),
+                          )),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Driver',
+                        style: TextStyle(fontSize: 11)),
+                    Text(ride.driver.fullName(),
+                        style:
+                        CarriageTheme.rideInfoStyle)
+                  ],
+                )
+              ],
+            )
+                : Container(),
+            SizedBox(height: 10),
+          ]),
+    );
+
+    Widget cardInfo = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          rideDetails
+        ],
+      ),
+    );
+    if (ride == null) {
+      return Container(
+          margin: EdgeInsets.all(2),
+          decoration: CarriageTheme.cardDecoration,
+          child: cardInfo
+      );
+    }
+    return Container(
+        margin: EdgeInsets.all(2),
+        decoration: CarriageTheme.cardDecoration,
+        child: Material(
+          type: MaterialType.transparency,
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: cardInfo,
+              onTap: () {
+                Navigator.push(context, new MaterialPageRoute(builder: (context) => Current(ride)));
+              },
+            )
+        )
     );
   }
 }
