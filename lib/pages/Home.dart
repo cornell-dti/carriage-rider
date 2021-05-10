@@ -11,9 +11,12 @@ import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/widgets/ModifiedRefreshIndicator.dart';
 import 'Upcoming.dart';
 
 void main() {
@@ -108,9 +111,21 @@ class _HomeHeaderState extends State<HomeHeader> {
   }
 }
 
-class Home extends StatelessWidget {
-  ScrollController scrollCtrl = ScrollController();
+class Home extends StatefulWidget {
 
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final ScrollController scrollCtrl = ScrollController();
+  final GlobalKey<ModifiedRefreshIndicatorState> refreshKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
   @override
   Widget build(context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
@@ -120,6 +135,7 @@ class Home extends StatelessWidget {
     Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
+    double headerHeight = 100;
 
     Widget sideBarText(String text, Color color) {
       return Text(
@@ -129,7 +145,141 @@ class Home extends StatelessWidget {
       );
     }
 
-    double headerHeight = 100;
+    Widget buildPage() {
+      return  NotificationListener<OverscrollNotification>(
+          onNotification: (notif) {
+            if (refreshKey.currentState.mode == RefreshIndicatorMode.drag) {
+              SemanticsService.announce('Pull down to refresh rides', TextDirection.ltr);
+            }
+            else if (refreshKey.currentState.mode == RefreshIndicatorMode.armed) {
+              SemanticsService.announce('Release to refresh rides', TextDirection.ltr);
+            }
+            return true;
+          },
+          child: ModifiedRefreshIndicator(
+            key: refreshKey,
+            semanticsLabel: 'Refreshing rides',
+            onRefresh: () async {
+              SemanticsService.announce('Refreshing rides', TextDirection.ltr);
+              await ridesProvider.fetchAllRides(
+                  appConfig, authProvider);
+            },
+            child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    controller: scrollCtrl,
+                    child: Column(
+                      children: [
+                        SizedBox(height: headerHeight),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Current Ride',
+                                  style: CarriageTheme.subHeading,
+                                ),
+                                SizedBox(height: 12),
+                                CurrentRideCard(ridesProvider.currentRide,
+                                    showCallDriver: true),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 35),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(children: [
+                            Semantics(
+                              container: true,
+                              header: true,
+                              child: Text(
+                                'Upcoming Rides',
+                                style: CarriageTheme.subHeading,
+                              ),
+                            ),
+                            Spacer(),
+                            ridesProvider.upcomingRides.isNotEmpty
+                                ? Semantics(
+                              button: true,
+                              container: true,
+                              child: GestureDetector(
+                                  onTap: () => Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpcomingSeeMore())),
+                                  child: Row(children: [
+                                    Text(
+                                      'See More',
+                                      style:
+                                      CarriageTheme.seeMoreStyle,
+                                      semanticsLabel:
+                                      'See more upcoming rides',
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(Icons.arrow_forward,
+                                        size: 16)
+                                  ])),
+                            )
+                                : Container()
+                          ]),
+                        ),
+                        SizedBox(height: 12),
+                        UpcomingRides(),
+                        SizedBox(height: 36),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(children: [
+                            Semantics(
+                              container: true,
+                              header: true,
+                              child: Text(
+                                'Ride History',
+                                style: CarriageTheme.subHeading,
+                              ),
+                            ),
+                            Spacer(),
+                            ridesProvider.pastRides.isNotEmpty
+                                ? Semantics(
+                              container: true,
+                              button: true,
+                              child: GestureDetector(
+                                  onTap: () => Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          HistorySeeMore())),
+                                  child: Row(children: [
+                                    Text(
+                                      'See More',
+                                      style:
+                                      CarriageTheme.seeMoreStyle,
+                                      semanticsLabel:
+                                      'See more past rides',
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(Icons.arrow_forward,
+                                        size: 16)
+                                  ])),
+                            )
+                                : Container()
+                          ]),
+                        ),
+                        SizedBox(height: 12),
+                        RideHistory(),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height:
+                          MediaQuery.of(context).size.height / 8 + 36,
+                        )
+                      ],
+                    ),
+                  ),
+                  HomeHeader(scrollCtrl, headerHeight)
+                ]
+            ),
+          )
+      );
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -181,126 +331,7 @@ class Home extends StatelessWidget {
             ? Center(child: CircularProgressIndicator())
             : Stack(
           children: <Widget>[
-            RefreshIndicator(
-                semanticsLabel: 'Refreshing rides',
-                onRefresh: () async {
-                  await ridesProvider.fetchAllRides(
-                      appConfig, authProvider);
-                },
-                child: Stack(
-                    children: [
-                      SingleChildScrollView(
-                        controller: scrollCtrl,
-                        child: Column(
-                          children: [
-                            SizedBox(height: headerHeight),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Current Ride',
-                                      style: CarriageTheme.subHeading,
-                                    ),
-                                    SizedBox(height: 12),
-                                    CurrentRideCard(ridesProvider.currentRide,
-                                        showCallDriver: true),
-                                  ]
-                              ),
-                            ),
-                            SizedBox(height: 35),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(children: [
-                                Semantics(
-                                  container: true,
-                                  header: true,
-                                  child: Text(
-                                    'Upcoming Rides',
-                                    style: CarriageTheme.subHeading,
-                                  ),
-                                ),
-                                Spacer(),
-                                ridesProvider.upcomingRides.isNotEmpty
-                                    ? Semantics(
-                                  button: true,
-                                  container: true,
-                                  child: GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              UpcomingSeeMore())),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more upcoming rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ])),
-                                )
-                                    : Container()
-                              ]),
-                            ),
-                            SizedBox(height: 12),
-                            UpcomingRides(),
-                            SizedBox(height: 36),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(children: [
-                                Semantics(
-                                  container: true,
-                                  header: true,
-                                  child: Text(
-                                    'Ride History',
-                                    style: CarriageTheme.subHeading,
-                                  ),
-                                ),
-                                Spacer(),
-                                ridesProvider.pastRides.isNotEmpty
-                                    ? Semantics(
-                                  container: true,
-                                  button: true,
-                                  child: GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              HistorySeeMore())),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more past rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ])),
-                                )
-                                    : Container()
-                              ]),
-                            ),
-                            SizedBox(height: 12),
-                            RideHistory(),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height:
-                              MediaQuery.of(context).size.height / 8 + 36,
-                            )
-                          ],
-                        ),
-                      ),
-                      HomeHeader(scrollCtrl, headerHeight)
-                    ]
-                )
-            ),
+            buildPage(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
