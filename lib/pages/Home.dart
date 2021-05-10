@@ -176,9 +176,13 @@ class _HomeState extends State<Home> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Current Ride',
-                                  style: CarriageTheme.subHeading,
+                                Semantics(
+                                  container: true,
+                                  header: true,
+                                  child: Text(
+                                    'Current Ride',
+                                    style: CarriageTheme.subHeading,
+                                  ),
                                 ),
                                 SizedBox(height: 12),
                                 CurrentRideCard(ridesProvider.currentRide,

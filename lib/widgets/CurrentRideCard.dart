@@ -123,23 +123,25 @@ class CurrentRideCard extends StatelessWidget {
           children: [
             ride == null
                 ? Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: 20),
-                  Icon(
-                    Icons.directions_car_rounded,
-                    size: 32,
-                    color: Colors.grey,
+                  child: MergeSemantics(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    Icon(
+                      Icons.directions_car_rounded,
+                      size: 32,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 10),
+                    Text('No current ride',
+                        style: CarriageTheme.body
+                            .copyWith(color: Colors.grey)),
+                    SizedBox(height: 20),
+                  ],
+                ),
                   ),
-                  SizedBox(height: 10),
-                  Text('No current ride',
-                      style: CarriageTheme.body
-                          .copyWith(color: Colors.grey)),
-                  SizedBox(height: 20),
-                ],
-              ),
-            )
+                )
                 : Expanded(
               child: GestureDetector(
                 onTap: () {
@@ -156,6 +158,7 @@ class CurrentRideCard extends StatelessWidget {
                         children: <Widget>[
                           Semantics(
                             label: 'Call driver',
+                            button: true,
                             child: GestureDetector(
                               onTap: () => UrlLauncher.launch(
                                   'tel://${ride.driver.phoneNumber}'),

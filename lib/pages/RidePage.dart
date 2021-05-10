@@ -441,11 +441,13 @@ class TimeLineRow extends StatelessWidget {
     ]);
 
     Widget locationCircle() {
-      return Container(
-          width: 26,
-          child: useCarIcon
-              ? SvgPicture.asset('assets/images/carIcon.svg')
-              : stopCircle);
+      return ExcludeSemantics(
+        child: Container(
+            width: 26,
+            child: useCarIcon
+                ? SvgPicture.asset('assets/images/carIcon.svg')
+                : stopCircle),
+      );
     }
 
     return Row(children: [
