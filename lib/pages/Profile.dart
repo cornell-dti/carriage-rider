@@ -118,9 +118,10 @@ class Profile extends StatelessWidget {
                                                 label: 'Add Profile Picture',
                                                 child: ExcludeSemantics(
                                                   child: FloatingActionButton(
+                                                    materialTapTargetSize: MaterialTapTargetSize.padded,
                                                     backgroundColor: Colors.black,
                                                     child: Icon(Icons.add,
-                                                        size: _picBtnDiameter),
+                                                        size: 32),
                                                     onPressed: selectImage,
                                                   ),
                                                 ),
