@@ -67,8 +67,9 @@ class _HomeState extends State<Home> {
   }
 
   _registerOnFirebase() async {
-    _fcm.subscribeToTopic('all');
+    //_fcm.subscribeToTopic('all');
     await _fcm.getToken().then((token) => deviceToken = token);
+
     if (deviceToken != null) {
       subscribe(deviceToken);
     }
@@ -89,6 +90,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  // Show notification banner on background and foreground.
   static void showNotification(String notification) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         await getAndroidNotificationDetails(notification);
@@ -123,14 +125,13 @@ class _HomeState extends State<Home> {
     PushNotificationMessageIOS iosNotification;
 
     _fcm.configure(
-      onBackgroundMessage: backgroundHandle,
+      onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        // print("onMessage: $message");
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
-        }
-        if (Platform.isIOS) {
+        } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Platform.isIOS
@@ -139,12 +140,11 @@ class _HomeState extends State<Home> {
         setState(() {});
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        //print("onLaunch: $message");
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
-        }
-        if (Platform.isIOS) {
+        } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(context,
@@ -152,12 +152,11 @@ class _HomeState extends State<Home> {
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        //print("onResume: $message");
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
-        }
-        if (Platform.isIOS) {
+        } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(context,
@@ -196,7 +195,7 @@ class _HomeState extends State<Home> {
         HttpHeaders.authorizationHeader: "Bearer $authToken"
       },
       body: jsonEncode(<String, String>{
-        'platform': Platform.isIOS ? 'ios' : 'android',
+        'platform': 'android',
         'token': token,
       }),
     );

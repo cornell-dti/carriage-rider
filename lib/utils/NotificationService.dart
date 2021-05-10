@@ -29,8 +29,8 @@ class PushNotificationMessageIOS {
 
   factory PushNotificationMessageIOS.fromJson(Map<String, dynamic> json) {
     return PushNotificationMessageIOS(
-      title: json['aps']['alert']['title'],
-      body: json['aps']['alert']['body'],
+      title: json['default'],
+      body: json['default']
     );
   }
 }
