@@ -15,18 +15,31 @@ class FlowCancel extends StatelessWidget {
   Widget build(BuildContext context) {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
+    void onTap() {
+      rideFlowProvider.clearControllers();
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Container(
-          child: InkWell(
-            child: Text('Cancel', style: CarriageTheme.cancelStyle),
-            onTap: () {
-              rideFlowProvider.clearControllers();
-              Navigator.popUntil(context, ModalRoute.withName('/'));
-            },
+        Semantics(
+          button: true,
+          label: 'Cancel',
+          onTap: onTap,
+          child: Container(
+            height: 48,
+            child: ExcludeSemantics(
+              child: InkWell(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(child: Text('Cancel', style: CarriageTheme.cancelStyle)),
+                ),
+                onTap: onTap,
+              ),
+            ),
           ),
-        ),
+        )
       ],
     );
   }
@@ -35,19 +48,32 @@ class FlowCancel extends StatelessWidget {
 class BackText extends StatelessWidget {
   const BackText({Key key}) : super(key: key);
 
+  void onTap(context) {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Container(
-          child: InkWell(
-            child: Text('Back', style: CarriageTheme.cancelStyle),
-            onTap: () {
-              Navigator.pop(context);
-            },
+        Semantics(
+          button: true,
+          label: 'Back',
+          onTap: () => onTap(context),
+          child: Container(
+            height: 48,
+            child: ExcludeSemantics(
+              child: InkWell(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(child: Text('Back', style: CarriageTheme.cancelStyle)),
+                ),
+                onTap: () => onTap(context),
+              ),
+            ),
           ),
-        ),
+        )
       ],
     );
   }
@@ -64,47 +90,39 @@ class SelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*return Container(
-      width: width,
-      child: ButtonTheme(
+    return Semantics(
+      button: true,
+      label: text,
+      onTap: onPressed,
+      child: ExcludeSemantics(
+        child: Container(
+          width: width,
           height: height,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: RaisedButton(
-            padding: EdgeInsets.all(16),
-            color: Colors.white,
-            textColor: Colors.black,
-            child: Text(text,
-                style: CarriageTheme.button.copyWith(color: Colors.black)),
-            onPressed: onPressed,
-          )
-      ),
-    );*/
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 1,
-                spreadRadius: 0,
-                color: Colors.black.withOpacity(0.25)
-            )
-          ],
-          borderRadius: BorderRadius.circular(12)
-      ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          onTap: onPressed,
-          child: Center(
-            child: Text(text,
-                style: CarriageTheme.button.copyWith(color: Colors.black)
+          decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 1,
+                    spreadRadius: 0,
+                    color: Colors.black.withOpacity(0.25)
+                )
+              ],
+              borderRadius: BorderRadius.circular(12)
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              onTap: onPressed,
+              child: Center(
+                child: Text(text,
+                    style: CarriageTheme.button.copyWith(color: Colors.black)
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      )
     );
   }
 }
@@ -114,26 +132,31 @@ class BackArrowButton extends StatelessWidget {
   BackArrowButton(this.size);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [CarriageTheme.boxShadow],
-          borderRadius: BorderRadius.circular(12)
-      ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Semantics(
-            label: 'Back',
-            child: Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Icon(Icons.arrow_back_ios),
+    return Semantics(
+      button: true,
+      label: 'Back',
+      onTap: () => Navigator.pop(context),
+      child: ExcludeSemantics(
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [CarriageTheme.boxShadow],
+              borderRadius: BorderRadius.circular(12)
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              onTap: () => Navigator.pop(context),
+              child: Semantics(
+                label: 'Back',
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.arrow_back_ios),
+                ),
+              ),
             ),
           ),
         ),

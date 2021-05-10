@@ -6,6 +6,7 @@ import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 
 double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
@@ -119,12 +120,11 @@ class RequestRideDateTime extends StatefulWidget {
 class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  DateTime startDate = assignDate();
-  DateTime endDate = assignDate();
-  TimeOfDay _pickUpTime = TimeOfDay.now();
-  TimeOfDay _dropOffTime = TimeOfDay.now();
+  DateTime startDate;
+  DateTime endDate;
+  TimeOfDay _pickUpTime;
+  TimeOfDay _dropOffTime;
   List<bool> isSelected = List.filled(5, false);
-  bool hasErrors = false;
   bool showSelectionError = false;
 
   @override
@@ -199,14 +199,15 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     Widget buildInputField(TextEditingController ctrl, String label, Function validator, Function onTap) {
       bool hasText = ctrl.text != null && ctrl.text != '';
       String labelInfo = hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
-      String errorInfo = hasErrors ? validator(ctrl.text) : '';
-      String semanticsLabel = labelInfo + '. ' + (errorInfo == null ? '' : errorInfo);
+      String errorInfo = validator(ctrl.text);
+      String semanticsLabel = labelInfo + '. ' + (errorInfo == null ? '' : ('Error: ' + errorInfo));
       bool screenReader = MediaQuery.of(context).accessibleNavigation;
 
       Widget textField = TextFormField(
         controller: ctrl,
         enableInteractiveSelection: false,
         focusNode: AlwaysDisabledFocusNode(),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         onTap: onTap,
         decoration: InputDecoration(
             errorMaxLines: 3,
@@ -228,8 +229,10 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     String validateStartDate(input) {
-      if (widget.ride.recurring && input.isNotEmpty && startDate.isAfter(endDate)) {
-        return 'Start date must be before end date';
+      if (widget.ride.recurring && input.isNotEmpty) {
+        if (endDate != null && startDate.isAfter(endDate)) {
+          return 'Start date must be before end date';
+        }
       }
       if (input.isEmpty) {
         return 'Please enter the ' + (widget.ride.recurring ? 'start date' : 'date');
@@ -238,7 +241,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectStartDate() {
-      selectDate(context, startDate, (selection) {
+      selectDate(context, startDate == null ? assignDate() : startDate, (selection) {
         setState(() {
           startDate = selection;
         });
@@ -247,8 +250,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     String validateEndDate(input) {
-      if (input.isNotEmpty && startDate.isAfter(endDate)) {
-        return 'End date must be after start date';
+      if (input.isNotEmpty) {
+        if (startDate != null) {
+          if (endDate != null && startDate.isAfter(endDate)) {
+            return 'End date must be after start date';
+          }
+        }
       }
       if (input.isEmpty) {
         return 'Please enter the end date';
@@ -257,7 +264,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectEndDate() {
-      selectDate(context, endDate, (selection) {
+      selectDate(context, endDate == null ? assignDate() : endDate, (selection) {
         setState(() {
           endDate = selection;
         });
@@ -266,8 +273,10 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     String validateStartTime(input) {
-      if (input.isNotEmpty && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
-        return 'Start time must be before end time';
+      if (input.isNotEmpty) {
+        if (_dropOffTime != null && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+          return 'Start time must be before end time';
+        }
       }
       if (input.isEmpty) {
         return 'Please enter your pickup time';
@@ -276,7 +285,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectStartTime() {
-      selectTime(context, _pickUpTime, (TimeOfDay selection) {
+      selectTime(context, _pickUpTime == null ? TimeOfDay.now() : _pickUpTime, (TimeOfDay selection) {
         setState(() {
           _pickUpTime = selection;
         });
@@ -285,8 +294,10 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     String validateEndTime(input) {
-      if (input.isNotEmpty && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
-        return 'End time must be after start time';
+      if (input.isNotEmpty) {
+        if (toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+          return 'End time must be after start time';
+        }
       }
       if (input.isEmpty) {
         return 'Please enter your drop-off time';
@@ -295,7 +306,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectEndTime() {
-      selectTime(context, _dropOffTime, (selection) {
+      selectTime(context, _dropOffTime == null ? TimeOfDay.now() : _dropOffTime, (selection) {
         setState(() {
           _dropOffTime = selection;
         });
@@ -326,7 +337,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     Widget endTimeInput = buildInputField(
         rideFlowProvider.dropOffCtrl,
-        'Dropoff Time',
+        'Drop-off Time',
         validateEndTime,
         selectEndTime
     );
@@ -349,7 +360,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
+                  margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
                   child: Column(
                     children: <Widget>[
                       FlowCancel(),
@@ -513,9 +524,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                                 }
                               }
                               else {
-                                setState(() {
-                                  hasErrors = true;
-                                });
+                                SemanticsService.announce('Error, please check your dates and times', TextDirection.ltr);
                               }
                             },
                           ),
