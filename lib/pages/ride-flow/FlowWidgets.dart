@@ -17,6 +17,7 @@ class FlowCancel extends StatelessWidget {
 
     void onTap() {
       rideFlowProvider.clearControllers();
+      rideFlowProvider.setError(false);
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
 

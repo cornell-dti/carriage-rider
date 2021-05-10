@@ -143,6 +143,7 @@ class _ReviewRideState extends State<ReviewRide> {
                               }
                               if (successfulRequest) {
                                 rideFlowProvider.clearControllers();
+                                rideFlowProvider.setError(false);
                                 Navigator.push(context, MaterialPageRoute(
                                     builder: (context) => RideConfirmation()
                                 ));
