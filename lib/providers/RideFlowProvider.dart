@@ -104,7 +104,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to edit instance of recurring ride: ${response.body}');
       return false;
     }
-    clearControllers();
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
     await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
@@ -149,7 +148,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to update ride: ${response.body}');
       return false;
     }
-    clearControllers();
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
     await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
@@ -201,7 +199,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to create ride: ${response.body}');
       return false;
     }
-    clearControllers();
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
     await locationsProvider.fetchLocations(context, config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
