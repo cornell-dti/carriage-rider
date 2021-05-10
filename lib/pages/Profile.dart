@@ -172,7 +172,6 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                   sectionDivider,
-                  SizedBox(height: 8),
                   //TODO: implement these pages
                   SettingRow(
                       'Legal', 'Terms of Service & Privacy Policy', Container()),
@@ -195,14 +194,24 @@ class ArrowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.only(right: 8),
-        child: Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-      },
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Icon(Icons.arrow_forward_ios, size: 20),
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+            },
+          ),
+        )
     );
   }
 }
@@ -217,10 +226,8 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double paddingTB = 16;
-
     return Padding(
-        padding: EdgeInsets.only(top: paddingTB, bottom: paddingTB),
+        padding: EdgeInsets.symmetric(vertical: editPage == null ? 16 : 8),
         child: Row(
           children: <Widget>[
             Icon(icon),
@@ -250,29 +257,32 @@ class SettingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
-                  style: TextStyle(
-                      fontFamily: 'SFDisplay',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
-              Text(description,
-                  style: TextStyle(
-                      fontFamily: 'SFDisplay',
-                      fontSize: 17,
-                      color: CarriageTheme.gray1)),
-            ],
-          ),
-          Spacer(),
-          ArrowButton(page)
-        ],
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: TextStyle(
+                        fontFamily: 'SFDisplay',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text(description,
+                    style: TextStyle(
+                        fontFamily: 'SFDisplay',
+                        fontSize: 17,
+                        color: CarriageTheme.gray1)),
+              ],
+            ),
+            Spacer(),
+            ArrowButton(page)
+          ],
+        ),
       ),
     );
   }
