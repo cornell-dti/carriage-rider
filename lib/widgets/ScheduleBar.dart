@@ -19,6 +19,7 @@ class ScheduleBar extends StatelessWidget implements PreferredSizeWidget {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Container(
+            alignment: Alignment.centerLeft,
             height: 48,
             child: InkWell(
               onTap: () => Navigator.pop(context, false),
