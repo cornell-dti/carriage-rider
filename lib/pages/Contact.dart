@@ -26,9 +26,22 @@ class Contact extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 8),
-                      PhoneNumberRow('Questions about scheduled rides can be made by calling the CULift dispatcher at:', '6072548293'),
-                      ContactRow(Icons.mail, "If it's before 3:45pm, you can also send an email to:", 'culift@cornell.edu', 'mailto:culift@cornell.edu'),
-                      PhoneNumberRow('For night rides after 3:45pm, call the CULift dispatcher at:', '6072296010'),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 16, top: 8),
+                        child: Text('Before 3:45pm:',
+                            style: CarriageTheme.subHeading
+                        ),
+                      ),
+                      PhoneNumberRow('6072548293'),
+                      ContactRow(Icons.mail, 'culift@cornell.edu', 'Email culift@cornell.edu', 'mailto:culift@cornell.edu'),
+                      Divider(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 16, top: 8),
+                        child: Text('After 3:45pm:',
+                            style: CarriageTheme.subHeading
+                        ),
+                      ),
+                      PhoneNumberRow('6072296010'),
                     ],
                   ),
                 )
@@ -40,10 +53,10 @@ class Contact extends StatelessWidget {
 }
 
 class ContactRow extends StatelessWidget {
-  ContactRow(this.icon, this.intro, this.text, this.url, {this.isPhoneNumber = false});
+  ContactRow(this.icon, this.text, this.semanticLabel, this.url, {this.isPhoneNumber = false});
   final IconData icon;
-  final String intro;
   final String text;
+  final String semanticLabel;
   final String url;
   final bool isPhoneNumber;
 
@@ -56,9 +69,6 @@ class ContactRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(intro,
-                style: CarriageTheme.body
-              ),
               Row(
                 children: <Widget>[
                   Icon(icon),
@@ -66,7 +76,7 @@ class ContactRow extends StatelessWidget {
                   Expanded(
                     child: Text(
                       text,
-                      semanticsLabel: isPhoneNumber ? text.characters.fold('', (previousValue, element) => previousValue + ' ' + element) : text,
+                      semanticsLabel: semanticLabel,
                       style: TextStyle(
                         fontSize: 17,
                         color: CarriageTheme.gray1,
@@ -76,7 +86,6 @@ class ContactRow extends StatelessWidget {
                   ArrowURLButton(url)
                 ],
               ),
-              Divider()
             ],
           )
       ),
@@ -85,14 +94,13 @@ class ContactRow extends StatelessWidget {
 }
 
 class PhoneNumberRow extends StatelessWidget {
-  PhoneNumberRow(this.text, this.phoneNumber);
-  final String text;
+  PhoneNumberRow(this.phoneNumber);
   final String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
     String phoneNumberFormatted = '(${phoneNumber.substring(0,3)}) ${phoneNumber.substring(3,6)}-${phoneNumber.substring(6)}';
-    return ContactRow(Icons.phone, text, phoneNumberFormatted, 'tel:' + phoneNumber, isPhoneNumber: true);
+    return ContactRow(Icons.phone, phoneNumberFormatted, 'Call ' + phoneNumber.characters.fold('', (previousValue, element) => previousValue + ' ' + element), 'tel:' + phoneNumber, isPhoneNumber: true);
   }
 }
 
