@@ -155,10 +155,14 @@ class Profile extends StatelessWidget {
                     'Account Info',
                     [
                       InfoRow(
-                        Icons.mail_outline,
-                        riderProvider.info.email,
+                          Icons.mail_outline,
+                          riderProvider.info.email,
+                          'Email'
                       ),
-                      InfoRow(Icons.phone, riderProvider.info.phoneNumber,
+                      InfoRow(
+                        Icons.phone,
+                        riderProvider.info.phoneNumber,
+                        'Phone number',
                         editPage: EditPhoneNumber(riderProvider.info.phoneNumber),
                         readDigits: true,
                       ),
@@ -167,6 +171,7 @@ class Profile extends StatelessWidget {
                         riderProvider.info.firstName +
                             ' ' +
                             riderProvider.info.lastName,
+                        'Name',
                         editPage: EditName(riderProvider.info.firstName,
                             riderProvider.info.lastName),
                       ),
@@ -218,10 +223,11 @@ class ArrowButton extends StatelessWidget {
 }
 
 class InfoRow extends StatelessWidget {
-  InfoRow(this.icon, this.text, {this.editPage, this.readDigits = false});
+  InfoRow(this.icon, this.text, this.semanticsLabel, {this.editPage, this.readDigits = false});
 
   final IconData icon;
   final String text;
+  final String semanticsLabel;
   final Widget editPage;
   final bool readDigits; // for phone number screen reader format
 
@@ -236,14 +242,18 @@ class InfoRow extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                semanticsLabel: readDigits ? text.characters.fold('', (previousValue, element) => previousValue + ' ' + element) : text,
+                semanticsLabel: semanticsLabel + ': ' +
+                    (readDigits ?  text.characters.fold('', (previousValue, element) => previousValue + ' ' + element) : text),
                 style: TextStyle(
                   fontSize: 17,
                   color: Color.fromRGBO(74, 74, 74, 1),
                 ),
               ),
             ),
-            editPage != null ? ArrowButton(editPage) : Container()
+            editPage != null ? Semantics(
+                button: true,
+                child: ArrowButton(editPage)
+            ) : Container()
           ],
         ));
   }
