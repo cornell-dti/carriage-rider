@@ -139,7 +139,7 @@ class _LogicState extends State<Logic> {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
-    return authProvider.isAuthenticated ? OnBoarding() : Login();
+    return authProvider.isAuthenticated ? HomeOrOnBoarding() : Login();
   }
 }
 
@@ -162,7 +162,7 @@ class HomeOrOnBoarding extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             bool firstLogin = snapshot.data;
-            return firstLogin ? HomeOrOnBoarding() : Home();
+            return firstLogin ? OnBoarding() : Home();
           }
           return Center(child: CircularProgressIndicator());
         });

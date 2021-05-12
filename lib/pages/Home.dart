@@ -9,14 +9,15 @@ import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/CurrentRideCard.dart';
+import 'package:carriage_rider/widgets/ModifiedRefreshIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Ride_History.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/semantics.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
-import 'package:carriage_rider/widgets/ModifiedRefreshIndicator.dart';
 import 'Upcoming.dart';
 
 void main() {
@@ -28,7 +29,8 @@ void main() {
 class HomeHeader extends StatefulWidget {
   final ScrollController homeScrollCtrl;
   final double height;
-  HomeHeader(this.homeScrollCtrl, this.height);
+  final Function refreshCallback;
+  HomeHeader(this.homeScrollCtrl, this.height, this.refreshCallback);
 
   @override
   _HomeHeaderState createState() => _HomeHeaderState();
@@ -69,6 +71,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           Row(
             children: [
               Semantics(
+                sortKey: OrdinalSortKey(0),
                 header: true,
                 label: 'Hi ' + riderProvider.info.firstName,
                 child: Padding(
@@ -90,19 +93,47 @@ class _HomeHeaderState extends State<HomeHeader> {
               ),
               Spacer(),
               Padding(
-                padding: const EdgeInsets.only(bottom: 23),
-                child: Builder(builder: (context) {
-                  return Semantics(
+                padding: EdgeInsets.only(bottom: 23),
+                child: Semantics(
+                    button: true,
+                    sortKey: OrdinalSortKey(1),
+                    label: 'Refresh rides',
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      child: Material(
+                        child: InkWell(
+                            onTap: () async => widget.refreshCallback(),
+                            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                            child: Icon(Icons.refresh, color: Colors.black)
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              SizedBox(width: 8),
+              Padding(
+                padding: EdgeInsets.only(bottom: 23, right: 16),
+                child: Semantics(
+                    button: true,
+                    sortKey: OrdinalSortKey(2),
                     label: 'Menu',
-                    child: IconButton(
-                        icon: Icon(Icons.menu,
-                            color: Colors.black),
-                        onPressed: () =>
-                            Scaffold.of(context)
-                                .openEndDrawer()),
-                  );
-                }),
-              )
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      child: Material(
+                        child: InkWell(
+                            onTap: () {
+                              Scaffold.of(context).openEndDrawer();
+                              SemanticsService.announce('Swipe right to close drawer', TextDirection.ltr);
+                            },
+                            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                            child: Icon(Icons.menu, color: Colors.black)
+                        ),
+                      ),
+                    )
+                ),
+              ),
             ],
           ),
         ],
@@ -112,7 +143,6 @@ class _HomeHeaderState extends State<HomeHeader> {
 }
 
 class Home extends StatefulWidget {
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -121,11 +151,8 @@ class _HomeState extends State<Home> {
   final ScrollController scrollCtrl = ScrollController();
   final GlobalKey<ModifiedRefreshIndicatorState> refreshKey = GlobalKey();
 
-  @override
-  void initState() {
-    super.initState();
+  bool fetchingRides = false;
 
-  }
   @override
   Widget build(context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
@@ -145,29 +172,43 @@ class _HomeState extends State<Home> {
       );
     }
 
+    Future<void> refresh() async {
+      SemanticsService.announce('Refreshing rides', TextDirection.ltr);
+      await ridesProvider.fetchAllRides(appConfig, authProvider);
+      SemanticsService.announce('Done refreshing rides', TextDirection.ltr);
+    }
+
+    void refreshShowLoading() async {
+      setState(() {
+        fetchingRides = true;
+      });
+      await refresh();
+      setState(() {
+        fetchingRides = false;
+      });
+    }
+
     Widget buildPage() {
-      return  NotificationListener<OverscrollNotification>(
-          onNotification: (notif) {
-            if (refreshKey.currentState.mode == RefreshIndicatorMode.drag) {
-              SemanticsService.announce('Pull down to refresh rides', TextDirection.ltr);
-            }
-            else if (refreshKey.currentState.mode == RefreshIndicatorMode.armed) {
-              SemanticsService.announce('Release to refresh rides', TextDirection.ltr);
-            }
-            return true;
-          },
-          child: ModifiedRefreshIndicator(
-            key: refreshKey,
-            semanticsLabel: 'Refreshing rides',
-            onRefresh: () async {
-              SemanticsService.announce('Refreshing rides', TextDirection.ltr);
-              await ridesProvider.fetchAllRides(
-                  appConfig, authProvider);
-            },
+      return NotificationListener<OverscrollNotification>(
+        onNotification: (notif) {
+          if (refreshKey.currentState.mode == RefreshIndicatorMode.drag) {
+            SemanticsService.announce('Pull down to refresh rides', TextDirection.ltr);
+          }
+          else if (refreshKey.currentState.mode == RefreshIndicatorMode.armed) {
+            SemanticsService.announce('Release to refresh rides', TextDirection.ltr);
+          }
+          return true;
+        },
+        child: ModifiedRefreshIndicator(
+
+          key: refreshKey,
+          onRefresh: () async => refresh(),
+          child: LoadingOverlay(
+            color: Colors.white,
+            isLoading: fetchingRides,
             child: Stack(
                 children: [
                   SingleChildScrollView(
-                    controller: scrollCtrl,
                     child: Column(
                       children: [
                         SizedBox(height: headerHeight),
@@ -289,10 +330,11 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  HomeHeader(scrollCtrl, headerHeight)
+                  HomeHeader(scrollCtrl, headerHeight, refreshShowLoading)
                 ]
             ),
-          )
+          ),
+        ),
       );
     }
 
