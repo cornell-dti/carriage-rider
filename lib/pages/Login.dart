@@ -49,10 +49,12 @@ class Login extends StatelessWidget {
               ),
             ),
             SizedBox(height: 60.0),
-            Image.asset(
-              'assets/images/Logo-No text.png',
-              height: 270,
-              width: 270,
+            ExcludeSemantics(
+              child: Image.asset(
+                'assets/images/Logo-No text.png',
+                height: 270,
+                width: 270,
+              ),
             ),
             Expanded(
               child: Align(

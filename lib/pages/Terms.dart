@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/pages/Home.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TermsOfService extends StatelessWidget {
   Widget acceptButton(BuildContext context) {
@@ -14,7 +15,7 @@ class TermsOfService extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10)),
               child: RaisedButton(
                   onPressed: () {
-                    Navigator.push(context,
+                    Navigator.pushReplacement(context,
                         new MaterialPageRoute(builder: (context) => Home()));
                   },
                   elevation: 2.0,
@@ -22,48 +23,19 @@ class TermsOfService extends StatelessWidget {
                   textColor: Colors.white,
                   child: Text('Accept All',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17)))),
-        ));
+                          fontWeight: FontWeight.bold, fontSize: 17)
+                  )
+              )
+          ),
+        )
+    );
   }
 
-  void displayBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (ctx) {
-          return Stack(
-            children: [
-              Positioned(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(top: 15.0, left: 15.0, right: 15),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Text('Terms & Conditions',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 28)),
-                              ),
-                              SizedBox(height: 20),
-                              Flexible(
-                                  child: Text(
-                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quam aliquam vestibulum egestas amet euismod tellus. '
-                                      'Augue suspendisse nunc vitae suspendisse fringilla. Nisl semper sed vehicula volutpat risus, id. Vitae,'
-                                      ' malesuada euismod lectus duis nibh. ',
-                                      style: TextStyle(fontSize: 17))),
-                            ]),
-                      ))),
-              Positioned(
-                  bottom: 0, left: 0, right: 0, child: acceptButton(context))
-            ],
-          );
-        });
+  void openGuidelines() async {
+    String url = 'https://sds.cornell.edu/accommodations-services/transportation/culift-guidelines';
+    if (await canLaunch(url)) {
+    await launch(url);
+    }
   }
 
   @override
@@ -72,42 +44,45 @@ class TermsOfService extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-          margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('Do you agree to',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-              SizedBox(height: 5.0),
-              Text("Carriage's",
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10.0),
-              GestureDetector(
-                onTap: () => displayBottomSheet(context),
-                child: RichText(
-                  text: new TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: new TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
+              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Semantics(
+                    label: 'By using Carriage, you agree to follow CULift guidelines',
+                    button: true,
+                    onTap: () => openGuidelines(),
+                    child: ExcludeSemantics(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('By using Carriage,',
+                              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 5.0),
+                          Text('you agree to follow',
+                              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 10.0),
+                          GestureDetector(
+                            onTap: () => openGuidelines(),
+                            child: Text(
+                                'CULift guidelines',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                  decoration: TextDecoration.underline,
+                                )
+                            )
+                          ),
+                        ],
+                      ),
                     ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'Terms and Conditions',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                          )),
-                      TextSpan(text: '?', style: TextStyle(color: Colors.grey)),
-                    ],
                   ),
-                ),
+
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  ExcludeSemantics(child: Image(image: AssetImage('assets/images/readingman.png'))),
+                  Expanded(child: acceptButton(context))
+                ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              Image(image: AssetImage('assets/images/readingman.png')),
-              Expanded(child: acceptButton(context))
-            ],
-          ),
-        )));
+            )));
   }
 }

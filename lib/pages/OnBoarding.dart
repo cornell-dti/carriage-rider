@@ -2,6 +2,7 @@ import 'package:carriage_rider/pages/Terms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+
 class OnBoarding extends StatefulWidget {
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -24,7 +25,7 @@ class _OnBoardingState extends State<OnBoarding> {
   final List<String> subText = [
     'Paratransit ride app made by Cornell DTI with CULift',
     'Request and edit rides',
-    'Check your driver’s location and your ETA from the app',
+    'Check when your driver is on the way',
     'Transportation service provided by CULift'
   ];
 
@@ -57,9 +58,8 @@ class _OnBoardingState extends State<OnBoarding> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          decoration: BoxDecoration(),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
+            padding: EdgeInsets.only(top: 5.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -81,27 +81,34 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.10,
+                                MediaQuery.of(context).size.height * 0.10,
                               ),
-                              Text(
-                                text[_slideIndex],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                              Semantics(
+                                container: true,
+                                child: Text(
+                                  text[_slideIndex],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
-                                child: Text(
-                                  subText[_slideIndex],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                              Semantics(
+                                container: true,
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(left: 20.0, right: 20.0),
+                                  child: Text(
+                                    subText[_slideIndex],
+                                    semanticsLabel: subText[_slideIndex] + '. Swipe left to advance',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                                  ),
                                 ),
                               ),
                             ],
@@ -110,28 +117,43 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 350,
                               right: 100,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_1/c2.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_1/c2.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 250,
                               left: 50,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_1/c1.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_1/c1.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_1/Group 4 Copy.svg')),
+                              child: ExcludeSemantics(
+                                  child: SvgPicture.asset(
+                                      'assets/images/onboard_1/Group 4 Copy.svg')
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 125,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_1/t1.svg')),
+                              child: ExcludeSemantics(
+                                  child: SvgPicture.asset(
+                                      'assets/images/onboard_1/t1.svg')
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               right: 0,
-                              child: Image.asset(
-                                  'assets/images/onboard_1/cornell 1.png')),
+                              child: ExcludeSemantics(
+                                  child: Image.asset(
+                                      'assets/images/onboard_1/cornell 1.png')
+                              )
+                          ),
                         ],
                       ),
                       Stack(
@@ -141,27 +163,34 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.10,
+                                MediaQuery.of(context).size.height * 0.10,
                               ),
-                              Text(
-                                text[_slideIndex],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                              Semantics(
+                                container: true,
+                                child: Text(
+                                  text[_slideIndex],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
-                                child: Text(
-                                  subText[_slideIndex],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                              Semantics(
+                                container: true,
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(left: 20.0, right: 20.0),
+                                  child: Text(
+                                    subText[_slideIndex],
+                                    semanticsLabel: subText[_slideIndex] + '. Swipe left to advance',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                                  ),
                                 ),
                               ),
                             ],
@@ -170,29 +199,49 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 350,
                               left: 50,
-                              child: SvgPicture.asset(
-                                'assets/images/onboard_2/c2.svg',
-                              )),
+                              child: ExcludeSemantics(
+                                  child: SvgPicture.asset(
+                                    'assets/images/onboard_2/c2.svg',
+                                  )
+                              )
+                          ),
                           Positioned(
                               bottom: 400,
                               right: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_2/c3.svg')),
+                              child: ExcludeSemantics(
+                                  child:
+                                  SvgPicture.asset(
+                                      'assets/images/onboard_2/c3.svg'
+                                  )
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 20,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_2/t1.svg')),
+                              child: ExcludeSemantics(
+                                  child: SvgPicture.asset(
+                                      'assets/images/onboard_2/t1.svg'
+                                  )
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 5,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_2/Group 4 Copy.svg')),
+                              child: ExcludeSemantics(
+                                  child: SvgPicture.asset(
+                                      'assets/images/onboard_2/Group 4 Copy.svg'
+                                  )
+                              )
+                          ),
                           Positioned(
-                              bottom: 0,
-                              right: 30,
-                              child: Image.asset(
-                                  'assets/images/onboard_2/cornell 1.png')),
+                            bottom: 0,
+                            right: 30,
+                            child: ExcludeSemantics(
+                                child: Image.asset(
+                                    'assets/images/onboard_2/cornell 1.png'
+                                )
+                            ),
+                          )
                         ],
                       ),
                       Stack(
@@ -202,27 +251,34 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.10,
+                                MediaQuery.of(context).size.height * 0.10,
                               ),
-                              Text(
-                                text[_slideIndex],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                              Semantics(
+                                container: true,
+                                child: Text(
+                                  text[_slideIndex],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
-                                child: Text(
-                                  subText[_slideIndex],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                              Semantics(
+                                container: true,
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(left: 20.0, right: 20.0),
+                                  child: Text(
+                                    subText[_slideIndex],
+                                    semanticsLabel: subText[_slideIndex] + '. Swipe left to advance',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                                  ),
                                 ),
                               ),
                             ],
@@ -231,28 +287,43 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 350,
                               left: 75,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_3/c3.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_3/c3.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 225,
                               right: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_3/c4.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_3/c4.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               right: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_3/tree2.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_3/tree2.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 20,
-                              child: Image.asset(
-                                  'assets/images/onboard_3/cornell 1.png')),
+                              child: ExcludeSemantics(
+                                child: Image.asset(
+                                    'assets/images/onboard_3/cornell 1.png'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 125,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_3/Group 4 Copy.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_3/Group 4 Copy.svg'),
+                              )
+                          ),
                         ],
                       ),
                       Stack(
@@ -262,27 +333,34 @@ class _OnBoardingState extends State<OnBoarding> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.10,
+                                MediaQuery.of(context).size.height * 0.10,
                               ),
-                              Text(
-                                text[_slideIndex],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                              Semantics(
+                                  container: true,
+                                child: Text(
+                                  text[_slideIndex],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
-                                child: Text(
-                                  subText[_slideIndex],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                              Semantics(
+                                container: true,
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(left: 20.0, right: 20.0),
+                                  child: Text(
+                                    subText[_slideIndex],
+                                    semanticsLabel: subText[_slideIndex] + '. Swipe left to advance',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                                  ),
                                 ),
                               ),
                             ],
@@ -291,18 +369,27 @@ class _OnBoardingState extends State<OnBoarding> {
                           Positioned(
                               bottom: 225,
                               left: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_4/c4.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_4/c4.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               left: 100,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_4/tree2.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_4/tree2.svg'),
+                              )
+                          ),
                           Positioned(
                               bottom: 0,
                               right: 0,
-                              child: SvgPicture.asset(
-                                  'assets/images/onboard_4/Group 4 Copy.svg')),
+                              child: ExcludeSemantics(
+                                child: SvgPicture.asset(
+                                    'assets/images/onboard_4/Group 4 Copy.svg'),
+                              )
+                          ),
                         ],
                       ),
                     ],
@@ -310,52 +397,48 @@ class _OnBoardingState extends State<OnBoarding> {
                 ),
                 _slideIndex != _numPages - 1
                     ? Expanded(
-                        child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height,
-                              color: Colors.black,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: _buildPageIndicator(),
-                              ),
-                            )),
-                      )
+                  child: ExcludeSemantics(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          color: Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: _buildPageIndicator(),
+                          ),
+                        )),
+                  ),
+                )
                     : Expanded(
-                        child: Align(
-                            child: Container(
-                        height: MediaQuery.of(context).size.height * 0.20,
-                        color: Colors.black,
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: ButtonTheme(
-                                minWidth:
-                                    MediaQuery.of(context).size.width * 0.8,
-                                height: 50.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: RaisedButton(
-                                    onPressed: () {
-                                      _onIntroEnd(context);
-                                    },
-                                    elevation: 2.0,
-                                    color: Colors.white,
-                                    textColor: Colors.black,
-                                    child: Text('Begin Now',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17))))),
-                      )))
+                    child: Align(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          color: Colors.black,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: ButtonTheme(
+                                  minWidth:
+                                  MediaQuery.of(context).size.width * 0.8,
+                                  height: 50.0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: RaisedButton(
+                                      onPressed: () {
+                                        _onIntroEnd(context);
+                                      },
+                                      elevation: 2.0,
+                                      color: Colors.white,
+                                      textColor: Colors.black,
+                                      child: Text('Begin Now',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17))))),
+                        )))
               ],
             ),
           ),
         ),
-        bottomSheet: Container(
-            height: 5.0,
-            width: double.infinity,
-            color: Colors.black,
-            child: Container(
-              color: Colors.black,
-            )));
+    );
   }
 }
