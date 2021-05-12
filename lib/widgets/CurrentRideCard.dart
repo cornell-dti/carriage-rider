@@ -115,23 +115,21 @@ class CurrentRideCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget rideDetails = ride == null ? Expanded(
-      child: MergeSemantics(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 20),
-            Icon(
-              Icons.directions_car_rounded,
-              size: 32,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 10),
-            Text('No current ride',
-                style: CarriageTheme.body
-                    .copyWith(color: Colors.grey)),
-            SizedBox(height: 20),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Icon(
+            Icons.directions_car_rounded,
+            size: 32,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 10),
+          Text('No current ride',
+              style: CarriageTheme.body
+                  .copyWith(color: Colors.grey)),
+          SizedBox(height: 20),
+        ],
       ),
     ) : Expanded(
       child: Column(
@@ -199,10 +197,12 @@ class CurrentRideCard extends StatelessWidget {
       ),
     );
     if (ride == null) {
-      return Container(
-          margin: EdgeInsets.all(2),
-          decoration: CarriageTheme.cardDecoration,
-          child: cardInfo
+      return MergeSemantics(
+        child: Container(
+            margin: EdgeInsets.all(2),
+            decoration: CarriageTheme.cardDecoration,
+            child: cardInfo
+        ),
       );
     }
     return Container(

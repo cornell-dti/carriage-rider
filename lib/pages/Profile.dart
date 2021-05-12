@@ -133,6 +133,7 @@ class Profile extends StatelessWidget {
                                   ],
                                 )),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(riderProvider.info.fullName(),
                                     style: TextStyle(
