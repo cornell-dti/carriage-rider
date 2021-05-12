@@ -50,7 +50,7 @@ class TermsOfService extends StatelessWidget {
                 children: <Widget>[
                   Semantics(
                     label: 'By using Carriage, you agree to follow CULift guidelines',
-                    button: true,
+                    link: true,
                     onTap: () => openGuidelines(),
                     child: ExcludeSemantics(
                       child: Column(

@@ -356,7 +356,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                   EdgeInsets.only(left: 20.0, right: 20.0),
                                   child: Text(
                                     subText[_slideIndex],
-                                    semanticsLabel: subText[_slideIndex] + '. Swipe left to advance',
+                                    semanticsLabel: subText[_slideIndex],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 17.0, color: Color(0xFFA6A6A6)),

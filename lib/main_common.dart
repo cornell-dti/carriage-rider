@@ -162,7 +162,7 @@ class HomeOrOnBoarding extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             bool firstLogin = snapshot.data;
-            return firstLogin ? OnBoarding() : Home();
+            return firstLogin ? HomeOrOnBoarding() : Home();
           }
           return Center(child: CircularProgressIndicator());
         });

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:carriage_rider/pages/Terms.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:core';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/RiderProvider.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -178,9 +180,7 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                   sectionDivider,
-                  //TODO: implement these pages
-                  SettingRow(
-                      'Legal', 'Terms of Service & Privacy Policy', Container()),
+                  TermsInfo(),
                   sectionDivider,
                   SignOutButton(),
                 ],
@@ -190,6 +190,53 @@ class Profile extends StatelessWidget {
     } else {
       return SafeArea(child: Center(child: CircularProgressIndicator()));
     }
+  }
+}
+
+class TermsInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    void openGuidelines() async {
+      String url = 'https://sds.cornell.edu/accommodations-services/transportation/culift-guidelines';
+      if (await canLaunch(url)) {
+        await launch(url);
+      }
+    }
+
+    return Semantics(
+      label: 'By using Carriage, you agree to follow CULift guidelines',
+      link: true,
+      onTap: () => openGuidelines(),
+      child: ExcludeSemantics(
+        child: Container(
+          padding: EdgeInsets.only(top: 16, bottom: 8),
+          width: double.infinity,
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('By using Carriage, you agree to follow',
+                  style: CarriageTheme.body),
+              Material(
+                type: MaterialType.transparency,
+                child: FlatButton(
+                    onPressed: () => openGuidelines(),
+                    child: Text(
+                        'CULift guidelines',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black,
+                          decoration: TextDecoration.underline,
+                        )
+                    )
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -268,31 +315,38 @@ class SettingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Semantics(
+      label: title + ', ' + description,
+      button: true,
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => page)),
+      child: ExcludeSemantics(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
               children: [
-                Text(title,
-                    style: TextStyle(
-                        fontFamily: 'SFDisplay',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text(description,
-                    style: TextStyle(
-                        fontFamily: 'SFDisplay',
-                        fontSize: 17,
-                        color: CarriageTheme.gray1)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: TextStyle(
+                            fontFamily: 'SFDisplay',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    Text(description,
+                        style: TextStyle(
+                            fontFamily: 'SFDisplay',
+                            fontSize: 17,
+                            color: CarriageTheme.gray1)),
+                  ],
+                ),
+                Spacer(),
+                ArrowButton(page)
               ],
             ),
-            Spacer(),
-            ArrowButton(page)
-          ],
+          ),
         ),
       ),
     );
