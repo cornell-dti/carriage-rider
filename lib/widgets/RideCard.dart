@@ -35,7 +35,6 @@ class RideCard extends StatelessWidget {
     }
     return Semantics(
       button: true,
-      onTap: navigateToPage,
       child: Container(
         margin: EdgeInsets.all(2),
         decoration: CarriageTheme.cardDecoration,
