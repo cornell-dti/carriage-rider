@@ -220,14 +220,18 @@ class _HomeState extends State<Home> {
                                 Semantics(
                                   container: true,
                                   header: true,
+                                  sortKey: OrdinalSortKey(3),
                                   child: Text(
                                     'Current Ride',
                                     style: CarriageTheme.subHeading,
                                   ),
                                 ),
                                 SizedBox(height: 12),
-                                CurrentRideCard(ridesProvider.currentRide,
-                                    showCallDriver: true),
+                                Semantics(
+                                  sortKey: OrdinalSortKey(4),
+                                  child: CurrentRideCard(ridesProvider.currentRide,
+                                      showCallDriver: true),
+                                ),
                               ]
                           ),
                         ),
@@ -236,6 +240,7 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Row(children: [
                             Semantics(
+                              sortKey: OrdinalSortKey(5),
                               container: true,
                               header: true,
                               child: Text(
@@ -246,6 +251,7 @@ class _HomeState extends State<Home> {
                             Spacer(),
                             ridesProvider.upcomingRides.isNotEmpty
                                 ? Semantics(
+                              sortKey: OrdinalSortKey(6),
                               button: true,
                               container: true,
                               child: Container(
@@ -275,12 +281,16 @@ class _HomeState extends State<Home> {
                                 : Container()
                           ]),
                         ),
-                        UpcomingRides(),
+                        Semantics(
+                            sortKey: OrdinalSortKey(7),
+                            child: UpcomingRides()
+                        ),
                         SizedBox(height: 16),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Row(children: [
                             Semantics(
+                              sortKey: OrdinalSortKey(8),
                               container: true,
                               header: true,
                               child: Text(
@@ -291,6 +301,7 @@ class _HomeState extends State<Home> {
                             Spacer(),
                             ridesProvider.pastRides.isNotEmpty
                                 ? Semantics(
+                              sortKey: OrdinalSortKey(9),
                               container: true,
                               button: true,
                               child: Container(
@@ -321,7 +332,10 @@ class _HomeState extends State<Home> {
                           ]),
                         ),
                         SizedBox(height: 12),
-                        RideHistory(),
+                        Semantics(
+                            sortKey: OrdinalSortKey(10),
+                            child: RideHistory()
+                        ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height:
@@ -330,7 +344,10 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  HomeHeader(scrollCtrl, headerHeight, refreshShowLoading)
+                  Semantics(
+                      sortKey: OrdinalSortKey(0),
+                      child: HomeHeader(scrollCtrl, headerHeight, refreshShowLoading)
+                  )
                 ]
             ),
           ),
@@ -404,33 +421,37 @@ class _HomeState extends State<Home> {
                 ]),
                 child: Stack(
                   children: <Widget>[
-                    Align(
-                        alignment: Alignment.center,
-                        child: ButtonTheme(
-                          minWidth:
-                          MediaQuery.of(context).size.width * 0.8,
-                          height: 50.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: RaisedButton.icon(
-                            onPressed: () {
-                              rideFlowProvider.setLocControllers('', '');
-                              rideFlowProvider.setEditing(false);
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) =>
-                                          RequestRideLoc(
-                                              ride: new Ride())));
-                            },
-                            elevation: 3.0,
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            icon: Icon(Icons.add),
-                            label: Text('Request Ride',
-                                style: TextStyle(fontSize: 18)),
-                          ),
-                        )),
+                    Semantics(
+                      button: true,
+                      sortKey: OrdinalSortKey(11),
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: ButtonTheme(
+                            minWidth:
+                            MediaQuery.of(context).size.width * 0.8,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: RaisedButton.icon(
+                              onPressed: () {
+                                rideFlowProvider.setLocControllers('', '');
+                                rideFlowProvider.setEditing(false);
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            RequestRideLoc(
+                                                ride: new Ride())));
+                              },
+                              elevation: 3.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              icon: Icon(Icons.add),
+                              label: Text('Request Ride',
+                                  style: TextStyle(fontSize: 18)),
+                            ),
+                          )),
+                    ),
                   ],
                 ),
               ),
