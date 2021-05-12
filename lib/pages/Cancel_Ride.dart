@@ -137,7 +137,7 @@ class CancelConfirmation extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
-              SizedBox(height: 176),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.15),
               ExcludeSemantics(child: Image.asset('assets/images/cancel_ride_confirmed.png')),
               SizedBox(height: 32),
               Center(
