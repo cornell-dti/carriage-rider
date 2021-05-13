@@ -84,6 +84,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 child: Container(
                   width: MediaQuery.of(context).size.width - (2*iconButtonSize) - (2*horizPadding) - iconButtonSpacing,
                   child: FittedBox(
+                    alignment: Alignment.centerLeft,
                     fit: BoxFit.scaleDown,
                     child: Padding(
                       padding: EdgeInsets.only(
