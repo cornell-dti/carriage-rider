@@ -132,24 +132,27 @@ class Profile extends StatelessWidget {
                                         top: _picDiameter * 0.66)
                                   ],
                                 )),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(riderProvider.info.fullName(),
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                SizedBox(height: 4),
-                                Semantics(
-                                  container: true,
-                                  child: Text('Joined ' + riderProvider.info.joinDate,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(riderProvider.info.fullName(),
                                       style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).accentColor,
-                                      )),
-                                )
-                              ],
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                  ),
+                                  SizedBox(height: 4),
+                                  Semantics(
+                                    container: true,
+                                    child: Text('Joined ' + riderProvider.info.joinDate,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).accentColor,
+                                        )),
+                                  )
+                                ],
+                              ),
                             )
                           ]))),
                   sectionDivider,
@@ -210,7 +213,7 @@ class TermsInfo extends StatelessWidget {
       onTap: () => openGuidelines(),
       child: ExcludeSemantics(
         child: Container(
-          padding: EdgeInsets.only(top: 16, bottom: 8),
+          padding: EdgeInsets.only(top: 16, bottom: 8, left: 16, right: 16),
           width: double.infinity,
           color: Colors.white,
           child: Column(

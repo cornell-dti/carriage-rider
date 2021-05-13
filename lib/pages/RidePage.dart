@@ -450,24 +450,30 @@ class TimeLineRow extends StatelessWidget {
       );
     }
 
-    return Row(children: [
-      locationCircle(),
-      SizedBox(width: 16),
-      text == null
-          ? infoWidget
-          : text == noShowMessage
-          ? Text(noShowMessage,
-          style: TextStyle(fontSize: 16, color: Color(0xFFF44336)))
-          : isCurrentRide
-          ? Text(text,
-          style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold))
-          : Text(text,
-          style:
-          TextStyle(fontSize: 16, color: CarriageTheme.gray4))
-    ]);
+    return Row(
+        children: [
+          locationCircle(),
+          SizedBox(width: 16),
+          text == null
+              ? infoWidget
+              : text == noShowMessage
+              ? Expanded(
+            child: Text(noShowMessage,
+                style: TextStyle(fontSize: 16, color: Color(0xFFF44336))),
+          )
+              : isCurrentRide
+              ? Expanded(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ) : Expanded(
+            child: Text(text,
+                style:
+                TextStyle(fontSize: 16, color: CarriageTheme.gray4)),
+          )
+        ]);
   }
 }
 
@@ -519,10 +525,10 @@ class _TimeLineState extends State<TimeLine> {
         context: context,
         builder: (ctx) {
           return Container(
-              height: MediaQuery.of(context).size.height * 0.15,
               child: Padding(
-                  padding: EdgeInsets.only(top: 15.0, left: 10.0),
+                  padding: EdgeInsets.all(16),
                   child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Flexible(

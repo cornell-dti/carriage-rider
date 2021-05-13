@@ -44,6 +44,8 @@ class _HomeHeaderState extends State<HomeHeader> {
     super.initState();
     scrollAtTop = true;
     widget.homeScrollCtrl.addListener(() {
+      print(widget.homeScrollCtrl.position.pixels);
+
       setState(() {
         scrollAtTop = widget.homeScrollCtrl.position.pixels == 0;
       });
@@ -53,6 +55,10 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+
+    double iconButtonSize = 48;
+    double iconButtonSpacing = 8;
+    double horizPadding = 16;
 
     return Container(
       height: widget.height,
@@ -66,61 +72,63 @@ class _HomeHeaderState extends State<HomeHeader> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Semantics(
                 sortKey: OrdinalSortKey(0),
                 header: true,
                 label: 'Hi ' + riderProvider.info.firstName,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, bottom: 23),
-                  child: ExcludeSemantics(
-                    child: Text(
-                      'Hi ' +
-                          riderProvider.info.firstName +
-                          '! ☀',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontFamily: 'SFPro',
-                          fontWeight: FontWeight.w700),
+                child: Container(
+                  width: MediaQuery.of(context).size.width - (2*iconButtonSize) - (2*horizPadding) - iconButtonSpacing,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: horizPadding, right: 16),
+                      child: ExcludeSemantics(
+                        child: Text(
+                          'Hi ${riderProvider.info.firstName}!',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontFamily: 'SFPro',
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
               Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 23),
-                child: Semantics(
-                    button: true,
-                    sortKey: OrdinalSortKey(1),
-                    label: 'Refresh rides',
-                    child: Container(
-                      width: 48,
-                      height: 48,
-                      child: Material(
-                        child: InkWell(
-                            onTap: () async => widget.refreshCallback(),
-                            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                            child: Icon(Icons.refresh, color: Colors.black)
-                        ),
+              Semantics(
+                  button: true,
+                  sortKey: OrdinalSortKey(1),
+                  label: 'Refresh rides',
+                  child: Container(
+                    width: iconButtonSize,
+                    height: iconButtonSize,
+                    child: Material(
+                      child: InkWell(
+                          onTap: () async => widget.refreshCallback(),
+                          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          child: Icon(Icons.refresh, color: Colors.black)
                       ),
-                    )
-                ),
+                    ),
+                  )
               ),
-              SizedBox(width: 8),
+              SizedBox(width: iconButtonSpacing),
               Padding(
-                padding: EdgeInsets.only(bottom: 23, right: 16),
+                padding: EdgeInsets.only(right: horizPadding),
                 child: Semantics(
                     button: true,
                     sortKey: OrdinalSortKey(2),
                     label: 'Menu',
                     child: Container(
-                      width: 48,
-                      height: 48,
+                      width: iconButtonSize,
+                      height: iconButtonSize,
                       child: Material(
                         child: InkWell(
                             onTap: () {
@@ -236,100 +244,126 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         SizedBox(height: 35),
-                        Padding(
+                        Container(
                           padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(children: [
-                            Semantics(
-                              sortKey: OrdinalSortKey(5),
-                              container: true,
-                              header: true,
-                              child: Text(
-                                'Upcoming Rides',
-                                style: CarriageTheme.subHeading,
-                              ),
-                            ),
-                            Spacer(),
-                            ridesProvider.upcomingRides.isNotEmpty
-                                ? Semantics(
-                              sortKey: OrdinalSortKey(6),
-                              button: true,
-                              container: true,
-                              child: Container(
-                                height: 48,
-                                child: InkWell(
-                                    onTap: () => Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpcomingSeeMore())),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more upcoming rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ]),
-                                    )),
-                              ),
-                            )
-                                : Container()
-                          ]),
+                          width: MediaQuery.of(context).size.width,
+                          child: Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              direction: Axis.horizontal,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Semantics(
+                                      sortKey: OrdinalSortKey(5),
+                                      container: true,
+                                      header: true,
+                                      child: Text(
+                                        'Upcoming Rides',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ridesProvider.upcomingRides.isNotEmpty ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Semantics(
+                                      sortKey: OrdinalSortKey(6),
+                                      button: true,
+                                      container: true,
+                                      child: Container(
+                                        height: 48,
+                                        child: InkWell(
+                                            onTap: () => Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UpcomingSeeMore())),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'See More',
+                                                      style:
+                                                      CarriageTheme.seeMoreStyle,
+                                                      semanticsLabel:
+                                                      'See more upcoming rides',
+                                                    ),
+                                                    SizedBox(width: 4),
+                                                    Icon(Icons.arrow_forward,
+                                                        size: 16)
+                                                  ]),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ) : Container()
+                              ]),
                         ),
                         Semantics(
                             sortKey: OrdinalSortKey(7),
                             child: UpcomingRides()
                         ),
                         SizedBox(height: 16),
-                        Padding(
+                        Container(
+                          width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(children: [
-                            Semantics(
-                              sortKey: OrdinalSortKey(8),
-                              container: true,
-                              header: true,
-                              child: Text(
-                                'Ride History',
-                                style: CarriageTheme.subHeading,
-                              ),
-                            ),
-                            Spacer(),
-                            ridesProvider.pastRides.isNotEmpty
-                                ? Semantics(
-                              sortKey: OrdinalSortKey(9),
-                              container: true,
-                              button: true,
-                              child: Container(
-                                height: 48,
-                                child: InkWell(
-                                    onTap: () => Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            HistorySeeMore())),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more past rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ]),
-                                    )),
-                              ),
-                            )
-                                : Container()
-                          ]),
+                          child: Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              direction: Axis.horizontal,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Semantics(
+                                      sortKey: OrdinalSortKey(8),
+                                      container: true,
+                                      header: true,
+                                      child: Text(
+                                        'Ride History',
+                                        style: CarriageTheme.subHeading,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ridesProvider.pastRides.isNotEmpty ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Semantics(
+                                      sortKey: OrdinalSortKey(9),
+                                      container: true,
+                                      button: true,
+                                      child: Container(
+                                        height: 48,
+                                        child: InkWell(
+                                            onTap: () => Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HistorySeeMore())),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              child: Row(children: [
+                                                Text(
+                                                  'See More',
+                                                  style:
+                                                  CarriageTheme.seeMoreStyle,
+                                                  semanticsLabel:
+                                                  'See more past rides',
+                                                ),
+                                                SizedBox(width: 4),
+                                                Icon(Icons.arrow_forward,
+                                                    size: 16)
+                                              ]),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                    : Container()
+                              ]),
                         ),
                         SizedBox(height: 12),
                         Semantics(

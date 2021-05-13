@@ -139,7 +139,7 @@ class _LogicState extends State<Logic> {
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
-    return authProvider.isAuthenticated ? OnBoarding() : Login();
+    return authProvider.isAuthenticated ? HomeOrOnBoarding() : Login();
   }
 }
 

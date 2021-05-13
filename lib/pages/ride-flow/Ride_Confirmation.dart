@@ -28,14 +28,20 @@ class _RideConfirmationState extends State<RideConfirmation> {
             child: ExcludeSemantics(child: Image(image: AssetImage(rideFlowProvider.editing ? 'assets/images/changesInProgress.png' : 'assets/images/RequestInProgress.png'))),
           ),
           SizedBox(height: 36),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                  rideFlowProvider.editing ? 'Your changes are in progress!' : 'Your request is in progress!',
-                  style: CarriageTheme.title3
-              )
-            ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                      rideFlowProvider.editing ? 'Your changes are in progress!' : 'Your request is in progress!',
+                      textAlign: TextAlign.center,
+                      style: CarriageTheme.title3
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(height: 20),
           Row(

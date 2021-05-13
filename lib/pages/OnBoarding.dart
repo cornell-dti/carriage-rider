@@ -37,46 +37,52 @@ class OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
-      children: [
-        Column(
-          children: [
-            SizedBox(
-              height:
-              MediaQuery.of(context).size.height * 0.10,
+      children: images..addAll(
+        [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height:
+                  MediaQuery.of(context).size.height * 0.10,
+                ),
+                MergeSemantics(
+                  child: Column(
+                      children: [
+                        Text(
+                          heading,
+                          semanticsLabel: heading + '.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: Text(
+                            description,
+                            semanticsLabel: description + (saySwipeLeft ? '. Swipe left to advance' : ''),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 17.0, color: Color(0xFFA6A6A6)),
+                          ),
+                        ),
+                      ]
+                  ),
+                )
+              ],
             ),
-            MergeSemantics(
-              child: Column(
-                children: [
-                  Text(
-                    heading,
-                    semanticsLabel: heading + '.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Padding(
-                    padding:
-                    EdgeInsets.only(left: 20.0, right: 20.0),
-                    child: Text(
-                      description,
-                      semanticsLabel: description + (saySwipeLeft ? '. Swipe left to advance' : ''),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 17.0, color: Color(0xFFA6A6A6)),
-                    ),
-                  ),
-                ]
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 15.0),
-      ]..addAll(images),
+          ),
+          SizedBox(height: 15.0),
+        ]
+      ),
     );
   }
 }
@@ -131,8 +137,8 @@ class _OnBoardingState extends State<OnBoarding> {
           [
             PositionedImage(bigCloud, bottom: 250, left: 50),
             PositionedImage(smallCloud, bottom: 350, right: 100),
-            PositionedImage(clockTower, bottom: -10, right: -90),
             PositionedImage(trees, bottom: 0, left: 125),
+            PositionedImage(clockTower, bottom: -10, right: -90),
             PositionedImage(car, bottom: 0, left: -75),
           ]
       ),
@@ -141,16 +147,16 @@ class _OnBoardingState extends State<OnBoarding> {
             PositionedImage(bigCloud, bottom: 400, right: 0),
             PositionedImage(smallCloud, bottom: 350, left: 50),
             PositionedImage(trees, bottom: 0, left: 0),
+            PositionedImage(clockTower, bottom: -10, right: 20),
             PositionedImage(car, bottom: 0, left: -5),
-            PositionedImage(clockTower, bottom: -10, right: 20)
           ]
       ),
       OnboardingPage('Live Updates', 'Check when your driver is on the way.', true,
           [
             PositionedImage(bigCloud, bottom: 350, left: 75),
             PositionedImage(smallCloud, bottom: 225, right: 0),
-            PositionedImage(clockTower, bottom: -10, left: 20),
             PositionedImage(trees, bottom: 0, right: -80),
+            PositionedImage(clockTower, bottom: -10, left: 20),
             PositionedImage(car, bottom: 0, right: 100),
           ]
       ),
