@@ -21,6 +21,7 @@ class CurrentRideCard extends StatelessWidget {
     return Row(children: <Widget>[
       Expanded(
         child: RichText(
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
           text: new TextSpan(
             style: new TextStyle(
               fontSize: 20.0,
@@ -44,6 +45,7 @@ class CurrentRideCard extends StatelessWidget {
     return Row(children: <Widget>[
       Expanded(
           child: RichText(
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
             text: new TextSpan(
               style: new TextStyle(
                 fontSize: 20.0,
@@ -65,6 +67,7 @@ class CurrentRideCard extends StatelessWidget {
     return Row(children: <Widget>[
       Expanded(
           child: RichText(
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
             text: new TextSpan(
               style: new TextStyle(
                 fontSize: 20.0,
@@ -85,6 +88,7 @@ class CurrentRideCard extends StatelessWidget {
     return Row(children: <Widget>[
       Expanded(
           child: RichText(
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
             text: new TextSpan(
               style: new TextStyle(
                 fontSize: 20.0,

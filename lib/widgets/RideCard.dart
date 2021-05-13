@@ -64,7 +64,7 @@ class RideCard extends StatelessWidget {
                               style: confirmationStyle.copyWith(
                                   color: Color(0xFFF44336))) : Container(),
                           SizedBox(height: 4),
-                          ride.buildStartTime(),
+                          ride.buildStartTime(context),
                           SizedBox(height: 16),
                           Text('From', style: CarriageTheme.directionStyle),
                           Text(ride.startLocation,

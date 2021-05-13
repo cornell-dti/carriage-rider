@@ -157,8 +157,9 @@ class Ride {
   }
 
   //Widget displaying the start time of a ride using DateFormat.
-  Widget buildStartTime() {
+  Widget buildStartTime(BuildContext context) {
     return RichText(
+      textScaleFactor: MediaQuery.of(context).textScaleFactor,
       text: TextSpan(
           text: DateFormat('MMM').format(startTime).toUpperCase() + ' ',
           style: CarriageTheme.monthStyle,
