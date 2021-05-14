@@ -380,7 +380,6 @@ class LocationInput extends StatelessWidget {
       }
     }
 
-    bool screenReader = MediaQuery.of(context).accessibleNavigation;
     String semanticsLabel = isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
     (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location');
 
@@ -420,14 +419,13 @@ class LocationInput extends StatelessWidget {
       onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
 
-    return screenReader ? Semantics(
+    return Semantics(
       label: semanticsLabel,
       focusable: true,
       onTap: onTap,
-      child: IgnorePointer(
-          child: textField
-      ),
-    ) : textField;
+      button: true,
+      child: ExcludeSemantics(child: textField)
+    );
   }
 
   @override

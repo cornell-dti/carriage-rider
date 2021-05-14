@@ -22,7 +22,6 @@ class RideCard extends StatelessWidget {
     fontSize: 10,
   );
 
-
   @override
   Widget build(BuildContext context) {
     void navigateToPage() {

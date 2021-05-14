@@ -175,48 +175,6 @@ class Ride {
     );
   }
 
-  //Widget displaying a custom built card with information about a ride's start location and start time.
-  //[isIcon] determines whether the card needs an icon.
-  Widget buildLocationsCard(context, bool isIcon, bool pickUp, bool isStart) {
-    return Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [CarriageTheme.boxShadow]),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(isStart ? startLocation : endLocation,
-                style: TextStyle(fontSize: 14, color: Color(0xFF1A051D))),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                child: cardInfo(context, isStart, isIcon)),
-            SizedBox(height: 16),
-            Text(
-                'Estimated ${pickUp ? 'pick up time' : 'drop off time'}: ' +
-                    DateFormat('jm').format(isStart ? startTime : endTime),
-                style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-          ]),
-        ));
-  }
-
-  Widget cardInfo(context, bool isStartAddress, bool isIcon) {
-    Widget addressInfo = Row(children: [
-      Expanded(
-        child: Text(isStartAddress ? startAddress : endAddress,
-            style: TextStyle(
-                fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5))),
-      ),
-      isIcon
-          ? Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Icon(Icons.location_on))
-          : Container()
-    ]);
-    return addressInfo;
-  }
-
   //Widget displaying the information of a ride after it has been requested. Shows the ride's
   //start location, end location, date, start and end time, recurring days,
   //and accessibility requests.

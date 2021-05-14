@@ -478,10 +478,10 @@ class TimeLineRow extends StatelessWidget {
 }
 
 class TimeLine extends StatefulWidget {
-  TimeLine(this.ride, this.isIcon, this.isCurrent, this.isCarIcon);
+  TimeLine(this.ride, this.hasLocationIcon, this.isCurrent, this.isCarIcon);
 
   final Ride ride;
-  final bool isIcon;
+  final bool hasLocationIcon;
   final bool isCurrent;
   final bool isCarIcon;
 
@@ -524,25 +524,31 @@ class _TimeLineState extends State<TimeLine> {
         ),
         context: context,
         builder: (ctx) {
-          return Container(
-              child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: Text(
-                              isStart ? ride.startLocation : ride.endLocation,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
-                        ),
-                        SizedBox(height: 10),
-                        Flexible(
-                          child: Text(info, style: TextStyle(fontSize: 16)),
-                        ),
-                      ])));
-        });
+          return MergeSemantics(
+            child: Container(
+                child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Text(
+                                isStart ? ride.startLocation : ride.endLocation,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                          ),
+                          SizedBox(height: 10),
+                          Flexible(
+                            child: Text(info, style: TextStyle(fontSize: 16)),
+                          ),
+                        ]
+                    )
+                )
+            ),
+          );
+        }
+    );
   }
 
   @override
@@ -587,6 +593,69 @@ class _TimeLineState extends State<TimeLine> {
       return CircularProgressIndicator();
     }
 
+    //Widget displaying a custom built card with information about a ride's start location and start time.
+    //[isIcon] determines whether the card needs an icon.
+    Widget buildLocationsCard(BuildContext context, bool isStart) {
+      return Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [CarriageTheme.boxShadow]
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child:
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(isStart ? widget.ride.startLocation : widget.ride.endLocation,
+                                  style: TextStyle(fontSize: 14, color: Color(0xFF1A051D)),
+                                  semanticsLabel: isStart ? 'Start location: ' + widget.ride.startLocation :
+                                  'End location: ' + widget.ride.endLocation
+                              ),
+                              Text(isStart? widget.ride.startAddress : widget.ride.endAddress,
+                                  style: TextStyle(fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5)),
+                                  semanticsLabel: isStart ? 'Start location address: ' + widget.ride.startAddress :
+                                  'End location address: ' + widget.ride.endAddress
+                              )
+                            ]
+                        ),
+                      ),
+                      widget.hasLocationIcon ? Semantics(
+                        button: true,
+                        label: (isStart ? 'Start ' : 'End ') + 'location details',
+                        child: SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: InkWell(
+                              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                              child: Icon(Icons.location_on),
+                              onTap: () => displayBottomSheet(context, widget.ride, true),
+                            ),
+                          ),
+                        ),
+                      )
+                          : Container()
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                      'Estimated ${isStart ? 'pick up time' : 'drop off time'}: ' +
+                          DateFormat('jm').format(isStart ? widget.ride.startTime : widget.ride.endTime),
+                      style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+                ]),
+          )
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
@@ -619,11 +688,7 @@ class _TimeLineState extends State<TimeLine> {
               SizedBox(height: 32),
               TimeLineRow(
                   infoWidget: Expanded(
-                    child: GestureDetector(
-                        onTap: () =>
-                            displayBottomSheet(context, widget.ride, true),
-                        child: widget.ride.buildLocationsCard(
-                            context, widget.isIcon, true, true)),
+                      child: buildLocationsCard(context, true)
                   ),
                   useCarIcon: false,
                   isCurrentRide: widget.isCurrent),
@@ -644,8 +709,8 @@ class _TimeLineState extends State<TimeLine> {
                         child: GestureDetector(
                             onTap: () =>
                                 displayBottomSheet(context, widget.ride, false),
-                            child: widget.ride.buildLocationsCard(
-                                context, widget.isIcon, false, false)),
+                            child: buildLocationsCard(context, false)
+                        ),
                       ),
                       useCarIcon: false,
                       isCurrentRide: widget.isCurrent),
