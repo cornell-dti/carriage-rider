@@ -98,8 +98,8 @@ class _RidePageState extends State<RidePage> {
                       ]
                   ) : Container(),
                   showRideActions && !editable && cancellable ? Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: CancelRideButton(widget.ride),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(child: CancelRideButton(widget.ride)),
                   ) : Container(),
                   showRideActions ? SizedBox(height: rideActionsHeight) : Container()
                 ],
@@ -214,18 +214,28 @@ class CancelRideButton extends StatelessWidget {
   final Ride ride;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 22, bottom: 22),
-      child: RideAction(
-          text: 'Cancel Ride',
-          color: Colors.red,
-          icon: Icons.close,
-          action: () async {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CancelRidePage(ride))
-            );
-          }
+    return Semantics(
+      button: true,
+      child: FlatButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CancelRidePage(ride))
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.close, color: Colors.red),
+              SizedBox(width: 10),
+              Text('Cancel Ride',
+                  style: TextStyle(color: Colors.red, fontSize: 18, fontFamily: 'SFPro'))
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -371,29 +381,32 @@ class RideActions extends StatelessWidget {
         children: <Widget>[
           Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ButtonTheme(
-                minWidth: MediaQuery.of(context).size.width * 0.8,
-                height: 50.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 18),
-                  child: RaisedButton.icon(
-                      onPressed: () async {
-                        if (ride.parentRide != null) {
-                          showEditDialog();
-                        } else {
-                          editSingle(context, ride);
-                        }
-                      },
-                      elevation: 3.0,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                      icon: Icon(Icons.edit),
-                      label: Text('Edit Ride',
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold))),
+              Center(
+                child: ButtonTheme(
+                  minWidth: MediaQuery.of(context).size.width * 0.8,
+                  height: 50.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 18),
+                    child: RaisedButton.icon(
+                        onPressed: () async {
+                          if (ride.parentRide != null) {
+                            showEditDialog();
+                          } else {
+                            editSingle(context, ride);
+                          }
+                        },
+                        elevation: 3.0,
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        icon: Icon(Icons.edit),
+                        label: Text('Edit Ride',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold))),
+                  ),
                 ),
               ),
               CancelRideButton(ride)
@@ -794,36 +807,6 @@ class InformationRow extends StatelessWidget {
           ],
         )
       ],
-    );
-  }
-}
-
-class RideAction extends StatelessWidget {
-  const RideAction(
-      {@required this.text,
-        @required this.color,
-        @required this.icon,
-        @required this.action});
-  final String text;
-  final Color color;
-  final IconData icon;
-  final Function action;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        action();
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(icon, color: color),
-          SizedBox(width: 10),
-          Text(text,
-              style: TextStyle(color: color, fontSize: 18, fontFamily: 'SFPro'))
-        ],
-      ),
     );
   }
 }

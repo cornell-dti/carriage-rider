@@ -91,12 +91,12 @@ class CarriageTheme {
 
   static final cancelStyle = TextStyle(
     color: Colors.black,
-    fontWeight: FontWeight.w100,
+    fontWeight: FontWeight.w400,
     fontSize: 15,
   );
 
   static final labelStyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 11);
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 11);
 
   static final infoStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16);
