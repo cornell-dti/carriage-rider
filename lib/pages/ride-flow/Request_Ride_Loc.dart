@@ -3,6 +3,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Time.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
+import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:provider/provider.dart';
@@ -29,134 +30,133 @@ class _RequestRideLocState extends State<RequestRideLoc> {
     TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
     TextEditingController toCtrl = rideFlowProvider.toCtrl;
 
+    double buttonHeight = 48;
+    double buttonVerticalPadding = 16;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
-            child: Container(
-              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FlowCancel(),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text('Location', style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  TabBarTop(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  TabBarBot(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.grey[350],
-                      colorThree: Colors.grey[350]),
-                  SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text((rideFlowProvider.locationsFinished() ? 'Review your ' : 'Set your ') + 'pickup and dropoff location',
-                            style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  rideFlowProvider.requestHadError ? Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Text('Invalid location(s), please try again.', style: TextStyle(color: Colors.red, fontSize: 16)),
-                  ) : Container(),
-                  SizedBox(height: 20),
-                  Form(
-                    key: _formKey,
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonHeight + 2*buttonVerticalPadding + 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        LocationInput(
-                          label: 'From',
-                          ride: widget.ride,
-                          finished: rideFlowProvider.locationsFinished(),
-                          isToLocation: false,
+                        FlowCancel(),
+                        SizedBox(height: 20.0),
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                              child: Text('Location', style: CarriageTheme.title1),
+                            )
+                          ],
                         ),
-                        SizedBox(height: 10.0),
-                        Text(
-                            locationsProvider.isPreset(fromCtrl.text)
-                                ? locationsProvider
-                                .locationByName(fromCtrl.text)
-                                .info ==
-                                null
-                                ? ' '
-                                : locationsProvider
-                                .locationByName(fromCtrl.text)
-                                .info
-                                : ' ',
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        SizedBox(height: 30.0),
-                        LocationInput(
-                          label: 'To',
-                          ride: widget.ride,
-                          finished: rideFlowProvider.locationsFinished(),
-                          isToLocation: true,
+                        TabBarTop(
+                            colorOne: Colors.black,
+                            colorTwo: Colors.grey[350],
+                            colorThree: Colors.grey[350]),
+                        TabBarBot(
+                            colorOne: Colors.black,
+                            colorTwo: Colors.grey[350],
+                            colorThree: Colors.grey[350]),
+                        SizedBox(height: 15.0),
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                              child: Text((rideFlowProvider.locationsFinished() ? 'Review your ' : 'Set your ') + 'pickup and dropoff location',
+                                  style: CarriageTheme.title1),
+                            )
+                          ],
                         ),
-                        SizedBox(height: 10.0),
-                        Text(
-                            locationsProvider.isPreset(toCtrl.text)
-                                ? locationsProvider
-                                .locationByName(toCtrl.text)
-                                .info ==
-                                null
-                                ? ' '
-                                : locationsProvider
-                                .locationByName(toCtrl.text)
-                                .info
-                                : ' ',
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
+                        rideFlowProvider.requestHadError ? Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text('Invalid location(s), please try again.', style: TextStyle(color: Colors.red, fontSize: 16)),
+                        ) : Container(),
+                        SizedBox(height: 20),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              LocationInput(
+                                label: 'From',
+                                ride: widget.ride,
+                                finished: rideFlowProvider.locationsFinished(),
+                                isToLocation: false,
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                  locationsProvider.isPreset(fromCtrl.text)
+                                      ? locationsProvider
+                                      .locationByName(fromCtrl.text)
+                                      .info ==
+                                      null
+                                      ? ' '
+                                      : locationsProvider
+                                      .locationByName(fromCtrl.text)
+                                      .info
+                                      : ' ',
+                                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              SizedBox(height: 30.0),
+                              LocationInput(
+                                label: 'To',
+                                ride: widget.ride,
+                                finished: rideFlowProvider.locationsFinished(),
+                                isToLocation: true,
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                  locationsProvider.isPreset(toCtrl.text)
+                                      ? locationsProvider
+                                      .locationByName(toCtrl.text)
+                                      .info ==
+                                      null
+                                      ? ' '
+                                      : locationsProvider
+                                      .locationByName(toCtrl.text)
+                                      .info
+                                      : ' ',
+                                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
-                          child: rideFlowProvider.locationsFinished() ? Row(
-                              children: <Widget>[
-                                //FlowBackDuo(),
-                                //SizedBox(width: 50),
-                                ButtonTheme(
-                                  minWidth: MediaQuery.of(context).size.width * 0.65,
-                                  height: 50.0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Expanded(
-                                      child: RaisedButton(
-                                          onPressed: () {
-                                            if (_formKey.currentState.validate()) {
-                                              Navigator.push(context, MaterialPageRoute(
-                                                  builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
-                                              )
-                                              );
-                                              widget.ride.startLocation = fromCtrl.text;
-                                              widget.ride.endLocation = toCtrl.text;
-                                            }
-                                          },
-                                          elevation: 2.0,
-                                          color: Colors.black,
-                                          textColor: Colors.white,
-                                          child: Text('Set Location',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)
-                                          )
-                                      )
-                                  ),
-                                ),
-                              ]) : Container(),
-                        )
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 34, vertical: buttonVerticalPadding),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                spreadRadius: 5,
+                                blurRadius: 11,
+                                color: Colors.black.withOpacity(0.11))
+                          ]
+                      ),
+                      child: CButton(
+                        text: 'Set Location',
+                        height: buttonHeight,
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
+                            )
+                            );
+                            widget.ride.startLocation = fromCtrl.text;
+                            widget.ride.endLocation = toCtrl.text;
+                          }
+                        },
+                      )
+                  ),
+                )
+              ],
             )
         )
     );
@@ -201,7 +201,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
 
     String input = widget.isToLocation ? toCtrl.text : fromCtrl.text;
     String ithaca = 'Ithaca, NY 14850';
-    
+
     Widget customLocationOption = Column(
         children: [
           InkWell(
@@ -406,7 +406,7 @@ class LocationInput extends StatelessWidget {
       textInputAction: TextInputAction.next,
       validator: (input) {
         if (input.isEmpty) {
-          return 'Please enter your location';
+          return 'Please enter your ' + (isToLocation ? 'drop off' : 'pick up') + ' location';
         }
         return null;
       },

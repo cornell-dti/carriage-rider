@@ -222,6 +222,9 @@ class _HomeState extends State<Home> {
       );
     }
 
+    double menuButtonSize = 48;
+    double headingHorizPadding = 16;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
@@ -301,15 +304,20 @@ class _HomeState extends State<Home> {
                                       padding: const EdgeInsets.only(
                                           left: 16, right: 16, bottom: 23),
                                       child: ExcludeSemantics(
-                                        child: Text(
-                                          'Hi ' +
-                                              riderProvider.info.firstName +
-                                              '! ☀',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 30,
-                                              fontFamily: 'SFPro',
-                                              fontWeight: FontWeight.w700),
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width - menuButtonSize - (headingHorizPadding * 2),
+                                          child: FittedBox(
+                                            alignment: Alignment.centerLeft,
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              'Hi ' + riderProvider.info.firstName + '! ☀',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 30,
+                                                  fontFamily: 'SFPro',
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -320,12 +328,16 @@ class _HomeState extends State<Home> {
                                     child: Builder(builder: (context) {
                                       return Semantics(
                                         label: 'Menu',
-                                        child: IconButton(
-                                            icon: Icon(Icons.menu,
-                                                color: Colors.black),
-                                            onPressed: () =>
-                                                Scaffold.of(context)
-                                                    .openEndDrawer()),
+                                        child: Container(
+                                          width: 48,
+                                          height: 48,
+                                          child: IconButton(
+                                              icon: Icon(Icons.menu,
+                                                  color: Colors.black),
+                                              onPressed: () =>
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer()),
+                                        ),
                                       );
                                     }),
                                   )

@@ -64,7 +64,7 @@ class _OnBoardingState extends State<OnBoarding> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: 600.0,
+                  height: MediaQuery.of(context).size.height * 0.85,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -229,7 +229,7 @@ class _OnBoardingState extends State<OnBoarding> {
                           ),
                           SizedBox(height: 15.0),
                           Positioned(
-                              bottom: 400,
+                              bottom: 350,
                               left: 75,
                               child: SvgPicture.asset(
                                   'assets/images/onboard_3/c3.svg')),

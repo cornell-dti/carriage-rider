@@ -130,23 +130,26 @@ class Profile extends StatelessWidget {
                                 top: _picDiameter * 0.66)
                           ],
                         )),
-                    Column(
-                      children: [
-                        Text(riderProvider.info.fullName(),
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            )),
-                        SizedBox(height: 4),
-                        Semantics(
-                          container: true,
-                          child: Text('Joined ' + riderProvider.info.joinDate,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(riderProvider.info.fullName(),
                               style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).accentColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
                               )),
-                        )
-                      ],
+                          SizedBox(height: 4),
+                          Semantics(
+                            container: true,
+                            child: Text('Joined ' + riderProvider.info.joinDate,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).accentColor,
+                                )),
+                          )
+                        ],
+                      ),
                     )
                   ]))),
               sectionDivider,
