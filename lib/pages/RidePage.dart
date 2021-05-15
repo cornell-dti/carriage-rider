@@ -535,8 +535,9 @@ class _TimeLineState extends State<TimeLine> {
                           Flexible(
                             child: Text(
                                 isStart ? ride.startLocation : ride.endLocation,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              semanticsLabel: (isStart ? ride.startLocation : ride.endLocation) + '.',
+                            ),
                           ),
                           SizedBox(height: 10),
                           Flexible(
@@ -596,63 +597,66 @@ class _TimeLineState extends State<TimeLine> {
     //Widget displaying a custom built card with information about a ride's start location and start time.
     //[isIcon] determines whether the card needs an icon.
     Widget buildLocationsCard(BuildContext context, bool isStart) {
-      return Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [CarriageTheme.boxShadow]
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child:
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(isStart ? widget.ride.startLocation : widget.ride.endLocation,
-                                  style: TextStyle(fontSize: 14, color: Color(0xFF1A051D)),
-                                  semanticsLabel: isStart ? 'Start location: ' + widget.ride.startLocation :
-                                  'End location: ' + widget.ride.endLocation
-                              ),
-                              Text(isStart? widget.ride.startAddress : widget.ride.endAddress,
-                                  style: TextStyle(fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5)),
-                                  semanticsLabel: isStart ? 'Start location address: ' + widget.ride.startAddress :
-                                  'End location address: ' + widget.ride.endAddress
-                              )
-                            ]
-                        ),
-                      ),
-                      widget.hasLocationIcon ? Semantics(
-                        button: true,
-                        label: (isStart ? 'Start ' : 'End ') + 'location details',
-                        child: SizedBox(
-                          height: 48,
-                          width: 48,
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: InkWell(
-                              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                              child: Icon(Icons.location_on),
-                              onTap: () => displayBottomSheet(context, widget.ride, true),
-                            ),
+      return Semantics(
+        container: true,
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [CarriageTheme.boxShadow]
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child:
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(isStart ? widget.ride.startLocation : widget.ride.endLocation,
+                                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D)),
+                                    semanticsLabel: (isStart ? 'Start location: ' + widget.ride.startLocation :
+                                    'End location: ' + widget.ride.endLocation) + '.'
+                                ),
+                                Text(isStart? widget.ride.startAddress : widget.ride.endAddress,
+                                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5)),
+                                    semanticsLabel: 'Address: ' + (isStart ? widget.ride.startAddress : widget.ride.endAddress) + '.'
+                                )
+                              ]
                           ),
                         ),
-                      )
-                          : Container()
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                      'Estimated ${isStart ? 'pick up time' : 'drop off time'}: ' +
-                          DateFormat('jm').format(isStart ? widget.ride.startTime : widget.ride.endTime),
-                      style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-                ]),
-          )
+                        widget.hasLocationIcon ? Semantics(
+                          button: true,
+                          container: true,
+                          label: (isStart ? 'Start ' : 'End ') + 'location details',
+                          child: SizedBox(
+                            height: 48,
+                            width: 48,
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: InkWell(
+                                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                child: Icon(Icons.location_on),
+                                onTap: () => displayBottomSheet(context, widget.ride, true),
+                              ),
+                            ),
+                          ),
+                        )
+                            : Container()
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                        'Estimated ${isStart ? 'pick up time' : 'drop off time'}: ' +
+                            DateFormat('jm').format(isStart ? widget.ride.startTime : widget.ride.endTime),
+                        style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
+                  ]),
+            )
+        ),
       );
     }
 
@@ -686,12 +690,14 @@ class _TimeLineState extends State<TimeLine> {
                 ),
               ),
               SizedBox(height: 32),
-              TimeLineRow(
-                  infoWidget: Expanded(
-                      child: buildLocationsCard(context, true)
-                  ),
-                  useCarIcon: false,
-                  isCurrentRide: widget.isCurrent),
+              Container(
+                child: TimeLineRow(
+                    infoWidget: Expanded(
+                        child: buildLocationsCard(context, true)
+                    ),
+                    useCarIcon: false,
+                    isCurrentRide: widget.isCurrent),
+              ),
               SizedBox(height: 32),
               MeasureSize(
                 onChange: (size) {
