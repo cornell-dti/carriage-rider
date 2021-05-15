@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
@@ -33,11 +34,14 @@ class RequestRideType extends StatefulWidget {
 class _RequestRideTypeState extends State<RequestRideType> {
   @override
   Widget build(BuildContext context) {
+    double horizPadding = min(MediaQuery.of(context).size.width * 0.05, 20);
+    double buttonSpacing = min(MediaQuery.of(context).size.width * 0.1, 20);
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-              margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+              margin: EdgeInsets.only(top: 40.0, left: horizPadding, right: horizPadding),
               child: Column(
                 children: <Widget>[
                   FlowCancel(),
@@ -81,7 +85,7 @@ class _RequestRideTypeState extends State<RequestRideType> {
                             ));
                           },
                         ),
-                        SizedBox(width: 30.0),
+                        SizedBox(width: buttonSpacing),
                         SelectionButton(
                             text: 'No',
                             width: MediaQuery.of(context).size.width * 0.4,
