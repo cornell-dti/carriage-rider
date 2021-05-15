@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:carriage_rider/pages/Login.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
@@ -704,8 +705,11 @@ class SignOutButton extends StatelessWidget {
           ),
           onPressed: () {
             authProvider.signOut();
-            Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Login())
+            );
           },
         ));
   }
