@@ -14,7 +14,6 @@ import '../models/Ride.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 
-
 class RidePage extends StatefulWidget {
   RidePage(this.ride);
 
@@ -32,8 +31,10 @@ class _RidePageState extends State<RidePage> {
   @override
   Widget build(BuildContext context) {
     DateTime dayBeforeRide = widget.ride.startTime.subtract(Duration(days: 1));
-    DateTime dayBeforeRide10 = DateTime(dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
-    DateTime hourBeforeRide = widget.ride.startTime.subtract(Duration(hours: 1));
+    DateTime dayBeforeRide10 = DateTime(
+        dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
+    DateTime hourBeforeRide =
+    widget.ride.startTime.subtract(Duration(hours: 1));
     bool beforeEditDeadline = DateTime.now().isBefore(dayBeforeRide10);
 
     bool editable = widget.ride.type == 'unscheduled' && beforeEditDeadline;
@@ -47,8 +48,8 @@ class _RidePageState extends State<RidePage> {
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: ScheduleBar(
-          Colors.black, Theme.of(context).scaffoldBackgroundColor),
+      appBar:
+      ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -105,7 +106,8 @@ class _RidePageState extends State<RidePage> {
                 ],
               ),
             ),
-            showRideActions && editable && cancellable ? Align(
+            showRideActions && editable && cancellable
+                ? Align(
                 alignment: Alignment.bottomCenter,
                 child: showRideActions &&
                     widget.ride.type == 'unscheduled' &&
@@ -118,8 +120,9 @@ class _RidePageState extends State<RidePage> {
                       rideActionsHeight = size.height;
                     });
                   },
-                ) : Container()
-            ) : Container()
+                )
+                    : Container())
+                : Container()
           ],
         ),
       ),
@@ -211,7 +214,9 @@ class CustomDivider extends StatelessWidget {
 
 class CancelRideButton extends StatelessWidget {
   CancelRideButton(this.ride);
+
   final Ride ride;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -240,8 +245,10 @@ class CancelRideButton extends StatelessWidget {
     );
   }
 }
+
 class RideActions extends StatelessWidget {
   const RideActions(this.ride, this.visibilityCallback, this.scaffoldKey);
+
   final Ride ride;
   final Function visibilityCallback;
   final GlobalKey scaffoldKey;
@@ -308,8 +315,7 @@ class RideActions extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => RequestRideLoc(ride: ride.copy())));
           },
-        )
-    );
+        ));
 
     Widget editAllButton(BuildContext context) => ButtonTheme(
         minWidth: MediaQuery.of(context).size.width * 0.8,
@@ -327,8 +333,7 @@ class RideActions extends StatelessWidget {
           onPressed: () {
             editAll(context, ride.parentRide);
           },
-        )
-    );
+        ));
 
     Future<void> showEditDialog() async {
       visibilityCallback(false);
@@ -365,8 +370,7 @@ class RideActions extends StatelessWidget {
                     )),
               ),
             ]);
-          }
-      );
+          });
     }
 
     return Container(
@@ -547,8 +551,8 @@ class _TimeLineState extends State<TimeLine> {
                         children: [
                           Flexible(
                             child: Text(
-                                isStart ? ride.startLocation : ride.endLocation,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              isStart ? ride.startLocation : ride.endLocation,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                               semanticsLabel: (isStart ? ride.startLocation : ride.endLocation) + '.',
                             ),
                           ),
@@ -673,6 +677,89 @@ class _TimeLineState extends State<TimeLine> {
       );
     }
 
+    Widget driverOnTheWay() {
+      return TimeLineRow(
+          text: 'Your driver is on the way.',
+          useCarIcon: widget.isCarIcon,
+          isCurrentRide: widget.isCurrent
+      );
+    }
+
+    Widget startLocationCard() {
+      return TimeLineRow(
+          infoWidget: Expanded(
+              child: buildLocationsCard(context, true)
+          ),
+          useCarIcon: false,
+          isCurrentRide: widget.isCurrent
+      );
+    }
+
+    Widget endLocationCard() {
+      return TimeLineRow(
+          infoWidget: Expanded(
+              child: buildLocationsCard(context, false)
+          ),
+          useCarIcon: false,
+          isCurrentRide: widget.isCurrent
+      );
+    }
+
+    Widget noShow() {
+      return TimeLineRow(
+          text: noShowMessage,
+          useCarIcon: false,
+          isCurrentRide: widget.isCurrent
+      );
+    }
+
+    Widget arrived() {
+      return TimeLineRow(
+          text: 'Arrived!',
+          useCarIcon: false,
+          isCurrentRide: widget.isCurrent
+      );
+    }
+
+    List<Widget> timeLineRows = [startLocationCard(), endLocationCard()];
+    if (widget.isCurrent || widget.ride.type == 'past') {
+      timeLineRows.insert(0, driverOnTheWay());
+    }
+    if (widget.ride.type == 'past') {
+      if (widget.ride.status == RideStatus.NO_SHOW) {
+        timeLineRows.add(noShow());
+      }
+      else {
+        timeLineRows.add(arrived());
+      }
+    }
+
+    timeLineRows.first = MeasureSize(
+      onChange: (size) {
+        setState(() {
+          firstRowHeight = size.height;
+          line = buildLine();
+        });
+      },
+      child: Container(
+          key: firstRowKey,
+          child: timeLineRows.first
+      ),
+    );
+
+    timeLineRows.last = MeasureSize(
+      onChange: (size) {
+        setState(() {
+          lastRowHeight = size.height;
+          line = buildLine();
+        });
+      },
+      child: Container(
+          key: lastRowKey,
+          child: timeLineRows.last
+      ),
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
@@ -686,81 +773,17 @@ class _TimeLineState extends State<TimeLine> {
                 timelineHeight = size.height;
               });
             },
-            child: Column(children: [
-              MeasureSize(
-                onChange: (size) {
-                  setState(() {
-                    firstRowHeight = size.height;
-                    line = buildLine();
-                  });
-                },
-                child: Container(
-                  key: firstRowKey,
-                  child: TimeLineRow(
-                      text: 'Your driver is on the way.',
-                      useCarIcon: widget.isCarIcon,
-                      isCurrentRide: widget.isCurrent),
-                ),
-              ),
-              SizedBox(height: 32),
-              Container(
-                child: TimeLineRow(
-                    infoWidget: Expanded(
-                        child: buildLocationsCard(context, true)
-                    ),
-                    useCarIcon: false,
-                    isCurrentRide: widget.isCurrent),
-              ),
-              SizedBox(height: 32),
-              MeasureSize(
-                onChange: (size) {
-                  if (widget.ride.type != 'past') {
-                    setState(() {
-                      lastRowHeight = size.height;
-                      line = buildLine();
-                    });
-                  }
-                },
-                child: Container(
-                  key: widget.ride.type != 'past' ? lastRowKey : null,
-                  child: TimeLineRow(
-                      infoWidget: Expanded(
-                        child: GestureDetector(
-                            onTap: () =>
-                                displayBottomSheet(context, widget.ride, false),
-                            child: buildLocationsCard(context, false)
-                        ),
-                      ),
-                      useCarIcon: false,
-                      isCurrentRide: widget.isCurrent),
-                ),
-              ),
-              widget.ride.type == 'past' ? SizedBox(height: 32) : Container(),
-              MeasureSize(
-                onChange: (size) {
-                  if (widget.ride.type == 'past') {
-                    setState(() {
-                      lastRowHeight = size.height;
-                      line = buildLine();
-                    });
-                  }
-                },
-                child: Container(
-                  key: widget.ride.type == 'past' ? lastRowKey : null,
-                  child: widget.ride.type == 'past'
-                      ? widget.ride.status == RideStatus.NO_SHOW
-                      ? TimeLineRow(
-                      text: noShowMessage,
-                      useCarIcon: false,
-                      isCurrentRide: widget.isCurrent)
-                      : TimeLineRow(
-                      text: 'Arrived!',
-                      useCarIcon: false,
-                      isCurrentRide: widget.isCurrent)
-                      : Container(),
-                ),
-              ),
-            ]),
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: timeLineRows.length,
+              itemBuilder: (context, index) {
+                return timeLineRows[index];
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 30);
+              },
+            ),
           ),
         ],
       ),

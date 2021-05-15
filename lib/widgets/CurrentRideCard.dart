@@ -186,8 +186,7 @@ class CurrentRideCard extends StatelessWidget {
                   ],
                 )
               ],
-            )
-                : Container(),
+            ) : Container(),
             SizedBox(height: 10),
           ]),
     );
