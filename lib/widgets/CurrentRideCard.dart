@@ -184,7 +184,7 @@ class CurrentRideCard extends StatelessWidget {
                             children: <Widget>[
                               Text('Driver',
                                   style: TextStyle(fontSize: 11)),
-                              Text(ride.driver.fullName(),
+                              Text(ride.driver != null ? ride.driver.fullName() : 'Driver TBD',
                                   style:
                                   CarriageTheme.rideInfoStyle)
                             ],
