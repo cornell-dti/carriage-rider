@@ -63,8 +63,8 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => NotificationsPage()));
     return Future<void>.value();
   }
 
@@ -197,6 +197,8 @@ class _HomeState extends State<Home> {
         HttpHeaders.authorizationHeader: "Bearer $authToken"
       },
       body: jsonEncode(<String, String>{
+        'userId': authProvider.id,
+        'userType': 'Rider',
         'platform': 'android',
         'token': token,
       }),
@@ -349,11 +351,14 @@ class _HomeState extends State<Home> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 23),
                                     child: Builder(builder: (context) {
-                                      Widget button = IconButton(
-                                          icon: Icon(Icons.menu,
-                                              color: Colors.black),
-                                          onPressed: () => Scaffold.of(context)
-                                              .openEndDrawer());
+                                      Widget button = Semantics(
+                                          label: 'Menu',
+                                          child: IconButton(
+                                              icon: Icon(Icons.menu,
+                                                  color: Colors.black),
+                                              onPressed: () =>
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer()));
                                       if (hasNewNotification) {
                                         return Stack(children: [
                                           button,
