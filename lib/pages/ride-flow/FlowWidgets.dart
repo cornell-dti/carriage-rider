@@ -54,100 +54,90 @@ class BackText extends StatelessWidget {
 }
 
 class SelectionButton extends StatelessWidget {
-  final Widget page;
   final String text;
+  final double width;
+  final double height;
   final GestureTapCallback onPressed;
 
-  const SelectionButton({Key key, this.page, this.text, this.onPressed})
+  const SelectionButton({Key key, @required this.text, @required this.width, @required this.height, @required this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ButtonTheme(
-      minWidth: MediaQuery.of(context).size.width * 0.4,
-      height: 50.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      child: RaisedButton(
-        onPressed: () {
-          onPressed();
-          Navigator.push(
-              context, new MaterialPageRoute(builder: (context) => page));
-        },
-        elevation: 3.0,
-        color: Colors.white,
-        textColor: Colors.black,
-        child: Text(text,
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+    /*return Container(
+      width: width,
+      child: ButtonTheme(
+          height: height,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: RaisedButton(
+            padding: EdgeInsets.all(16),
+            color: Colors.white,
+            textColor: Colors.black,
+            child: Text(text,
+                style: CarriageTheme.button.copyWith(color: Colors.black)),
+            onPressed: onPressed,
+          )
+      ),
+    );*/
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 1,
+                spreadRadius: 0,
+                color: Colors.black.withOpacity(0.25)
+            )
+          ],
+          borderRadius: BorderRadius.circular(12)
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          onTap: onPressed,
+          child: Center(
+            child: Text(text,
+                style: CarriageTheme.button.copyWith(color: Colors.black)
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-class FlowBack extends StatelessWidget {
-  const FlowBack({Key key}) : super(key: key);
-
+class BackArrowButton extends StatelessWidget {
+  final double size;
+  BackArrowButton(this.size);
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-              padding: const EdgeInsets.only(bottom: 30.0),
-              child: Row(
-                children: <Widget>[
-                  ButtonTheme(
-                    minWidth: MediaQuery.of(context).size.width * 0.05,
-                    height: 50.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      elevation: 2.0,
-                      color: Colors.white,
-                      child: Semantics(
-                        label: 'Back',
-                        child: Row(
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(Icons.arrow_back_ios),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ))),
-    );
-  }
-}
-
-class FlowBackDuo extends StatelessWidget {
-  const FlowBackDuo({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.05,
-        height: 50.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: RaisedButton(
-          onPressed: () {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [CarriageTheme.boxShadow],
+          borderRadius: BorderRadius.circular(12)
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          onTap: () {
             Navigator.pop(context);
           },
-          elevation: 2.0,
-          color: Colors.white,
           child: Semantics(
-              label: 'Back',
-              child: Row(
-                children: [
-                  SizedBox(width: 5),
-                  Icon(Icons.arrow_back_ios),
-                ],
-              )
+            label: 'Back',
+            child: Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.arrow_back_ios),
+            ),
           ),
-        )
+        ),
+      ),
     );
   }
 }

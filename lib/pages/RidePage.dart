@@ -2,6 +2,7 @@ import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
+import 'package:carriage_rider/widgets/RecurringRideInfo.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,12 @@ class _RidePageState extends State<RidePage> {
     DateTime dayBeforeRide = widget.ride.startTime.subtract(Duration(days: 1));
     DateTime dayBeforeRide10 = DateTime(
         dayBeforeRide.year, dayBeforeRide.month, dayBeforeRide.day, 10, 0);
+    DateTime hourBeforeRide =
+        widget.ride.startTime.subtract(Duration(hours: 1));
     bool beforeEditDeadline = DateTime.now().isBefore(dayBeforeRide10);
+
+    bool editable = widget.ride.type == 'unscheduled' && beforeEditDeadline;
+    bool cancellable = DateTime.now().isBefore(hourBeforeRide);
 
     void setRideActionVisibility(bool visible) {
       setState(() {
@@ -41,69 +47,92 @@ class _RidePageState extends State<RidePage> {
     }
 
     return Scaffold(
-        key: scaffoldKey,
-        appBar: ScheduleBar(
-            Colors.black, Theme.of(context).scaffoldBackgroundColor),
-        body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 8, top: 16),
-                      child: Text(
-                          DateFormat('MMM')
-                                  .format(widget.ride.startTime)
-                                  .toUpperCase() +
-                              ' ' +
-                              ordinal(int.parse(DateFormat('d')
-                                  .format(widget.ride.startTime))) +
-                              ' ' +
-                              DateFormat('jm').format(widget.ride.startTime),
-                          style: CarriageTheme.largeTitle),
+      key: scaffoldKey,
+      appBar:
+          ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, bottom: 8, top: 16),
+                    child: Text(
+                        DateFormat('MMM')
+                                .format(widget.ride.startTime)
+                                .toUpperCase() +
+                            ' ' +
+                            ordinal(int.parse(DateFormat('d')
+                                .format(widget.ride.startTime))) +
+                            ' ' +
+                            DateFormat('jm').format(widget.ride.startTime),
+                        style: CarriageTheme.largeTitle),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 32),
+                        DriverCard(
+                            color: widget.ride.type == 'unscheduled'
+                                ? CarriageTheme.gray4
+                                : Colors.black,
+                            ride: widget.ride,
+                            showButtons: false),
+                        SizedBox(height: 48),
+                        TimeLine(widget.ride, true, false, false),
+                        SizedBox(height: 32),
+                      ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 32),
-                          DriverCard(
-                              color: widget.ride.type == 'unscheduled'
-                                  ? CarriageTheme.gray4
-                                  : Colors.black,
-                              ride: widget.ride,
-                              showButtons: false),
-                          SizedBox(height: 48),
-                          TimeLine(widget.ride, true, false, false),
-                          SizedBox(height: 50)
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: rideActionsHeight)
-                  ],
-                ),
-              ),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: showRideActions &&
-                          widget.ride.type == 'unscheduled' &&
-                          beforeEditDeadline
-                      ? MeasureSize(
-                          child: RideActions(widget.ride,
-                              setRideActionVisibility, scaffoldKey),
-                          onChange: (size) {
-                            setState(() {
-                              rideActionsHeight = size.height;
-                            });
-                          },
+                  ),
+                  widget.ride.parentRide != null
+                      ? Column(children: [
+                          Container(
+                              height: 6,
+                              color: Theme.of(context).scaffoldBackgroundColor),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 24),
+                            color: Colors.white,
+                            child: RecurringRideInfo(widget.ride.parentRide),
+                          ),
+                        ])
+                      : Container(),
+                  showRideActions && !editable && cancellable
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: CancelRideButton(widget.ride),
                         )
-                      : Container()),
-            ],
-          ),
-        ));
+                      : Container(),
+                  showRideActions
+                      ? SizedBox(height: rideActionsHeight)
+                      : Container()
+                ],
+              ),
+            ),
+            showRideActions && editable && cancellable
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: showRideActions &&
+                            widget.ride.type == 'unscheduled' &&
+                            beforeEditDeadline
+                        ? MeasureSize(
+                            child: RideActions(widget.ride,
+                                setRideActionVisibility, scaffoldKey),
+                            onChange: (size) {
+                              setState(() {
+                                rideActionsHeight = size.height;
+                              });
+                            },
+                          )
+                        : Container())
+                : Container()
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -189,8 +218,30 @@ class CustomDivider extends StatelessWidget {
   }
 }
 
+class CancelRideButton extends StatelessWidget {
+  CancelRideButton(this.ride);
+
+  final Ride ride;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 22, bottom: 22),
+      child: RideAction(
+          text: 'Cancel Ride',
+          color: Colors.red,
+          icon: Icons.close,
+          action: () async {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CancelRidePage(ride)));
+          }),
+    );
+  }
+}
+
 class RideActions extends StatelessWidget {
   const RideActions(this.ride, this.visibilityCallback, this.scaffoldKey);
+
   final Ride ride;
   final Function visibilityCallback;
   final GlobalKey scaffoldKey;
@@ -352,18 +403,7 @@ class RideActions extends StatelessWidget {
                               fontSize: 17, fontWeight: FontWeight.bold))),
                 ),
               ),
-              ride.type == 'past'
-                  ? Container()
-                  : Padding(
-                      padding: EdgeInsets.only(top: 22, bottom: 22),
-                      child: RideAction(
-                          text: 'Cancel Ride',
-                          color: Colors.red,
-                          icon: Icons.close,
-                          action: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CancelRidePage(ride)))),
-                    ),
+              CancelRideButton(ride)
             ],
           )
         ],
@@ -461,7 +501,7 @@ class _TimeLineState extends State<TimeLine> {
 
     String info = 'No Location Info';
     if (isStart) {
-      if (!locationsProvider.isPreset(ride.startLocation)) {
+      if (locationsProvider.isPreset(ride.startLocation)) {
         String potentialStartInfo =
             locationsProvider.locationByName(ride.startLocation).info;
         if (potentialStartInfo != null) {
@@ -469,7 +509,7 @@ class _TimeLineState extends State<TimeLine> {
         }
       }
     } else {
-      if (!locationsProvider.isPreset(ride.endLocation)) {
+      if (locationsProvider.isPreset(ride.endLocation)) {
         String potentialEndInfo =
             locationsProvider.locationByName(ride.endLocation).info;
         if (potentialEndInfo != null) {
@@ -569,23 +609,37 @@ class _TimeLineState extends State<TimeLine> {
                 },
                 child: Container(
                   key: firstRowKey,
-                  child: TimeLineRow(
-                      text: 'Your driver is on the way.',
-                      useCarIcon: widget.isCarIcon,
-                      isCurrentRide: widget.isCurrent),
+                  child:
+                      widget.ride.type == 'past' || widget.ride.type == 'active'
+                          ? TimeLineRow(
+                              text: 'Your driver is on the way.',
+                              useCarIcon: widget.isCarIcon,
+                              isCurrentRide: widget.isCurrent)
+                          : TimeLineRow(
+                              infoWidget: Expanded(
+                                child: GestureDetector(
+                                    onTap: () => displayBottomSheet(
+                                        context, widget.ride, true),
+                                    child: widget.ride.buildLocationsCard(
+                                        context, widget.isIcon, true, true)),
+                              ),
+                              useCarIcon: false,
+                              isCurrentRide: widget.isCurrent),
                 ),
               ),
               SizedBox(height: 32),
-              TimeLineRow(
-                  infoWidget: Expanded(
-                    child: GestureDetector(
-                        onTap: () =>
-                            displayBottomSheet(context, widget.ride, true),
-                        child: widget.ride.buildLocationsCard(
-                            context, widget.isIcon, true, true)),
-                  ),
-                  useCarIcon: false,
-                  isCurrentRide: widget.isCurrent),
+              widget.ride.type == 'past' || widget.ride.type == 'active'
+                  ? TimeLineRow(
+                      infoWidget: Expanded(
+                        child: GestureDetector(
+                            onTap: () =>
+                                displayBottomSheet(context, widget.ride, true),
+                            child: widget.ride.buildLocationsCard(
+                                context, widget.isIcon, true, true)),
+                      ),
+                      useCarIcon: false,
+                      isCurrentRide: widget.isCurrent)
+                  : Container(),
               SizedBox(height: 32),
               MeasureSize(
                 onChange: (size) {
@@ -692,6 +746,7 @@ class RideAction extends StatelessWidget {
       @required this.color,
       @required this.icon,
       @required this.action});
+
   final String text;
   final Color color;
   final IconData icon;

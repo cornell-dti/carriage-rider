@@ -2,6 +2,7 @@ import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Review_Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/ToggleButton.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
+import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
@@ -11,10 +12,10 @@ double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
 DateTime assignDate() {
   DateTime now = DateTime.now();
-  DateTime compare = DateTime(now.year, now.month, now.day, 10);
-  return now.difference(compare).inMinutes >= 0
+  DateTime today10AM = DateTime(now.year, now.month, now.day, 10);
+  return now.isAfter(today10AM)
       ? DateTime(now.year, now.month, now.day + 2)
-      : DateTime(now.year, now.month, now.day);
+      : DateTime(now.year, now.month, now.day + 1);
 }
 
 class RequestRideType extends StatefulWidget {
@@ -67,20 +68,39 @@ class _RequestRideTypeState extends State<RequestRideType> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SelectionButton(
-                            text: 'Yes',
-                            onPressed: () {
-                              widget.ride.recurring = true;
-                            },
-                            page: RequestRideDateTime(ride: widget.ride)),
+                          text: 'Yes',
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: 48,
+                          onPressed: () {
+                            widget.ride.recurring = true;
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => RequestRideDateTime(ride: widget.ride)
+                            ));
+                          },
+                        ),
                         SizedBox(width: 30.0),
                         SelectionButton(
                             text: 'No',
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: 48,
                             onPressed: () {
                               widget.ride.recurring = false;
-                            },
-                            page: RequestRideDateTime(ride: widget.ride))
-                      ]),
-                  FlowBack()
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => RequestRideDateTime(ride: widget.ride)
+                              ));
+                            }
+                        )
+                      ]
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 30),
+                          child: BackArrowButton(50),
+                        )
+                    ),
+                  )
                 ],
               ),
             )));
@@ -105,6 +125,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   TimeOfDay _dropOffTime = TimeOfDay.now();
   List<bool> isSelected = List.filled(5, false);
   bool hasErrors = false;
+  bool showSelectionError = false;
 
   @override
   void initState() {
@@ -164,6 +185,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
   void toggle(int index) {
     setState(() {
+      showSelectionError = false;
       isSelected[index] = !isSelected[index];
     });
   }
@@ -317,177 +339,192 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       return DateTime(startDate.year, startDate.month, startDate.day, _dropOffTime.hour, _dropOffTime.minute);
     }
 
+    double buttonsHeight = 48;
+    double buttonsVerticalPadding = 16;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-            child: Column(
-              children: <Widget>[
-                FlowCancel(),
-                SizedBox(height: 20.0),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Text('Date & Time', style: CarriageTheme.title1),
-                    )
-                  ],
-                ),
-                TabBarTop(
-                    colorOne: Colors.black,
-                    colorTwo: Colors.black,
-                    colorThree: Colors.grey[350]),
-                TabBarBot(
-                    colorOne: Colors.green,
-                    colorTwo: Colors.black,
-                    colorThree: Colors.grey[350]),
-                SizedBox(height: 15.0),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Text('When is your ride? (2/2)',
-                          style: CarriageTheme.title1),
-                    )
-                  ],
-                ),
-                SizedBox(height: 30.0),
-                Row(
-                  children: <Widget>[
-                    Text('Date & Time',
-                        style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Form(
-                  key: _formKey,
-                  child: widget.ride.recurring ? Column(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
+                  child: Column(
                     children: <Widget>[
+                      FlowCancel(),
+                      SizedBox(height: 20.0),
                       Row(
                         children: <Widget>[
-                          Container(
-                              width: MediaQuery.of(context).size.width / 3,
-                              margin: EdgeInsets.only(left: 15.0),
-                              child: startDateInput
-                          ),
-                          SizedBox(width: 30),
-                          Container(
-                              width: MediaQuery.of(context).size.width / 3,
-                              margin: EdgeInsets.only(right: 15.0),
-                              child: endDateInput
-                          ),
+                          Flexible(
+                            child: Text('Date & Time', style: CarriageTheme.title1),
+                          )
                         ],
                       ),
-                      SizedBox(height: 20.0),
+                      TabBarTop(
+                          colorOne: Colors.black,
+                          colorTwo: Colors.black,
+                          colorThree: Colors.grey[350]),
+                      TabBarBot(
+                          colorOne: Colors.green,
+                          colorTwo: Colors.black,
+                          colorThree: Colors.grey[350]),
+                      SizedBox(height: 15.0),
                       Row(
                         children: <Widget>[
-                          Container(
-                              width: MediaQuery.of(context).size.width / 3,
-                              margin: EdgeInsets.only(left: 15.0),
-                              child: startTimeInput),
-                          SizedBox(width: 30.0),
-                          Container(
-                              width: MediaQuery.of(context).size.width / 3,
-                              margin: EdgeInsets.only(right: 15.0),
-                              child: endTimeInput),
+                          Flexible(
+                            child: Text('When is your ride? (2/2)',
+                                style: CarriageTheme.title1),
+                          )
                         ],
-                      )
-                    ],
-                  ) : Column(
-                    children: [
-                      startDateInput,
-                      SizedBox(height: 20.0),
-                      startTimeInput,
-                      SizedBox(height: 20.0),
-                      endTimeInput
-                    ],
-                  ),
-                ),
-                widget.ride.recurring ? Column(
-                    children: [
+                      ),
                       SizedBox(height: 30.0),
                       Row(
                         children: <Widget>[
-                          Text('Repeat Days',
+                          Text('Date & Time',
                               style:
                               TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
-                      SizedBox(height: 15),
-                      Row(
-                        children: [
-                          ToggleButton(isSelected[0], () => toggle(0), 'M', 'Mondays'),
-                          SizedBox(width: 15),
-                          ToggleButton(isSelected[1], () => toggle(1), 'T', 'Tuesdays'),
-                          SizedBox(width: 15),
-                          ToggleButton(isSelected[2], () => toggle(2), 'W', 'Wednesdays'),
-                          SizedBox(width: 15),
-                          ToggleButton(isSelected[3], () => toggle(3), 'Th', 'Thursdays'),
-                          SizedBox(width: 15),
-                          ToggleButton(isSelected[4], () => toggle(4), 'F', 'Fridays'),
-                        ],
+                      Form(
+                        key: _formKey,
+                        child: widget.ride.recurring ? Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    margin: EdgeInsets.only(left: 15.0),
+                                    child: startDateInput
+                                ),
+                                SizedBox(width: 30),
+                                Container(
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    margin: EdgeInsets.only(right: 15.0),
+                                    child: endDateInput
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.0),
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    margin: EdgeInsets.only(left: 15.0),
+                                    child: startTimeInput),
+                                SizedBox(width: 30.0),
+                                Container(
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    margin: EdgeInsets.only(right: 15.0),
+                                    child: endTimeInput),
+                              ],
+                            )
+                          ],
+                        ) : Column(
+                          children: [
+                            startDateInput,
+                            SizedBox(height: 20.0),
+                            startTimeInput,
+                            SizedBox(height: 20.0),
+                            endTimeInput
+                          ],
+                        ),
                       ),
-                      isSelected.indexOf(true) == -1 ? Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text('Select at least one day.', style: TextStyle(color: Colors.red)),
-                      ) : Container()
-                    ]
-                ) : Container(),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                          padding: const EdgeInsets.only(bottom: 30.0),
-                          child: Row(children: <Widget>[
-                            FlowBackDuo(),
-                            SizedBox(width: 40),
-                            ButtonTheme(
-                                minWidth:
-                                MediaQuery.of(context).size.width * 0.65,
-                                height: 50.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Expanded(
-                                  child: RaisedButton(
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate() && (widget.ride.recurring ? isSelected.indexOf(true) >= 0 : true)) {
-                                          widget.ride.startTime = assembleStartTime();
-                                          widget.ride.endTime = assembleEndTime();
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReviewRide(
-                                                          ride: widget.ride
-                                                      )
-                                              )
-                                          );
-                                          if (widget.ride.recurring) {
-                                            List<int> selectedDays = [];
-                                            for (int i = 0; i < isSelected.length; i++) {
-                                              if (isSelected[i]) {
-                                                selectedDays.add(i);
-                                              }
-                                            }
-                                            widget.ride.recurringDays = selectedDays.map((index) => index+1).toList();
-                                            widget.ride.endDate = endDate;
-                                          }
-                                        }
-                                        else {
-                                          setState(() {
-                                            hasErrors = true;
-                                          });
-                                        }
-                                      },
-                                      elevation: 2.0,
-                                      color: Colors.black,
-                                      textColor: Colors.white,
-                                      child: Text('Set Date & Time',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold))),
-                                )),
-                          ]))),
+                      widget.ride.recurring ? Column(
+                          children: [
+                            SizedBox(height: 30.0),
+                            Row(
+                              children: <Widget>[
+                                Text('Repeat Days',
+                                    style:
+                                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              children: [
+                                ToggleButton(isSelected[0], () => toggle(0), 'M', 'Mondays'),
+                                SizedBox(width: 15),
+                                ToggleButton(isSelected[1], () => toggle(1), 'T', 'Tuesdays'),
+                                SizedBox(width: 15),
+                                ToggleButton(isSelected[2], () => toggle(2), 'W', 'Wednesdays'),
+                                SizedBox(width: 15),
+                                ToggleButton(isSelected[3], () => toggle(3), 'Th', 'Thursdays'),
+                                SizedBox(width: 15),
+                                ToggleButton(isSelected[4], () => toggle(4), 'F', 'Fridays'),
+                              ],
+                            ),
+                            showSelectionError && isSelected.indexOf(true) == -1 ? Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: Text('Select at least one day.', style: TextStyle(color: Colors.red)),
+                            ) : Container(),
+                          ]
+                      ) : Container(),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: buttonsVerticalPadding),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            spreadRadius: 5,
+                            blurRadius: 11,
+                            color: Colors.black.withOpacity(0.11))
+                      ]
+                  ),
+                  child: Row(
+                      children: [
+                        BackArrowButton(buttonsHeight),
+                        SizedBox(width: 24),
+                        Expanded(
+                          child: CButton(
+                            text: 'Set Date & Time',
+                            height: buttonsHeight,
+                            onPressed: () {
+                              setState(() {
+                                showSelectionError = true;
+                              });
+                              if (_formKey.currentState.validate() && (widget.ride.recurring ? isSelected.indexOf(true) >= 0 : true)) {
+                                widget.ride.startTime = assembleStartTime();
+                                widget.ride.endTime = assembleEndTime();
+                                Navigator.push(context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ReviewRide(
+                                                ride: widget.ride
+                                            )
+                                    )
+                                );
+                                if (widget.ride.recurring) {
+                                  List<int> selectedDays = [];
+                                  for (int i = 0; i < isSelected.length; i++) {
+                                    if (isSelected[i]) {
+                                      selectedDays.add(i);
+                                    }
+                                  }
+                                  widget.ride.recurringDays = selectedDays.map((index) => index+1).toList();
+                                  widget.ride.endDate = endDate;
+                                }
+                              }
+                              else {
+                                setState(() {
+                                  hasErrors = true;
+                                });
+                              }
+                            },
+                          ),
+                        )
+                      ]
+                  ),
+                ),
+              )
+            ],
           ),
         ));
   }
