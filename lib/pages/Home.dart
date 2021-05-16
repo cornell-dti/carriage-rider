@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
 
   Future<void> onSelectNotification(String payload) {
     Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => Notifications()));
+        context, new MaterialPageRoute(builder: (context) => NotificationsPage()));
     return Future<void>.value();
   }
 
@@ -150,7 +150,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => Notifications()));
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
@@ -162,7 +162,7 @@ class _HomeState extends State<Home> {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
         }
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => Notifications()));
+            new MaterialPageRoute(builder: (context) => NotificationsPage()));
         setState(() {});
       },
     );
@@ -240,17 +240,6 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   Navigator.push(context,
                       new MaterialPageRoute(builder: (context) => Profile()));
-                },
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              ListTile(
-                leading: Icon(Icons.settings, color: Colors.black),
-                title: sideBarText('Settings', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Settings()));
                 },
               ),
               Divider(
