@@ -219,26 +219,31 @@ class CancelRideButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void openCancelPage () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CancelRidePage(ride))
+      );
+    }
     return Semantics(
+      label: 'Cancel Ride',
       button: true,
-      child: FlatButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CancelRidePage(ride))
-          );
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.close, color: Colors.red),
-              SizedBox(width: 10),
-              Text('Cancel Ride',
-                  style: TextStyle(color: Colors.red, fontSize: 18, fontFamily: 'SFPro'))
-            ],
+      onTap: openCancelPage,
+      child: ExcludeSemantics(
+        child: FlatButton(
+          onPressed: openCancelPage,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.close, color: Colors.red),
+                SizedBox(width: 10),
+                Text('Cancel Ride',
+                    style: TextStyle(color: Colors.red, fontSize: 18, fontFamily: 'SFPro'))
+              ],
+            ),
           ),
         ),
       ),
