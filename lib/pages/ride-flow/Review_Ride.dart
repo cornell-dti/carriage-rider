@@ -4,6 +4,7 @@ import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -39,7 +40,7 @@ class _ReviewRideState extends State<ReviewRide> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
+                  margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
                   child: Column(
                     children: <Widget>[
                       FlowCancel(),
@@ -142,12 +143,14 @@ class _ReviewRideState extends State<ReviewRide> {
                               }
                               if (successfulRequest) {
                                 rideFlowProvider.clearControllers();
+                                rideFlowProvider.setError(false);
                                 Navigator.push(context, MaterialPageRoute(
                                     builder: (context) => RideConfirmation()
                                 ));
                               }
                               else {
                                 rideFlowProvider.setError(true);
+                                SemanticsService.announce('An error occurred, please enter valid locations.', TextDirection.ltr);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();

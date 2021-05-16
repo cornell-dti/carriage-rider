@@ -64,8 +64,7 @@ class UpcomingRides extends StatelessWidget {
 class UpcomingSeeMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     List<Ride> upcomingRides = ridesProvider.upcomingRides;
 
     return Scaffold(
@@ -73,39 +72,42 @@ class UpcomingSeeMore extends StatelessWidget {
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
             child: SingleChildScrollView(
-          child:
+              child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 8),
-              child: Text('Upcoming Rides', style: CarriageTheme.largeTitle),
-            ),
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: upcomingRides.length,
-                    itemBuilder: (context, index) {
-                      return RideCard(
-                        upcomingRides[index],
-                        showConfirmation: true,
-                        showCallDriver: false,
-                        showArrow: true,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 16);
-                    },
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 16, bottom: 8),
+                  child: Semantics(
+                      header: true,
+                      child: Text('Upcoming Rides', style: CarriageTheme.largeTitle)
                   ),
                 ),
-              ),
-            )
-          ]),
-        )));
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: upcomingRides.length,
+                        itemBuilder: (context, index) {
+                          return RideCard(
+                            upcomingRides[index],
+                            showConfirmation: true,
+                            showCallDriver: false,
+                            showArrow: true,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(height: 16);
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            )));
   }
 }
