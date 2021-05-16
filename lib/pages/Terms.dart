@@ -14,7 +14,7 @@ class TermsOfService extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10)),
               child: RaisedButton(
                   onPressed: () {
-                    Navigator.push(context,
+                    Navigator.pushReplacement(context,
                         new MaterialPageRoute(builder: (context) => Home()));
                   },
                   elevation: 2.0,
