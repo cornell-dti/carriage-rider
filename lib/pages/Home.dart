@@ -195,6 +195,8 @@ class _HomeState extends State<Home> {
         HttpHeaders.authorizationHeader: "Bearer $authToken"
       },
       body: jsonEncode(<String, String>{
+        'userId': authProvider.id,
+        'userType': 'Rider',
         'platform': 'android',
         'token': token,
       }),
