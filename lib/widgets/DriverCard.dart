@@ -26,9 +26,15 @@ class DriverCard extends StatelessWidget {
       margin: EdgeInsets.only(left: 15),
       child: Row(
         children: <Widget>[
-          ride.driver == null || ride.driver.photoLink == null
-              ? Icon(Icons.account_circle, size: 64, color: CarriageTheme.gray4)
-              : ride.driver.profilePicture(70),
+          Semantics(
+            image: true,
+            label: 'Your driver',
+            child: Container(
+              child: ride.driver == null || ride.driver.photoLink == null
+                  ? Icon(Icons.account_circle, size: 64, color: CarriageTheme.gray4)
+                  : ExcludeSemantics(child: ride.driver.profilePicture(70)),
+            ),
+          ),
           SizedBox(width: 15),
           Container(
             child: Row(
@@ -44,15 +50,17 @@ class DriverCard extends StatelessWidget {
                     ? Row(
                         children: [
                           SizedBox(width: 20),
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: buttonDecoration,
-                            child: IconButton(
-                              icon: Icon(Icons.phone, size: 16),
-                              color: color,
-                              onPressed: () =>
-                                  launch('tel://${ride.driver.phoneNumber}'),
+                          Semantics(
+                            button: true,
+                            label: 'Call driver',
+                            onTap: () => launch('tel://${ride.driver.phoneNumber}'),
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: buttonDecoration,
+                              child: ExcludeSemantics(
+                                child: Icon(Icons.phone, size: 24, color: color)
+                              ),
                             ),
                           ),
                           SizedBox(width: 8),

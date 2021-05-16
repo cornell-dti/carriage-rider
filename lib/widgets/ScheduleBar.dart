@@ -8,23 +8,38 @@ class ScheduleBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: backgroundColor,
-      titleSpacing: 0.0,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: GestureDetector(
-        onTap: () => Navigator.pop(context, false),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Icon(Icons.arrow_back_ios, color: textColor),
-            Text(
-              'Schedule',
-              style: TextStyle(
-                  color: textColor, fontSize: 20, fontFamily: 'SFPro'),
+    return Semantics(
+      button: true,
+      label: 'Return to schedule',
+      onTap: () => Navigator.pop(context, false),
+      child: ExcludeSemantics(
+        child: AppBar(
+          backgroundColor: backgroundColor,
+          titleSpacing: 0.0,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Container(
+            alignment: Alignment.centerLeft,
+            height: 48,
+            child: InkWell(
+              onTap: () => Navigator.pop(context, false),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.arrow_back_ios, color: textColor),
+                    Text(
+                      'Schedule',
+                      style: TextStyle(
+                          color: textColor, fontSize: 20, fontFamily: 'SFPro'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );

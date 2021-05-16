@@ -6,6 +6,7 @@ import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
@@ -40,7 +41,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: buttonHeight + 2*buttonVerticalPadding + 40),
+                    margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0, bottom: buttonHeight + 2*buttonVerticalPadding + 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -93,11 +94,11 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                                       .locationByName(fromCtrl.text)
                                       .info ==
                                       null
-                                      ? ' '
+                                      ? ''
                                       : locationsProvider
                                       .locationByName(fromCtrl.text)
                                       .info
-                                      : ' ',
+                                      : '',
                                   style: TextStyle(fontSize: 14, color: Colors.grey)),
                               SizedBox(height: 30.0),
                               LocationInput(
@@ -113,11 +114,11 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                                       .locationByName(toCtrl.text)
                                       .info ==
                                       null
-                                      ? ' '
+                                      ? ''
                                       : locationsProvider
                                       .locationByName(toCtrl.text)
                                       .info
-                                      : ' ',
+                                      : '',
                                   style: TextStyle(fontSize: 14, color: Colors.grey)),
                             ],
                           ),
@@ -151,6 +152,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                             );
                             widget.ride.startLocation = fromCtrl.text;
                             widget.ride.endLocation = toCtrl.text;
+                          }
+                          else {
+                            SemanticsService.announce('Error, please check your locations', TextDirection.ltr);
                           }
                         },
                       )
@@ -289,7 +293,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
-            margin: EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+            margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0),
             child: Column(
               children: <Widget>[
                 BackText(),
@@ -376,7 +380,8 @@ class LocationInput extends StatelessWidget {
       }
     }
 
-    bool screenReader = MediaQuery.of(context).accessibleNavigation;
+    String semanticsLabel = isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
+    (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location');
 
     void onTap () {
       rideFlowProvider.setError(false);
@@ -414,15 +419,13 @@ class LocationInput extends StatelessWidget {
       onFieldSubmitted: (value) => FocusScope.of(context).nextFocus(),
     );
 
-    return screenReader ? Semantics(
-      label: isToLocation ? (toCtrl.text != null && toCtrl.text != '' ? 'Selected drop off location: ${toCtrl.text}' : 'Select drop off location') :
-      (fromCtrl.text != null && fromCtrl.text != '' ? 'Selected pick up location: ${fromCtrl.text}' : 'Select pick up location'),
+    return Semantics(
+      label: semanticsLabel,
       focusable: true,
       onTap: onTap,
-      child: IgnorePointer(
-          child: textField
-      ),
-    ) : textField;
+      button: true,
+      child: ExcludeSemantics(child: textField)
+    );
   }
 
   @override
