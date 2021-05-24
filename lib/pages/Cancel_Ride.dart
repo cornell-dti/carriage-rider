@@ -106,7 +106,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
                               requestedCancel = true;
                             });
                             if (cancelRepeating) {
-                              await ridesProvider.cancelRide(context, widget.ride.parentRide);
+                              await ridesProvider.cancelRide(context, widget.ride);
                             }
                             else {
                               if (widget.ride.parentRide != null) {

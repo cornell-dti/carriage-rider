@@ -163,16 +163,16 @@ class RidesProvider with ChangeNotifier {
     fetchAllRides(config, authProvider);
   }
 
-  Future<void> cancelRepeatingRideOccurrence(BuildContext context, Ride ride) async {
+  Future<void> cancelRepeatingRideOccurrence(BuildContext context, Ride origRide) async {
     AppConfig config = AppConfig.of(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
-      'id': ride.id,
+      'id': origRide.id,
       'deleteOnly': true,
-      'origDate': DateFormat('yyyy-MM-dd').format(ride.origDate),
+      'origDate': DateFormat('yyyy-MM-dd').format(origRide.origDate),
     };
-    final response = await http.put('${config.baseUrl}/rides/${ride.parentRide.id}/edits',
+    final response = await http.put('${config.baseUrl}/rides/${origRide.parentRide.id}/edits',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'

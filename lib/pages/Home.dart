@@ -628,14 +628,13 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(12)),
                             child: RaisedButton.icon(
                               onPressed: () {
-                                rideFlowProvider.setLocControllers('', '');
-                                rideFlowProvider.setEditing(false);
+                                rideFlowProvider.clear();
+                                rideFlowProvider.setCreating();
                                 Navigator.push(
                                     context,
-                                    new MaterialPageRoute(
+                                    MaterialPageRoute(
                                         builder: (context) =>
-                                            RequestRideLoc(
-                                                ride: new Ride())));
+                                            RequestRideLoc()));
                               },
                               elevation: 3.0,
                               color: Colors.black,

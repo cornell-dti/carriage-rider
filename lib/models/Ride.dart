@@ -352,27 +352,4 @@ class Ride {
       ),
     ]);
   }
-
-  Ride copy() {
-    return Ride(
-        id: this.id,
-        parentRide: this.parentRide,
-        origDate: this.origDate,
-        type: this.type,
-        rider: this.rider,
-        status: this.status,
-        startLocation: this.startLocation,
-        startAddress: this.startAddress,
-        endLocation: this.endLocation,
-        endAddress: this.endAddress,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        recurring: this.recurring,
-        recurringDays: this.recurringDays,
-        deleted: this.deleted,
-        late: this.late,
-        edits: this.edits,
-        endDate: this.endDate,
-        driver: this.driver);
-  }
 }

@@ -260,38 +260,23 @@ class RideActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RideFlowProvider createRideProvider =
-    Provider.of<RideFlowProvider>(context);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     void editSingle(BuildContext context, Ride ride) {
-      createRideProvider.setLocControllers(
-          ride.startLocation, ride.endLocation);
-      createRideProvider.setPickupTimeCtrl(
-          TimeOfDay.fromDateTime(ride.startTime).format(context));
-      createRideProvider.setDropoffTimeCtrl(
-          TimeOfDay.fromDateTime(ride.endTime).format(context));
-      createRideProvider.setStartDateCtrl(ride.startTime);
-      createRideProvider.setEditing(true);
+      print(ride.id);
+      rideFlowProvider.setEditing(context, ride);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RequestRideLoc(ride: ride.copy())));
+              builder: (context) => RequestRideLoc()));
     }
 
     void editAll(BuildContext context, Ride parentRide) {
-      createRideProvider.setLocControllers(
-          parentRide.startLocation, parentRide.endLocation);
-      createRideProvider.setPickupTimeCtrl(
-          TimeOfDay.fromDateTime(parentRide.startTime).format(context));
-      createRideProvider.setDropoffTimeCtrl(
-          TimeOfDay.fromDateTime(parentRide.endTime).format(context));
-      createRideProvider.setStartDateCtrl(parentRide.startTime);
-      createRideProvider.setEndDateCtrl(parentRide.endDate);
-      createRideProvider.setEditing(true);
+      rideFlowProvider.setEditing(context, parentRide);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RequestRideLoc(ride: parentRide.copy())));
+              builder: (context) => RequestRideLoc()));
     }
 
     Widget editSingleButton(BuildContext context) => ButtonTheme(
@@ -307,18 +292,11 @@ class RideActions extends StatelessWidget {
           child: Text('Edit This Ride',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           onPressed: () {
-            createRideProvider.setLocControllers(
-                ride.startLocation, ride.endLocation);
-            createRideProvider.setPickupTimeCtrl(
-                TimeOfDay.fromDateTime(ride.startTime).format(context));
-            createRideProvider.setDropoffTimeCtrl(
-                TimeOfDay.fromDateTime(ride.endTime).format(context));
-            createRideProvider.setStartDateCtrl(ride.startTime);
-            createRideProvider.setEditing(true);
+            rideFlowProvider.setEditing(context, ride);
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => RequestRideLoc(ride: ride.copy())));
+                    builder: (context) => RequestRideLoc()));
           },
         ));
 

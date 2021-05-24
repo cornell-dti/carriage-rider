@@ -9,12 +9,13 @@ import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 
-double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
+double timeToDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
-DateTime assignDate() {
+DateTime firstPossibleRideDate() {
   DateTime now = DateTime.now();
   DateTime today10AM = DateTime(now.year, now.month, now.day, 10);
   return now.isAfter(today10AM)
@@ -23,9 +24,8 @@ DateTime assignDate() {
 }
 
 class RequestRideType extends StatefulWidget {
-  final Ride ride;
 
-  RequestRideType({Key key, this.ride}) : super(key: key);
+  RequestRideType({Key key}) : super(key: key);
 
   @override
   _RequestRideTypeState createState() => _RequestRideTypeState();
@@ -36,6 +36,7 @@ class _RequestRideTypeState extends State<RequestRideType> {
   Widget build(BuildContext context) {
     double horizPadding = min(MediaQuery.of(context).size.width * 0.05, 20);
     double buttonSpacing = min(MediaQuery.of(context).size.width * 0.1, 20);
+    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -79,9 +80,9 @@ class _RequestRideTypeState extends State<RequestRideType> {
                           width: MediaQuery.of(context).size.width * 0.4,
                           height: 48,
                           onPressed: () {
-                            widget.ride.recurring = true;
+                            rideFlowProvider.setRecurring(true);
                             Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => RequestRideDateTime(ride: widget.ride)
+                                builder: (context) => RequestRideDateTime()
                             ));
                           },
                         ),
@@ -91,9 +92,9 @@ class _RequestRideTypeState extends State<RequestRideType> {
                             width: MediaQuery.of(context).size.width * 0.4,
                             height: 48,
                             onPressed: () {
-                              widget.ride.recurring = false;
+                              rideFlowProvider.setRecurring(false);
                               Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => RequestRideDateTime(ride: widget.ride)
+                                  builder: (context) => RequestRideDateTime()
                               ));
                             }
                         )
@@ -115,9 +116,8 @@ class _RequestRideTypeState extends State<RequestRideType> {
 }
 
 class RequestRideDateTime extends StatefulWidget {
-  final Ride ride;
 
-  RequestRideDateTime({Key key, @required this.ride}) : super(key: key);
+  RequestRideDateTime({Key key}) : super(key: key);
 
   @override
   _RequestRideDateTimeState createState() => _RequestRideDateTimeState();
@@ -126,11 +126,7 @@ class RequestRideDateTime extends StatefulWidget {
 class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-  DateTime startDate;
-  DateTime endDate;
-  TimeOfDay _pickUpTime;
-  TimeOfDay _dropOffTime;
-  List<bool> isSelected;
+
   bool showSelectionError;
   String startDateError;
   String endDateError;
@@ -141,36 +137,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   void initState() {
     super.initState();
     setState(() {
-      isSelected = List.filled(5, false);
       showSelectionError = false;
       startDateError = '';
       endDateError = '';
       startTimeError = '';
       endTimeError = '';
     });
-    if (widget.ride.startTime != null) {
-      setState(() {
-        startDate = widget.ride.startTime;
-        _pickUpTime = TimeOfDay(hour: startDate.hour, minute: startDate.minute);
-      });
-    }
-    if (widget.ride.endTime != null) {
-      setState(() {
-        _dropOffTime = TimeOfDay(hour: widget.ride.endTime.hour, minute: widget.ride.endTime.minute);
-      });
-    }
-    if (widget.ride.endDate != null) {
-      setState(() {
-        endDate = widget.ride.endDate;
-      });
-    }
-    if (widget.ride.recurring && widget.ride.recurringDays != null) {
-      for (int day in widget.ride.recurringDays) {
-        setState(() {
-          isSelected[day-1] = true;
-        });
-      }
-    }
   }
 
   Future<void> selectTime(BuildContext context, TimeOfDay init, Function selectCallback) async {
@@ -187,7 +159,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     final DateTime selection = await showDatePicker(
       context: context,
       initialDate: init,
-      firstDate: assignDate(),
+      firstDate: firstPossibleRideDate(),
       lastDate: DateTime(init.year + 1),
       builder: (context, child) {
         return Theme(
@@ -201,11 +173,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
   }
 
-  void toggle(int index) {
+  void toggle(RideFlowProvider rideFlowProvider, int index) {
     setState(() {
       showSelectionError = false;
-      isSelected[index] = !isSelected[index];
     });
+    rideFlowProvider.toggleRepeatDays(index);
   }
 
   @override
@@ -252,13 +224,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     String validateStartDate(input) {
       String error;
-      if (widget.ride.recurring && input.isNotEmpty) {
-        if (endDate != null && startDate.isAfter(endDate)) {
+      if (rideFlowProvider.startDate != null) {
+        if (rideFlowProvider.recurring && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
           error = 'Start date must be before end date';
         }
       }
-      else if (input.isEmpty) {
-        error = 'Please enter the ' + (widget.ride.recurring ? 'start date' : 'date');
+      else {
+        error = 'Please enter the ' + (rideFlowProvider.recurring ? 'start date' : 'date');
       }
       startDateError = error;
 
@@ -267,25 +239,25 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     String validateEndDate(input) {
       String error;
-      if (input.isNotEmpty) {
-        if (startDate != null) {
-          if (endDate != null && startDate.isAfter(endDate)) {
+      if (rideFlowProvider.recurring) {
+        if (rideFlowProvider.endDate != null) {
+          if (rideFlowProvider.startDate != null &&
+              rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
             error = 'End date must be after start date';
           }
         }
-      }
-      else {
-        error = 'Please enter the end date';
+        else {
+          error = 'Please enter the end date';
+        }
       }
       endDateError = error;
       return error;
     }
 
     void selectStartDate() {
-      selectDate(context, startDate == null ? assignDate() : startDate, (selection) {
-        rideFlowProvider.setStartDateCtrl(selection);
+      selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
+        rideFlowProvider.setStartDate(selection);
         setState(() {
-          startDate = selection;
           startDateError = validateStartDate(startDateCtrl.text);
           endDateError = validateEndDate(endDateCtrl.text);
         });
@@ -293,10 +265,9 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectEndDate() {
-      selectDate(context, endDate == null ? assignDate() : endDate, (selection) {
-        rideFlowProvider.setEndDateCtrl(selection);
+      selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
+        rideFlowProvider.setEndDate(selection);
         setState(() {
-          endDate = selection;
           startDateError = validateStartDate(startDateCtrl.text);
           endDateError = validateEndDate(endDateCtrl.text);
         });
@@ -305,8 +276,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     String validateStartTime(input) {
       String error;
-      if (input.isNotEmpty) {
-        if (_dropOffTime != null && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+      if (rideFlowProvider.pickUpTime != null) {
+        if (rideFlowProvider.dropOffTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'Start time must be before end time';
         }
       }
@@ -318,12 +289,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     String validateEndTime(input) {
       String error;
-      if (input.isNotEmpty) {
-        if (_pickUpTime != null && toDouble(_pickUpTime) >= toDouble(_dropOffTime)) {
+      if (rideFlowProvider.dropOffTime != null ) {
+        if (rideFlowProvider.pickUpTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'End time must be after start time';
         }
       }
-      if (input.isEmpty) {
+      else {
         error = 'Please enter your drop-off time';
       }
       endTimeError = error;
@@ -331,10 +302,9 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectStartTime() {
-      selectTime(context, _pickUpTime == null ? TimeOfDay.now() : _pickUpTime, (TimeOfDay selection) {
-        rideFlowProvider.setPickupTimeCtrl(selection.format(context));
+      selectTime(context, rideFlowProvider.pickUpTime == null ? TimeOfDay.now() : rideFlowProvider.pickUpTime, (TimeOfDay selection) {
+        rideFlowProvider.setPickUpTime(selection, context);
         setState(() {
-          _pickUpTime = selection;
           startTimeError = validateStartTime(pickUpCtrl.text);
           endTimeError = validateEndTime(dropOffCtrl.text);
         });
@@ -342,10 +312,9 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectEndTime() {
-      selectTime(context, _dropOffTime == null ? TimeOfDay.now() : _dropOffTime, (selection) {
-        rideFlowProvider.setDropoffTimeCtrl(selection.format(context));
+      selectTime(context, rideFlowProvider.dropOffTime == null ? TimeOfDay.now() : rideFlowProvider.dropOffTime, (selection) {
+        rideFlowProvider.setDropOffTime(selection, context);
         setState(() {
-          _dropOffTime = selection;
           startTimeError = validateStartTime(pickUpCtrl.text);
           endTimeError = validateEndTime(dropOffCtrl.text);
         });
@@ -354,7 +323,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     Widget startDateInput = buildInputField(
         startDateCtrl,
-        widget.ride.recurring ? 'Start Date' : 'Date',
+        rideFlowProvider.recurring ? 'Start Date' : 'Date',
         startDateError,
         validateStartDate,
         selectStartDate
@@ -369,7 +338,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     );
 
     Widget startTimeInput = buildInputField(
-        rideFlowProvider.pickUpCtrl,
+        rideFlowProvider.pickUpTimeCtrl,
         'Pickup Time',
         startTimeError,
         validateStartTime,
@@ -377,20 +346,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     );
 
     Widget endTimeInput = buildInputField(
-        rideFlowProvider.dropOffCtrl,
+        rideFlowProvider.dropOffTimeCtrl,
         'Drop-off Time',
         endTimeError,
         validateEndTime,
         selectEndTime
     );
-
-    DateTime assembleStartTime() {
-      return DateTime(startDate.year, startDate.month, startDate.day, _pickUpTime.hour, _pickUpTime.minute);
-    }
-
-    DateTime assembleEndTime() {
-      return DateTime(startDate.year, startDate.month, startDate.day, _dropOffTime.hour, _dropOffTime.minute);
-    }
 
     double buttonsHeight = 48;
     double buttonsVerticalPadding = 16;
@@ -441,7 +402,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       ),
                       Form(
                         key: _formKey,
-                        child: widget.ride.recurring ? Column(
+                        child: rideFlowProvider.recurring ? Column(
                           children: <Widget>[
                             Row(
                               children: <Widget>[
@@ -483,7 +444,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                           ],
                         ),
                       ),
-                      widget.ride.recurring ? Column(
+                      rideFlowProvider.recurring ? Column(
                           children: [
                             SizedBox(height: 30.0),
                             Row(
@@ -496,18 +457,18 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                             SizedBox(height: 15),
                             Row(
                               children: [
-                                ToggleButton(isSelected[0], () => toggle(0), 'M', 'Mondays'),
+                                ToggleButton(rideFlowProvider.repeatDaysSelected[0], () => toggle(rideFlowProvider, 0), 'M', 'Mondays'),
                                 SizedBox(width: 15),
-                                ToggleButton(isSelected[1], () => toggle(1), 'T', 'Tuesdays'),
+                                ToggleButton(rideFlowProvider.repeatDaysSelected[1], () => toggle(rideFlowProvider, 1), 'T', 'Tuesdays'),
                                 SizedBox(width: 15),
-                                ToggleButton(isSelected[2], () => toggle(2), 'W', 'Wednesdays'),
+                                ToggleButton(rideFlowProvider.repeatDaysSelected[2], () => toggle(rideFlowProvider, 2), 'W', 'Wednesdays'),
                                 SizedBox(width: 15),
-                                ToggleButton(isSelected[3], () => toggle(3), 'Th', 'Thursdays'),
+                                ToggleButton(rideFlowProvider.repeatDaysSelected[3], () => toggle(rideFlowProvider, 3), 'Th', 'Thursdays'),
                                 SizedBox(width: 15),
-                                ToggleButton(isSelected[4], () => toggle(4), 'F', 'Fridays'),
+                                ToggleButton(rideFlowProvider.repeatDaysSelected[4], () => toggle(rideFlowProvider, 4), 'F', 'Fridays'),
                               ],
                             ),
-                            showSelectionError && isSelected.indexOf(true) == -1 ? Padding(
+                            showSelectionError && rideFlowProvider.repeatDaysSelected.indexOf(true) == -1 ? Padding(
                               padding: EdgeInsets.only(top: 8),
                               child: Text('Select at least one day.', semanticsLabel: 'Error, please select at least one day for the ride to repeat on.', style: TextStyle(color: Colors.red)),
                             ) : Container(),
@@ -540,26 +501,19 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                             text: 'Set Date & Time',
                             height: buttonsHeight,
                             onPressed: () {
-                              if (_formKey.currentState.validate() && (widget.ride.recurring ? isSelected.indexOf(true) >= 0 : true)) {
-                                widget.ride.startTime = assembleStartTime();
-                                widget.ride.endTime = assembleEndTime();
+                              if (_formKey.currentState.validate() && (rideFlowProvider.recurring ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
                                 Navigator.push(context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ReviewRide(
-                                                ride: widget.ride
-                                            )
+                                        builder: (context) => ReviewRide()
                                     )
                                 );
-                                if (widget.ride.recurring) {
+                                if (rideFlowProvider.recurring) {
                                   List<int> selectedDays = [];
-                                  for (int i = 0; i < isSelected.length; i++) {
-                                    if (isSelected[i]) {
+                                  for (int i = 0; i < rideFlowProvider.repeatDaysSelected.length; i++) {
+                                    if (rideFlowProvider.repeatDaysSelected[i]) {
                                       selectedDays.add(i);
                                     }
                                   }
-                                  widget.ride.recurringDays = selectedDays.map((index) => index+1).toList();
-                                  widget.ride.endDate = endDate;
                                 }
                               }
                               else {
