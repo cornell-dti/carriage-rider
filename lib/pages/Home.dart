@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
-import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';

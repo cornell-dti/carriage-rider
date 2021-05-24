@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
-import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';

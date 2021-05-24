@@ -1,13 +1,11 @@
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/ride-flow/Ride_Confirmation.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
-import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
