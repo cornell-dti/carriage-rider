@@ -1,19 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:carriage_rider/models/Ride.dart';
 
 class PushNotificationMessageAndroid {
   final String title;
   final String body;
+  final String rideId;
+  final String changedBy;
 
-  PushNotificationMessageAndroid({
-    @required this.title,
-    @required this.body,
-  });
+  PushNotificationMessageAndroid(
+      {@required this.title,
+      @required this.body,
+      @required this.rideId,
+      @required this.changedBy});
 
   factory PushNotificationMessageAndroid.fromJson(Map<String, dynamic> json) {
-    // temporary parsing for console messages
+    // temporary parsing for console message
+    String parsed = json['data']['default'];
+
     return PushNotificationMessageAndroid(
-      title: json["data"]["default"],
-      body: json["data"]["default"],
+      title: parsed,
+      body: parsed,
+      rideId: jsonDecode(parsed)['ride']['id'],
+      changedBy: jsonDecode(parsed)['changedBy']['userType'],
     );
   }
 }
@@ -21,16 +31,22 @@ class PushNotificationMessageAndroid {
 class PushNotificationMessageIOS {
   final String title;
   final String body;
+  final String rideId;
+  final String changedBy;
 
-  PushNotificationMessageIOS({
-    @required this.title,
-    @required this.body,
-  });
+  PushNotificationMessageIOS(
+      {@required this.title,
+      @required this.body,
+      @required this.rideId,
+      @required this.changedBy});
 
   factory PushNotificationMessageIOS.fromJson(Map<String, dynamic> json) {
+    String parsed = json['default'];
     return PushNotificationMessageIOS(
-      title: json['default'],
-      body: json['default']
+      title: parsed,
+      body: parsed,
+      rideId: jsonDecode(parsed)['ride']['id'],
+      changedBy: jsonDecode(parsed)['changedBy']['userType'],
     );
   }
 }

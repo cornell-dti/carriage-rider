@@ -163,14 +163,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // TODO: figure out if there's been a new notification
-  bool hasNewNotification = true;
+  bool hasNewNotification = false;
 
   static final FirebaseMessaging _fcm = FirebaseMessaging();
   static FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   String deviceToken;
+  String id;
 
   final ScrollController scrollCtrl = ScrollController();
   bool fetchingRides = false;
@@ -193,8 +193,13 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> onSelectNotification(String payload) {
-    Navigator.push(context,
-        new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    if (id != null) {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage(rideId: id,)));
+    } else {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => NotificationsPage()));
+    }
     return Future<void>.value();
   }
 
@@ -231,11 +236,10 @@ class _HomeState extends State<Home> {
     final NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
-
     await notificationsPlugin.show(
       0,
       'Carriage Rider',
-      notification,
+      'Ride changed by $notification',
       platformChannelSpecifics,
     );
   }
@@ -259,40 +263,46 @@ class _HomeState extends State<Home> {
     _fcm.configure(
       onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
-        // print("onMessage: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
         Platform.isIOS
-            ? showNotification(iosNotification.body)
-            : showNotification(androidNotification.body);
+            ? showNotification(iosNotification.changedBy)
+            : showNotification(androidNotification.changedBy);
         setState(() {});
       },
       onLaunch: (Map<String, dynamic> message) async {
-        //print("onLaunch: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => NotificationsPage()));
+            new MaterialPageRoute(builder: (context) => NotificationsPage(rideId: androidNotification.rideId)));
         setState(() {});
       },
       onResume: (Map<String, dynamic> message) async {
-        //print("onResume: $message");
+        hasNewNotification = true;
         if (Platform.isAndroid) {
           androidNotification =
               PushNotificationMessageAndroid.fromJson(message);
+          id = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
+          id = iosNotification.rideId;
         }
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => NotificationsPage()));
+            new MaterialPageRoute(builder: (context) => NotificationsPage(rideId: androidNotification.rideId)));
         setState(() {});
       },
     );
@@ -305,7 +315,7 @@ class _HomeState extends State<Home> {
       // Handle data message
       final dynamic data = message['data']['default'];
       showNotification('$data');
-      print("_backgroundMessageHandler data: $data");
+      //print("_backgroundMessageHandler data: $data");
     }
     if (message.containsKey('notification')) {
       // Handle notification message

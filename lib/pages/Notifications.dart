@@ -48,13 +48,16 @@ DispatcherNotification rideConfirmedNotif(Ride ride, DateTime notifTime) {
 
 class DriverNotification extends StatelessWidget {
   DriverNotification(this.ride, this.notifTime, this.text);
+
   final Ride ride;
   final DateTime notifTime;
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    Widget driverImage = ride.driver.profilePicture(48);
+    Widget driverImage = ride.driver != null
+        ? ride.driver.profilePicture(48)
+        : Image.asset('assets/images/person.png', width: 48, height: 48);
     return Notification(ride, notifTime, driverImage, 'Driver', text);
   }
 }
@@ -62,6 +65,7 @@ class DriverNotification extends StatelessWidget {
 class DispatcherNotification extends StatelessWidget {
   DispatcherNotification(
       this.ride, this.notifTime, this.text, this.color, this.iconData);
+
   final Ride ride;
   final DateTime notifTime;
   final String text;
@@ -159,7 +163,9 @@ class Notification extends StatelessWidget {
 }
 
 class NotificationsPage extends StatefulWidget {
-  NotificationsPage({Key key}) : super(key: key);
+  NotificationsPage({Key key, this.rideId}) : super(key: key);
+
+  final String rideId;
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
@@ -168,8 +174,13 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
-    Ride ride =
-        Provider.of<RidesProvider>(context, listen: false).upcomingRides.first;
+    Ride ride = new Ride();
+    List<Ride> rides =
+        Provider.of<RidesProvider>(context, listen: false).upcomingRides;
+    if (widget.rideId != null) {
+      ride = rides[rides.indexWhere((element) => element.id == widget.rideId)];
+    }
+
     return Scaffold(
         appBar: ScheduleBar(
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
@@ -188,28 +199,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: Column(children: [
                       driverArrivedNotif(
                           ride, DateTime.now().subtract(Duration(days: 1))),
-                      driverOnTheWayNotif(
-                          ride, DateTime.now().subtract(Duration(days: 1))),
-                      driverCancelledNotif(
-                          ride, DateTime.now().subtract(Duration(days: 1))),
-                      rideEditedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 1))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 7))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 3))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 2))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 1))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(hours: 7))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(hours: 1))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(minutes: 7))),
-                      rideConfirmedNotif(
-                          ride, DateTime.now().subtract(Duration(minutes: 1))),
                     ]),
                   )
                 ]),
