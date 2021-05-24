@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/models/Ride.dart';
 
 class PushNotificationMessageAndroid {
   final String title;
