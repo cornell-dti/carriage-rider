@@ -225,21 +225,21 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       );
     }
 
-    String validateStartDate() {
+    String validateStartDate(bool checkEmpty) {
       String error;
       if (rideFlowProvider.startDate != null) {
         if (rideFlowProvider.recurring && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
           error = 'Start date must be before end date';
         }
       }
-      else {
+      else if (checkEmpty) {
         error = 'Please enter the ' + (rideFlowProvider.recurring ? 'start date' : 'date');
       }
       startDateError = error;
       return error;
     }
 
-    String validateEndDate() {
+    String validateEndDate(bool checkEmpty) {
       String error;
       if (rideFlowProvider.recurring) {
         if (rideFlowProvider.endDate != null) {
@@ -248,7 +248,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
             error = 'End date must be after start date';
           }
         }
-        else {
+        else if (checkEmpty) {
           error = 'Please enter the end date';
         }
       }
@@ -260,8 +260,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
         rideFlowProvider.setStartDate(selection);
         setState(() {
-          startDateError = validateStartDate();
-          endDateError = validateEndDate();
+          startDateError = validateStartDate(true);
+          endDateError = validateEndDate(false);
         });
       });
     }
@@ -270,34 +270,34 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
         rideFlowProvider.setEndDate(selection);
         setState(() {
-          startDateError = validateStartDate();
-          endDateError = validateEndDate();
+          startDateError = validateStartDate(false);
+          endDateError = validateEndDate(true);
         });
       });
     }
 
-    String validateStartTime() {
+    String validateStartTime(bool checkEmpty) {
       String error;
       if (rideFlowProvider.pickUpTime != null) {
         if (rideFlowProvider.dropOffTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'Start time must be before end time';
         }
       }
-      else {
+      else if (checkEmpty) {
         error = 'Please enter your pickup time';
       }
       startTimeError = error;
       return error;
     }
 
-    String validateEndTime() {
+    String validateEndTime(bool checkEmpty) {
       String error;
       if (rideFlowProvider.dropOffTime != null ) {
         if (rideFlowProvider.pickUpTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'End time must be after start time';
         }
       }
-      else {
+      else if (checkEmpty) {
         error = 'Please enter your drop-off time';
       }
       endTimeError = error;
@@ -308,8 +308,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectTime(context, rideFlowProvider.pickUpTime == null ? TimeOfDay.now() : rideFlowProvider.pickUpTime, (TimeOfDay selection) {
         rideFlowProvider.setPickUpTime(selection, context);
         setState(() {
-          startTimeError = validateStartTime();
-          endTimeError = validateEndTime();
+          startTimeError = validateStartTime(true);
+          endTimeError = validateEndTime(false);
         });
       });
     }
@@ -318,8 +318,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectTime(context, rideFlowProvider.dropOffTime == null ? TimeOfDay.now() : rideFlowProvider.dropOffTime, (selection) {
         rideFlowProvider.setDropOffTime(selection, context);
         setState(() {
-          startTimeError = validateStartTime();
-          endTimeError = validateEndTime();
+          startTimeError = validateStartTime(false);
+          endTimeError = validateEndTime(true);
         });
       });
     }
@@ -353,10 +353,10 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     );
 
     bool allValid() {
-      bool validStartTime = validateStartTime() == null;
-      bool validEndTime = validateEndTime() == null;
-      bool validStartDate = validateStartDate() == null;
-      bool validEndDate = validateEndDate() == null;
+      bool validStartTime = validateStartTime(true) == null;
+      bool validEndTime = validateEndTime(true) == null;
+      bool validStartDate = validateStartDate(true) == null;
+      bool validEndDate = validateEndDate(true) == null;
       return validStartDate && validEndDate && validStartTime && validEndTime;
     }
     double buttonsHeight = 48;
