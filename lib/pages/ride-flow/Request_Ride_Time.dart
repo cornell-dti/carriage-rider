@@ -180,16 +180,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   @override
   Widget build(BuildContext context) {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    TextEditingController startDateCtrl = rideFlowProvider.startDateCtrl;
-    TextEditingController endDateCtrl = rideFlowProvider.endDateCtrl;
-    TextEditingController pickUpCtrl = rideFlowProvider.startDateCtrl;
-    TextEditingController dropOffCtrl = rideFlowProvider.endDateCtrl;
 
-    Widget buildInputField(TextEditingController ctrl, String label, String errorInfo, Function validator, Function onTap) {
+    Widget buildInputField(TextEditingController ctrl, String label, String errorInfo, Function onTap) {
       bool hasText = ctrl.text != null && ctrl.text != '';
       String labelInfo = hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
       String semanticsLabel = labelInfo;
-      if (errorInfo != null && errorInfo.isNotEmpty) {
+      bool hasError = errorInfo != null && errorInfo.isNotEmpty;
+      if (hasError) {
         semanticsLabel += '. Error: $errorInfo.';
       }
 
@@ -199,27 +196,36 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
           onTap: onTap,
           button: true,
           child: ExcludeSemantics(
-              child: TextFormField(
-                controller: ctrl,
-                enableInteractiveSelection: false,
-                focusNode: AlwaysDisabledFocusNode(),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onTap: onTap,
-                decoration: InputDecoration(
-                    errorMaxLines: 3,
-                    labelText: label,
-                    labelStyle: TextStyle(
-                        color: Colors.grey, fontSize: 17
-                    )
-                ),
-                validator: validator,
-                style: TextStyle(color: Colors.black, fontSize: 15),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: ctrl,
+                    enableInteractiveSelection: false,
+                    focusNode: AlwaysDisabledFocusNode(),
+                    onTap: onTap,
+                    decoration: InputDecoration(
+                        errorMaxLines: 3,
+                        labelText: label,
+                        labelStyle: TextStyle(
+                            color: Colors.grey, fontSize: 17
+                        ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: hasError ? Colors.red : Colors.grey),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  hasError ? Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(errorInfo, style: TextStyle(color: Colors.red),),
+                  ) : Container()
+                ],
               )
           )
       );
     }
 
-    String validateStartDate(input) {
+    String validateStartDate() {
       String error;
       if (rideFlowProvider.startDate != null) {
         if (rideFlowProvider.recurring && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
@@ -230,11 +236,10 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
         error = 'Please enter the ' + (rideFlowProvider.recurring ? 'start date' : 'date');
       }
       startDateError = error;
-
       return error;
     }
 
-    String validateEndDate(input) {
+    String validateEndDate() {
       String error;
       if (rideFlowProvider.recurring) {
         if (rideFlowProvider.endDate != null) {
@@ -255,8 +260,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
         rideFlowProvider.setStartDate(selection);
         setState(() {
-          startDateError = validateStartDate(startDateCtrl.text);
-          endDateError = validateEndDate(endDateCtrl.text);
+          startDateError = validateStartDate();
+          endDateError = validateEndDate();
         });
       });
     }
@@ -265,13 +270,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
         rideFlowProvider.setEndDate(selection);
         setState(() {
-          startDateError = validateStartDate(startDateCtrl.text);
-          endDateError = validateEndDate(endDateCtrl.text);
+          startDateError = validateStartDate();
+          endDateError = validateEndDate();
         });
       });
     }
 
-    String validateStartTime(input) {
+    String validateStartTime() {
       String error;
       if (rideFlowProvider.pickUpTime != null) {
         if (rideFlowProvider.dropOffTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
@@ -281,10 +286,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       else {
         error = 'Please enter your pickup time';
       }
+      startTimeError = error;
       return error;
     }
 
-    String validateEndTime(input) {
+    String validateEndTime() {
       String error;
       if (rideFlowProvider.dropOffTime != null ) {
         if (rideFlowProvider.pickUpTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
@@ -302,8 +308,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectTime(context, rideFlowProvider.pickUpTime == null ? TimeOfDay.now() : rideFlowProvider.pickUpTime, (TimeOfDay selection) {
         rideFlowProvider.setPickUpTime(selection, context);
         setState(() {
-          startTimeError = validateStartTime(pickUpCtrl.text);
-          endTimeError = validateEndTime(dropOffCtrl.text);
+          startTimeError = validateStartTime();
+          endTimeError = validateEndTime();
         });
       });
     }
@@ -312,44 +318,47 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       selectTime(context, rideFlowProvider.dropOffTime == null ? TimeOfDay.now() : rideFlowProvider.dropOffTime, (selection) {
         rideFlowProvider.setDropOffTime(selection, context);
         setState(() {
-          startTimeError = validateStartTime(pickUpCtrl.text);
-          endTimeError = validateEndTime(dropOffCtrl.text);
+          startTimeError = validateStartTime();
+          endTimeError = validateEndTime();
         });
       });
     }
 
-    Widget startDateInput = buildInputField(
-        startDateCtrl,
+    Widget startDateInput() => buildInputField(
+        rideFlowProvider.startDateCtrl,
         rideFlowProvider.recurring ? 'Start Date' : 'Date',
         startDateError,
-        validateStartDate,
         selectStartDate
     );
 
-    Widget endDateInput = buildInputField(
-        endDateCtrl,
+    Widget endDateInput() => buildInputField(
+        rideFlowProvider.endDateCtrl,
         'End Date',
         endDateError,
-        validateEndDate,
         selectEndDate
     );
 
-    Widget startTimeInput = buildInputField(
+    Widget startTimeInput() => buildInputField(
         rideFlowProvider.pickUpTimeCtrl,
         'Pickup Time',
         startTimeError,
-        validateStartTime,
         selectStartTime
     );
 
-    Widget endTimeInput = buildInputField(
+    Widget endTimeInput() => buildInputField(
         rideFlowProvider.dropOffTimeCtrl,
         'Drop-off Time',
         endTimeError,
-        validateEndTime,
         selectEndTime
     );
 
+    bool allValid() {
+      bool validStartTime = validateStartTime() == null;
+      bool validEndTime = validateEndTime() == null;
+      bool validStartDate = validateStartDate() == null;
+      bool validEndDate = validateEndDate() == null;
+      return validStartDate && validEndDate && validStartTime && validEndTime;
+    }
     double buttonsHeight = 48;
     double buttonsVerticalPadding = 16;
 
@@ -406,13 +415,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                                 Container(
                                     width: MediaQuery.of(context).size.width / 3,
                                     margin: EdgeInsets.only(left: 15.0),
-                                    child: startDateInput
+                                    child: startDateInput()
                                 ),
                                 SizedBox(width: 30),
                                 Container(
                                     width: MediaQuery.of(context).size.width / 3,
                                     margin: EdgeInsets.only(right: 15.0),
-                                    child: endDateInput
+                                    child: endDateInput()
                                 ),
                               ],
                             ),
@@ -422,22 +431,22 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                                 Container(
                                     width: MediaQuery.of(context).size.width / 3,
                                     margin: EdgeInsets.only(left: 15.0),
-                                    child: startTimeInput),
+                                    child: startTimeInput()),
                                 SizedBox(width: 30.0),
                                 Container(
                                     width: MediaQuery.of(context).size.width / 3,
                                     margin: EdgeInsets.only(right: 15.0),
-                                    child: endTimeInput),
+                                    child: endTimeInput()),
                               ],
                             )
                           ],
                         ) : Column(
                           children: [
-                            startDateInput,
+                            startDateInput(),
                             SizedBox(height: 20.0),
-                            startTimeInput,
+                            startTimeInput(),
                             SizedBox(height: 20.0),
-                            endTimeInput
+                            endTimeInput()
                           ],
                         ),
                       ),
@@ -498,20 +507,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                             text: 'Set Date & Time',
                             height: buttonsHeight,
                             onPressed: () {
-                              if (_formKey.currentState.validate() && (rideFlowProvider.recurring ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
+                              if (allValid() && (rideFlowProvider.recurring ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
                                 Navigator.push(context,
                                     MaterialPageRoute(
                                         builder: (context) => ReviewRide()
                                     )
                                 );
-                                if (rideFlowProvider.recurring) {
-                                  List<int> selectedDays = [];
-                                  for (int i = 0; i < rideFlowProvider.repeatDaysSelected.length; i++) {
-                                    if (rideFlowProvider.repeatDaysSelected[i]) {
-                                      selectedDays.add(i);
-                                    }
-                                  }
-                                }
                               }
                               else {
                                 SemanticsService.announce('Error, please check your dates and times', TextDirection.ltr);
