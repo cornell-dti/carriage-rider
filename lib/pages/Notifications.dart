@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/pages/RidePage.dart';
+import 'package:carriage_rider/providers/NotificationsProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/cupertino.dart';
@@ -146,7 +147,7 @@ class Notification extends StatelessWidget {
                     Text(
                       time,
                       style:
-                          TextStyle(fontSize: 11, color: CarriageTheme.gray2),
+                      TextStyle(fontSize: 11, color: CarriageTheme.gray2),
                     ),
                   ]),
                   SizedBox(height: 4),
@@ -162,32 +163,64 @@ class Notification extends StatelessWidget {
   }
 }
 
-class NotificationsPage extends StatefulWidget {
-  NotificationsPage({Key key, this.rideId}) : super(key: key);
+class BackendNotification {
+  BackendNotification(this.type, this.rideID, this.timeSent);
+  final String type;
+  final DateTime timeSent;
+  final String rideID;
+}
 
-  final String rideId;
+class NotificationsPage extends StatefulWidget {
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+      notifsProvider.notifOpened();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Ride ride = new Ride();
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
+    List<Ride> rides = ridesProvider.upcomingRides..add(ridesProvider.currentRide);
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
 
+    List<BackendNotification> backendNotifs = notifsProvider.notifs;
+    List<Widget> notifWidgets = [];
 
-    List<Ride> rides =
-        Provider.of<RidesProvider>(context, listen: false).upcomingRides;
-    // Not sure if this is correct?
-    if (widget.rideId != null) {
-      ride = rides[rides.indexWhere((element) => element.id == widget.rideId)];
-    }
-    List<Ride> notificationRides = [];
-
-    setState(() {
-      notificationRides.add(ride);
+    backendNotifs.forEach((notif) {
+      Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID, orElse: () => null);
+      if (ride != null) {
+        switch (notif.type) {
+          case ('driver_arrived'):
+            notifWidgets.add(driverArrivedNotif(ride, notif.timeSent));
+            break;
+          case ('driver_on_the_way'):
+            notifWidgets.add(driverOnTheWayNotif(ride, notif.timeSent));
+            break;
+          case ('driver_cancelled'):
+            notifWidgets.add(driverCancelledNotif(ride, notif.timeSent));
+            break;
+          case ('ride_edited'):
+            notifWidgets.add(rideEditedNotif(ride, notif.timeSent));
+            break;
+          case ('ride_confirmed'):
+            notifWidgets.add(rideConfirmedNotif(ride, notif.timeSent));
+            break;
+          default:
+            throw Exception('Notification type is invalid');
+        }
+      }
     });
+
     return Scaffold(
         appBar: ScheduleBar(
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
@@ -199,11 +232,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                     child:
-                        Text('Notifications', style: CarriageTheme.largeTitle),
+                    Text('Notifications', style: CarriageTheme.largeTitle),
                   ),
-                // Need List View
-                ]),
+                  ListView(
+                    shrinkWrap: true,
+                    children: notifWidgets,
+                  )
+                ]
+            ),
           ),
-        ));
+        )
+    );
   }
 }

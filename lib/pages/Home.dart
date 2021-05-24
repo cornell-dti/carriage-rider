@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:carriage_rider/providers/NotificationsProvider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -72,11 +73,11 @@ class _HomeHeaderState extends State<HomeHeader> {
           boxShadow: scrollAtTop
               ? []
               : [
-                  BoxShadow(
-                      offset: Offset(0, 2),
-                      blurRadius: 11,
-                      color: Colors.black.withOpacity(0.15))
-                ]),
+            BoxShadow(
+                offset: Offset(0, 2),
+                blurRadius: 11,
+                color: Colors.black.withOpacity(0.15))
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,44 +173,50 @@ class _HomeState extends State<Home> {
 
   static final FirebaseMessaging _fcm = FirebaseMessaging();
   static FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   String deviceToken;
-  String id;
 
   final ScrollController scrollCtrl = ScrollController();
   bool fetchingRides = false;
 
+  void addNotif(BuildContext context, String rideID) {
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
+    // TODO: change to actual type
+    String type = 'driver_arrived';
+    notifsProvider.addNewNotif(BackendNotification(type, rideID, DateTime.now()));
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+    addNotif(context, payload);
+  }
+
   @override
   void initState() {
     final AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final initializationSettingsIOS = IOSInitializationSettings();
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    final initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification
+    );
     final InitializationSettings initializationSettings =
-        InitializationSettings(
+    InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
     notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+        onSelectNotification: onSelectNotification
+    );
+
     initialize();
     getMessage();
     super.initState();
   }
 
+
+
   Future<void> onSelectNotification(String payload) {
-    if (id != null) {
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => NotificationsPage(
-                    rideId: id,
-                  )));
-    } else {
-      Navigator.push(context,
-          new MaterialPageRoute(builder: (context) => NotificationsPage()));
-    }
-    return Future<void>.value();
+    addNotif(context, payload);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
   }
 
   _registerOnFirebase() async {
@@ -239,9 +246,9 @@ class _HomeState extends State<Home> {
   // Show notification banner on background and foreground.
   static void showNotification(String notification) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-        await getAndroidNotificationDetails(notification);
+    await getAndroidNotificationDetails(notification);
     final IOSNotificationDetails iOSPlatformChannelSpecifics =
-        IOSNotificationDetails();
+    IOSNotificationDetails();
     final NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
@@ -272,60 +279,57 @@ class _HomeState extends State<Home> {
     _fcm.configure(
       onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
       onMessage: (Map<String, dynamic> message) async {
-        hasNewNotification = true;
+        String rideID;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
+
         if (Platform.isAndroid) {
-          androidNotification =
-              PushNotificationMessageAndroid.fromJson(message);
-          id = androidNotification.rideId;
+          androidNotification = PushNotificationMessageAndroid.fromJson(message);
+          rideID = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
-          id = iosNotification.rideId;
+          rideID = iosNotification.rideId;
         }
         Platform.isIOS
             ? showNotification(iosNotification.changedBy)
             : showNotification(androidNotification.changedBy);
-        setState(() {});
+        addNotif(context, rideID);
       },
+
       onLaunch: (Map<String, dynamic> message) async {
-        hasNewNotification = true;
+        String rideID;
         if (Platform.isAndroid) {
-          androidNotification =
-              PushNotificationMessageAndroid.fromJson(message);
-          id = androidNotification.rideId;
+          androidNotification = PushNotificationMessageAndroid.fromJson(message);
+          rideID = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
-          id = iosNotification.rideId;
+          rideID = iosNotification.rideId;
         }
+        addNotif(context, rideID);
         Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) =>
-                    NotificationsPage(rideId: androidNotification.rideId)));
-        setState(() {});
+            context, MaterialPageRoute(builder: (context) => NotificationsPage())
+        );
       },
+
       onResume: (Map<String, dynamic> message) async {
-        hasNewNotification = true;
+        String rideID;
         if (Platform.isAndroid) {
-          androidNotification =
-              PushNotificationMessageAndroid.fromJson(message);
-          id = androidNotification.rideId;
+          androidNotification = PushNotificationMessageAndroid.fromJson(message);
+          rideID = androidNotification.rideId;
         } else {
           iosNotification = PushNotificationMessageIOS.fromJson(message);
-          id = iosNotification.rideId;
+          rideID = iosNotification.rideId;
         }
+        addNotif(context, rideID);
         Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) =>
-                    NotificationsPage(rideId: androidNotification.rideId)));
-        setState(() {});
+            context, MaterialPageRoute(builder: (context) => NotificationsPage())
+        );
       },
     );
   }
 
   static Future<dynamic> backgroundHandle(
-    Map<String, dynamic> message,
-  ) async {
+      Map<String, dynamic> message,
+      ) async {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = Platform.isIOS ? message['default'] : message['data']['default'];
@@ -337,7 +341,7 @@ class _HomeState extends State<Home> {
 
   subscribe(String token) async {
     AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${AppConfig.of(context).baseUrl}/notification/subscribe",
@@ -363,7 +367,7 @@ class _HomeState extends State<Home> {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     LocationsProvider locationsProvider =
-        Provider.of<LocationsProvider>(context);
+    Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
     double headerHeight = 100;
@@ -449,39 +453,39 @@ class _HomeState extends State<Home> {
                         ),
                         ridesProvider.upcomingRides.isNotEmpty
                             ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Semantics(
-                                    sortKey: OrdinalSortKey(6),
-                                    button: true,
-                                    container: true,
-                                    child: Container(
-                                      height: 48,
-                                      child: InkWell(
-                                          onTap: () => Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      UpcomingSeeMore())),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Row(children: [
-                                              Text(
-                                                'See More',
-                                                style:
-                                                    CarriageTheme.seeMoreStyle,
-                                                semanticsLabel:
-                                                    'See more upcoming rides',
-                                              ),
-                                              SizedBox(width: 4),
-                                              Icon(Icons.arrow_forward,
-                                                  size: 16)
-                                            ]),
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              )
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Semantics(
+                              sortKey: OrdinalSortKey(6),
+                              button: true,
+                              container: true,
+                              child: Container(
+                                height: 48,
+                                child: InkWell(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpcomingSeeMore())),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Row(children: [
+                                        Text(
+                                          'See More',
+                                          style:
+                                          CarriageTheme.seeMoreStyle,
+                                          semanticsLabel:
+                                          'See more upcoming rides',
+                                        ),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward,
+                                            size: 16)
+                                      ]),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        )
                             : Container()
                       ]),
                 ),
@@ -511,39 +515,39 @@ class _HomeState extends State<Home> {
                         ),
                         ridesProvider.pastRides.isNotEmpty
                             ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Semantics(
-                                    sortKey: OrdinalSortKey(9),
-                                    container: true,
-                                    button: true,
-                                    child: Container(
-                                      height: 48,
-                                      child: InkWell(
-                                          onTap: () => Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HistorySeeMore())),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Row(children: [
-                                              Text(
-                                                'See More',
-                                                style:
-                                                    CarriageTheme.seeMoreStyle,
-                                                semanticsLabel:
-                                                    'See more past rides',
-                                              ),
-                                              SizedBox(width: 4),
-                                              Icon(Icons.arrow_forward,
-                                                  size: 16)
-                                            ]),
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              )
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Semantics(
+                              sortKey: OrdinalSortKey(9),
+                              container: true,
+                              button: true,
+                              child: Container(
+                                height: 48,
+                                child: InkWell(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            HistorySeeMore())),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Row(children: [
+                                        Text(
+                                          'See More',
+                                          style:
+                                          CarriageTheme.seeMoreStyle,
+                                          semanticsLabel:
+                                          'See more past rides',
+                                        ),
+                                        SizedBox(width: 4),
+                                        Icon(Icons.arrow_forward,
+                                            size: 16)
+                                      ]),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        )
                             : Container()
                       ]),
                 ),
@@ -584,19 +588,19 @@ class _HomeState extends State<Home> {
               ListTile(
                 leading: hasNewNotification
                     ? Stack(children: [
-                        Icon(Icons.notifications, color: Colors.black),
-                        Positioned(
-                            top: 0,
-                            right: 0,
-                            child: Container(
-                                width: 9,
-                                height: 9,
-                                padding: EdgeInsets.all(1),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(100),
-                                )))
-                      ])
+                  Icon(Icons.notifications, color: Colors.black),
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                          width: 9,
+                          height: 9,
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(100),
+                          )))
+                ])
                     : Icon(Icons.notifications, color: Colors.black),
                 title: sideBarText('Notifications', Colors.black),
                 onTap: () {
@@ -623,65 +627,65 @@ class _HomeState extends State<Home> {
       ),
       body: SafeArea(
         child: !ridesProvider.hasData() ||
-                !locationsProvider.hasLocations() ||
-                !riderProvider.hasInfo()
+            !locationsProvider.hasLocations() ||
+            !riderProvider.hasInfo()
             ? Center(child: CircularProgressIndicator())
             : Stack(
-                children: <Widget>[
-                  buildPage(),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 8,
-                      decoration:
-                          BoxDecoration(color: Colors.white, boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, -2),
-                            blurRadius: 11,
-                            spreadRadius: 5,
-                            color: Colors.black.withOpacity(0.11))
-                      ]),
-                      child: Stack(
-                        children: <Widget>[
-                          Semantics(
-                            button: true,
-                            sortKey: OrdinalSortKey(11),
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: ButtonTheme(
-                                  minWidth:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  height: 50.0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: RaisedButton.icon(
-                                    onPressed: () {
-                                      rideFlowProvider.setLocControllers(
-                                          '', '');
-                                      rideFlowProvider.setEditing(false);
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RequestRideLoc(
-                                                      ride: new Ride())));
-                                    },
-                                    elevation: 3.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    icon: Icon(Icons.add),
-                                    label: Text('Request Ride',
-                                        style: TextStyle(fontSize: 18)),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
+          children: <Widget>[
+            buildPage(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 8,
+                decoration:
+                BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0, -2),
+                      blurRadius: 11,
+                      spreadRadius: 5,
+                      color: Colors.black.withOpacity(0.11))
+                ]),
+                child: Stack(
+                  children: <Widget>[
+                    Semantics(
+                      button: true,
+                      sortKey: OrdinalSortKey(11),
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: ButtonTheme(
+                            minWidth:
+                            MediaQuery.of(context).size.width * 0.8,
+                            height: 50.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: RaisedButton.icon(
+                              onPressed: () {
+                                rideFlowProvider.setLocControllers(
+                                    '', '');
+                                rideFlowProvider.setEditing(false);
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            RequestRideLoc(
+                                                ride: new Ride())));
+                              },
+                              elevation: 3.0,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              icon: Icon(Icons.add),
+                              label: Text('Request Ride',
+                                  style: TextStyle(fontSize: 18)),
+                            ),
+                          )),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
