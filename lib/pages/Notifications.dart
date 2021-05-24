@@ -175,12 +175,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     Ride ride = new Ride();
+
+
     List<Ride> rides =
         Provider.of<RidesProvider>(context, listen: false).upcomingRides;
+    // Not sure if this is correct?
     if (widget.rideId != null) {
       ride = rides[rides.indexWhere((element) => element.id == widget.rideId)];
     }
+    List<Ride> notificationRides = [];
 
+    setState(() {
+      notificationRides.add(ride);
+    });
     return Scaffold(
         appBar: ScheduleBar(
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
@@ -194,13 +201,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child:
                         Text('Notifications', style: CarriageTheme.largeTitle),
                   ),
-                  Container(
-                    color: Colors.white,
-                    child: Column(children: [
-                      driverArrivedNotif(
-                          ride, DateTime.now().subtract(Duration(days: 1))),
-                    ]),
-                  )
+                // Need List View
                 ]),
           ),
         ));
