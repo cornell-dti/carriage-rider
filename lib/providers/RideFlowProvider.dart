@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
+import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
@@ -206,10 +207,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to edit instance of recurring ride: ${response.body}');
       return false;
     }
-    await locationsProvider.fetchLocations(context, config, authProvider);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-    await ridesProvider.fetchAllRides(config, authProvider);
-    notifyListeners();
     return true;
   }
 
@@ -242,9 +239,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to update ride: ${response.body}');
       return false;
     }
-    await locationsProvider.fetchLocations(context, config, authProvider);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-    await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
     return true;
   }
@@ -258,9 +252,11 @@ class RideFlowProvider with ChangeNotifier {
     AppConfig config = AppConfig.of(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    RiderProvider riderProvider = Provider.of<RiderProvider>(context, listen: false);
 
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
+      'rider': riderProvider.info.id,
       'startLocation': assembleStartLocation(locationsProvider),
       'endLocation': assembleEndLocation(locationsProvider),
       'startTime': assembleStartTimeString(),
@@ -284,10 +280,6 @@ class RideFlowProvider with ChangeNotifier {
       print('Failed to create ride: ${response.body}');
       return false;
     }
-    await locationsProvider.fetchLocations(context, config, authProvider);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-    await ridesProvider.fetchAllRides(config, authProvider);
-    notifyListeners();
     return true;
   }
 
@@ -309,6 +301,14 @@ class RideFlowProvider with ChangeNotifier {
     else {
       successful = await createRide(context);
     }
+    AppConfig config = AppConfig.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    await locationsProvider.fetchLocations(context, config, authProvider);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    await ridesProvider.fetchAllRides(config, authProvider);
+    notifyListeners();
+
     return successful;
   }
 }
