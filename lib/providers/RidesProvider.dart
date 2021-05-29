@@ -183,4 +183,19 @@ class RidesProvider with ChangeNotifier {
     }
     fetchAllRides(config, authProvider);
   }
+
+  void updateRideByID(Ride updatedRide) {
+    if (currentRide != null && updatedRide.id == currentRide.id) {
+      currentRide = updatedRide;
+    }
+    else if (updatedRide.type == 'unscheduled' || updatedRide.type == 'active') {
+      int index = upcomingRides.indexWhere((ride) => ride.id == updatedRide.id);
+      upcomingRides[index] = updatedRide;
+    }
+    else if (updatedRide.type == 'past') {
+      int index = pastRides.indexWhere((ride) => ride.id == updatedRide.id);
+      pastRides[index] = updatedRide;
+    }
+    notifyListeners();
+  }
 }

@@ -1,4 +1,6 @@
 import 'dart:core';
+import 'package:carriage_rider/models/Location.dart';
+import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:humanize/humanize.dart';
@@ -154,6 +156,50 @@ class Ride {
             ? null
             : DateFormat('yyyy-MM-dd').parse(json['endDate'])
     );
+  }
+
+  factory Ride.fromJsonLocationIDs(Map<String, dynamic> json, BuildContext context) {
+    Ride ride = Ride(
+        id: json['id'],
+        type: json['type'],
+        rider: Rider.fromJson(json['rider']),
+        status: getStatusEnum(json['status']),
+        startLocation: json['startLocation'],
+        startAddress: json['startLocation'],
+        endLocation: json['endLocation'],
+        endAddress: json['endLocation'],
+        startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['startTime'], true)
+            .toLocal(),
+        endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(json['endTime'], true)
+            .toLocal(),
+        recurring: json['recurring'] == null ? false : json['recurring'],
+        recurringDays:
+        json['recurringDays'] == null ? null : List.from(json['recurringDays']),
+        deleted: json['deleted'] == null
+            ? null
+            : List<String>.from(json['deleted'])
+            .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
+            .toList(),
+        late: json['late'],
+        driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
+        edits: json['edits'] == null ? null : List.from(json['edits']),
+        endDate: json['endDate'] == null
+            ? null
+            : DateFormat('yyyy-MM-dd').parse(json['endDate'])
+    );
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    Map<String, Location> locationsByID = locationsProvider.locationsByID();
+    String startLocationID = ride.startLocation;
+    String endLocationID = ride.endLocation;
+    Location startLocation = locationsByID[startLocationID];
+    Location endLocation = locationsByID[endLocationID];
+    ride.startLocation = startLocation.name;
+    ride.startAddress = startLocation.address;
+    ride.endLocation = endLocation.name;
+    ride.startAddress = endLocation.address;
+    return ride;
   }
 
   //Widget displaying the start time of a ride using DateFormat.
@@ -374,5 +420,9 @@ class Ride {
         edits: this.edits,
         endDate: this.endDate,
         driver: this.driver);
+  }
+
+  String toString() {
+    return 'Ride $id from $startLocation to $endLocation';
   }
 }

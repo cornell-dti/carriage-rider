@@ -115,7 +115,7 @@ class LocationsProvider with ChangeNotifier {
   }
 
   //Converts a list of locations [locations] to a Map containing location ids (key) to locations (value).
-  Map<String, Location> locationsById(List<Location> locations) {
+  Map<String, Location> locationsByID() {
     Map<String, Location> res = {};
     locations.forEach((element) {
       res[element.id] = element;

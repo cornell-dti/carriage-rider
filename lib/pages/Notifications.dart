@@ -10,41 +10,30 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-DriverNotification driverArrivedNotif(Ride ride, DateTime notifTime) {
-  return DriverNotification(ride, notifTime,
-      'Your driver is here! Meet your driver at the pickup point for ${ride.endLocation}.');
+enum NotifType {
+  DRIVER_ARRIVED,
+  DRIVER_ON_THE_WAY,
+  DRIVER_CANCELLED,
+  RIDE_EDITED,
+  RIDE_CONFIRMED
 }
 
-DriverNotification driverOnTheWayNotif(Ride ride, DateTime notifTime) {
-  return DriverNotification(ride, notifTime,
-      'Your driver is on the way! Wait outside at the pickup point for ${ride.endLocation}.');
-}
 
-DispatcherNotification driverCancelledNotif(Ride ride, DateTime notifTime) {
-  return DispatcherNotification(
-      ride,
-      notifTime,
-      'Your driver cancelled the ride because they were unable to find you.',
-      Colors.red,
-      Icons.close);
-}
-
-DispatcherNotification rideEditedNotif(Ride ride, DateTime notifTime) {
-  return DispatcherNotification(
-      ride,
-      notifTime,
-      'The information for your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been edited. Please review your ride info.',
-      Colors.red,
-      Icons.edit);
-}
-
-DispatcherNotification rideConfirmedNotif(Ride ride, DateTime notifTime) {
-  return DispatcherNotification(
-      ride,
-      notifTime,
-      'Your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been confirmed.',
-      Colors.green,
-      Icons.check);
+String notifMessage(NotifType type, Ride ride, DateTime time) {
+  switch (type) {
+    case NotifType.DRIVER_ARRIVED:
+      return 'Your driver is here! Meet your driver at the pickup point for ${ride.endLocation}.';
+    case NotifType.DRIVER_ON_THE_WAY:
+      return 'Your driver is on the way! Wait outside at the pickup point for ${ride.endLocation}.';
+    case NotifType.DRIVER_CANCELLED:
+      return 'Your driver cancelled your ride to ${ride.endLocation} because they were unable to find you.';
+    case NotifType.RIDE_EDITED:
+      return 'The information for your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been edited. Please review your ride info.';
+    case NotifType.RIDE_CONFIRMED:
+      return 'Your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been confirmed.';
+    default:
+      throw Exception('Invalid notification type for notifMessage');
+  }
 }
 
 class DriverNotification extends StatelessWidget {
@@ -89,8 +78,7 @@ class DispatcherNotification extends StatelessWidget {
 }
 
 class Notification extends StatelessWidget {
-  Notification(
-      this.ride, this.notifTime, this.circularWidget, this.title, this.text);
+  Notification(this.ride, this.notifTime, this.circularWidget, this.title, this.text);
 
   final Ride ride;
   final DateTime notifTime;
@@ -120,7 +108,7 @@ class Notification extends StatelessWidget {
       time = DateFormat('yMd').format(notifTime);
     }
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => RidePage(ride)));
@@ -163,11 +151,51 @@ class Notification extends StatelessWidget {
   }
 }
 
+NotifType typeFromNotifJson(Map<String, dynamic> json) {
+  String changedBy = json['changedBy']['userType'];
+  Map<String, dynamic> change = json['change'];
+  if (changedBy == 'Admin') {
+    if (change['driver'] != null) {
+      return NotifType.RIDE_CONFIRMED;
+    }
+    else {
+      return NotifType.RIDE_EDITED;
+    }
+  }
+  else if (changedBy == 'Driver') {
+    String status = change['data']['ride']['status'];
+    print(status);
+    if (status == 'on_the_way') {
+      return NotifType.DRIVER_ON_THE_WAY;
+    }
+    else if (status == 'arrived') {
+      return NotifType.DRIVER_ARRIVED;
+    }
+    else if (status == 'no_show') {
+      return NotifType.DRIVER_CANCELLED;
+    }
+  }
+  throw Exception('No notification type parsed from json in typeFromJson');
+}
+
+String rideIDFromNotifJson(Map<String, dynamic> json) {
+  return json['ride']['id'];
+}
+
 class BackendNotification {
   BackendNotification(this.type, this.rideID, this.timeSent);
-  final String type;
+
+  final NotifType type;
   final DateTime timeSent;
   final String rideID;
+
+  factory BackendNotification.fromJson(Map<String, dynamic> json) {
+    String rideID = rideIDFromNotifJson(json);
+    NotifType type = typeFromNotifJson(json);
+    return BackendNotification(type, rideID, DateTime.now());
+  }
+
+  String toString() => 'Notification $type: $rideID';
 }
 
 class NotificationsPage extends StatefulWidget {
@@ -187,37 +215,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
+  Widget buildNotification(NotifType type, Ride ride, DateTime time) {
+    String message = notifMessage(type, ride, time);
+    switch (type) {
+      case NotifType.DRIVER_ARRIVED:
+      case NotifType.DRIVER_ON_THE_WAY:
+        return DriverNotification(ride, time, message);
+      case NotifType.DRIVER_CANCELLED:
+        return DispatcherNotification(ride, time, message, Colors.red, Icons.close);
+      case NotifType.RIDE_EDITED:
+        return DispatcherNotification(ride, time, message, Colors.red, Icons.edit);
+      case NotifType.RIDE_CONFIRMED:
+        return DispatcherNotification(ride, time, message, Colors.green, Icons.check);
+      default:
+        throw Exception('Notification could not be built: $type, ${ride.id}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-    List<Ride> rides = ridesProvider.upcomingRides..add(ridesProvider.currentRide);
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
+    List<Ride> rides = ridesProvider.upcomingRides;
+    if (ridesProvider.currentRide != null) {
+      rides.add(ridesProvider.currentRide);
+    }
 
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
     List<BackendNotification> backendNotifs = notifsProvider.notifs;
     List<Widget> notifWidgets = [];
 
     backendNotifs.forEach((notif) {
       Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID, orElse: () => null);
       if (ride != null) {
-        switch (notif.type) {
-          case ('driver_arrived'):
-            notifWidgets.add(driverArrivedNotif(ride, notif.timeSent));
-            break;
-          case ('driver_on_the_way'):
-            notifWidgets.add(driverOnTheWayNotif(ride, notif.timeSent));
-            break;
-          case ('driver_cancelled'):
-            notifWidgets.add(driverCancelledNotif(ride, notif.timeSent));
-            break;
-          case ('ride_edited'):
-            notifWidgets.add(rideEditedNotif(ride, notif.timeSent));
-            break;
-          case ('ride_confirmed'):
-            notifWidgets.add(rideConfirmedNotif(ride, notif.timeSent));
-            break;
-          default:
-            throw Exception('Notification type is invalid');
-        }
+        notifWidgets.add(buildNotification(notif.type, ride, notif.timeSent));
       }
     });
 
@@ -236,7 +266,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   ListView(
                     shrinkWrap: true,
-                    children: notifWidgets,
+                    children: notifWidgets.reversed.toList(),
                   )
                 ]
             ),

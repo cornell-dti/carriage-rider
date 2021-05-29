@@ -11,7 +11,6 @@ import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
 import 'package:carriage_rider/pages/Profile.dart';
-import 'package:carriage_rider/utils/NotificationService.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
@@ -61,6 +60,7 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
 
     double iconButtonSize = 48;
     double iconButtonSpacing = 8;
@@ -149,7 +149,19 @@ class _HomeHeaderState extends State<HomeHeader> {
                             },
                             customBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
-                            child: Icon(Icons.menu, color: Colors.black)),
+                            child: notifsProvider.hasNewNotif ? Stack(children: [
+                              Center(child: Icon(Icons.menu, color: Colors.black)),
+                              Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: Container(
+                                      width: 9,
+                                      height: 9,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(100),
+                                      )))
+                            ]) : Icon(Icons.menu, color: Colors.black)),
                       ),
                     )),
               ),
@@ -169,8 +181,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool hasNewNotification = false;
-
   static final FirebaseMessaging _fcm = FirebaseMessaging();
   static FlutterLocalNotificationsPlugin notificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -180,23 +190,13 @@ class _HomeState extends State<Home> {
   final ScrollController scrollCtrl = ScrollController();
   bool fetchingRides = false;
 
-  void addNotif(BuildContext context, String rideID) {
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
-    // TODO: change to actual type
-    String type = 'driver_arrived';
-    notifsProvider.addNewNotif(BackendNotification(type, rideID, DateTime.now()));
-  }
-
-  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
-    addNotif(context, payload);
-  }
-
   @override
   void initState() {
+    super.initState();
     final AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
     final initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification
+        //onDidReceiveLocalNotification: onDidReceiveLocalNotification
     );
     final InitializationSettings initializationSettings =
     InitializationSettings(
@@ -206,18 +206,24 @@ class _HomeState extends State<Home> {
     notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification
     );
+    notificationsPlugin.initialize(initializationSettings);
 
     initialize();
-    getMessage();
-    super.initState();
+    initFirebaseNotifs();
   }
 
-
-
-  Future<void> onSelectNotification(String payload) {
-    addNotif(context, payload);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
+  // flutter local notifs callback when selecting a background notification
+  Future<void> onSelectNotification(String payload) async {
+    print('onSelectNotification payload: ' + payload);
+    //addNotif(BackendNotification.fromJson(jsonDecode(payload)));
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
   }
+//
+//  static Future<void> onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+//    print('onDidReceive: id $id, title $title, body $body, payload $payload');
+//    //addNotif(BackendNotification.fromJson(jsonDecode(payload)));
+//    //Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
+//  }
 
   _registerOnFirebase() async {
     //_fcm.subscribeToTopic('all');
@@ -244,9 +250,9 @@ class _HomeState extends State<Home> {
   }
 
   // Show notification banner on background and foreground.
-  static void showNotification(String notification) async {
+  static void showNotification(String message) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    await getAndroidNotificationDetails(notification);
+    await getAndroidNotificationDetails(message);
     final IOSNotificationDetails iOSPlatformChannelSpecifics =
     IOSNotificationDetails();
     final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -255,7 +261,7 @@ class _HomeState extends State<Home> {
     await notificationsPlugin.show(
       0,
       'Carriage Rider',
-      'Ride changed by $notification',
+      message,
       platformChannelSpecifics,
     );
   }
@@ -269,79 +275,80 @@ class _HomeState extends State<Home> {
         showWhen: false,
         category: 'General',
         icon: '@mipmap/ic_launcher',
-        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'));
-  }
-
-  void getMessage() async {
-    PushNotificationMessageAndroid androidNotification;
-    PushNotificationMessageIOS iosNotification;
-
-    _fcm.configure(
-      onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
-      onMessage: (Map<String, dynamic> message) async {
-        String rideID;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
-
-        if (Platform.isAndroid) {
-          androidNotification = PushNotificationMessageAndroid.fromJson(message);
-          rideID = androidNotification.rideId;
-        } else {
-          iosNotification = PushNotificationMessageIOS.fromJson(message);
-          rideID = iosNotification.rideId;
-        }
-        Platform.isIOS
-            ? showNotification(iosNotification.changedBy)
-            : showNotification(androidNotification.changedBy);
-        addNotif(context, rideID);
-      },
-
-      onLaunch: (Map<String, dynamic> message) async {
-        String rideID;
-        if (Platform.isAndroid) {
-          androidNotification = PushNotificationMessageAndroid.fromJson(message);
-          rideID = androidNotification.rideId;
-        } else {
-          iosNotification = PushNotificationMessageIOS.fromJson(message);
-          rideID = iosNotification.rideId;
-        }
-        addNotif(context, rideID);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NotificationsPage())
-        );
-      },
-
-      onResume: (Map<String, dynamic> message) async {
-        String rideID;
-        if (Platform.isAndroid) {
-          androidNotification = PushNotificationMessageAndroid.fromJson(message);
-          rideID = androidNotification.rideId;
-        } else {
-          iosNotification = PushNotificationMessageIOS.fromJson(message);
-          rideID = iosNotification.rideId;
-        }
-        addNotif(context, rideID);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NotificationsPage())
-        );
-      },
+        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+        styleInformation: BigTextStyleInformation('')
     );
   }
 
-  static Future<dynamic> backgroundHandle(
-      Map<String, dynamic> message,
-      ) async {
+  void initFirebaseNotifs() {
+    _fcm.configure(
+        onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
+        onMessage: onForegroundNotif,
+        onLaunch: onNotifPressed,
+        onResume: onNotifPressed
+    );
+  }
+
+  Future<void> onForegroundNotif(Map<String, dynamic> message) async {
+    print('onForegroundNotif');
+    String data = Platform.isIOS ? message['default'] : message['data']['default'];
+    Map<String, dynamic> json = jsonDecode(data);
+    Map<String, dynamic> rideJson = json['ride'];
+    print(rideJson['id']);
+    Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.updateRideByID(ride);
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+  }
+
+  Future<void> onNotifPressed(Map<String, dynamic> message) async {
+    print('notifPressed');
+    Map<String, dynamic> json = jsonDecode(Platform.isIOS ? message['default'] : message['data']['default']);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.updateRideByID(Ride.fromJson(json['ride']));
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NotificationsPage())
+    );
+  }
+
+  static Future<dynamic> backgroundHandle(Map<String, dynamic> message) async {
+    print('backgroundHandle');
+    print(message);
     if (message.containsKey('data')) {
       // Handle data message
-      final dynamic data = Platform.isIOS ? message['default'] : message['data']['default'];
-      showNotification(jsonDecode(data)['changedBy']['userType']);
-      print("_backgroundMessageHandler data: $data");
+      Map<String, dynamic> json = jsonDecode(Platform.isIOS ? message['default'] : message['data']['default']);
+      NotifType type = typeFromNotifJson(json);
+
+      String notifMessage;
+      switch (type) {
+        case NotifType.DRIVER_ARRIVED:
+          notifMessage = 'Your driver is here! Meet your driver at the pickup point.';
+          break;
+        case NotifType.DRIVER_ON_THE_WAY:
+          notifMessage = 'Your driver is on the way! Wait outside at the pickup point.';
+          break;
+        case NotifType.DRIVER_CANCELLED:
+          notifMessage = 'Your driver cancelled your ride because they were unable to find you.';
+          break;
+        case NotifType.RIDE_EDITED:
+          notifMessage = 'The information for one of your rides has been edited. Please review your ride info.';
+          break;
+        case NotifType.RIDE_CONFIRMED:
+          notifMessage = 'One of your rides has been confirmed.';
+          break;
+        default:
+          throw Exception('Invalid notification type for notifMessage');
+      }
+      showNotification(notifMessage);
     }
     return Future<void>.value();
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider =
-    Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
       "${AppConfig.of(context).baseUrl}/notification/subscribe",
@@ -366,9 +373,9 @@ class _HomeState extends State<Home> {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    LocationsProvider locationsProvider =
-    Provider.of<LocationsProvider>(context);
+    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
     double headerHeight = 100;
 
@@ -586,7 +593,7 @@ class _HomeState extends State<Home> {
                 color: Colors.grey[500],
               ),
               ListTile(
-                leading: hasNewNotification
+                leading: notifsProvider.hasNewNotif
                     ? Stack(children: [
                   Icon(Icons.notifications, color: Colors.black),
                   Positioned(
