@@ -89,9 +89,7 @@ class RidesProvider with ChangeNotifier {
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      List<Ride> rides = _ridesFromJson(response.body)
-          .where((ride) => !ride.recurring)
-          .toList();
+      List<Ride> rides = _ridesFromJson(response.body).toList();
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       upcomingSingleRides = rides;
     }
