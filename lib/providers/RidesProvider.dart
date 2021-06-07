@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class RidesProvider with ChangeNotifier {
   Ride currentRide;
   List<Ride> pastRides;
-  List<Ride> upcomingSingleRides;
+  List<Ride> existingUpcomingRides;
   List<Ride> _parentRecurringRides;
   List<Ride> upcomingRides;
 
@@ -30,16 +30,16 @@ class RidesProvider with ChangeNotifier {
 
   bool hasData() {
     return pastRides != null &&
-        upcomingSingleRides != null &&
+        existingUpcomingRides != null &&
         _parentRecurringRides != null &&
         upcomingRides != null;
   }
 
   _generateUpcomingRides() {
     List<Ride> recurringRides =
-    RecurringRidesGenerator(_parentRecurringRides, upcomingSingleRides)
+    RecurringRidesGenerator(_parentRecurringRides, existingUpcomingRides)
         .generateRecurringRides();
-    upcomingRides = upcomingSingleRides;
+    upcomingRides = existingUpcomingRides;
     upcomingRides.addAll(recurringRides);
     upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
   }
@@ -82,7 +82,7 @@ class RidesProvider with ChangeNotifier {
   /// Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
   /// Upcoming rides are sorted from closest in time to farthest forward in time,
   /// so upcoming rides has the soonest ride first.
-  Future<void> _fetchUpcomingSingleRides(AppConfig config,
+  Future<void> _fetchExistingUpcomingRides(AppConfig config,
       AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
@@ -91,7 +91,7 @@ class RidesProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body).toList();
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
-      upcomingSingleRides = rides;
+      existingUpcomingRides = rides;
     }
   }
 
@@ -136,11 +136,11 @@ class RidesProvider with ChangeNotifier {
       AuthProvider authProvider) async {
     await _fetchCurrentRide(config, authProvider);
     await _fetchPastRides(config, authProvider);
-    await _fetchUpcomingSingleRides(config, authProvider);
+    await _fetchExistingUpcomingRides(config, authProvider);
     await _fetchParentRecurringRides(config, authProvider);
     _generateUpcomingRides();
     if (currentRide != null) {
-      upcomingSingleRides.removeWhere((ride) => ride.id == currentRide.id);
+      existingUpcomingRides.removeWhere((ride) => ride.id == currentRide.id);
     }
     notifyListeners();
   }

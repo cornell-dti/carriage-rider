@@ -464,6 +464,7 @@ class _HomeState extends State<Home> {
                             ) : Container()
                           ]),
                     ),
+                    SizedBox(height: 12),
                     Semantics(
                         sortKey: OrdinalSortKey(7),
                         child: UpcomingRides()
