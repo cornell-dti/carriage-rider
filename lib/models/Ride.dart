@@ -194,11 +194,14 @@ class Ride {
     String startLocationID = ride.startLocation;
     String endLocationID = ride.endLocation;
     Location startLocation = locationsByID[startLocationID];
+    print(locationsByID[startLocationID]);
     Location endLocation = locationsByID[endLocationID];
+    print(locationsByID[endLocationID]);
+
     ride.startLocation = startLocation.name;
     ride.startAddress = startLocation.address;
     ride.endLocation = endLocation.name;
-    ride.startAddress = endLocation.address;
+    ride.endAddress = endLocation.address;
     return ride;
   }
 
@@ -420,9 +423,5 @@ class Ride {
         edits: this.edits,
         endDate: this.endDate,
         driver: this.driver);
-  }
-
-  String toString() {
-    return 'Ride $id from $startLocation to $endLocation';
   }
 }

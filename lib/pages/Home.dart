@@ -206,8 +206,6 @@ class _HomeState extends State<Home> {
     notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification
     );
-    notificationsPlugin.initialize(initializationSettings);
-
     initialize();
     initFirebaseNotifs();
   }
@@ -215,8 +213,16 @@ class _HomeState extends State<Home> {
   // flutter local notifs callback when selecting a background notification
   Future<void> onSelectNotification(String payload) async {
     print('onSelectNotification payload: ' + payload);
-    //addNotif(BackendNotification.fromJson(jsonDecode(payload)));
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
+    Map<String, dynamic> json = jsonDecode(payload);
+    Map<String, dynamic> rideJson = jsonDecode(payload)['ride'];
+    print(jsonEncode(rideJson));
+    Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
+    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.updateRideByID(ride);
+    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+    print(BackendNotification.fromJson(json));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
   }
 //
 //  static Future<void> onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
@@ -250,7 +256,7 @@ class _HomeState extends State<Home> {
   }
 
   // Show notification banner on background and foreground.
-  static void showNotification(String message) async {
+  static void showNotification(String message, String payload) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
     await getAndroidNotificationDetails(message);
     final IOSNotificationDetails iOSPlatformChannelSpecifics =
@@ -258,11 +264,14 @@ class _HomeState extends State<Home> {
     final NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
+
+    print('showNotification payload: ' + payload);
     await notificationsPlugin.show(
       0,
       'Carriage Rider',
       message,
       platformChannelSpecifics,
+      payload: payload
     );
   }
 
@@ -294,7 +303,6 @@ class _HomeState extends State<Home> {
     String data = Platform.isIOS ? message['default'] : message['data']['default'];
     Map<String, dynamic> json = jsonDecode(data);
     Map<String, dynamic> rideJson = json['ride'];
-    print(rideJson['id']);
     Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     ridesProvider.updateRideByID(ride);
@@ -342,7 +350,7 @@ class _HomeState extends State<Home> {
         default:
           throw Exception('Invalid notification type for notifMessage');
       }
-      showNotification(notifMessage);
+      showNotification(notifMessage, jsonEncode(json));
     }
     return Future<void>.value();
   }

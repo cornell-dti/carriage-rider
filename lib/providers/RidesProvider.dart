@@ -184,6 +184,23 @@ class RidesProvider with ChangeNotifier {
     fetchAllRides(config, authProvider);
   }
 
+  Ride getRideByID(String id) {
+    if (currentRide != null && id == currentRide.id) {
+      return currentRide;
+    }
+    upcomingRides.forEach((ride) {
+      if (ride.id == id) {
+        return ride;
+      }
+    });
+    pastRides.forEach((ride) {
+      if (ride.id == id) {
+        return ride;
+      }
+    });
+    throw Exception('Cannot get ride with id $id');
+  }
+
   void updateRideByID(Ride updatedRide) {
     if (currentRide != null && updatedRide.id == currentRide.id) {
       currentRide = updatedRide;
