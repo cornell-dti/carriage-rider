@@ -178,7 +178,7 @@ class Ride {
   //Widget displaying the information of a ride after it has been requested. Shows the ride's
   //start location, end location, date, start and end time, recurring days,
   //and accessibility requests.
-  Widget buildSummary(context) {
+  Widget buildSummary(BuildContext context, bool showRecurringInfo) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Column(children: [
       MergeSemantics(
@@ -231,7 +231,7 @@ class Ride {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Start Date', style: CarriageTheme.labelStyle),
+                        Text(showRecurringInfo ? 'Start Date' : 'Date', style: CarriageTheme.labelStyle),
                         SizedBox(height: 5),
                         Text(DateFormat.yMd().format(startTime),
                             style: CarriageTheme.infoStyle)
@@ -257,8 +257,7 @@ class Ride {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              endDate != null
-                  ? Container(
+              showRecurringInfo ? Container(
                   child: MergeSemantics(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +297,7 @@ class Ride {
           ),
         ],
       ),
-      recurring ? Container(
+      showRecurringInfo ? Container(
           child: MergeSemantics(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

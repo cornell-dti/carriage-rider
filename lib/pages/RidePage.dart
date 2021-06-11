@@ -264,7 +264,7 @@ class RideActions extends StatelessWidget {
 
     void editSingle(BuildContext context, Ride ride) {
       print(ride.id);
-      rideFlowProvider.setEditing(context, ride);
+      rideFlowProvider.setEditingSingle(context, ride);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -272,7 +272,7 @@ class RideActions extends StatelessWidget {
     }
 
     void editAll(BuildContext context, Ride parentRide) {
-      rideFlowProvider.setEditing(context, parentRide);
+      rideFlowProvider.setEditingAll(context, parentRide);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -292,7 +292,12 @@ class RideActions extends StatelessWidget {
           child: Text('Edit This Ride',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           onPressed: () {
-            rideFlowProvider.setEditing(context, ride);
+            if (ride.parentRide != null || ride.recurring) {
+              rideFlowProvider.setEditingRecurringSingle(context, ride);
+            }
+            else {
+              rideFlowProvider.setEditingSingle(context, ride);
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -314,7 +319,15 @@ class RideActions extends StatelessWidget {
           child: Text('Edit All Repeating Rides',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           onPressed: () {
-            editAll(context, ride.parentRide);
+            if (ride.parentRide != null) {
+              editAll(context, ride.parentRide);
+            }
+            else if (ride.recurring) {
+              editAll(context, ride);
+            }
+            else {
+              throw Exception('Editing all repeating rides failed for ride ${ride.id} with recurring=${ride.recurring} and parentRide=${ride.parentRide}');
+            }
           },
         ));
 
@@ -380,7 +393,7 @@ class RideActions extends StatelessWidget {
                     padding: EdgeInsets.only(top: 18),
                     child: RaisedButton.icon(
                         onPressed: () async {
-                          if (ride.parentRide != null) {
+                          if (ride.parentRide != null || ride.recurring) {
                             showEditDialog();
                           } else {
                             editSingle(context, ride);

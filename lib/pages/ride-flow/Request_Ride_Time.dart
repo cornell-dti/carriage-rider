@@ -180,6 +180,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   @override
   Widget build(BuildContext context) {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
+    bool showRecurringFields = (rideFlowProvider.creating() && rideFlowProvider.recurring) || rideFlowProvider.editingAll();
 
     Widget buildInputField(TextEditingController ctrl, String label, String errorInfo, Function onTap) {
       bool hasText = ctrl.text != null && ctrl.text != '';
@@ -228,7 +229,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     String validateStartDate(bool checkEmpty) {
       String error;
       if (rideFlowProvider.startDate != null) {
-        if (rideFlowProvider.recurring && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
+        if (showRecurringFields && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
           error = 'Start date must be before end date';
         }
       }
@@ -256,8 +257,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       return error;
     }
 
-    void selectStartDate() {
-      selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
+    Future<void> selectStartDate() async {
+      await selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
         rideFlowProvider.setStartDate(selection);
         setState(() {
           startDateError = validateStartDate(true);
@@ -266,8 +267,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       });
     }
 
-    void selectEndDate() {
-      selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
+    Future<void> selectEndDate() async {
+      await selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
         rideFlowProvider.setEndDate(selection);
         setState(() {
           startDateError = validateStartDate(false);
@@ -352,11 +353,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
         selectEndTime
     );
 
-    bool allValid() {
+    bool allValid(bool checkEndDate) {
       bool validStartTime = validateStartTime(true) == null;
       bool validEndTime = validateEndTime(true) == null;
       bool validStartDate = validateStartDate(true) == null;
-      bool validEndDate = validateEndDate(true) == null;
+      bool validEndDate = checkEndDate ? (validateEndDate(true) == null) : true;
       return validStartDate && validEndDate && validStartTime && validEndTime;
     }
     double buttonsHeight = 48;
@@ -408,7 +409,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       ),
                       Form(
                         key: _formKey,
-                        child: rideFlowProvider.recurring ? Column(
+                        child: showRecurringFields ? Column(
                           children: <Widget>[
                             Row(
                               children: <Widget>[
@@ -450,7 +451,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                           ],
                         ),
                       ),
-                      rideFlowProvider.recurring ? Column(
+                      showRecurringFields ? Column(
                           children: [
                             SizedBox(height: 30.0),
                             Row(
@@ -507,7 +508,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                             text: 'Set Date & Time',
                             height: buttonsHeight,
                             onPressed: () {
-                              if (allValid() && (rideFlowProvider.recurring ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
+                              if (allValid(showRecurringFields) && (showRecurringFields ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
                                 Navigator.push(context,
                                     MaterialPageRoute(
                                         builder: (context) => ReviewRide()

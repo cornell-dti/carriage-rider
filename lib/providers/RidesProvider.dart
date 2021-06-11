@@ -168,16 +168,16 @@ class RidesProvider with ChangeNotifier {
     Map<String, dynamic> request = <String, dynamic>{
       'id': origRide.id,
       'deleteOnly': true,
-      'origDate': DateFormat('yyyy-MM-dd').format(origRide.origDate),
+      'origDate': DateFormat('yyyy-MM-dd').format(origRide.origDate != null ? origRide.origDate : origRide.startTime),
     };
-    final response = await http.put('${config.baseUrl}/rides/${origRide.parentRide.id}/edits',
+    final response = await http.put('${config.baseUrl}/rides/${origRide.parentRide != null ? origRide.parentRide.id : origRide.id}/edits',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete instance of recurring ride: ${response.body}');
+      throw Exception('Failed to cancel instance of recurring ride: ${response.body}');
     }
     fetchAllRides(config, authProvider);
   }

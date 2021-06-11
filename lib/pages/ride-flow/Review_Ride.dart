@@ -59,7 +59,7 @@ class _ReviewRideState extends State<ReviewRide> {
                           colorTwo: Colors.green,
                           colorThree: Colors.black),
                       SizedBox(height: 30),
-                      ride.buildSummary(context),
+                      ride.buildSummary(context, (rideFlowProvider.creating() && rideFlowProvider.recurring) || rideFlowProvider.editingAll()),
                     ],
                   ),
                 ),
@@ -84,7 +84,7 @@ class _ReviewRideState extends State<ReviewRide> {
                         SizedBox(width: 24),
                         Expanded(
                           child: CButton(
-                            text: rideFlowProvider.editing ? 'Update Request' : 'Send Request',
+                            text: rideFlowProvider.creating() ? 'Send Request' : 'Update Request',
                             height: buttonsHeight,
                             onPressed: () async {
                               setState(() {

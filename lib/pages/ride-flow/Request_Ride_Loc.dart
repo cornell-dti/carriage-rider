@@ -144,7 +144,7 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => rideFlowProvider.editing ? RequestRideDateTime() : RequestRideType()
+                                builder: (context) => (rideFlowProvider.creating()) ? RequestRideType() : RequestRideDateTime()
                             )
                             );
                           }

@@ -1,4 +1,5 @@
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
+import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
@@ -32,7 +33,6 @@ class _CancelRidePageState extends State<CancelRidePage> {
   @override
   Widget build(BuildContext context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
-
     double buttonHeight = 48;
     double buttonVerticalPadding = 16;
     return Scaffold(
@@ -64,9 +64,9 @@ class _CancelRidePageState extends State<CancelRidePage> {
                           colorTwo: Colors.green,
                           colorThree: Colors.black),
                       SizedBox(height: 30),
-                      widget.ride.buildSummary(context),
+                      widget.ride.buildSummary(context, false),
                       SizedBox(height: 16),
-                      widget.ride.parentRide != null ? CheckboxListTile(
+                      widget.ride.parentRide != null || widget.ride.recurring ? CheckboxListTile(
                           activeColor: CarriageTheme.gray2,
                           controlAffinity: ListTileControlAffinity.leading,
                           value: cancelRepeating,
@@ -106,10 +106,10 @@ class _CancelRidePageState extends State<CancelRidePage> {
                               requestedCancel = true;
                             });
                             if (cancelRepeating) {
-                              await ridesProvider.cancelRide(context, widget.ride);
+                              await ridesProvider.cancelRide(context, widget.ride.recurring ? widget.ride : widget.ride.parentRide);
                             }
                             else {
-                              if (widget.ride.parentRide != null) {
+                              if (widget.ride.parentRide != null || widget.ride.recurring) {
                                 await ridesProvider.cancelRepeatingRideOccurrence(context, widget.ride);
                               }
                               else {
