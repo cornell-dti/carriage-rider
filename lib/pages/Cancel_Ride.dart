@@ -1,5 +1,4 @@
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
-import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/providers/RidesProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
