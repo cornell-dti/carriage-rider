@@ -11,9 +11,16 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+enum RideFlowType {
+  CREATE,
+  EDIT_SINGLE,
+  EDIT_ALL,
+  EDIT_RECURRING
+}
+
 /// Manage the state of rides with ChangeNotifier.
 class RideFlowProvider with ChangeNotifier {
-  bool editing;
+  RideFlowType rideFlowType;
   Ride origRide;
 
   TextEditingController startLocCtrl = TextEditingController();
@@ -88,13 +95,37 @@ class RideFlowProvider with ChangeNotifier {
     return ride;
   }
 
-  void setCreating() {
-    editing = false;
+  void _setFlowType(RideFlowType type) {
+    rideFlowType = type;
     notifyListeners();
   }
 
-  void setEditing(BuildContext context, Ride ride) {
-    editing = true;
+  bool creating() => rideFlowType == RideFlowType.CREATE;
+  bool editingSingle() => rideFlowType == RideFlowType.EDIT_SINGLE;
+  bool editingAll() => rideFlowType == RideFlowType.EDIT_ALL;
+  bool editingRecurringSingle() => rideFlowType == RideFlowType.EDIT_RECURRING;
+
+  void setCreating() {
+    _setFlowType(RideFlowType.CREATE);
+    notifyListeners();
+  }
+
+  void setEditingSingle(BuildContext context, Ride ride) {
+    _setFlowType(RideFlowType.EDIT_SINGLE);
+    origRide = ride;
+    initFromRide(context, ride);
+    notifyListeners();
+  }
+
+  void setEditingAll(BuildContext context, Ride parentRide) {
+    _setFlowType(RideFlowType.EDIT_ALL);
+    origRide = parentRide;
+    initFromRide(context, parentRide);
+    notifyListeners();
+  }
+
+  void setEditingRecurringSingle(BuildContext context, Ride ride) {
+    _setFlowType(RideFlowType.EDIT_RECURRING);
     origRide = ride;
     initFromRide(context, ride);
     notifyListeners();
@@ -183,21 +214,22 @@ class RideFlowProvider with ChangeNotifier {
 
   Future<bool> updateRecurringRide(
       BuildContext context,
-      Ride origRide) async {
+      Ride origRide,
+      Ride parentRide) async {
     AppConfig config = AppConfig.of(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
-      'id': origRide.parentRide.id,
+      'id': parentRide.id,
       'deleteOnly': false,
-      'origDate': DateFormat('yyyy-MM-dd').format(origRide.origDate),
+      'origDate': DateFormat('yyyy-MM-dd').format(parentRide.origDate != null ? parentRide.origDate : origRide.startTime),
       'startLocation': assembleStartLocation(locationsProvider),
       'endLocation': assembleEndLocation(locationsProvider),
       'startTime': assembleStartTimeString(),
       'endTime': assembleEndTimeString()
     };
-    final response = await http.put('${config.baseUrl}/rides/${origRide.parentRide.id}/edits',
+    final response = await http.put('${config.baseUrl}/rides/${parentRide.id}/edits',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -285,21 +317,24 @@ class RideFlowProvider with ChangeNotifier {
 
   Future<bool> request(BuildContext context) async {
     bool successful;
-    if (editing) {
-      // update fake instance for recurring ride
-      if (origRide.parentRide != null) {
-        successful = await updateRecurringRide(
+    // update fake instance for recurring ride
+    if (editingRecurringSingle()) {
+      successful = await updateRecurringRide(
           context,
-          origRide
-        );
-      }
-      // update real instance
-      else {
-        successful = await updateRide(context);
-      }
+          origRide,
+          // if editing first instance, it exists and is its own parent
+          origRide.parentRide != null ? origRide.parentRide : origRide
+      );
+    }
+    // update real instance; parent to edit all, or regular single ride
+    else if (editingAll() || editingSingle()) {
+      successful = await updateRide(context);
+    }
+    else if (creating()){
+      successful = await createRide(context);
     }
     else {
-      successful = await createRide(context);
+      throw Exception('Invalid ride flow type');
     }
     AppConfig config = AppConfig.of(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);

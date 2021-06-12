@@ -538,7 +538,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19-nullsafety.6"
+    version: "0.2.19-nullsafety.2"
   timezone:
     dependency: transitive
     description:

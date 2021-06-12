@@ -25,7 +25,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.2),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 40),
-            child: ExcludeSemantics(child: Image(image: AssetImage(rideFlowProvider.editing ? 'assets/images/changesInProgress.png' : 'assets/images/RequestInProgress.png'))),
+            child: ExcludeSemantics(child: Image(image: AssetImage(rideFlowProvider.creating() ? 'assets/images/RequestInProgress.png' : 'assets/images/changesInProgress.png'))),
           ),
           SizedBox(height: 36),
           Padding(
@@ -35,7 +35,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                      rideFlowProvider.editing ? 'Your changes are in progress!' : 'Your request is in progress!',
+                      rideFlowProvider.creating() ? 'Your request is in progress!' : 'Your changes are in progress!',
                       textAlign: TextAlign.center,
                       style: CarriageTheme.title3
                   ),
