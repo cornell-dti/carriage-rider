@@ -32,20 +32,11 @@ class RecurringRidesGenerator {
   /// Returns whether the recurring ride from backend [parentRide]'s list of deleted dates contains the start date of [generatedRide],
   /// representing a frontend-generated instance of a repeating ride that does not exist in backend yet.
   ///
-  /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
+  /// This indicates that the original instance has been deleted or edited (original date of ride is added to [parentRide.deleted],
+  /// the edited instance is actually created in backend) so it should NOT be generated in the app.
   bool wasDeleted(Ride generatedRide, Ride parentRide) {
     return parentRide.deleted
         .where((date) => sameDay(date, generatedRide.startTime))
-        .isNotEmpty;
-  }
-
-  /// Returns whether [generatedRide], representing a frontend-generated instance of a repeating ride that does not exist in backend yet,
-  /// was edited and has a real copy in backend.
-  ///
-  /// This indicates that the original instance has been deleted so it should NOT be generated in the app.
-  bool wasEdited(Ride generatedRide, List<Ride> editedRides) {
-    return editedRides
-        .where((ride) => sameDay(ride.startTime, generatedRide.startTime))
         .isNotEmpty;
   }
 
@@ -56,8 +47,7 @@ class RecurringRidesGenerator {
   /// exist in backend yet.
   List<Ride> generateRecurringRides() {
     Map<String, Ride> singleRidesByID = Map();
-    singleRides
-        .forEach((singleRide) => singleRidesByID[singleRide.id] = singleRide);
+    singleRides.forEach((singleRide) => singleRidesByID[singleRide.id] = singleRide);
     List<Ride> generatedRides = [];
 
     for (Ride originalRide in parentRides) {
@@ -86,9 +76,9 @@ class RecurringRidesGenerator {
         // create the new ride and keep track of its parent to help with editing
         Ride rideInstance = Ride(
             parentRide: originalRide,
+            origDate: rideStart,
             status: RideStatus.NOT_STARTED,
             type: 'unscheduled',
-            origDate: rideStart,
             startLocation: originalRide.startLocation,
             startAddress: originalRide.startAddress,
             endLocation: originalRide.endLocation,
@@ -101,11 +91,7 @@ class RecurringRidesGenerator {
             (now.isAfter(rideCreationTime) &&
                 sameDay(rideStart, today.add(Duration(days: 1))));
 
-        List<Ride> rideEdits =
-            originalRide.edits.map((id) => singleRidesByID[id]).toList();
-        if (!rideAlreadyExists &&
-            !wasDeleted(rideInstance, originalRide) &&
-            !wasEdited(rideInstance, rideEdits)) {
+        if (!rideAlreadyExists && !wasDeleted(rideInstance, originalRide)) {
           generatedRides.add(rideInstance);
         }
 

@@ -13,9 +13,8 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 
 
 class RequestRideLoc extends StatefulWidget {
-  final Ride ride;
 
-  RequestRideLoc({Key key, @required this.ride}) : super(key: key);
+  RequestRideLoc({Key key}) : super(key: key);
 
   @override
   _RequestRideLocState createState() => _RequestRideLocState();
@@ -28,8 +27,8 @@ class _RequestRideLocState extends State<RequestRideLoc> {
   Widget build(context) {
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
-    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+    TextEditingController fromCtrl = rideFlowProvider.startLocCtrl;
+    TextEditingController toCtrl = rideFlowProvider.endLocCtrl;
 
     double buttonHeight = 48;
     double buttonVerticalPadding = 16;
@@ -83,7 +82,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                             children: <Widget>[
                               LocationInput(
                                 label: 'From',
-                                ride: widget.ride,
                                 finished: rideFlowProvider.locationsFinished(),
                                 isToLocation: false,
                               ),
@@ -103,7 +101,6 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                               SizedBox(height: 30.0),
                               LocationInput(
                                 label: 'To',
-                                ride: widget.ride,
                                 finished: rideFlowProvider.locationsFinished(),
                                 isToLocation: true,
                               ),
@@ -147,11 +144,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => rideFlowProvider.editing ? RequestRideDateTime(ride: widget.ride) : RequestRideType(ride: widget.ride)
+                                builder: (context) => (rideFlowProvider.creating()) ? RequestRideType() : RequestRideDateTime()
                             )
                             );
-                            widget.ride.startLocation = fromCtrl.text;
-                            widget.ride.endLocation = toCtrl.text;
                           }
                           else {
                             SemanticsService.announce('Error, please check your locations', TextDirection.ltr);
@@ -199,8 +194,8 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   @override
   Widget build(BuildContext context) {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
-    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+    TextEditingController fromCtrl = rideFlowProvider.startLocCtrl;
+    TextEditingController toCtrl = rideFlowProvider.endLocCtrl;
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
 
     String input = widget.isToLocation ? toCtrl.text : fromCtrl.text;
@@ -348,8 +343,8 @@ class LocationInput extends StatelessWidget {
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    TextEditingController fromCtrl = rideFlowProvider.fromCtrl;
-    TextEditingController toCtrl = rideFlowProvider.toCtrl;
+    TextEditingController fromCtrl = rideFlowProvider.startLocCtrl;
+    TextEditingController toCtrl = rideFlowProvider.endLocCtrl;
 
     List<String> initSuggestions;
     if (isToLocation && toCtrl.text != null && toCtrl.text != '') {
@@ -392,7 +387,7 @@ class LocationInput extends StatelessWidget {
                 ride: ride,
                 label: label,
                 isToLocation: isToLocation,
-                page: RequestRideLoc(ride: ride),
+                page: RequestRideLoc(),
                 initSuggestions: initSuggestions
             ),
           )
