@@ -339,7 +339,7 @@ class RideFlowProvider with ChangeNotifier {
     AppConfig config = AppConfig.of(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
-    await locationsProvider.fetchLocations(context, config, authProvider);
+    await locationsProvider.fetchLocations(config, authProvider);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
