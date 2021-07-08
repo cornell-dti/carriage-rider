@@ -610,6 +610,10 @@ class _TimeLineState extends State<TimeLine> {
     //Widget displaying a custom built card with information about a ride's start location and start time.
     //[isIcon] determines whether the card needs an icon.
     Widget buildLocationsCard(BuildContext context, bool isStart) {
+      LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+      String location = isStart ? widget.ride.startLocation : widget.ride.endLocation;
+      String address = isStart? widget.ride.startAddress : widget.ride.endAddress;
+
       return Semantics(
         container: true,
         child: Container(
@@ -621,53 +625,62 @@ class _TimeLineState extends State<TimeLine> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child:
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(isStart ? widget.ride.startLocation : widget.ride.endLocation,
-                                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D)),
-                                    semanticsLabel: (isStart ? 'Start location: ' + widget.ride.startLocation :
-                                    'End location: ' + widget.ride.endLocation) + '.'
-                                ),
-                                Text(isStart? widget.ride.startAddress : widget.ride.endAddress,
-                                    style: TextStyle(fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5)),
-                                    semanticsLabel: 'Address: ' + (isStart ? widget.ride.startAddress : widget.ride.endAddress) + '.'
-                                )
-                              ]
-                          ),
-                        ),
-                        widget.hasLocationIcon ? Semantics(
-                          button: true,
-                          container: true,
-                          label: (isStart ? 'Start ' : 'End ') + 'location details',
-                          child: SizedBox(
-                            height: 48,
-                            width: 48,
-                            child: Material(
-                              type: MaterialType.transparency,
-                              child: InkWell(
-                                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                child: Icon(Icons.location_on),
-                                onTap: () => displayBottomSheet(context, widget.ride, true),
-                              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(location,
+                                      style: TextStyle(fontSize: 14, color: Color(0xFF1A051D)),
+                                      semanticsLabel: (isStart ? 'Start location: ' + widget.ride.startLocation :
+                                      'End location: ' + widget.ride.endLocation) + '.'
+                                  ),
+                                  !locationsProvider.isPreset(location) ? Text(address,
+                                      style: TextStyle(fontSize: 14, color: Color(0xFF1A051D).withOpacity(0.5)),
+                                      semanticsLabel: 'Address: ' + address + '.'
+                                  ) : Container()
+                                ]
                             ),
                           ),
-                        )
-                            : Container()
-                      ],
+                          SizedBox(height: 16),
+                          Text(
+                              'Estimated ${isStart ? 'pick up time' : 'drop off time'}: ' +
+                                  DateFormat('jm').format(isStart ? widget.ride.startTime : widget.ride.endTime),
+                              style: TextStyle(fontSize: 13, color: Color(0xFF3F3356))
+                          )
+                        ]
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                        'Estimated ${isStart ? 'pick up time' : 'drop off time'}: ' +
-                            DateFormat('jm').format(isStart ? widget.ride.startTime : widget.ride.endTime),
-                        style: TextStyle(fontSize: 13, color: Color(0xFF3F3356)))
-                  ]),
+                  ),
+                  widget.hasLocationIcon ? Semantics(
+                      button: true,
+                      container: true,
+                      label: (isStart ? 'Start ' : 'End ') + 'location details',
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          onTap: () => displayBottomSheet(context, widget.ride, isStart),
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(width: 0.5, color: Colors.black .withOpacity(0.25)
+                              ),
+                            ),
+                            child: Icon(Icons.location_on),
+                          ),
+                        ),
+                      )
+                  ) : Container()
+                ],
+              ),
             )
         ),
       );

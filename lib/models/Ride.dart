@@ -13,7 +13,8 @@ enum RideStatus {
   ARRIVED,
   PICKED_UP,
   COMPLETED,
-  NO_SHOW
+  NO_SHOW,
+  CANCELLED
 }
 
 /// Parses [status] representing a ride status into its corresponding enum.
@@ -31,6 +32,8 @@ RideStatus getStatusEnum(String status) {
       return RideStatus.COMPLETED;
     case ('no_show'):
       return RideStatus.NO_SHOW;
+    case ('cancelled'):
+      return RideStatus.CANCELLED;
     default:
       throw Exception('Ride status is invalid');
   }

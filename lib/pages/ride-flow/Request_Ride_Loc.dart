@@ -257,10 +257,10 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 12),
+                          SizedBox(height: 16),
                           Text(name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                          Text(address, style: TextStyle(color: Colors.grey, fontSize: 12)),
-                          SizedBox(height: 12),
+                          !locationsProvider.isPreset(suggestions[index]) ? Text(address, style: TextStyle(color: Colors.grey, fontSize: 12)) : Container(),
+                          SizedBox(height: 16),
                         ]
                     ),
                   ),
