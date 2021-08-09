@@ -7,6 +7,8 @@ class NotificationsProvider with ChangeNotifier {
   List<BackendNotification> notifs = [];
 
   void addNewNotif(BackendNotification newNotif) {
+    print('addNewNotif');
+    print(newNotif);
     hasNewNotif = true;
     notifs.add(newNotif);
     notifyListeners();

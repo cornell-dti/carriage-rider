@@ -300,14 +300,21 @@ class _HomeState extends State<Home> {
 
   Future<void> onForegroundNotif(Map<String, dynamic> message) async {
     print('onForegroundNotif');
+    print(message);
     String data = Platform.isIOS ? message['default'] : message['data']['default'];
     Map<String, dynamic> json = jsonDecode(data);
     Map<String, dynamic> rideJson = json['ride'];
+    print(rideJson);
+    print(json['changeType']);
+    print(json['changedBy']);
     Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
     ridesProvider.updateRideByID(ride);
+    print('updated ride by ID');
     NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
     notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+    print('added new notif');
+    print('end of onForegroundNotif');
   }
 
   Future<void> onNotifPressed(Map<String, dynamic> message) async {
@@ -337,6 +344,9 @@ class _HomeState extends State<Home> {
           break;
         case NotifType.DRIVER_ON_THE_WAY:
           notifMessage = 'Your driver is on the way! Wait outside at the pickup point.';
+          break;
+        case NotifType.DRIVER_LATE:
+          notifMessage = 'Your driver is running late but will meet you soon at the pickup point.';
           break;
         case NotifType.DRIVER_CANCELLED:
           notifMessage = 'Your driver cancelled your ride because they were unable to find you.';

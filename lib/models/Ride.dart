@@ -12,6 +12,7 @@ import '../utils/CarriageTheme.dart';
 enum RideStatus {
   NOT_STARTED,
   ON_THE_WAY,
+  LATE,
   ARRIVED,
   PICKED_UP,
   COMPLETED,
@@ -194,6 +195,9 @@ class Ride {
     String startLocationID = ride.startLocation;
     String endLocationID = ride.endLocation;
     Location startLocation = locationsByID[startLocationID];
+    print('----Ride factory');
+    print('startLocation');
+    print(startLocation);
     print(locationsByID[startLocationID]);
     Location endLocation = locationsByID[endLocationID];
     print(locationsByID[endLocationID]);

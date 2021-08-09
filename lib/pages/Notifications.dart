@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 enum NotifType {
   DRIVER_ARRIVED,
   DRIVER_ON_THE_WAY,
+  DRIVER_LATE,
   DRIVER_CANCELLED,
   RIDE_EDITED,
   RIDE_CONFIRMED
@@ -25,6 +26,8 @@ String notifMessage(NotifType type, Ride ride, DateTime time) {
       return 'Your driver is here! Meet your driver at the pickup point for ${ride.endLocation}.';
     case NotifType.DRIVER_ON_THE_WAY:
       return 'Your driver is on the way! Wait outside at the pickup point for ${ride.endLocation}.';
+    case NotifType.DRIVER_LATE:
+      return 'Your driver is running late but will meet you soon at the pickup point for ${ride.endLocation}.';
     case NotifType.DRIVER_CANCELLED:
       return 'Your driver cancelled your ride to ${ride.endLocation} because they were unable to find you.';
     case NotifType.RIDE_EDITED:
@@ -152,10 +155,11 @@ class Notification extends StatelessWidget {
 }
 
 NotifType typeFromNotifJson(Map<String, dynamic> json) {
+  print('----Notifications typeFromNotifJson');
   String changedBy = json['changedBy']['userType'];
-  Map<String, dynamic> change = json['change'];
+  Map<String, dynamic> ride = json['ride'];
   if (changedBy == 'Admin') {
-    if (change['driver'] != null) {
+    if (ride['driver'] != null) {
       return NotifType.RIDE_CONFIRMED;
     }
     else {
@@ -163,7 +167,10 @@ NotifType typeFromNotifJson(Map<String, dynamic> json) {
     }
   }
   else if (changedBy == 'Driver') {
-    String status = change['data']['ride']['status'];
+    if (ride['late']) {
+      return NotifType.DRIVER_LATE;
+    }
+    String status = ride['status'];
     print(status);
     if (status == 'on_the_way') {
       return NotifType.DRIVER_ON_THE_WAY;
@@ -190,8 +197,14 @@ class BackendNotification {
   final String rideID;
 
   factory BackendNotification.fromJson(Map<String, dynamic> json) {
+    print('----Notifications factory');
+    print(json);
     String rideID = rideIDFromNotifJson(json);
+    print('ride ID');
+    print(rideID);
     NotifType type = typeFromNotifJson(json);
+    print('type');
+    print(type);
     return BackendNotification(type, rideID, DateTime.now());
   }
 
