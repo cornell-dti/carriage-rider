@@ -202,11 +202,17 @@ class RidesProvider with ChangeNotifier {
   }
 
   void updateRideByID(Ride updatedRide) {
+    print('----updateRideByID');
     if (currentRide != null && updatedRide.id == currentRide.id) {
       currentRide = updatedRide;
     }
     else if (updatedRide.type == 'unscheduled' || updatedRide.type == 'active') {
+      print('updating unscheduled or active ride');
       int index = upcomingRides.indexWhere((ride) => ride.id == updatedRide.id);
+      print('upcoming rides');
+      print(upcomingRides.map((ride) => ride.id));
+      print('index');
+      print(index);
       upcomingRides[index] = updatedRide;
     }
     else if (updatedRide.type == 'past') {

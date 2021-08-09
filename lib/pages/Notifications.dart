@@ -156,33 +156,26 @@ class Notification extends StatelessWidget {
 
 NotifType typeFromNotifJson(Map<String, dynamic> json) {
   print('----Notifications typeFromNotifJson');
-  String changedBy = json['changedBy']['userType'];
-  Map<String, dynamic> ride = json['ride'];
-  if (changedBy == 'Admin') {
-    if (ride['driver'] != null) {
-      return NotifType.RIDE_CONFIRMED;
-    }
-    else {
-      return NotifType.RIDE_EDITED;
-    }
-  }
-  else if (changedBy == 'Driver') {
-    if (ride['late']) {
-      return NotifType.DRIVER_LATE;
-    }
-    String status = ride['status'];
-    print(status);
-    if (status == 'on_the_way') {
+  print(json['changeType']);
+
+  switch(json['changeType']) {
+    case 'on_the_way':
       return NotifType.DRIVER_ON_THE_WAY;
-    }
-    else if (status == 'arrived') {
+    case 'arrived':
       return NotifType.DRIVER_ARRIVED;
-    }
-    else if (status == 'no_show') {
+    case 'no_show':
+    case 'cancelled':
       return NotifType.DRIVER_CANCELLED;
-    }
+    case 'late':
+      return NotifType.DRIVER_LATE;
+    case 'scheduled':
+      return NotifType.RIDE_CONFIRMED;
+    case 'edited':
+    case 'repeating_edited':
+      return NotifType.RIDE_EDITED;
+    default:
+      throw Exception('No notification type parsed from json in typeFromJson');
   }
-  throw Exception('No notification type parsed from json in typeFromJson');
 }
 
 String rideIDFromNotifJson(Map<String, dynamic> json) {
