@@ -11,12 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum RideFlowType {
-  CREATE,
-  EDIT_SINGLE,
-  EDIT_ALL,
-  EDIT_RECURRING
-}
+enum RideFlowType { CREATE, EDIT_SINGLE, EDIT_ALL, EDIT_RECURRING }
 
 /// Manage the state of rides with ChangeNotifier.
 class RideFlowProvider with ChangeNotifier {
@@ -39,8 +34,14 @@ class RideFlowProvider with ChangeNotifier {
 
   bool requestHadError = false;
 
-  bool locationsFinished() => startLocCtrl.text != null && startLocCtrl.text != '' && endLocCtrl.text != null && endLocCtrl.text != '';
-  bool locationsEmpty() => (startLocCtrl.text == null || startLocCtrl.text == '') && (endLocCtrl.text == null || endLocCtrl.text == '');
+  bool locationsFinished() =>
+      startLocCtrl.text != null &&
+      startLocCtrl.text != '' &&
+      endLocCtrl.text != null &&
+      endLocCtrl.text != '';
+  bool locationsEmpty() =>
+      (startLocCtrl.text == null || startLocCtrl.text == '') &&
+      (endLocCtrl.text == null || endLocCtrl.text == '');
 
   void clear() {
     startLocCtrl.clear();
@@ -68,10 +69,9 @@ class RideFlowProvider with ChangeNotifier {
       setEndDate(ride.endDate);
       repeatDaysSelected = List.filled(5, false);
       ride.recurringDays.forEach((day) {
-        repeatDaysSelected[day-1] = true;
+        repeatDaysSelected[day - 1] = true;
       });
-    }
-    else {
+    } else {
       setRecurring(false);
     }
     notifyListeners();
@@ -88,8 +88,7 @@ class RideFlowProvider with ChangeNotifier {
       ride.recurring = true;
       ride.endDate = endDate;
       ride.recurringDays = assembleRecurringDays();
-    }
-    else {
+    } else {
       ride.recurring = false;
     }
     return ride;
@@ -181,9 +180,12 @@ class RideFlowProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  DateTime assembleStartTime() => DateTime(startDate.year, startDate.month, startDate.day, pickUpTime.hour, pickUpTime.minute);
-  String assembleStartTimeString() => assembleStartTime().toUtc().toIso8601String();
-  DateTime assembleEndTime() => DateTime(startDate.year, startDate.month, startDate.day, dropOffTime.hour, dropOffTime.minute);
+  DateTime assembleStartTime() => DateTime(startDate.year, startDate.month,
+      startDate.day, pickUpTime.hour, pickUpTime.minute);
+  String assembleStartTimeString() =>
+      assembleStartTime().toUtc().toIso8601String();
+  DateTime assembleEndTime() => DateTime(startDate.year, startDate.month,
+      startDate.day, dropOffTime.hour, dropOffTime.minute);
   String assembleEndTimeString() => assembleEndTime().toUtc().toIso8601String();
 
   String assembleStartLocation(LocationsProvider locationsProvider) {
@@ -206,35 +208,38 @@ class RideFlowProvider with ChangeNotifier {
     List<int> recurringDays = [];
     for (int i = 0; i < repeatDaysSelected.length; i++) {
       if (repeatDaysSelected[i]) {
-        recurringDays.add(i+1);
+        recurringDays.add(i + 1);
       }
     }
     return recurringDays;
   }
 
   Future<bool> updateRecurringRide(
-      BuildContext context,
-      Ride origRide,
-      Ride parentRide) async {
+      BuildContext context, Ride origRide, Ride parentRide) async {
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
       'id': parentRide.id,
       'deleteOnly': false,
-      'origDate': DateFormat('yyyy-MM-dd').format(parentRide.origDate != null ? parentRide.origDate : origRide.startTime),
+      'origDate': DateFormat('yyyy-MM-dd').format(parentRide.origDate != null
+          ? parentRide.origDate
+          : origRide.startTime),
       'startLocation': assembleStartLocation(locationsProvider),
       'endLocation': assembleEndLocation(locationsProvider),
       'startTime': assembleStartTimeString(),
       'endTime': assembleEndTimeString()
     };
-    final response = await http.put('${config.baseUrl}/rides/${parentRide.id}/edits',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
-        },
-        body: jsonEncode(request));
+    final response =
+        await http.put('${config.baseUrl}/rides/${parentRide.id}/edits',
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token'
+            },
+            body: jsonEncode(request));
     if (response.statusCode != 200) {
       print('Failed to edit instance of recurring ride: ${response.body}');
       return false;
@@ -244,8 +249,10 @@ class RideFlowProvider with ChangeNotifier {
 
   Future<bool> updateRide(BuildContext context) async {
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
 
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
@@ -282,9 +289,12 @@ class RideFlowProvider with ChangeNotifier {
   /// Returns whether the request was successful or not.
   Future<bool> createRide(BuildContext context) async {
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
-    RiderProvider riderProvider = Provider.of<RiderProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
+    RiderProvider riderProvider =
+        Provider.of<RiderProvider>(context, listen: false);
 
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
@@ -323,24 +333,24 @@ class RideFlowProvider with ChangeNotifier {
           context,
           origRide,
           // if editing first instance, it exists and is its own parent
-          origRide.parentRide != null ? origRide.parentRide : origRide
-      );
+          origRide.parentRide != null ? origRide.parentRide : origRide);
     }
     // update real instance; parent to edit all, or regular single ride
     else if (editingAll() || editingSingle()) {
       successful = await updateRide(context);
-    }
-    else if (creating()){
+    } else if (creating()) {
       successful = await createRide(context);
-    }
-    else {
+    } else {
       throw Exception('Invalid ride flow type');
     }
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context, listen: false);
     await locationsProvider.fetchLocations(config, authProvider);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
     await ridesProvider.fetchAllRides(config, authProvider);
     notifyListeners();
 

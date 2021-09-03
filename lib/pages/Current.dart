@@ -28,15 +28,14 @@ class Current extends StatelessWidget {
                     widget: SizedBox(height: 10),
                   ),
                   SizedBox(height: 20),
-                  DriverCard(color: Colors.black, ride: ride, showButtons: true),
+                  DriverCard(
+                      color: Colors.black, ride: ride, showButtons: true),
                   SizedBox(height: 40),
                   TimeLine(ride, true, true, true),
                   SizedBox(height: 30),
                   CustomDivider(),
                   SizedBox(height: 20),
-                  ride.recurring
-                      ? RecurringRideInfo(ride)
-                      : Container(),
+                  ride.recurring ? RecurringRideInfo(ride) : Container(),
                   SizedBox(height: MediaQuery.of(context).size.height / 8),
                 ],
               ),

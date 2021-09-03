@@ -15,24 +15,23 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ScheduleBar(Colors.black, Theme.of(context).scaffoldBackgroundColor),
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                child: Text('Notifications',
-                    style: CarriageTheme.largeTitle),
-              ),
-              Detail(),
-              Container(
-                color: Colors.white,
-                height: MediaQuery.of(context).size.height / 5,
-              )
-            ]),
-      )
-    );
+        appBar: ScheduleBar(
+            Colors.black, Theme.of(context).scaffoldBackgroundColor),
+        body: SingleChildScrollView(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+                  child: Text('Notifications', style: CarriageTheme.largeTitle),
+                ),
+                Detail(),
+                Container(
+                  color: Colors.white,
+                  height: MediaQuery.of(context).size.height / 5,
+                )
+              ]),
+        ));
   }
 }
 
@@ -42,7 +41,6 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-
   List<Color> colors = [
     Colors.black,
     Colors.black,
@@ -70,7 +68,8 @@ class _DetailState extends State<Detail> {
     'Your driver cancelled the ride because the driver was unable to find you.'
   ];
 
-  Widget notificationRow(BuildContext context, Color color, IconData icon, String text) {
+  Widget notificationRow(
+      BuildContext context, Color color, IconData icon, String text) {
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
@@ -119,17 +118,16 @@ class _DetailState extends State<Detail> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: icons.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return notificationRow(context, colors[index], icons[index], text[index]);
+                      return notificationRow(
+                          context, colors[index], icons[index], text[index]);
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
-                        height: 0, color: Colors.white,
+                        height: 0,
+                        color: Colors.white,
                       );
-                    }
-                )
+                    })
               ],
-            )
-        )
-    );
+            )));
   }
 }

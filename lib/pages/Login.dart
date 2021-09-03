@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 
 class Login extends StatelessWidget {
-
   @override
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
@@ -39,7 +38,8 @@ class Login extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text('Sign in using your Cornell email',
-                        style: TextStyle(fontSize: 15, color: Colors.grey[300])),
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.grey[300])),
                   ),
                 ],
               ),

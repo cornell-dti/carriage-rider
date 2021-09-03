@@ -8,9 +8,7 @@ class CButton extends StatelessWidget {
   final void Function() onPressed;
 
   CButton(
-      {@required this.text,
-        @required this.height,
-        @required this.onPressed});
+      {@required this.text, @required this.height, @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,8 @@ class CButton extends StatelessWidget {
           padding: EdgeInsets.all(16),
           color: Colors.black,
           textColor: Colors.white,
-          child: Text(text,
-              style: CarriageTheme.button),
+          child: Text(text, style: CarriageTheme.button),
           onPressed: onPressed,
-        )
-    );
+        ));
   }
 }

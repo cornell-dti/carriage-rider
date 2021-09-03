@@ -38,8 +38,10 @@ class RecurringRideInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> dayCharList = ride.recurringDays.map((index) => dayChars[index]).toList();
-    List<String> dayNameList = ride.recurringDays.map((index) => dayNames[index]).toList();
+    List<String> dayCharList =
+        ride.recurringDays.map((index) => dayChars[index]).toList();
+    List<String> dayNameList =
+        ride.recurringDays.map((index) => dayNames[index]).toList();
 
     String recurringDaysInfo = repetitionInfo(dayCharList);
     String recurringDayNamesInfo = repetitionInfo(dayNameList);
@@ -98,7 +100,8 @@ class DateDivider extends StatelessWidget {
 }
 
 class DateInfo extends StatelessWidget {
-  const DateInfo({Key key, @required this.ride, @required this.start}) : super(key: key);
+  const DateInfo({Key key, @required this.ride, @required this.start})
+      : super(key: key);
   final Ride ride;
   final bool start;
 
@@ -117,7 +120,8 @@ class DateInfo extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              DateFormat('MM/dd/yyyy').format(start ? ride.startTime : ride.endDate),
+              DateFormat('MM/dd/yyyy')
+                  .format(start ? ride.startTime : ride.endDate),
               style: TextStyle(color: CarriageTheme.gray1, fontSize: 16),
             )
           ],
