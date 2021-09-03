@@ -12,4 +12,3 @@ linter:
     # The following rules are overridden due to preference. Feel free to change.
     avoid_print: false
     constant_identifier_names: false
-    todo: false
