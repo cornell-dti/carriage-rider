@@ -157,9 +157,11 @@ class CancelConfirmation extends StatelessWidget {
         padding: EdgeInsets.all(34),
         child: Container(
           width: double.infinity,
-          child: FlatButton(
-            color: Colors.black,
-            textColor: Colors.white,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: Colors.black,
+            ),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
               child: Text('Done',

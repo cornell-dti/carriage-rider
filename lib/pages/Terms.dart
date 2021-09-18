@@ -64,17 +64,20 @@ class TermsOfService extends StatelessWidget {
                                       fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(height: 10.0),
-                            Container(
-                              height: 48,
-                              child: FlatButton(
-                                  onPressed: () => openGuidelines(),
-                                  child: Text('CULift guidelines',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        color: Colors.black,
-                                        decoration: TextDecoration.underline,
-                                      ))),
-                            ),
+                            Padding(
+                                padding: EdgeInsets.only(left: 8),
+                                child: Container(
+                                  height: 48,
+                                  child: TextButton(
+                                      onPressed: () => openGuidelines(),
+                                      child: Text('CULift guidelines',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ))),
+                                )),
                           ],
                         ),
                       ),

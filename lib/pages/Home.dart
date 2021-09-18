@@ -612,35 +612,36 @@ class _HomeState extends State<Home> {
                       child: Stack(
                         children: <Widget>[
                           Semantics(
-                            button: true,
-                            sortKey: OrdinalSortKey(11),
-                            child: Align(
+                              button: true,
+                              sortKey: OrdinalSortKey(11),
+                              child: Align(
                                 alignment: Alignment.center,
-                                child: ButtonTheme(
-                                  minWidth:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  height: 50.0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: RaisedButton.icon(
-                                    onPressed: () {
-                                      rideFlowProvider.clear();
-                                      rideFlowProvider.setCreating();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RequestRideLoc()));
-                                    },
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    rideFlowProvider.clear();
+                                    rideFlowProvider.setCreating();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RequestRideLoc()));
+                                  },
+                                  style: ElevatedButton.styleFrom(
                                     elevation: 3.0,
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                    icon: Icon(Icons.add),
-                                    label: Text('Request Ride',
-                                        style: TextStyle(fontSize: 18)),
+                                    onPrimary: Colors.white,
+                                    primary: Colors.black,
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width * 0.8,
+                                        50.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
                                   ),
-                                )),
-                          ),
+                                  icon: Icon(Icons.add),
+                                  label: Text('Request Ride',
+                                      style: TextStyle(fontSize: 18)),
+                                ),
+                              )),
                         ],
                       ),
                     ),

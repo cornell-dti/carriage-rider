@@ -194,28 +194,31 @@ class _OnBoardingState extends State<OnBoarding> {
                     )
                   : Expanded(
                       child: Align(
-                          child: Container(
-                      height: MediaQuery.of(context).size.height * 0.20,
-                      color: Colors.black,
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: ButtonTheme(
-                              minWidth: MediaQuery.of(context).size.width * 0.8,
-                              height: 50.0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: RaisedButton(
+                      child: Container(
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          color: Colors.black,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
                                   onPressed: () {
                                     _onIntroEnd(context);
                                   },
-                                  elevation: 2.0,
-                                  color: Colors.white,
-                                  textColor: Colors.black,
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 2.0,
+                                    primary: Colors.white,
+                                    onPrimary: Colors.black,
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width * 0.8,
+                                        50.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  ),
                                   child: Text('Begin Now',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17))))),
-                    )))
+                    ))
             ],
           ),
         ),

@@ -220,7 +220,7 @@ class TermsInfo extends StatelessWidget {
                   style: CarriageTheme.body),
               Material(
                 type: MaterialType.transparency,
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () => openGuidelines(),
                     child: Text('CULift guidelines',
                         style: TextStyle(
@@ -510,38 +510,37 @@ class _EditNameState extends State<EditName> {
                       ])),
               Spacer(),
               Container(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.8,
-                      height: 50.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: RaisedButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              setState(() {
-                                requestedUpdate = true;
-                              });
-                              userInfoProvider.setNames(
-                                  AppConfig.of(context),
-                                  Provider.of<AuthProvider>(context,
-                                      listen: false),
-                                  firstNameCtrl.text,
-                                  lastNameCtrl.text);
-                              Navigator.pop(context);
-                            }
-                          },
+                width: double.infinity,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          setState(() {
+                            requestedUpdate = true;
+                          });
+                          userInfoProvider.setNames(
+                              AppConfig.of(context),
+                              Provider.of<AuthProvider>(context, listen: false),
+                              firstNameCtrl.text,
+                              lastNameCtrl.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
                           elevation: 3.0,
-                          color: Colors.black,
-                          textColor: Colors.white,
-                          child: Text('Update Name',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold))),
-                    ),
-                  ))
+                          primary: Colors.black,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.width * 0.8, 50.0)),
+                      child: Text('Update Name',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold))),
+                ),
+              )
             ])),
       ),
     ));
@@ -623,37 +622,36 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
                   )),
               Spacer(),
               Container(
-                  width: double.infinity,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: ButtonTheme(
-                      minWidth: MediaQuery.of(context).size.width * 0.8,
-                      height: 50.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: RaisedButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              setState(() {
-                                requestedUpdate = true;
-                              });
-                              riderProvider.setPhone(
-                                  AppConfig.of(context),
-                                  Provider.of<AuthProvider>(context,
-                                      listen: false),
-                                  phoneNumberCtrl.text);
-                              Navigator.pop(context);
-                            }
-                          },
+                width: double.infinity,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          setState(() {
+                            requestedUpdate = true;
+                          });
+                          riderProvider.setPhone(
+                              AppConfig.of(context),
+                              Provider.of<AuthProvider>(context, listen: false),
+                              phoneNumberCtrl.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
                           elevation: 3.0,
-                          color: Colors.black,
-                          textColor: Colors.white,
-                          child: Text('Update Phone Number',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold))),
-                    ),
-                  ))
+                          primary: Colors.black,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.width * 0.8, 50.0)),
+                      child: Text('Update Phone Number',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold))),
+                ),
+              )
             ])),
       ),
     ));

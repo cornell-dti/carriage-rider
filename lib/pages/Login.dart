@@ -65,25 +65,31 @@ class SignInButton extends StatelessWidget {
   Widget build(context) {
     AuthProvider authProvider = Provider.of(context);
     return Container(
-      constraints: BoxConstraints(minHeight: 48),
+      constraints: BoxConstraints(
+          minHeight: 40, minWidth: MediaQuery.of(context).size.width),
       child: ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.8,
-        child: FlatButton(
-          color: Colors.white,
-          splashColor: Colors.grey,
+        child: TextButton(
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12))),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
+                if (states.contains(MaterialState.pressed)) return Colors.grey;
+                return null;
+              })),
           onPressed: () {
             authProvider.signIn();
           },
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image(
                     image: AssetImage('assets/images/google_logo.png'),
-                    height: 20.0),
+                    height: 18.0),
                 SizedBox(
                   width: 8,
                 ),
@@ -92,7 +98,7 @@ class SignInButton extends StatelessWidget {
                   child: Text(
                     'Sign in with Google',
                     style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),

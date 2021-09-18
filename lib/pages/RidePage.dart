@@ -235,7 +235,7 @@ class CancelRideButton extends StatelessWidget {
       button: true,
       onTap: openCancelPage,
       child: ExcludeSemantics(
-        child: FlatButton(
+        child: TextButton(
           onPressed: openCancelPage,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
@@ -281,16 +281,16 @@ class RideActions extends StatelessWidget {
           context, MaterialPageRoute(builder: (context) => RequestRideLoc()));
     }
 
-    Widget editSingleButton(BuildContext context) => ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.8,
-        height: 50.0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-        child: RaisedButton(
-          elevation: 3.0,
-          color: Colors.black,
-          textColor: Colors.white,
+    Widget editSingleButton(BuildContext context) => ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              elevation: 3.0,
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10))),
+              minimumSize: Size(MediaQuery.of(context).size.width * 0.8, 50.0)),
           child: Text('Edit This Ride',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           onPressed: () {
@@ -302,19 +302,18 @@ class RideActions extends StatelessWidget {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => RequestRideLoc()));
           },
-        ));
+        );
 
-    Widget editAllButton(BuildContext context) => ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width * 0.8,
-        height: 50.0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10))),
-        child: RaisedButton(
-          elevation: 3.0,
-          color: Colors.black,
-          textColor: Colors.white,
+    Widget editAllButton(BuildContext context) => ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              elevation: 3.0,
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              minimumSize: Size(MediaQuery.of(context).size.width * 0.8, 50.0)),
           child: Text('Edit All Repeating Rides',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           onPressed: () {
@@ -327,7 +326,7 @@ class RideActions extends StatelessWidget {
                   'Editing all repeating rides failed for ride ${ride.id} with recurring=${ride.recurring} and parentRide=${ride.parentRide}');
             }
           },
-        ));
+        );
 
     Future<void> showEditDialog() async {
       visibilityCallback(false);
@@ -342,27 +341,27 @@ class RideActions extends StatelessWidget {
               editAllButton(context),
               SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.only(bottom: 32),
-                child: ButtonTheme(
-                    height: 50.0,
-                    minWidth: MediaQuery.of(context).size.width * 0.8,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: RaisedButton(
-                      elevation: 3.0,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                      child: Text('Cancel',
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red)),
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        visibilityCallback(true);
-                      },
-                    )),
-              ),
+                  padding: EdgeInsets.only(bottom: 32),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 3.0,
+                        primary: Colors.black,
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        minimumSize: Size(
+                            MediaQuery.of(context).size.width * 0.8, 50.0)),
+                    child: Text('Cancel',
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red)),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      visibilityCallback(true);
+                    },
+                  )),
             ]);
           });
     }
@@ -382,29 +381,29 @@ class RideActions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
-                child: ButtonTheme(
-                  minWidth: MediaQuery.of(context).size.width * 0.8,
-                  height: 50.0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 18),
-                    child: RaisedButton.icon(
-                        onPressed: () async {
-                          if (ride.parentRide != null || ride.recurring) {
-                            showEditDialog();
-                          } else {
-                            editSingle(context, ride);
-                          }
-                        },
-                        elevation: 3.0,
-                        color: Colors.black,
-                        textColor: Colors.white,
-                        icon: Icon(Icons.edit),
-                        label: Text('Edit Ride',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold))),
-                  ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 18),
+                  child: ElevatedButton.icon(
+                      onPressed: () async {
+                        if (ride.parentRide != null || ride.recurring) {
+                          showEditDialog();
+                        } else {
+                          editSingle(context, ride);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          elevation: 3.0,
+                          primary: Colors.black,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.width * 0.8, 50.0)),
+                      icon: Icon(Icons.edit),
+                      label: Text('Edit Ride',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold))),
                 ),
               ),
               CancelRideButton(ride)
