@@ -29,7 +29,13 @@ class Contact extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 16, right: 16, top: 8),
                     child:
-                        Text('Before 3:45pm:', style: CarriageTheme.subHeading),
+                        Semantics(
+                            header: true,
+                            child: Text(
+                                'Before 3:45pm:',
+                                style: CarriageTheme.subHeading
+                            )
+                        ),
                   ),
                   PhoneNumberRow('6072548293'),
                   ContactRow(Icons.mail, 'culift@cornell.edu',
@@ -38,7 +44,13 @@ class Contact extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 16, right: 16, top: 8),
                     child:
-                        Text('After 3:45pm:', style: CarriageTheme.subHeading),
+                        Semantics(
+                          header: true,
+                          child: Text(
+                              'After 3:45pm:',
+                              style: CarriageTheme.subHeading
+                          ),
+                        ),
                   ),
                   PhoneNumberRow('6072296010'),
                 ],
