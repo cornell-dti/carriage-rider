@@ -37,8 +37,8 @@ class RidesProvider with ChangeNotifier {
 
   _generateUpcomingRides() {
     List<Ride> recurringRides =
-    RecurringRidesGenerator(_parentRecurringRides, existingUpcomingRides)
-        .generateRecurringRides();
+        RecurringRidesGenerator(_parentRecurringRides, existingUpcomingRides)
+            .generateRecurringRides();
     upcomingRides = existingUpcomingRides;
     upcomingRides.addAll(recurringRides);
     upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
@@ -47,8 +47,8 @@ class RidesProvider with ChangeNotifier {
   /// Fetches the most current ride from the backend by using the baseUrl of [config] and the rider id from [authProvider].
   /// The current ride that is retrieved from the backend is the soonest ride
   /// within the next 30 minutes for the rider with the associated id (if it exists).
-  Future<void> _fetchCurrentRide(AppConfig config,
-      AuthProvider authProvider) async {
+  Future<void> _fetchCurrentRide(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/riders/${authProvider.id}/currentride',
@@ -64,8 +64,8 @@ class RidesProvider with ChangeNotifier {
   /// Fetches a list of have already occurred from the backend by using the baseUrl of [config] and rider id from [authProvider].
   /// Past rides are sorted from closest in time to farthest back in time,
   /// so past rides has the most recent ride first.
-  Future<void> _fetchPastRides(AppConfig config,
-      AuthProvider authProvider) async {
+  Future<void> _fetchPastRides(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
@@ -82,8 +82,8 @@ class RidesProvider with ChangeNotifier {
   /// Fetches a list of upcoming rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
   /// Upcoming rides are sorted from closest in time to farthest forward in time,
   /// so upcoming rides has the soonest ride first.
-  Future<void> _fetchExistingUpcomingRides(AppConfig config,
-      AuthProvider authProvider) async {
+  Future<void> _fetchExistingUpcomingRides(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
@@ -96,8 +96,8 @@ class RidesProvider with ChangeNotifier {
   }
 
   /// Fetches a list of recurring rides from the backend by using the baseUrl of [config] and rider id from [authProvider].
-  Future<void> _fetchParentRecurringRides(AppConfig config,
-      AuthProvider authProvider) async {
+  Future<void> _fetchParentRecurringRides(
+      AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
         '${config.baseUrl}/rides/repeating?rider=${authProvider.id}',
@@ -132,8 +132,8 @@ class RidesProvider with ChangeNotifier {
   /// Fetches past rides, upcoming rides, and current ride from the backend.
   /// Uses AppConfig [config] and AuthProvider [authProvider] to pass in as arguments for each
   /// ride fetching helper function. Notifies client if the object containing rides may have changed.
-  Future<void> fetchAllRides(AppConfig config,
-      AuthProvider authProvider) async {
+  Future<void> fetchAllRides(
+      AppConfig config, AuthProvider authProvider) async {
     await _fetchCurrentRide(config, authProvider);
     await _fetchPastRides(config, authProvider);
     await _fetchExistingUpcomingRides(config, authProvider);
@@ -147,37 +147,43 @@ class RidesProvider with ChangeNotifier {
 
   Future<void> cancelRide(BuildContext context, Ride ride) async {
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
-    http.Response response = await http.delete(
-        config.baseUrl + '/rides/${ride.id}',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
-        });
+    http.Response response = await http
+        .delete(config.baseUrl + '/rides/${ride.id}', headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete instance of recurring ride: ${response.body}');
+      throw Exception(
+          'Failed to delete instance of recurring ride: ${response.body}');
     }
     fetchAllRides(config, authProvider);
   }
 
-  Future<void> cancelRepeatingRideOccurrence(BuildContext context, Ride origRide) async {
+  Future<void> cancelRepeatingRideOccurrence(
+      BuildContext context, Ride origRide) async {
     AppConfig config = AppConfig.of(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
     Map<String, dynamic> request = <String, dynamic>{
       'id': origRide.id,
       'deleteOnly': true,
-      'origDate': DateFormat('yyyy-MM-dd').format(origRide.origDate != null ? origRide.origDate : origRide.startTime),
+      'origDate': DateFormat('yyyy-MM-dd').format(
+          origRide.origDate != null ? origRide.origDate : origRide.startTime),
     };
-    final response = await http.put('${config.baseUrl}/rides/${origRide.parentRide != null ? origRide.parentRide.id : origRide.id}/edits',
+    final response = await http.put(
+        '${config.baseUrl}/rides/${origRide.parentRide != null ? origRide.parentRide.id : origRide.id}/edits',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'
         },
         body: jsonEncode(request));
     if (response.statusCode != 200) {
-      throw Exception('Failed to cancel instance of recurring ride: ${response.body}');
+      throw Exception(
+          'Failed to cancel instance of recurring ride: ${response.body}');
     }
     fetchAllRides(config, authProvider);
   }

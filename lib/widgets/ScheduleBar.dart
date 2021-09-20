@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ScheduleBar extends StatelessWidget implements PreferredSizeWidget {
-
   ScheduleBar(this.textColor, this.backgroundColor);
   final Color textColor;
   final Color backgroundColor;

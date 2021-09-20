@@ -10,7 +10,6 @@ import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 
 class ReviewRide extends StatefulWidget {
-
   ReviewRide({Key key}) : super(key: key);
 
   @override
@@ -22,7 +21,8 @@ class _ReviewRideState extends State<ReviewRide> {
 
   @override
   Widget build(context) {
-    RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context, listen: false);
+    RideFlowProvider rideFlowProvider =
+        Provider.of<RideFlowProvider>(context, listen: false);
 
     double buttonsHeight = 48;
     double buttonsVerticalPadding = 16;
@@ -38,7 +38,11 @@ class _ReviewRideState extends State<ReviewRide> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
+                  margin: EdgeInsets.only(
+                      top: 24,
+                      left: 20.0,
+                      right: 20.0,
+                      bottom: buttonsHeight + 2 * buttonsVerticalPadding + 40),
                   child: Column(
                     children: <Widget>[
                       FlowCancel(),
@@ -59,7 +63,11 @@ class _ReviewRideState extends State<ReviewRide> {
                           colorTwo: Colors.green,
                           colorThree: Colors.black),
                       SizedBox(height: 30),
-                      ride.buildSummary(context, (rideFlowProvider.creating() && rideFlowProvider.recurring) || rideFlowProvider.editingAll()),
+                      ride.buildSummary(
+                          context,
+                          (rideFlowProvider.creating() &&
+                                  rideFlowProvider.recurring) ||
+                              rideFlowProvider.editingAll()),
                     ],
                   ),
                 ),
@@ -67,48 +75,49 @@ class _ReviewRideState extends State<ReviewRide> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: buttonsVerticalPadding),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16, vertical: buttonsVerticalPadding),
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            spreadRadius: 5,
-                            blurRadius: 11,
-                            color: Colors.black.withOpacity(0.11))
-                      ]
-                  ),
-                  child: Row(
-                      children: [
-                        BackArrowButton(buttonsHeight),
-                        SizedBox(width: 24),
-                        Expanded(
-                          child: CButton(
-                            text: rideFlowProvider.creating() ? 'Send Request' : 'Update Request',
-                            height: buttonsHeight,
-                            onPressed: () async {
-                              setState(() {
-                                requestLoading = true;
-                              });
-                              bool successfulRequest = await rideFlowProvider.request(context);
-                              if (successfulRequest) {
-                                Navigator.pushReplacement(context, MaterialPageRoute(
-                                    builder: (context) => RideConfirmation()
-                                ));
-                                rideFlowProvider.clear();
-                              }
-                              else {
-                                rideFlowProvider.setError(true);
-                                SemanticsService.announce('An error occurred, please enter valid locations.', TextDirection.ltr);
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                              }
-                            },
-                          ),
-                        )
-                      ]
-                  ),
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 5,
+                        blurRadius: 11,
+                        color: Colors.black.withOpacity(0.11))
+                  ]),
+                  child: Row(children: [
+                    BackArrowButton(buttonsHeight),
+                    SizedBox(width: 24),
+                    Expanded(
+                      child: CButton(
+                        text: rideFlowProvider.creating()
+                            ? 'Send Request'
+                            : 'Update Request',
+                        height: buttonsHeight,
+                        onPressed: () async {
+                          setState(() {
+                            requestLoading = true;
+                          });
+                          bool successfulRequest =
+                              await rideFlowProvider.request(context);
+                          if (successfulRequest) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RideConfirmation()));
+                            rideFlowProvider.clear();
+                          } else {
+                            rideFlowProvider.setError(true);
+                            SemanticsService.announce(
+                                'An error occurred, please enter valid locations.',
+                                TextDirection.ltr);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      ),
+                    )
+                  ]),
                 ),
               )
             ],

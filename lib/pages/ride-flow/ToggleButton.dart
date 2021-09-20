@@ -16,9 +16,7 @@ class ToggleButton extends StatelessWidget {
         width: 50.0,
         height: 50.0,
       ),
-      shape: CircleBorder(
-        side: BorderSide(color: Colors.grey)
-      ),
+      shape: CircleBorder(side: BorderSide(color: Colors.grey)),
       fillColor: selected ? Colors.black : Colors.white,
       child: Semantics(
         checked: selected,

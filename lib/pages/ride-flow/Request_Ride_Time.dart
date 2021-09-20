@@ -21,7 +21,6 @@ DateTime firstPossibleRideDate() {
 }
 
 class RequestRideType extends StatefulWidget {
-
   RequestRideType({Key key}) : super(key: key);
 
   @override
@@ -39,81 +38,80 @@ class _RequestRideTypeState extends State<RequestRideType> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Container(
-              margin: EdgeInsets.only(top: 40.0, left: horizPadding, right: horizPadding),
-              child: Column(
+          margin: EdgeInsets.only(
+              top: 40.0, left: horizPadding, right: horizPadding),
+          child: Column(
+            children: <Widget>[
+              FlowCancel(),
+              SizedBox(height: 20.0),
+              Row(
                 children: <Widget>[
-                  FlowCancel(),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text('Date & Time', style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  TabBarTop(
-                      colorOne: Colors.black,
-                      colorTwo: Colors.black,
-                      colorThree: Colors.grey[350]),
-                  TabBarBot(
-                      colorOne: Colors.green,
-                      colorTwo: Colors.black,
-                      colorThree: Colors.grey[350]),
-                  SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text('Is this a repeating ride? (1/2)',
-                            style: CarriageTheme.title1),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 40.0),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SelectionButton(
-                          text: 'Yes',
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: 48,
-                          onPressed: () {
-                            rideFlowProvider.setRecurring(true);
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => RequestRideDateTime()
-                            ));
-                          },
-                        ),
-                        SizedBox(width: buttonSpacing),
-                        SelectionButton(
-                            text: 'No',
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: 48,
-                            onPressed: () {
-                              rideFlowProvider.setRecurring(false);
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => RequestRideDateTime()
-                              ));
-                            }
-                        )
-                      ]
-                  ),
-                  Expanded(
-                    child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: BackArrowButton(50),
-                        )
-                    ),
+                  Flexible(
+                    child: Text('Date & Time', style: CarriageTheme.title1),
                   )
                 ],
               ),
-            )));
+              TabBarTop(
+                  colorOne: Colors.black,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              TabBarBot(
+                  colorOne: Colors.green,
+                  colorTwo: Colors.black,
+                  colorThree: Colors.grey[350]),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('Is this a repeating ride? (1/2)',
+                        style: CarriageTheme.title1),
+                  )
+                ],
+              ),
+              SizedBox(height: 40.0),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SelectionButton(
+                      text: 'Yes',
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 48,
+                      onPressed: () {
+                        rideFlowProvider.setRecurring(true);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RequestRideDateTime()));
+                      },
+                    ),
+                    SizedBox(width: buttonSpacing),
+                    SelectionButton(
+                        text: 'No',
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 48,
+                        onPressed: () {
+                          rideFlowProvider.setRecurring(false);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RequestRideDateTime()));
+                        })
+                  ]),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: BackArrowButton(50),
+                    )),
+              )
+            ],
+          ),
+        )));
   }
 }
 
 class RequestRideDateTime extends StatefulWidget {
-
   RequestRideDateTime({Key key}) : super(key: key);
 
   @override
@@ -142,7 +140,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     });
   }
 
-  Future<void> selectTime(BuildContext context, TimeOfDay init, Function selectCallback) async {
+  Future<void> selectTime(
+      BuildContext context, TimeOfDay init, Function selectCallback) async {
     TimeOfDay selection = await showTimePicker(
       context: context,
       initialTime: init,
@@ -152,7 +151,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
   }
 
-  Future<void> selectDate(BuildContext context, DateTime init, Function selectCallback) async {
+  Future<void> selectDate(
+      BuildContext context, DateTime init, Function selectCallback) async {
     final DateTime selection = await showDatePicker(
       context: context,
       initialDate: init,
@@ -180,11 +180,15 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
   @override
   Widget build(BuildContext context) {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    bool showRecurringFields = (rideFlowProvider.creating() && rideFlowProvider.recurring) || rideFlowProvider.editingAll();
+    bool showRecurringFields =
+        (rideFlowProvider.creating() && rideFlowProvider.recurring) ||
+            rideFlowProvider.editingAll();
 
-    Widget buildInputField(TextEditingController ctrl, String label, String errorInfo, Function onTap) {
+    Widget buildInputField(TextEditingController ctrl, String label,
+        String errorInfo, Function onTap) {
       bool hasText = ctrl.text != null && ctrl.text != '';
-      String labelInfo = hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
+      String labelInfo =
+          hasText ? 'Selected $label: ${ctrl.text}' : 'Select $label';
       String semanticsLabel = labelInfo;
       bool hasError = errorInfo != null && errorInfo.isNotEmpty;
       if (hasError) {
@@ -198,43 +202,47 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
           button: true,
           child: ExcludeSemantics(
               child: Column(
-                children: [
-                  TextFormField(
-                    controller: ctrl,
-                    enableInteractiveSelection: false,
-                    focusNode: AlwaysDisabledFocusNode(),
-                    onTap: onTap,
-                    decoration: InputDecoration(
-                        errorMaxLines: 3,
-                        labelText: label,
-                        labelStyle: TextStyle(
-                            color: Colors.grey, fontSize: 17
-                        ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: hasError ? Colors.red : Colors.grey),
-                      ),
-                    ),
-                    style: TextStyle(color: Colors.black, fontSize: 15),
+            children: [
+              TextFormField(
+                controller: ctrl,
+                enableInteractiveSelection: false,
+                focusNode: AlwaysDisabledFocusNode(),
+                onTap: onTap,
+                decoration: InputDecoration(
+                  errorMaxLines: 3,
+                  labelText: label,
+                  labelStyle: TextStyle(color: Colors.grey, fontSize: 17),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: hasError ? Colors.red : Colors.grey),
                   ),
-                  hasError ? Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text(errorInfo, style: TextStyle(color: Colors.red),),
-                  ) : Container()
-                ],
-              )
-          )
-      );
+                ),
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+              hasError
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        errorInfo,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    )
+                  : Container()
+            ],
+          )));
     }
 
     String validateStartDate(bool checkEmpty) {
       String error;
       if (rideFlowProvider.startDate != null) {
-        if (showRecurringFields && rideFlowProvider.endDate != null && rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
+        if (showRecurringFields &&
+            rideFlowProvider.endDate != null &&
+            rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
           error = 'Start date must be before end date';
         }
-      }
-      else if (checkEmpty) {
-        error = 'Please enter the ' + (rideFlowProvider.recurring ? 'start date' : 'date');
+      } else if (checkEmpty) {
+        error = 'Please enter the ' +
+            (rideFlowProvider.recurring ? 'start date' : 'date');
       }
       startDateError = error;
       return error;
@@ -248,8 +256,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
               rideFlowProvider.startDate.isAfter(rideFlowProvider.endDate)) {
             error = 'End date must be after start date';
           }
-        }
-        else if (checkEmpty) {
+        } else if (checkEmpty) {
           error = 'Please enter the end date';
         }
       }
@@ -258,7 +265,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     Future<void> selectStartDate() async {
-      await selectDate(context, rideFlowProvider.startDate == null ? firstPossibleRideDate() : rideFlowProvider.startDate, (DateTime selection) {
+      await selectDate(
+          context,
+          rideFlowProvider.startDate == null
+              ? firstPossibleRideDate()
+              : rideFlowProvider.startDate, (DateTime selection) {
         rideFlowProvider.setStartDate(selection);
         setState(() {
           startDateError = validateStartDate(true);
@@ -268,7 +279,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     Future<void> selectEndDate() async {
-      await selectDate(context, rideFlowProvider.endDate == null ? firstPossibleRideDate() : rideFlowProvider.endDate, (DateTime selection) {
+      await selectDate(
+          context,
+          rideFlowProvider.endDate == null
+              ? firstPossibleRideDate()
+              : rideFlowProvider.endDate, (DateTime selection) {
         rideFlowProvider.setEndDate(selection);
         setState(() {
           startDateError = validateStartDate(false);
@@ -280,11 +295,12 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     String validateStartTime(bool checkEmpty) {
       String error;
       if (rideFlowProvider.pickUpTime != null) {
-        if (rideFlowProvider.dropOffTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
+        if (rideFlowProvider.dropOffTime != null &&
+            timeToDouble(rideFlowProvider.pickUpTime) >=
+                timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'Start time must be before end time';
         }
-      }
-      else if (checkEmpty) {
+      } else if (checkEmpty) {
         error = 'Please enter your pickup time';
       }
       startTimeError = error;
@@ -293,12 +309,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
     String validateEndTime(bool checkEmpty) {
       String error;
-      if (rideFlowProvider.dropOffTime != null ) {
-        if (rideFlowProvider.pickUpTime != null && timeToDouble(rideFlowProvider.pickUpTime) >= timeToDouble(rideFlowProvider.dropOffTime)) {
+      if (rideFlowProvider.dropOffTime != null) {
+        if (rideFlowProvider.pickUpTime != null &&
+            timeToDouble(rideFlowProvider.pickUpTime) >=
+                timeToDouble(rideFlowProvider.dropOffTime)) {
           error = 'End time must be after start time';
         }
-      }
-      else if (checkEmpty) {
+      } else if (checkEmpty) {
         error = 'Please enter your drop-off time';
       }
       endTimeError = error;
@@ -306,7 +323,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectStartTime() {
-      selectTime(context, rideFlowProvider.pickUpTime == null ? TimeOfDay.now() : rideFlowProvider.pickUpTime, (TimeOfDay selection) {
+      selectTime(
+          context,
+          rideFlowProvider.pickUpTime == null
+              ? TimeOfDay.now()
+              : rideFlowProvider.pickUpTime, (TimeOfDay selection) {
         rideFlowProvider.setPickUpTime(selection, context);
         setState(() {
           startTimeError = validateStartTime(true);
@@ -316,7 +337,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
     }
 
     void selectEndTime() {
-      selectTime(context, rideFlowProvider.dropOffTime == null ? TimeOfDay.now() : rideFlowProvider.dropOffTime, (selection) {
+      selectTime(
+          context,
+          rideFlowProvider.dropOffTime == null
+              ? TimeOfDay.now()
+              : rideFlowProvider.dropOffTime, (selection) {
         rideFlowProvider.setDropOffTime(selection, context);
         setState(() {
           startTimeError = validateStartTime(false);
@@ -329,29 +354,16 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
         rideFlowProvider.startDateCtrl,
         rideFlowProvider.recurring ? 'Start Date' : 'Date',
         startDateError,
-        selectStartDate
-    );
+        selectStartDate);
 
     Widget endDateInput() => buildInputField(
-        rideFlowProvider.endDateCtrl,
-        'End Date',
-        endDateError,
-        selectEndDate
-    );
+        rideFlowProvider.endDateCtrl, 'End Date', endDateError, selectEndDate);
 
-    Widget startTimeInput() => buildInputField(
-        rideFlowProvider.pickUpTimeCtrl,
-        'Pickup Time',
-        startTimeError,
-        selectStartTime
-    );
+    Widget startTimeInput() => buildInputField(rideFlowProvider.pickUpTimeCtrl,
+        'Pickup Time', startTimeError, selectStartTime);
 
-    Widget endTimeInput() => buildInputField(
-        rideFlowProvider.dropOffTimeCtrl,
-        'Drop-off Time',
-        endTimeError,
-        selectEndTime
-    );
+    Widget endTimeInput() => buildInputField(rideFlowProvider.dropOffTimeCtrl,
+        'Drop-off Time', endTimeError, selectEndTime);
 
     bool allValid(bool checkEndDate) {
       bool validStartTime = validateStartTime(true) == null;
@@ -360,6 +372,7 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
       bool validEndDate = checkEndDate ? (validateEndDate(true) == null) : true;
       return validStartDate && validEndDate && validStartTime && validEndTime;
     }
+
     double buttonsHeight = 48;
     double buttonsVerticalPadding = 16;
 
@@ -370,7 +383,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(top: 24, left: 20.0, right: 20.0, bottom: buttonsHeight + 2*buttonsVerticalPadding + 40),
+                  margin: EdgeInsets.only(
+                      top: 24,
+                      left: 20.0,
+                      right: 20.0,
+                      bottom: buttonsHeight + 2 * buttonsVerticalPadding + 40),
                   child: Column(
                     children: <Widget>[
                       FlowCancel(),
@@ -378,7 +395,8 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       Row(
                         children: <Widget>[
                           Flexible(
-                            child: Text('Date & Time', style: CarriageTheme.title1),
+                            child: Text('Date & Time',
+                                style: CarriageTheme.title1),
                           )
                         ],
                       ),
@@ -403,84 +421,125 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       Row(
                         children: <Widget>[
                           Text('Date & Time',
-                              style:
-                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                       Form(
                         key: _formKey,
-                        child: showRecurringFields ? Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    margin: EdgeInsets.only(left: 15.0),
-                                    child: startDateInput()
-                                ),
-                                SizedBox(width: 30),
-                                Container(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    margin: EdgeInsets.only(right: 15.0),
-                                    child: endDateInput()
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.0),
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    margin: EdgeInsets.only(left: 15.0),
-                                    child: startTimeInput()),
-                                SizedBox(width: 30.0),
-                                Container(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    margin: EdgeInsets.only(right: 15.0),
-                                    child: endTimeInput()),
-                              ],
-                            )
-                          ],
-                        ) : Column(
-                          children: [
-                            startDateInput(),
-                            SizedBox(height: 20.0),
-                            startTimeInput(),
-                            SizedBox(height: 20.0),
-                            endTimeInput()
-                          ],
-                        ),
+                        child: showRecurringFields
+                            ? Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          margin: EdgeInsets.only(left: 15.0),
+                                          child: startDateInput()),
+                                      SizedBox(width: 30),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          margin: EdgeInsets.only(right: 15.0),
+                                          child: endDateInput()),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          margin: EdgeInsets.only(left: 15.0),
+                                          child: startTimeInput()),
+                                      SizedBox(width: 30.0),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          margin: EdgeInsets.only(right: 15.0),
+                                          child: endTimeInput()),
+                                    ],
+                                  )
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  startDateInput(),
+                                  SizedBox(height: 20.0),
+                                  startTimeInput(),
+                                  SizedBox(height: 20.0),
+                                  endTimeInput()
+                                ],
+                              ),
                       ),
-                      showRecurringFields ? Column(
-                          children: [
-                            SizedBox(height: 30.0),
-                            Row(
-                              children: <Widget>[
-                                Text('Repeat Days',
-                                    style:
-                                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                            Row(
-                              children: [
-                                ToggleButton(rideFlowProvider.repeatDaysSelected[0], () => toggle(rideFlowProvider, 0), 'M', 'Mondays'),
-                                SizedBox(width: 15),
-                                ToggleButton(rideFlowProvider.repeatDaysSelected[1], () => toggle(rideFlowProvider, 1), 'T', 'Tuesdays'),
-                                SizedBox(width: 15),
-                                ToggleButton(rideFlowProvider.repeatDaysSelected[2], () => toggle(rideFlowProvider, 2), 'W', 'Wednesdays'),
-                                SizedBox(width: 15),
-                                ToggleButton(rideFlowProvider.repeatDaysSelected[3], () => toggle(rideFlowProvider, 3), 'Th', 'Thursdays'),
-                                SizedBox(width: 15),
-                                ToggleButton(rideFlowProvider.repeatDaysSelected[4], () => toggle(rideFlowProvider, 4), 'F', 'Fridays'),
-                              ],
-                            ),
-                            showSelectionError && rideFlowProvider.repeatDaysSelected.indexOf(true) == -1 ? Padding(
-                              padding: EdgeInsets.only(top: 8),
-                              child: Text('Select at least one day.', semanticsLabel: 'Error, please select at least one day for the ride to repeat on.', style: TextStyle(color: Colors.red)),
-                            ) : Container(),
-                          ]
-                      ) : Container(),
+                      showRecurringFields
+                          ? Column(children: [
+                              SizedBox(height: 30.0),
+                              Row(
+                                children: <Widget>[
+                                  Text('Repeat Days',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  ToggleButton(
+                                      rideFlowProvider.repeatDaysSelected[0],
+                                      () => toggle(rideFlowProvider, 0),
+                                      'M',
+                                      'Mondays'),
+                                  SizedBox(width: 15),
+                                  ToggleButton(
+                                      rideFlowProvider.repeatDaysSelected[1],
+                                      () => toggle(rideFlowProvider, 1),
+                                      'T',
+                                      'Tuesdays'),
+                                  SizedBox(width: 15),
+                                  ToggleButton(
+                                      rideFlowProvider.repeatDaysSelected[2],
+                                      () => toggle(rideFlowProvider, 2),
+                                      'W',
+                                      'Wednesdays'),
+                                  SizedBox(width: 15),
+                                  ToggleButton(
+                                      rideFlowProvider.repeatDaysSelected[3],
+                                      () => toggle(rideFlowProvider, 3),
+                                      'Th',
+                                      'Thursdays'),
+                                  SizedBox(width: 15),
+                                  ToggleButton(
+                                      rideFlowProvider.repeatDaysSelected[4],
+                                      () => toggle(rideFlowProvider, 4),
+                                      'F',
+                                      'Fridays'),
+                                ],
+                              ),
+                              showSelectionError &&
+                                      rideFlowProvider.repeatDaysSelected
+                                              .indexOf(true) ==
+                                          -1
+                                  ? Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text('Select at least one day.',
+                                          semanticsLabel:
+                                              'Error, please select at least one day for the ride to repeat on.',
+                                          style: TextStyle(color: Colors.red)),
+                                    )
+                                  : Container(),
+                            ])
+                          : Container(),
                     ],
                   ),
                 ),
@@ -488,44 +547,45 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: buttonsVerticalPadding),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16, vertical: buttonsVerticalPadding),
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            spreadRadius: 5,
-                            blurRadius: 11,
-                            color: Colors.black.withOpacity(0.11))
-                      ]
-                  ),
-                  child: Row(
-                      children: [
-                        BackArrowButton(buttonsHeight),
-                        SizedBox(width: 24),
-                        Expanded(
-                          child: CButton(
-                            text: 'Set Date & Time',
-                            height: buttonsHeight,
-                            onPressed: () {
-                              if (allValid(showRecurringFields) && (showRecurringFields ? rideFlowProvider.repeatDaysSelected.indexOf(true) >= 0 : true)) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ReviewRide()
-                                    )
-                                );
-                              }
-                              else {
-                                SemanticsService.announce('Error, please check your dates and times', TextDirection.ltr);
-                                setState(() {
-                                  showSelectionError = true;
-                                });
-                              }
-                            },
-                          ),
-                        )
-                      ]
-                  ),
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 5,
+                        blurRadius: 11,
+                        color: Colors.black.withOpacity(0.11))
+                  ]),
+                  child: Row(children: [
+                    BackArrowButton(buttonsHeight),
+                    SizedBox(width: 24),
+                    Expanded(
+                      child: CButton(
+                        text: 'Set Date & Time',
+                        height: buttonsHeight,
+                        onPressed: () {
+                          if (allValid(showRecurringFields) &&
+                              (showRecurringFields
+                                  ? rideFlowProvider.repeatDaysSelected
+                                          .indexOf(true) >=
+                                      0
+                                  : true)) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReviewRide()));
+                          } else {
+                            SemanticsService.announce(
+                                'Error, please check your dates and times',
+                                TextDirection.ltr);
+                            setState(() {
+                              showSelectionError = true;
+                            });
+                          }
+                        },
+                      ),
+                    )
+                  ]),
                 ),
               )
             ],

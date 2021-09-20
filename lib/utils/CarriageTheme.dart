@@ -5,63 +5,52 @@ class CarriageTheme {
       color: Colors.black,
       fontWeight: FontWeight.w600,
       fontSize: 34,
-      letterSpacing: 0.37
-  );
+      letterSpacing: 0.37);
 
   static final TextStyle title1 = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w600,
       fontSize: 28,
-      letterSpacing: 0.36
-  );
+      letterSpacing: 0.36);
 
   static final TextStyle title2 = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 22,
-      letterSpacing: 0.35
-  );
+      letterSpacing: 0.35);
 
   static final TextStyle title3 = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w600,
       fontSize: 20,
-      letterSpacing: 0.38
-  );
+      letterSpacing: 0.38);
 
   static final TextStyle body = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w400,
       fontSize: 17,
-      letterSpacing: -0.41
-  );
+      letterSpacing: -0.41);
 
-  static final TextStyle button = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-      fontSize: 17
-  );
+  static final TextStyle button =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17);
 
   static final TextStyle subheadline = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w400,
       fontSize: 15,
-      letterSpacing: -0.24
-  );
+      letterSpacing: -0.24);
 
   static final TextStyle caption1 = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w600,
       fontSize: 11,
-      letterSpacing: 0.07
-  );
+      letterSpacing: 0.07);
 
   static final TextStyle caption2 = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w400,
       fontSize: 11,
-      letterSpacing: 0.07
-  );
+      letterSpacing: 0.07);
 
   static final subHeading = TextStyle(
       color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 20);
@@ -107,17 +96,12 @@ class CarriageTheme {
   static Color gray4 = Color.fromRGBO(155, 155, 155, 1);
 
   static final BoxShadow boxShadow = BoxShadow(
-      blurRadius: 2,
-      spreadRadius: 0,
-      color: Colors.black.withOpacity(0.25)
-  );
+      blurRadius: 2, spreadRadius: 0, color: Colors.black.withOpacity(0.25));
 
   static final BoxDecoration cardDecoration = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        boxShadow
-      ]);
+      boxShadow: [boxShadow]);
 
   static final String generatedRideID = 'INSTANCE';
 }

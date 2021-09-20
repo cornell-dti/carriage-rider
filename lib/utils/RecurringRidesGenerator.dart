@@ -47,7 +47,8 @@ class RecurringRidesGenerator {
   /// exist in backend yet.
   List<Ride> generateRecurringRides() {
     Map<String, Ride> singleRidesByID = Map();
-    singleRides.forEach((singleRide) => singleRidesByID[singleRide.id] = singleRide);
+    singleRides
+        .forEach((singleRide) => singleRidesByID[singleRide.id] = singleRide);
     List<Ride> generatedRides = [];
 
     for (Ride originalRide in parentRides) {

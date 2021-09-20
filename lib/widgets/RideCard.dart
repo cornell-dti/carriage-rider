@@ -7,9 +7,9 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 class RideCard extends StatelessWidget {
   RideCard(this.ride,
       {@required this.showConfirmation,
-        @required this.showCallDriver,
-        @required this.showArrow,
-        this.parentRideID});
+      @required this.showCallDriver,
+      @required this.showArrow,
+      this.parentRideID});
 
   final Ride ride;
   final bool showConfirmation;
@@ -26,12 +26,9 @@ class RideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     void navigateToPage() {
       Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) =>
-                  RidePage(ride))
-      );
+          context, new MaterialPageRoute(builder: (context) => RidePage(ride)));
     }
+
     return Semantics(
       button: true,
       child: Container(
@@ -40,7 +37,8 @@ class RideCard extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            customBorder:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             onTap: navigateToPage,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -52,16 +50,18 @@ class RideCard extends StatelessWidget {
                         children: <Widget>[
                           showConfirmation
                               ? (ride.type == 'active'
-                              ? Text('Ride Confirmed',
-                              style: confirmationStyle.copyWith(
-                                  color: Color(0xFF4CAF50)))
-                              : Text('Ride Requested',
-                              style: confirmationStyle.copyWith(
-                                  color: Color(0xFFFF9800))))
+                                  ? Text('Ride Confirmed',
+                                      style: confirmationStyle.copyWith(
+                                          color: Color(0xFF4CAF50)))
+                                  : Text('Ride Requested',
+                                      style: confirmationStyle.copyWith(
+                                          color: Color(0xFFFF9800))))
                               : Container(),
-                          ride.status == RideStatus.NO_SHOW ? Text('No Show',
-                              style: confirmationStyle.copyWith(
-                                  color: Color(0xFFF44336))) : Container(),
+                          ride.status == RideStatus.NO_SHOW
+                              ? Text('No Show',
+                                  style: confirmationStyle.copyWith(
+                                      color: Color(0xFFF44336)))
+                              : Container(),
                           SizedBox(height: 4),
                           ride.buildStartTime(context),
                           SizedBox(height: 16),
@@ -75,39 +75,41 @@ class RideCard extends StatelessWidget {
                           SizedBox(height: 16),
                           showCallDriver
                               ? Row(
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () =>
-                                    UrlLauncher.launch('tel://${ride.driver.phoneNumber}'),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(100),
-                                        border: Border.all(
-                                            width: 0.5,
-                                            color: Colors.black
-                                                .withOpacity(0.25))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: Icon(Icons.phone,
-                                          size: 20, color: Color(0xFF9B9B9B)),
-                                    )),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('Driver',
-                                      style: TextStyle(fontSize: 11)),
-                                  Text(
-                                      ride.type == 'active'
-                                          ? 'Confirmed'
-                                          : 'TBD',
-                                      style: CarriageTheme.rideInfoStyle)
-                                ],
-                              )
-                            ],
-                          )
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () => UrlLauncher.launch(
+                                          'tel://${ride.driver.phoneNumber}'),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              border: Border.all(
+                                                  width: 0.5,
+                                                  color: Colors.black
+                                                      .withOpacity(0.25))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Icon(Icons.phone,
+                                                size: 20,
+                                                color: Color(0xFF9B9B9B)),
+                                          )),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text('Driver',
+                                            style: TextStyle(fontSize: 11)),
+                                        Text(
+                                            ride.type == 'active'
+                                                ? 'Confirmed'
+                                                : 'TBD',
+                                            style: CarriageTheme.rideInfoStyle)
+                                      ],
+                                    )
+                                  ],
+                                )
                               : Container()
                         ]),
                   ),

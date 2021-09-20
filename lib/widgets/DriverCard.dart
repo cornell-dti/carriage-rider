@@ -31,7 +31,8 @@ class DriverCard extends StatelessWidget {
             label: 'Your driver',
             child: Container(
               child: ride.driver == null || ride.driver.photoLink == null
-                  ? Icon(Icons.account_circle, size: 64, color: CarriageTheme.gray4)
+                  ? Icon(Icons.account_circle,
+                      size: 64, color: CarriageTheme.gray4)
                   : ExcludeSemantics(child: ride.driver.profilePicture(70)),
             ),
           ),
@@ -53,14 +54,15 @@ class DriverCard extends StatelessWidget {
                           Semantics(
                             button: true,
                             label: 'Call driver',
-                            onTap: () => launch('tel://${ride.driver.phoneNumber}'),
+                            onTap: () =>
+                                launch('tel://${ride.driver.phoneNumber}'),
                             child: Container(
                               width: 48,
                               height: 48,
                               decoration: buttonDecoration,
                               child: ExcludeSemantics(
-                                child: Icon(Icons.phone, size: 24, color: color)
-                              ),
+                                  child: Icon(Icons.phone,
+                                      size: 24, color: color)),
                             ),
                           ),
                           SizedBox(width: 8),
