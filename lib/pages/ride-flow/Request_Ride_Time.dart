@@ -49,7 +49,8 @@ class _RequestRideTypeState extends State<RequestRideType> {
                   Flexible(
                     child: Semantics(
                         header: true,
-                        child: Text('Date & Time', style: CarriageTheme.title1)),
+                        child:
+                            Text('Date & Time', style: CarriageTheme.title1)),
                   )
                 ],
               ),

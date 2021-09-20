@@ -545,16 +545,16 @@ class _HomeState extends State<Home> {
       );
     }
 
-    Widget createDrawerOption(BuildContext context, IconData icon, String text, Widget page) {
+    Widget createDrawerOption(
+        BuildContext context, IconData icon, String text, Widget page) {
       return Semantics(
         button: true,
         child: ListTile(
           leading: Icon(icon, color: Colors.black),
           title: sideBarText(text, Colors.black),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => page)
-            );
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => page));
           },
         ),
       );
@@ -567,21 +567,17 @@ class _HomeState extends State<Home> {
           child: ListView(
             padding: EdgeInsets.all(5.0),
             children: <Widget>[
-              createDrawerOption(
-                  context, Icons.person, 'Profile', Profile()
+              createDrawerOption(context, Icons.person, 'Profile', Profile()),
+              Divider(
+                color: Colors.grey[500],
               ),
+              createDrawerOption(context, Icons.notifications, 'Notifications',
+                  Notifications()),
               Divider(
                 color: Colors.grey[500],
               ),
               createDrawerOption(
-                  context, Icons.notifications, 'Notifications', Notifications()
-              ),
-              Divider(
-                color: Colors.grey[500],
-              ),
-              createDrawerOption(
-                  context, Icons.help_outline, 'Contact', Contact()
-              ),
+                  context, Icons.help_outline, 'Contact', Contact()),
             ],
           ),
         ),
