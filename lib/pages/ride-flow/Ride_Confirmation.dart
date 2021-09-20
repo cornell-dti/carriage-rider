@@ -38,12 +38,15 @@ class _RideConfirmationState extends State<RideConfirmation> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Expanded(
-                  child: Text(
-                      rideFlowProvider.creating()
-                          ? 'Your request is in progress!'
-                          : 'Your changes are in progress!',
-                      textAlign: TextAlign.center,
-                      style: CarriageTheme.title3),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                        rideFlowProvider.creating()
+                            ? 'Your request is in progress!'
+                            : 'Your changes are in progress!',
+                        textAlign: TextAlign.center,
+                        style: CarriageTheme.title3),
+                  ),
                 )
               ],
             ),

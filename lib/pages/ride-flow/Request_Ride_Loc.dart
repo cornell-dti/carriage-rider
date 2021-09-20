@@ -52,7 +52,10 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                     Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text('Location', style: CarriageTheme.title1),
+                          child: Semantics(
+                            header: true,
+                            child: Text('Location', style: CarriageTheme.title1)
+                          ),
                         )
                       ],
                     ),
@@ -257,7 +260,9 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
               child: Container(
                 width: double.infinity,
                 child: Semantics(
-                  label: name + ', ' + address,
+                  button: true,
+                  label: !locationsProvider.isPreset(suggestions[index]) ?
+                    name + ', ' + address : name,
                   child: ExcludeSemantics(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,12 +270,15 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                           SizedBox(height: 16),
                           Text(name,
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                                  fontSize: 15, fontWeight: FontWeight.bold
+                              )
+                          ),
                           !locationsProvider.isPreset(suggestions[index])
                               ? Text(address,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12))
-                              : Container(),
+                                      color: Colors.grey, fontSize: 12
+                                  )
+                          ) : Container(),
                           SizedBox(height: 16),
                         ]),
                   ),
@@ -301,16 +309,19 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
               children: <Widget>[
                 BackText(),
                 SizedBox(height: 20.0),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: widget.isToLocation
-                          ? Text('Where do you want to be dropped off?',
-                              style: CarriageTheme.title1)
-                          : Text('Where do you want to be picked up?',
-                              style: CarriageTheme.title1),
-                    )
-                  ],
+                Semantics(
+                  header: true,
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: widget.isToLocation
+                            ? Text('Where do you want to be dropped off?',
+                                style: CarriageTheme.title1)
+                            : Text('Where do you want to be picked up?',
+                                style: CarriageTheme.title1),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 LocationField(
