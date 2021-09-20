@@ -53,9 +53,9 @@ class _RequestRideLocState extends State<RequestRideLoc> {
                       children: <Widget>[
                         Flexible(
                           child: Semantics(
-                            header: true,
-                            child: Text('Location', style: CarriageTheme.title1)
-                          ),
+                              header: true,
+                              child: Text('Location',
+                                  style: CarriageTheme.title1)),
                         )
                       ],
                     ),
@@ -261,8 +261,9 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                 width: double.infinity,
                 child: Semantics(
                   button: true,
-                  label: !locationsProvider.isPreset(suggestions[index]) ?
-                    name + ', ' + address : name,
+                  label: !locationsProvider.isPreset(suggestions[index])
+                      ? name + ', ' + address
+                      : name,
                   child: ExcludeSemantics(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,15 +271,12 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                           SizedBox(height: 16),
                           Text(name,
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold
-                              )
-                          ),
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
                           !locationsProvider.isPreset(suggestions[index])
                               ? Text(address,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12
-                                  )
-                          ) : Container(),
+                                      color: Colors.grey, fontSize: 12))
+                              : Container(),
                           SizedBox(height: 16),
                         ]),
                   ),
