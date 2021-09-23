@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>carriage_rider</string>
+	<string>carriagerider</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -19,31 +19,30 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-<array>
-	<dict>
-    			<key>CFBundleTypeRole</key>
-    			<string>Editor</string>
-    			<key>CFBundleURLSchemes</key>
-    			<array>
-    				<string>com.googleusercontent.apps.241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c</string>
-    			</array>
-    		</dict>
-    		<dict>
-            			<key>CFBundleTypeRole</key>
-            			<string>Editor</string>
-            			<key>CFBundleURLSchemes</key>
-            			<array>
-            				<string>com.carriage.carriageRider</string>
-            			</array>
-            		</dict>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.cornelldti.carriagerider</string>
+			</array>
+		</dict>
 	</array>
-
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Need to upload image</string>
-    <key>NSCameraUsageDescription</key>
-    <string>Need to upload image</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Need to upload image</string>
+	<string>Need to upload image</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Need to upload image</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need to upload image</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -69,4 +68,3 @@
 	<false/>
 </dict>
 </plist>
-
