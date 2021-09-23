@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c.apps.googleusercontent.com</string>
+	<string>241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c</string>
+	<string>com.googleusercontent.apps.241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>241748771473-f9t7p3d01hpo30v8jl2j0qrvhq53ff1t.apps.googleusercontent.com</string>
+	<string>241748771473-0u1ehopjsrlukovm0ul4c5hhg8nam59f.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyA4HttjUBAvzy_RD40Ud7Gjuw3MfWTdH3A</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.carriage.carriageRider</string>
+	<string>com.cornelldti.carriagerider</string>
 	<key>PROJECT_ID</key>
 	<string>flutter-tutorial-256318</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:241748771473:ios:478ee69cb1fb76e95cb530</string>
+	<string>1:241748771473:ios:32ebfaa50082c1035cb530</string>
 	<key>DATABASE_URL</key>
 	<string>https://flutter-tutorial-256318.firebaseio.com</string>
 </dict>
