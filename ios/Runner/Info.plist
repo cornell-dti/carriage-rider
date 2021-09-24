@@ -28,14 +28,6 @@
 				<string>com.googleusercontent.apps.241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.cornelldti.carriagerider</string>
-			</array>
-		</dict>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to upload image</string>
