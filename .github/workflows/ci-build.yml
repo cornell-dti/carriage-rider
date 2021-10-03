@@ -1,5 +1,5 @@
-name: CI
-on: pull-request
+name: CI Build
+on: pull_request
 
 jobs:
   android:
