@@ -2,7 +2,7 @@ name: CI
 on: push
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -22,5 +22,3 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Build
-        run: flutter build apk
