@@ -17,7 +17,7 @@ jobs:
       - name: Get
         run: flutter pub get
       - name: Build
-        run: flutter build apk
+        run: flutter build appbundle
   ios:
     runs-on: macos-latest
     steps:
@@ -33,4 +33,4 @@ jobs:
       - name: Get
         run: flutter pub get
       - name: Build
-        run: flutter build ios
+        run: flutter build ipa
