@@ -268,13 +268,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
-  humanize:
-    dependency: "direct main"
-    description:
-      name: humanize
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   image:
     dependency: transitive
     description:

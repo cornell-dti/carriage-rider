@@ -1,12 +1,12 @@
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
 import 'package:carriage_rider/utils/MeasureSize.dart';
+import 'package:carriage_rider/utils/Ordinal.dart';
 import 'package:carriage_rider/widgets/DriverCard.dart';
 import 'package:carriage_rider/widgets/RecurringRideInfo.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
-import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'Cancel_Ride.dart';
