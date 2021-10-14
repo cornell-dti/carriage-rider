@@ -21,11 +21,11 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^0.1.2
   google_sign_in: ^4.4.4
-  http: ^0.12.0+2
+  http: ^0.13.0
   intl: ^0.16.1
   provider: ^4.0.5+1
   url_launcher:
-  image_picker: ^0.6.6+5
+  image_picker: ^0.7.0
   flutter_datetime_picker: ^1.4.0
   flutter_typeahead: ^1.8.8
   flutter_verification_code: ^0.2.1
@@ -35,7 +35,8 @@ dependencies:
   pull_to_refresh: 1.6.3
   custom_refresh_indicator: ^0.9.0
   overlay_support:
-  firebase_messaging:
+  firebase_messaging: ^10.0.8
+  firebase_core:
   loading_overlay: ^0.2.1
   flutter_local_notifications:
   shared_preferences:

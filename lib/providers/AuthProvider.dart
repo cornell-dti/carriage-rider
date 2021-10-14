@@ -11,7 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/app_config.dart';
 
 Future<String> auth(String baseUrl, String token, String email) async {
-  String endpoint = baseUrl + '/auth';
+  Uri endpoint = Uri.parse(baseUrl + '/auth');
   Map<String, dynamic> requestBody = {
     'token': token,
     'email': email,

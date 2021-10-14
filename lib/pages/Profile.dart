@@ -30,7 +30,7 @@ class Profile extends StatelessWidget {
 
     void selectImage() async {
       ImagePicker picker = ImagePicker();
-      PickedFile pickedFile = await picker.getImage(
+      XFile pickedFile = await picker.pickImage(
           source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
       Uint8List bytes = await File(pickedFile.path).readAsBytes();
       String base64Image = base64Encode(bytes);

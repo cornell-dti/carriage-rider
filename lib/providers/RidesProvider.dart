@@ -51,7 +51,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/riders/${authProvider.id}/currentride',
+        Uri.parse('${config.baseUrl}/riders/${authProvider.id}/currentride'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Ride ride = _rideFromJson(response.body);
@@ -68,7 +68,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/rides?type=past&rider=${authProvider.id}',
+        Uri.parse('${config.baseUrl}/rides?type=past&rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
@@ -86,7 +86,8 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}',
+        Uri.parse(
+            '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body).toList();
@@ -100,7 +101,7 @@ class RidesProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/rides/repeating?rider=${authProvider.id}',
+        Uri.parse('${config.baseUrl}/rides/repeating?rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       List<Ride> rides = _ridesFromJson(response.body);
@@ -150,11 +151,12 @@ class RidesProvider with ChangeNotifier {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     String token = await authProvider.secureStorage.read(key: 'token');
-    http.Response response = await http
-        .delete(config.baseUrl + '/rides/${ride.id}', headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: 'Bearer $token'
-    });
+    http.Response response = await http.delete(
+        Uri.parse(config.baseUrl + '/rides/${ride.id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        });
     if (response.statusCode != 200) {
       throw Exception(
           'Failed to delete instance of recurring ride: ${response.body}');
@@ -175,7 +177,8 @@ class RidesProvider with ChangeNotifier {
           origRide.origDate != null ? origRide.origDate : origRide.startTime),
     };
     final response = await http.put(
-        '${config.baseUrl}/rides/${origRide.parentRide != null ? origRide.parentRide.id : origRide.id}/edits',
+        Uri.parse(
+            '${config.baseUrl}/rides/${origRide.parentRide != null ? origRide.parentRide.id : origRide.id}/edits'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'
