@@ -60,16 +60,19 @@ class _RidePageState extends State<RidePage> {
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, bottom: 8, top: 16),
-                    child: Text(
-                        DateFormat('MMM')
-                                .format(widget.ride.startTime)
-                                .toUpperCase() +
-                            ' ' +
-                            ordinal(int.parse(DateFormat('d')
-                                .format(widget.ride.startTime))) +
-                            ' ' +
-                            DateFormat('jm').format(widget.ride.startTime),
-                        style: CarriageTheme.largeTitle),
+                    child: Semantics(
+                      header: true,
+                      child: Text(
+                          DateFormat('MMM')
+                                  .format(widget.ride.startTime)
+                                  .toUpperCase() +
+                              ' ' +
+                              ordinal(int.parse(DateFormat('d')
+                                  .format(widget.ride.startTime))) +
+                              ' ' +
+                              DateFormat('jm').format(widget.ride.startTime),
+                          style: CarriageTheme.largeTitle),
+                    ),
                   ),
                   Container(
                     color: Colors.white,

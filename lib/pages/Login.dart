@@ -27,8 +27,11 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text('Welcome to Carriage',
-                        style: TextStyle(fontSize: 33, color: Colors.white)),
+                    child: Semantics(
+                      header: true,
+                      child: Text('Welcome to Carriage',
+                          style: TextStyle(fontSize: 33, color: Colors.white)),
+                    ),
                   ),
                 ],
               ),
