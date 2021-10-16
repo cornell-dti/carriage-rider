@@ -47,9 +47,12 @@ class Profile extends StatelessWidget {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                child: Text('Your Profile', style: CarriageTheme.largeTitle),
+              Semantics(
+                header: true,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+                  child: Text('Your Profile', style: CarriageTheme.largeTitle),
+                ),
               ),
               Container(
                   decoration: BoxDecoration(
@@ -164,7 +167,7 @@ class Profile extends StatelessWidget {
                   InfoRow(
                     Icons.phone,
                     riderProvider.info.phoneNumber,
-                    'Phone number',
+                    'Edit phone number',
                     editPage: EditPhoneNumber(riderProvider.info.phoneNumber),
                     readDigits: true,
                   ),
@@ -173,7 +176,7 @@ class Profile extends StatelessWidget {
                     riderProvider.info.firstName +
                         ' ' +
                         riderProvider.info.lastName,
-                    'Name',
+                    'Edit name',
                     editPage: EditName(riderProvider.info.firstName,
                         riderProvider.info.lastName),
                   ),
@@ -373,11 +376,14 @@ class InfoGroup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(title,
-                    style: TextStyle(
-                        fontFamily: 'SFDisplay',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
+                Semantics(
+                  header: true,
+                  child: Text(title,
+                      style: TextStyle(
+                          fontFamily: 'SFDisplay',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                ),
                 ListView.separated(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
