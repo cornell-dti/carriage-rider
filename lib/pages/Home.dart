@@ -171,9 +171,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  StreamSubscription iosSubscription; // ignore: cancel_subscriptions
   AndroidNotificationChannel channel;
   FlutterLocalNotificationsPlugin notificationsPlugin;
+  NotificationSettings notifSettings;
   String deviceToken;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
@@ -182,9 +182,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    _initNotifications();
     FirebaseMessaging.onMessage.listen(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
-    _initNotifications();
     super.initState();
   }
 
@@ -212,13 +212,26 @@ class _HomeState extends State<Home> {
 
   _initNotifications() async {
     await _fcm.getToken().then((token) => deviceToken = token);
+
     if (deviceToken != null) {
       print(deviceToken);
       subscribe(deviceToken);
     }
+
     _fcm.onTokenRefresh.listen((newToken) {
       subscribe(newToken);
     });
+
+    notifSettings = await _fcm.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
@@ -230,7 +243,6 @@ class _HomeState extends State<Home> {
     notificationsPlugin = FlutterLocalNotificationsPlugin();
 
     /// Create an Android Notification Channel.
-    ///
     /// We use this channel in the `AndroidManifest.xml` file to override the
     /// default FCM channel to enable heads up notifications.
     await notificationsPlugin
@@ -249,6 +261,7 @@ class _HomeState extends State<Home> {
   }
 
   _onMessage(RemoteMessage message) {
+    print('received message');
     RemoteNotification notification = message.notification;
     AndroidNotification android = message.notification?.android;
     if (notification != null && android != null) {
