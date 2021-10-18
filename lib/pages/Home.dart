@@ -545,6 +545,21 @@ class _HomeState extends State<Home> {
       );
     }
 
+    Widget createDrawerOption(
+        BuildContext context, IconData icon, String text, Widget page) {
+      return Semantics(
+        button: true,
+        child: ListTile(
+          leading: Icon(icon, color: Colors.black),
+          title: sideBarText(text, Colors.black),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => page));
+          },
+        ),
+      );
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
@@ -552,38 +567,17 @@ class _HomeState extends State<Home> {
           child: ListView(
             padding: EdgeInsets.all(5.0),
             children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.person, color: Colors.black),
-                title: sideBarText('Profile', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Profile()));
-                },
-              ),
+              createDrawerOption(context, Icons.person, 'Profile', Profile()),
               Divider(
                 color: Colors.grey[500],
               ),
-              ListTile(
-                leading: Icon(Icons.notifications, color: Colors.black),
-                title: sideBarText('Notifications', Colors.black),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => Notifications()));
-                },
-              ),
+              createDrawerOption(context, Icons.notifications, 'Notifications',
+                  Notifications()),
               Divider(
                 color: Colors.grey[500],
               ),
-              ListTile(
-                leading: Icon(Icons.help_outline, color: Colors.black),
-                title: sideBarText('Contact', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Contact()));
-                },
-              )
+              createDrawerOption(
+                  context, Icons.help_outline, 'Contact', Contact()),
             ],
           ),
         ),

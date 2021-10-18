@@ -23,7 +23,10 @@ class _NotificationsState extends State<Notifications> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                  child: Text('Notifications', style: CarriageTheme.largeTitle),
+                  child: Semantics(
+                      header: true,
+                      child: Text('Notifications',
+                          style: CarriageTheme.largeTitle)),
                 ),
                 Detail(),
                 Container(

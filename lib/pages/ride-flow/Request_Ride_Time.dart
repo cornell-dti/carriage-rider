@@ -47,7 +47,10 @@ class _RequestRideTypeState extends State<RequestRideType> {
               Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text('Date & Time', style: CarriageTheme.title1),
+                    child: Semantics(
+                        header: true,
+                        child:
+                            Text('Date & Time', style: CarriageTheme.title1)),
                   )
                 ],
               ),
@@ -395,8 +398,11 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       Row(
                         children: <Widget>[
                           Flexible(
-                            child: Text('Date & Time',
-                                style: CarriageTheme.title1),
+                            child: Semantics(
+                              header: true,
+                              child: Text('Date & Time',
+                                  style: CarriageTheme.title1),
+                            ),
                           )
                         ],
                       ),
@@ -412,17 +418,23 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                       Row(
                         children: <Widget>[
                           Flexible(
-                            child: Text('When is your ride? (2/2)',
-                                style: CarriageTheme.title1),
+                            child: Semantics(
+                              header: true,
+                              child: Text('When is your ride? (2/2)',
+                                  style: CarriageTheme.title1),
+                            ),
                           )
                         ],
                       ),
                       SizedBox(height: 30.0),
                       Row(
                         children: <Widget>[
-                          Text('Date & Time',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Semantics(
+                            header: true,
+                            child: Text('Date & Time',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Form(
@@ -486,10 +498,13 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                               SizedBox(height: 30.0),
                               Row(
                                 children: <Widget>[
-                                  Text('Repeat Days',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
+                                  Semantics(
+                                    header: true,
+                                    child: Text('Repeat Days',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 15),
