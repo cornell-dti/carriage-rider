@@ -1,8 +1,8 @@
-name: CI Check
+name: CI
 on: push
 
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
