@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name=".Application"
-        android:label="carriage_rider"
+        android:label="Carriage Rider"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
