@@ -233,13 +233,13 @@ class RideFlowProvider with ChangeNotifier {
       'startTime': assembleStartTimeString(),
       'endTime': assembleEndTimeString()
     };
-    final response =
-        await http.put('${config.baseUrl}/rides/${parentRide.id}/edits',
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: 'Bearer $token'
-            },
-            body: jsonEncode(request));
+    final response = await http.put(
+        Uri.parse('${config.baseUrl}/rides/${parentRide.id}/edits'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode(request));
     if (response.statusCode != 200) {
       print('Failed to edit instance of recurring ride: ${response.body}');
       return false;
@@ -268,12 +268,13 @@ class RideFlowProvider with ChangeNotifier {
           .substring(0, 10);
       request['recurringDays'] = assembleRecurringDays();
     }
-    final response = await http.put('${config.baseUrl}/rides/${origRide.id}',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
-        },
-        body: jsonEncode(request));
+    final response =
+        await http.put(Uri.parse('${config.baseUrl}/rides/${origRide.id}'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token'
+            },
+            body: jsonEncode(request));
     if (response.statusCode != 200) {
       print('Failed to update ride: ${response.body}');
       return false;
@@ -312,7 +313,7 @@ class RideFlowProvider with ChangeNotifier {
       request['recurringDays'] = assembleRecurringDays();
     }
 
-    final response = await http.post('${config.baseUrl}/rides',
+    final response = await http.post(Uri.parse('${config.baseUrl}/rides'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token'

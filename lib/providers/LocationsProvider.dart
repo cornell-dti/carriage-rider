@@ -41,7 +41,7 @@ class LocationsProvider with ChangeNotifier {
   //Fetches all the locations from the backend as a list by using the baseUrl of [config] and id from [authProvider].
   Future<void> fetchLocations(config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get('${config.baseUrl}/locations',
+    final response = await http.get(Uri.parse('${config.baseUrl}/locations'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;
@@ -58,7 +58,7 @@ class LocationsProvider with ChangeNotifier {
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.get(
-        '${config.baseUrl}/riders/${authProvider.id}/favorites',
+        Uri.parse('${config.baseUrl}/riders/${authProvider.id}/favorites'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       String responseBody = response.body;
