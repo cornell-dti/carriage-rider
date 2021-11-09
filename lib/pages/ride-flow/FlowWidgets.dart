@@ -16,8 +16,7 @@ class FlowCancel extends StatelessWidget {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     void onTap() {
-      rideFlowProvider.clearControllers();
-      rideFlowProvider.setError(false);
+      rideFlowProvider.clear();
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
 
@@ -34,7 +33,8 @@ class FlowCancel extends StatelessWidget {
               child: InkWell(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Center(child: Text('Cancel', style: CarriageTheme.cancelStyle)),
+                  child: Center(
+                      child: Text('Cancel', style: CarriageTheme.cancelStyle)),
                 ),
                 onTap: onTap,
               ),
@@ -68,7 +68,8 @@ class BackText extends StatelessWidget {
               child: InkWell(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Center(child: Text('Back', style: CarriageTheme.cancelStyle)),
+                  child: Center(
+                      child: Text('Back', style: CarriageTheme.cancelStyle)),
                 ),
                 onTap: () => onTap(context),
               ),
@@ -86,45 +87,48 @@ class SelectionButton extends StatelessWidget {
   final double height;
   final GestureTapCallback onPressed;
 
-  const SelectionButton({Key key, @required this.text, @required this.width, @required this.height, @required this.onPressed})
+  const SelectionButton(
+      {Key key,
+      @required this.text,
+      @required this.width,
+      @required this.height,
+      @required this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      button: true,
-      label: text,
-      onTap: onPressed,
-      child: ExcludeSemantics(
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 1,
-                    spreadRadius: 0,
-                    color: Colors.black.withOpacity(0.25)
-                )
-              ],
-              borderRadius: BorderRadius.circular(12)
-          ),
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              onTap: onPressed,
-              child: Center(
-                child: Text(text,
-                    style: CarriageTheme.button.copyWith(color: Colors.black)
+        button: true,
+        label: text,
+        onTap: onPressed,
+        child: ExcludeSemantics(
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 1,
+                      spreadRadius: 0,
+                      color: Colors.black.withOpacity(0.25))
+                ],
+                borderRadius: BorderRadius.circular(12)),
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                onTap: onPressed,
+                child: Center(
+                  child: Text(text,
+                      style:
+                          CarriageTheme.button.copyWith(color: Colors.black)),
                 ),
               ),
             ),
           ),
-        ),
-      )
-    );
+        ));
   }
 }
 
@@ -144,12 +148,12 @@ class BackArrowButton extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [CarriageTheme.boxShadow],
-              borderRadius: BorderRadius.circular(12)
-          ),
+              borderRadius: BorderRadius.circular(12)),
           child: Material(
             type: MaterialType.transparency,
             child: InkWell(
-              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               onTap: () => Navigator.pop(context),
               child: Semantics(
                 label: 'Back',
@@ -191,10 +195,10 @@ class TabBarTop extends StatelessWidget {
         Expanded(
           child: new Container(
               child: Divider(
-                color: colorTwo,
-                height: 50,
-                thickness: 5,
-              )),
+            color: colorTwo,
+            height: 50,
+            thickness: 5,
+          )),
         ),
         Expanded(
           child: new Container(

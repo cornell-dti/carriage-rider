@@ -33,7 +33,8 @@ class Driver {
         firstName: json['firstName'],
         lastName: json['lastName'],
         phoneNumber: json['phoneNumber'],
-        photoLink: json['photoLink'] == null ? null : 'https://' + json['photoLink']);
+        photoLink:
+            json['photoLink'] == null ? null : 'https://' + json['photoLink']);
   }
 
   Widget profilePicture(double diameter) {
@@ -42,24 +43,23 @@ class Driver {
       width: diameter,
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: photoLink == null ? Image.asset(
-              'assets/images/person.png',
-              width: diameter,
-              height: diameter
-          ) : Image.network(
-            photoLink,
-            fit: BoxFit.cover,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )
-      ),
+          child: photoLink == null
+              ? Image.asset('assets/images/person.png',
+                  width: diameter, height: diameter)
+              : Image.network(
+                  photoLink,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                )),
     );
   }
 }

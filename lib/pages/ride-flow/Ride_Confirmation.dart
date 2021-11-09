@@ -25,7 +25,11 @@ class _RideConfirmationState extends State<RideConfirmation> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.2),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 40),
-            child: ExcludeSemantics(child: Image(image: AssetImage(rideFlowProvider.editing ? 'assets/images/changesInProgress.png' : 'assets/images/RequestInProgress.png'))),
+            child: ExcludeSemantics(
+                child: Image(
+                    image: AssetImage(rideFlowProvider.creating()
+                        ? 'assets/images/RequestInProgress.png'
+                        : 'assets/images/changesInProgress.png'))),
           ),
           SizedBox(height: 36),
           Padding(
@@ -34,10 +38,14 @@ class _RideConfirmationState extends State<RideConfirmation> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Expanded(
-                  child: Text(
-                      rideFlowProvider.editing ? 'Your changes are in progress!' : 'Your request is in progress!',
-                      textAlign: TextAlign.center,
-                      style: CarriageTheme.title3
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                        rideFlowProvider.creating()
+                            ? 'Your request is in progress!'
+                            : 'Your changes are in progress!',
+                        textAlign: TextAlign.center,
+                        style: CarriageTheme.title3),
                   ),
                 )
               ],
@@ -52,9 +60,9 @@ class _RideConfirmationState extends State<RideConfirmation> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                       'You\'ll be notified via in-app notification when your ride is confirmed',
-                      style: CarriageTheme.body.copyWith(color: CarriageTheme.gray3),
-                      textAlign: TextAlign.center
-                  ),
+                      style: CarriageTheme.body
+                          .copyWith(color: CarriageTheme.gray3),
+                      textAlign: TextAlign.center),
                 ),
               )
             ],
@@ -64,8 +72,8 @@ class _RideConfirmationState extends State<RideConfirmation> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.only(left: 34, right: 34, bottom: 30.0),
-
+                  padding:
+                      const EdgeInsets.only(left: 34, right: 34, bottom: 30.0),
                   child: CButton(
                     text: 'Done',
                     height: 50,
@@ -73,8 +81,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
                       Navigator.popUntil(context, ModalRoute.withName('/'));
                     },
                   ),
-                )
-            ),
+                )),
           )
         ],
       ),

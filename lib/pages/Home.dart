@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:carriage_rider/pages/ride-flow/Request_Ride_Loc.dart';
-import 'package:carriage_rider/models/Ride.dart';
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/pages/Notifications.dart';
@@ -26,7 +25,13 @@ import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'Upcoming.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message ${message.messageId}');
+}
+
+void main() async {
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   MaterialApp(routes: {
     '/': (context) => Home(),
   });
@@ -60,7 +65,8 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
 
     double iconButtonSize = 48;
     double iconButtonSpacing = 8;
@@ -73,11 +79,11 @@ class _HomeHeaderState extends State<HomeHeader> {
           boxShadow: scrollAtTop
               ? []
               : [
-            BoxShadow(
-                offset: Offset(0, 2),
-                blurRadius: 11,
-                color: Colors.black.withOpacity(0.15))
-          ]),
+                  BoxShadow(
+                      offset: Offset(0, 2),
+                      blurRadius: 11,
+                      color: Colors.black.withOpacity(0.15))
+                ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,19 +155,24 @@ class _HomeHeaderState extends State<HomeHeader> {
                             },
                             customBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
-                            child: notifsProvider.hasNewNotif ? Stack(children: [
-                              Center(child: Icon(Icons.menu, color: Colors.black)),
-                              Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Container(
-                                      width: 9,
-                                      height: 9,
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(100),
-                                      )))
-                            ]) : Icon(Icons.menu, color: Colors.black)),
+                            child: notifsProvider.hasNewNotif
+                                ? Stack(children: [
+                                    Center(
+                                        child: Icon(Icons.menu,
+                                            color: Colors.black)),
+                                    Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: Container(
+                                            width: 9,
+                                            height: 9,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            )))
+                                  ])
+                                : Icon(Icons.menu, color: Colors.black)),
                       ),
                     )),
               ),
@@ -181,33 +192,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  static final FirebaseMessaging _fcm = FirebaseMessaging();
-  static FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  StreamSubscription iosSubscription; // ignore: cancel_subscriptions
+  AndroidNotificationChannel channel;
+  FlutterLocalNotificationsPlugin notificationsPlugin;
+  NotificationSettings notifSettings;
   String deviceToken;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   final ScrollController scrollCtrl = ScrollController();
   bool fetchingRides = false;
 
   @override
   void initState() {
+    _initNotifications();
+    FirebaseMessaging.onMessage.listen(_onMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
     super.initState();
-    final AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    final initializationSettingsIOS = IOSInitializationSettings(
-        //onDidReceiveLocalNotification: onDidReceiveLocalNotification
-    );
-    final InitializationSettings initializationSettings =
-    InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification
-    );
-    initialize();
-    initFirebaseNotifs();
   }
 
   // flutter local notifs callback when selecting a background notification
@@ -217,159 +216,23 @@ class _HomeState extends State<Home> {
     Map<String, dynamic> rideJson = jsonDecode(payload)['ride'];
     print(jsonEncode(rideJson));
     Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
     ridesProvider.updateRideByID(ride);
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
     notifsProvider.addNewNotif(BackendNotification.fromJson(json));
     print(BackendNotification.fromJson(json));
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
-  }
-//
-//  static Future<void> onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
-//    print('onDidReceive: id $id, title $title, body $body, payload $payload');
-//    //addNotif(BackendNotification.fromJson(jsonDecode(payload)));
-//    //Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
-//  }
-
-  _registerOnFirebase() async {
-    //_fcm.subscribeToTopic('all');
-    await _fcm.getToken().then((token) => deviceToken = token);
-
-    if (deviceToken != null) {
-      subscribe(deviceToken);
-    }
-    _fcm.onTokenRefresh.listen((newToken) {
-      subscribe(newToken);
-    });
-  }
-
-  void initialize() async {
-    _registerOnFirebase();
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-        // save the token  OR subscribe to a topic here
-        _fcm.subscribeToTopic('all');
-      });
-      await _fcm.requestNotificationPermissions(
-          IosNotificationSettings(sound: true, badge: true, alert: true));
-    }
-  }
-
-  // Show notification banner on background and foreground.
-  static void showNotification(String message, String payload) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    await getAndroidNotificationDetails(message);
-    final IOSNotificationDetails iOSPlatformChannelSpecifics =
-    IOSNotificationDetails();
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics);
-
-    print('showNotification payload: ' + payload);
-    await notificationsPlugin.show(
-      0,
-      'Carriage Rider',
-      message,
-      platformChannelSpecifics,
-      payload: payload
-    );
-  }
-
-  static Future<AndroidNotificationDetails> getAndroidNotificationDetails(
-      dynamic notification) async {
-    return AndroidNotificationDetails('general', 'General notifications',
-        'General notifications that are not sorted to any specific topics.',
-        importance: Importance.max,
-        priority: Priority.high,
-        showWhen: false,
-        category: 'General',
-        icon: '@mipmap/ic_launcher',
-        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-        styleInformation: BigTextStyleInformation('')
-    );
-  }
-
-  void initFirebaseNotifs() {
-    _fcm.configure(
-        onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
-        onMessage: onForegroundNotif,
-        onLaunch: onNotifPressed,
-        onResume: onNotifPressed
-    );
-  }
-
-  Future<void> onForegroundNotif(Map<String, dynamic> message) async {
-    print('onForegroundNotif');
-    print(message);
-    String data = Platform.isIOS ? message['default'] : message['data']['default'];
-    Map<String, dynamic> json = jsonDecode(data);
-    Map<String, dynamic> rideJson = json['ride'];
-    print(rideJson);
-    print(json['changeType']);
-    print(json['changedBy']);
-    Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-    ridesProvider.updateRideByID(ride);
-    print('updated ride by ID');
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
-    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
-    print('added new notif');
-    print('end of onForegroundNotif');
-  }
-
-  Future<void> onNotifPressed(Map<String, dynamic> message) async {
-    print('notifPressed');
-    Map<String, dynamic> json = jsonDecode(Platform.isIOS ? message['default'] : message['data']['default']);
-    RidesProvider ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-    ridesProvider.updateRideByID(Ride.fromJson(json['ride']));
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
-    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NotificationsPage())
-    );
-  }
-
-  static Future<dynamic> backgroundHandle(Map<String, dynamic> message) async {
-    print('backgroundHandle');
-    print(message);
-    if (message.containsKey('data')) {
-      // Handle data message
-      Map<String, dynamic> json = jsonDecode(Platform.isIOS ? message['default'] : message['data']['default']);
-      NotifType type = typeFromNotifJson(json);
-
-      String notifMessage;
-      switch (type) {
-        case NotifType.DRIVER_ARRIVED:
-          notifMessage = 'Your driver is here! Meet your driver at the pickup point.';
-          break;
-        case NotifType.DRIVER_ON_THE_WAY:
-          notifMessage = 'Your driver is on the way! Wait outside at the pickup point.';
-          break;
-        case NotifType.DRIVER_LATE:
-          notifMessage = 'Your driver is running late but will meet you soon at the pickup point.';
-          break;
-        case NotifType.DRIVER_CANCELLED:
-          notifMessage = 'Your driver cancelled your ride because they were unable to find you.';
-          break;
-        case NotifType.RIDE_EDITED:
-          notifMessage = 'The information for one of your rides has been edited. Please review your ride info.';
-          break;
-        case NotifType.RIDE_CONFIRMED:
-          notifMessage = 'One of your rides has been confirmed.';
-          break;
-        default:
-          throw Exception('Invalid notification type for notifMessage');
-      }
-      showNotification(notifMessage, jsonEncode(json));
-    }
-    return Future<void>.value();
+        context, MaterialPageRoute(builder: (context) => NotificationsPage()));
   }
 
   subscribe(String token) async {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     String authToken = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
-      "${AppConfig.of(context).baseUrl}/notification/subscribe",
+      Uri.parse("${AppConfig.of(context).baseUrl}/notification/subscribe"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $authToken"
@@ -386,14 +249,206 @@ class _HomeState extends State<Home> {
     }
   }
 
+  _initNotifications() async {
+    await _fcm.getToken().then((token) => deviceToken = token);
+
+    if (deviceToken != null) {
+      print(deviceToken);
+      subscribe(deviceToken);
+    }
+
+    _fcm.onTokenRefresh.listen((newToken) {
+      subscribe(newToken);
+    });
+
+    notifSettings = await _fcm.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
+      description:
+          'This channel is used for important notifications.', // description
+      importance: Importance.high,
+    );
+
+    notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    /// Create an Android Notification Channel.
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
+    await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  _onMessage(RemoteMessage message) {
+    print('received message');
+    RemoteNotification notification = message.notification;
+    AndroidNotification android = message.notification?.android;
+    if (notification != null && android != null) {
+      notificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ));
+    }
+  }
+
+  // Show notification banner on background and foreground.
+  static void showNotification(String message, String payload) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        await getAndroidNotificationDetails(message);
+    final IOSNotificationDetails iOSPlatformChannelSpecifics =
+        IOSNotificationDetails();
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    print('showNotification payload: ' + payload);
+    await notificationsPlugin.show(
+        0, 'Carriage Rider', message, platformChannelSpecifics,
+        payload: payload);
+  }
+
+  static Future<AndroidNotificationDetails> getAndroidNotificationDetails(
+      dynamic notification) async {
+    return AndroidNotificationDetails('general', 'General notifications',
+        'General notifications that are not sorted to any specific topics.',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false,
+        category: 'General',
+        icon: '@mipmap/ic_launcher',
+        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+        styleInformation: BigTextStyleInformation(''));
+  }
+
+  void initFirebaseNotifs() {
+    _fcm.configure(
+        onBackgroundMessage: Platform.isIOS ? null : backgroundHandle,
+        onMessage: onForegroundNotif,
+        onLaunch: onNotifPressed,
+        onResume: onNotifPressed);
+  }
+
+  Future<void> onForegroundNotif(Map<String, dynamic> message) async {
+    print('onForegroundNotif');
+    print(message);
+    String data =
+        Platform.isIOS ? message['default'] : message['data']['default'];
+    Map<String, dynamic> json = jsonDecode(data);
+    Map<String, dynamic> rideJson = json['ride'];
+    print(rideJson);
+    print(json['changeType']);
+    print(json['changedBy']);
+    Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.updateRideByID(ride);
+    print('updated ride by ID');
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+    print('added new notif');
+    print('end of onForegroundNotif');
+  }
+
+  Future<void> onNotifPressed(Map<String, dynamic> message) async {
+    print('notifPressed');
+    Map<String, dynamic> json = jsonDecode(
+        Platform.isIOS ? message['default'] : message['data']['default']);
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.updateRideByID(Ride.fromJson(json['ride']));
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    notifsProvider.addNewNotif(BackendNotification.fromJson(json));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NotificationsPage()));
+  }
+
+  static Future<dynamic> backgroundHandle(Map<String, dynamic> message) async {
+    print('backgroundHandle');
+    print(message);
+    if (message.containsKey('data')) {
+      // Handle data message
+      Map<String, dynamic> json = jsonDecode(
+          Platform.isIOS ? message['default'] : message['data']['default']);
+      NotifType type = typeFromNotifJson(json);
+
+      String notifMessage;
+      switch (type) {
+        case NotifType.DRIVER_ARRIVED:
+          notifMessage =
+              'Your driver is here! Meet your driver at the pickup point.';
+          break;
+        case NotifType.DRIVER_ON_THE_WAY:
+          notifMessage =
+              'Your driver is on the way! Wait outside at the pickup point.';
+          break;
+        case NotifType.DRIVER_LATE:
+          notifMessage =
+              'Your driver is running late but will meet you soon at the pickup point.';
+          break;
+        case NotifType.DRIVER_CANCELLED:
+          notifMessage =
+              'Your driver cancelled your ride because they were unable to find you.';
+          break;
+        case NotifType.RIDE_EDITED:
+          notifMessage =
+              'The information for one of your rides has been edited. Please review your ride info.';
+          break;
+        case NotifType.RIDE_CONFIRMED:
+          notifMessage = 'One of your rides has been confirmed.';
+          break;
+        default:
+          throw Exception('Invalid notification type for notifMessage');
+      }
+      showNotification(notifMessage, jsonEncode(json));
+    }
+  }
+
+  _onMessageOpenedApp(RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+  }
+
   @override
   Widget build(context) {
     RidesProvider ridesProvider = Provider.of<RidesProvider>(context);
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context);
+    LocationsProvider locationsProvider =
+        Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
     double headerHeight = 100;
 
@@ -478,42 +533,43 @@ class _HomeState extends State<Home> {
                         ),
                         ridesProvider.upcomingRides.isNotEmpty
                             ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Semantics(
-                              sortKey: OrdinalSortKey(6),
-                              button: true,
-                              container: true,
-                              child: Container(
-                                height: 48,
-                                child: InkWell(
-                                    onTap: () => Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpcomingSeeMore())),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more upcoming rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ]),
-                                    )),
-                              ),
-                            ),
-                          ],
-                        )
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Semantics(
+                                    sortKey: OrdinalSortKey(6),
+                                    button: true,
+                                    container: true,
+                                    child: Container(
+                                      height: 48,
+                                      child: InkWell(
+                                          onTap: () => Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UpcomingSeeMore())),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Row(children: [
+                                              Text(
+                                                'See More',
+                                                style:
+                                                    CarriageTheme.seeMoreStyle,
+                                                semanticsLabel:
+                                                    'See more upcoming rides',
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(Icons.arrow_forward,
+                                                  size: 16)
+                                            ]),
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )
                             : Container()
                       ]),
                 ),
+                SizedBox(height: 12),
                 Semantics(sortKey: OrdinalSortKey(7), child: UpcomingRides()),
                 SizedBox(height: 16),
                 Container(
@@ -540,39 +596,39 @@ class _HomeState extends State<Home> {
                         ),
                         ridesProvider.pastRides.isNotEmpty
                             ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Semantics(
-                              sortKey: OrdinalSortKey(9),
-                              container: true,
-                              button: true,
-                              child: Container(
-                                height: 48,
-                                child: InkWell(
-                                    onTap: () => Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            HistorySeeMore())),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Row(children: [
-                                        Text(
-                                          'See More',
-                                          style:
-                                          CarriageTheme.seeMoreStyle,
-                                          semanticsLabel:
-                                          'See more past rides',
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(Icons.arrow_forward,
-                                            size: 16)
-                                      ]),
-                                    )),
-                              ),
-                            ),
-                          ],
-                        )
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Semantics(
+                                    sortKey: OrdinalSortKey(9),
+                                    container: true,
+                                    button: true,
+                                    child: Container(
+                                      height: 48,
+                                      child: InkWell(
+                                          onTap: () => Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HistorySeeMore())),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Row(children: [
+                                              Text(
+                                                'See More',
+                                                style:
+                                                    CarriageTheme.seeMoreStyle,
+                                                semanticsLabel:
+                                                    'See more past rides',
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(Icons.arrow_forward,
+                                                  size: 16)
+                                            ]),
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )
                             : Container()
                       ]),
                 ),
@@ -592,6 +648,21 @@ class _HomeState extends State<Home> {
       );
     }
 
+    Widget createDrawerOption(
+        BuildContext context, IconData icon, String text, Widget page) {
+      return Semantics(
+        button: true,
+        child: ListTile(
+          leading: Icon(icon, color: Colors.black),
+          title: sideBarText(text, Colors.black),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => page));
+          },
+        ),
+      );
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       endDrawer: SafeArea(
@@ -599,118 +670,81 @@ class _HomeState extends State<Home> {
           child: ListView(
             padding: EdgeInsets.all(5.0),
             children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.person, color: Colors.black),
-                title: sideBarText('Profile', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Profile()));
-                },
-              ),
+              createDrawerOption(context, Icons.person, 'Profile', Profile()),
               Divider(
                 color: Colors.grey[500],
               ),
-              ListTile(
-                leading: notifsProvider.hasNewNotif
-                    ? Stack(children: [
-                  Icon(Icons.notifications, color: Colors.black),
-                  Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                          width: 9,
-                          height: 9,
-                          padding: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(100),
-                          )))
-                ])
-                    : Icon(Icons.notifications, color: Colors.black),
-                title: sideBarText('Notifications', Colors.black),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => NotificationsPage()));
-                },
-              ),
+              createDrawerOption(context, Icons.notifications, 'Notifications',
+                  Notifications()),
               Divider(
                 color: Colors.grey[500],
               ),
-              ListTile(
-                leading: Icon(Icons.help_outline, color: Colors.black),
-                title: sideBarText('Contact', Colors.black),
-                onTap: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => Contact()));
-                },
-              )
+              createDrawerOption(
+                  context, Icons.help_outline, 'Contact', Contact()),
             ],
           ),
         ),
       ),
       body: SafeArea(
         child: !ridesProvider.hasData() ||
-            !locationsProvider.hasLocations() ||
-            !riderProvider.hasInfo()
+                !locationsProvider.hasLocations() ||
+                !riderProvider.hasInfo()
             ? Center(child: CircularProgressIndicator())
             : Stack(
-          children: <Widget>[
-            buildPage(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 8,
-                decoration:
-                BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, -2),
-                      blurRadius: 11,
-                      spreadRadius: 5,
-                      color: Colors.black.withOpacity(0.11))
-                ]),
-                child: Stack(
-                  children: <Widget>[
-                    Semantics(
-                      button: true,
-                      sortKey: OrdinalSortKey(11),
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: ButtonTheme(
-                            minWidth:
-                            MediaQuery.of(context).size.width * 0.8,
-                            height: 50.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            child: RaisedButton.icon(
-                              onPressed: () {
-                                rideFlowProvider.setLocControllers(
-                                    '', '');
-                                rideFlowProvider.setEditing(false);
-                                Navigator.push(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestRideLoc(
-                                                ride: new Ride())));
-                              },
-                              elevation: 3.0,
-                              color: Colors.black,
-                              textColor: Colors.white,
-                              icon: Icon(Icons.add),
-                              label: Text('Request Ride',
-                                  style: TextStyle(fontSize: 18)),
-                            ),
-                          )),
+                children: <Widget>[
+                  buildPage(),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 8,
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, -2),
+                            blurRadius: 11,
+                            spreadRadius: 5,
+                            color: Colors.black.withOpacity(0.11))
+                      ]),
+                      child: Stack(
+                        children: <Widget>[
+                          Semantics(
+                              button: true,
+                              sortKey: OrdinalSortKey(11),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    rideFlowProvider.clear();
+                                    rideFlowProvider.setCreating();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RequestRideLoc()));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 3.0,
+                                    onPrimary: Colors.white,
+                                    primary: Colors.black,
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width * 0.8,
+                                        50.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                  ),
+                                  icon: Icon(Icons.add),
+                                  label: Text('Request Ride',
+                                      style: TextStyle(fontSize: 18)),
+                                ),
+                              )),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -2,8 +2,8 @@ import 'dart:core';
 import 'package:carriage_rider/models/Location.dart';
 import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
+import 'package:carriage_rider/utils/Ordinal.dart';
 import 'package:flutter/material.dart';
-import 'package:humanize/humanize.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/models/Driver.dart';
@@ -16,7 +16,8 @@ enum RideStatus {
   ARRIVED,
   PICKED_UP,
   COMPLETED,
-  NO_SHOW
+  NO_SHOW,
+  CANCELLED
 }
 
 /// Parses [status] representing a ride status into its corresponding enum.
@@ -34,6 +35,8 @@ RideStatus getStatusEnum(String status) {
       return RideStatus.COMPLETED;
     case ('no_show'):
       return RideStatus.NO_SHOW;
+    case ('cancelled'):
+      return RideStatus.CANCELLED;
     default:
       throw Exception('Ride status is invalid');
   }
@@ -105,26 +108,26 @@ class Ride {
 
   Ride(
       {this.id,
-        this.parentRide,
-        this.origDate,
-        this.type,
-        this.rider,
-        this.status,
-        this.startLocation,
-        this.startAddress,
-        this.endLocation,
-        this.endAddress,
-        this.startTime,
-        this.endTime,
-        this.requestedEndTime,
-        this.recurring,
-        this.recurringDays,
-        this.deleted,
-        this.late,
-        this.edits,
-        this.isEdit,
-        this.endDate,
-        this.driver});
+      this.parentRide,
+      this.origDate,
+      this.type,
+      this.rider,
+      this.status,
+      this.startLocation,
+      this.startAddress,
+      this.endLocation,
+      this.endAddress,
+      this.startTime,
+      this.endTime,
+      this.requestedEndTime,
+      this.recurring,
+      this.recurringDays,
+      this.deleted,
+      this.late,
+      this.edits,
+      this.isEdit,
+      this.endDate,
+      this.driver});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
@@ -143,20 +146,20 @@ class Ride {
             .parse(json['endTime'], true)
             .toLocal(),
         recurring: json['recurring'] == null ? false : json['recurring'],
-        recurringDays:
-        json['recurringDays'] == null ? null : List.from(json['recurringDays']),
+        recurringDays: json['recurringDays'] == null
+            ? null
+            : List.from(json['recurringDays']),
         deleted: json['deleted'] == null
             ? null
             : List<String>.from(json['deleted'])
-            .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
-            .toList(),
+                .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
+                .toList(),
         late: json['late'],
         driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
         edits: json['edits'] == null ? null : List.from(json['edits']),
         endDate: json['endDate'] == null
             ? null
-            : DateFormat('yyyy-MM-dd').parse(json['endDate'])
-    );
+            : DateFormat('yyyy-MM-dd').parse(json['endDate']));
   }
 
   factory Ride.fromJsonLocationIDs(Map<String, dynamic> json, BuildContext context) {
@@ -219,7 +222,7 @@ class Ride {
           children: [
             TextSpan(
                 text:
-                ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
+                    ordinal(int.parse(DateFormat('d').format(startTime))) + ' ',
                 style: CarriageTheme.dayStyle),
             TextSpan(
                 text: DateFormat('jm').format(startTime),
@@ -231,7 +234,7 @@ class Ride {
   //Widget displaying the information of a ride after it has been requested. Shows the ride's
   //start location, end location, date, start and end time, recurring days,
   //and accessibility requests.
-  Widget buildSummary(context) {
+  Widget buildSummary(BuildContext context, bool showRecurringInfo) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     return Column(children: [
       MergeSemantics(
@@ -245,8 +248,7 @@ class Ride {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-                    child: Text(startLocation,
-                        style: CarriageTheme.infoStyle))
+                    child: Text(startLocation, style: CarriageTheme.infoStyle))
               ],
             ),
           ],
@@ -254,24 +256,19 @@ class Ride {
       ),
       SizedBox(height: 15),
       MergeSemantics(
-          child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[Text('To', style: CarriageTheme.labelStyle)],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Flexible(
-                        child: Text(endLocation,
-                            style: CarriageTheme.infoStyle))
-                  ],
-                ),
-              ]
-          )
-      ),
+          child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[Text('To', style: CarriageTheme.labelStyle)],
+        ),
+        SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Flexible(child: Text(endLocation, style: CarriageTheme.infoStyle))
+          ],
+        ),
+      ])),
       SizedBox(height: 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -281,17 +278,17 @@ class Ride {
             children: [
               Container(
                   child: MergeSemantics(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Start Date', style: CarriageTheme.labelStyle),
-                        SizedBox(height: 5),
-                        Text(DateFormat.yMd().format(startTime),
-                            style: CarriageTheme.infoStyle)
-                      ],
-                    ),
-                  )
-              ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(showRecurringInfo ? 'Start Date' : 'Date',
+                        style: CarriageTheme.labelStyle),
+                    SizedBox(height: 5),
+                    Text(DateFormat.yMd().format(startTime),
+                        style: CarriageTheme.infoStyle)
+                  ],
+                ),
+              )),
               SizedBox(height: 20),
               MergeSemantics(
                 child: Column(
@@ -310,122 +307,109 @@ class Ride {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              endDate != null
+              showRecurringInfo
                   ? Container(
-                  child: MergeSemantics(
-                    child: Column(
+                      child: MergeSemantics(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('End Date', style: CarriageTheme.labelStyle),
+                          SizedBox(height: 5),
+                          Text(DateFormat.yMd().format(endDate),
+                              style: CarriageTheme.infoStyle)
+                        ],
+                      ),
+                    ))
+                  : Container(
+                      child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('End Date', style: CarriageTheme.labelStyle),
+                        Text(''),
                         SizedBox(height: 5),
-                        Text(DateFormat.yMd().format(endDate),
-                            style: CarriageTheme.infoStyle)
+                        Text('', style: CarriageTheme.infoStyle)
                       ],
-                    ),
-                  ))
-                  : Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(''),
-                      SizedBox(height: 5),
-                      Text('', style: CarriageTheme.infoStyle)
-                    ],
-                  )),
+                    )),
               SizedBox(height: 20),
               Container(
                   child: MergeSemantics(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Drop-off Time',
-                            style: CarriageTheme.labelStyle),
-                        SizedBox(height: 5),
-                        Text(DateFormat.jm().format(endTime),
-                            style: CarriageTheme.infoStyle)
-                      ],
-                    ),
-                  )
-              )
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Drop-off Time', style: CarriageTheme.labelStyle),
+                    SizedBox(height: 5),
+                    Text(DateFormat.jm().format(endTime),
+                        style: CarriageTheme.infoStyle)
+                  ],
+                ),
+              ))
             ],
           ),
         ],
       ),
-      recurring ? Container(
-          child: MergeSemantics(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Every', style: CarriageTheme.labelStyle)
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(recurringDays.map((day) {
-                      List<String> days = ['M', 'T', 'W', 'Th', 'F'];
-                      return days[day-1];
-                    }).toList().join(' '),
-                      style: CarriageTheme.infoStyle,
-                      semanticsLabel: recurringDays.map((day) {
-                        List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-                        return days[day-1];
-                      }).toList().join(' '),)
-                  ],
-                )
-              ],
-            ),
-          ))
+      showRecurringInfo
+          ? Container(
+              child: MergeSemantics(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Every', style: CarriageTheme.labelStyle)
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        recurringDays
+                            .map((day) {
+                              List<String> days = ['M', 'T', 'W', 'Th', 'F'];
+                              return days[day - 1];
+                            })
+                            .toList()
+                            .join(' '),
+                        style: CarriageTheme.infoStyle,
+                        semanticsLabel: recurringDays
+                            .map((day) {
+                              List<String> days = [
+                                'Monday',
+                                'Tuesday',
+                                'Wednesday',
+                                'Thursday',
+                                'Friday'
+                              ];
+                              return days[day - 1];
+                            })
+                            .toList()
+                            .join(' '),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ))
           : Container(),
       SizedBox(height: 15),
       MergeSemantics(
-          child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Accessibility Requirement',
-                        style: CarriageTheme.labelStyle)
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(riderProvider.info.accessibilityStr(), style: CarriageTheme.infoStyle)
-                  ],
-                ),
-              ]
-          )
-      ),
+          child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text('Accessibility Requirement', style: CarriageTheme.labelStyle)
+          ],
+        ),
+        SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(riderProvider.info.accessibilityStr(),
+                style: CarriageTheme.infoStyle)
+          ],
+        ),
+      ])),
     ]);
-  }
-
-  Ride copy() {
-    return Ride(
-        id: this.id,
-        parentRide: this.parentRide,
-        origDate: this.origDate,
-        type: this.type,
-        rider: this.rider,
-        status: this.status,
-        startLocation: this.startLocation,
-        startAddress: this.startAddress,
-        endLocation: this.endLocation,
-        endAddress: this.endAddress,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        recurring: this.recurring,
-        recurringDays: this.recurringDays,
-        deleted: this.deleted,
-        late: this.late,
-        edits: this.edits,
-        endDate: this.endDate,
-        driver: this.driver);
   }
 }

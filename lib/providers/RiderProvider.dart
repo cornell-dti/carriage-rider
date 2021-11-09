@@ -83,7 +83,9 @@ class Rider {
         List.from(json['accessibility']),
         List.from(json['favoriteLocations']),
         json['description'],
-        json['photoLink'] == null ? null : 'https://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+        json['photoLink'] == null
+            ? null
+            : 'https://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
         json['joinDate'],
         json['address']);
   }
@@ -94,24 +96,23 @@ class Rider {
       width: diameter,
       child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: photoLink == null ? Image.asset(
-              'assets/images/person.png',
-              width: diameter,
-              height: diameter
-          ) : Image.network(
-            this.photoLink,
-            fit: BoxFit.cover,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )
-      ),
+          child: photoLink == null
+              ? Image.asset('assets/images/person.png',
+                  width: diameter, height: diameter)
+              : Image.network(
+                  this.photoLink,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                )),
     );
   }
 }
@@ -162,7 +163,7 @@ class RiderProvider with ChangeNotifier {
   Future<void> fetchRider(AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     http.Response response = await http.get(
-        '${config.baseUrl}/riders/${authProvider.id}',
+        Uri.parse('${config.baseUrl}/riders/${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -178,7 +179,7 @@ class RiderProvider with ChangeNotifier {
       Map<String, dynamic> changes) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.put(
-      '${config.baseUrl}/riders/${authProvider.id}',
+      Uri.parse('${config.baseUrl}/riders/${authProvider.id}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -248,11 +249,11 @@ class RiderProvider with ChangeNotifier {
   }
 
   /// Updates the logged in rider's profile picture.
-  Future<void> updateRiderPhoto(AppConfig config, AuthProvider authProvider,
-      String base64Photo) async {
+  Future<void> updateRiderPhoto(
+      AppConfig config, AuthProvider authProvider, String base64Photo) async {
     String token = await authProvider.secureStorage.read(key: 'token');
     final response = await http.post(
-      "${config.baseUrl}/upload",
+      Uri.parse("${config.baseUrl}/upload"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: "Bearer $token"

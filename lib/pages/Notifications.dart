@@ -19,7 +19,6 @@ enum NotifType {
   RIDE_CONFIRMED
 }
 
-
 String notifMessage(NotifType type, Ride ride, DateTime time) {
   switch (type) {
     case NotifType.DRIVER_ARRIVED:
@@ -81,7 +80,8 @@ class DispatcherNotification extends StatelessWidget {
 }
 
 class Notification extends StatelessWidget {
-  Notification(this.ride, this.notifTime, this.circularWidget, this.title, this.text);
+  Notification(
+      this.ride, this.notifTime, this.circularWidget, this.title, this.text);
 
   final Ride ride;
   final DateTime notifTime;
@@ -138,7 +138,7 @@ class Notification extends StatelessWidget {
                     Text(
                       time,
                       style:
-                      TextStyle(fontSize: 11, color: CarriageTheme.gray2),
+                          TextStyle(fontSize: 11, color: CarriageTheme.gray2),
                     ),
                   ]),
                   SizedBox(height: 4),
@@ -158,7 +158,7 @@ NotifType typeFromNotifJson(Map<String, dynamic> json) {
   print('----Notifications typeFromNotifJson');
   print(json['changeType']);
 
-  switch(json['changeType']) {
+  switch (json['changeType']) {
     case 'on_the_way':
       return NotifType.DRIVER_ON_THE_WAY;
     case 'arrived':
@@ -205,18 +205,17 @@ class BackendNotification {
 }
 
 class NotificationsPage extends StatefulWidget {
-
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context, listen: false);
+      NotificationsProvider notifsProvider =
+          Provider.of<NotificationsProvider>(context, listen: false);
       notifsProvider.notifOpened();
     });
   }
@@ -228,11 +227,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotifType.DRIVER_ON_THE_WAY:
         return DriverNotification(ride, time, message);
       case NotifType.DRIVER_CANCELLED:
-        return DispatcherNotification(ride, time, message, Colors.red, Icons.close);
+        return DispatcherNotification(
+            ride, time, message, Colors.red, Icons.close);
       case NotifType.RIDE_EDITED:
-        return DispatcherNotification(ride, time, message, Colors.red, Icons.edit);
+        return DispatcherNotification(
+            ride, time, message, Colors.red, Icons.edit);
       case NotifType.RIDE_CONFIRMED:
-        return DispatcherNotification(ride, time, message, Colors.green, Icons.check);
+        return DispatcherNotification(
+            ride, time, message, Colors.green, Icons.check);
       default:
         throw Exception('Notification could not be built: $type, ${ride.id}');
     }
@@ -246,12 +248,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
       rides.add(ridesProvider.currentRide);
     }
 
-    NotificationsProvider notifsProvider = Provider.of<NotificationsProvider>(context);
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context);
     List<BackendNotification> backendNotifs = notifsProvider.notifs;
     List<Widget> notifWidgets = [];
 
     backendNotifs.forEach((notif) {
-      Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID, orElse: () => null);
+      Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID,
+          orElse: () => null);
       if (ride != null) {
         notifWidgets.add(buildNotification(notif.type, ride, notif.timeSent));
       }
@@ -268,16 +272,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
                     child:
-                    Text('Notifications', style: CarriageTheme.largeTitle),
+                        Text('Notifications', style: CarriageTheme.largeTitle),
                   ),
                   ListView(
                     shrinkWrap: true,
                     children: notifWidgets.reversed.toList(),
                   )
-                ]
-            ),
+                ]),
           ),
-        )
-    );
+        ));
   }
 }

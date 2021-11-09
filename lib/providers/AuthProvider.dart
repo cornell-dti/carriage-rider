@@ -11,13 +11,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/app_config.dart';
 
 Future<String> auth(String baseUrl, String token, String email) async {
-  String endpoint = baseUrl + '/auth';
+  Uri endpoint = Uri.parse(baseUrl + '/auth');
   Map<String, dynamic> requestBody = {
     'token': token,
     'email': email,
     'clientId': Platform.isAndroid
         ? '241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com'
-        : '241748771473-c8p9845ouj8hh4sq6n37qv5fql1shk0c.apps.googleusercontent.com',
+        : '241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18.apps.googleusercontent.com',
     'table': 'Riders'
   };
   return post(endpoint, body: requestBody).then((res) {
