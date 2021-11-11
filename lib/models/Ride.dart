@@ -1,6 +1,4 @@
 import 'dart:core';
-import 'package:carriage_rider/models/Location.dart';
-import 'package:carriage_rider/providers/LocationsProvider.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/Ordinal.dart';
 import 'package:flutter/material.dart';

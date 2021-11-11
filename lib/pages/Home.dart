@@ -387,8 +387,6 @@ class _HomeState extends State<Home> {
     LocationsProvider locationsProvider =
         Provider.of<LocationsProvider>(context);
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
-    NotificationsProvider notifsProvider =
-        Provider.of<NotificationsProvider>(context);
     AppConfig appConfig = AppConfig.of(context);
     double headerHeight = 100;
 
