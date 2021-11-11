@@ -303,8 +303,25 @@ class _HomeState extends State<Home> {
   _onMessage(RemoteMessage message) {
     print('received message');
     RemoteNotification notification = message.notification;
+    Map<String, dynamic> data = message.data;
     AndroidNotification android = message.notification?.android;
     if (notification != null && android != null) {
+      Ride ride = Ride.fromJson(json.decode(data['ride']));
+      RidesProvider ridesProvider =
+          Provider.of<RidesProvider>(context, listen: false);
+      ridesProvider.updateRideByID(ride);
+      print('updated ride by ID');
+
+      NotificationsProvider notifsProvider =
+          Provider.of<NotificationsProvider>(context, listen: false);
+      BackendNotification backendNotif = BackendNotification(
+          getNotifEventEnum(data['notifEvent']),
+          notification.body,
+          ride.id,
+          DateTime.now());
+      notifsProvider.addNewNotif(backendNotif);
+      print('added notif');
+
       notificationsPlugin.show(
           notification.hashCode,
           notification.title,

@@ -17,11 +17,12 @@ enum NotifEvent {
   DRIVER_NO_SHOW,
   RIDE_CREATED,
   RIDE_EDITED,
-  RIDE_CONFIRMED,
+  RIDE_SCHEDULED,
   RIDE_CANCELLED,
 }
 
 NotifEvent getNotifEventEnum(String notifEvent) {
+  print(notifEvent);
   switch (notifEvent) {
     case ('arrived'):
       return NotifEvent.DRIVER_ARRIVED;
@@ -35,8 +36,8 @@ NotifEvent getNotifEventEnum(String notifEvent) {
       return NotifEvent.RIDE_CREATED;
     case ('edited'):
       return NotifEvent.RIDE_EDITED;
-    case ('confirmed'):
-      return NotifEvent.RIDE_CONFIRMED;
+    case ('scheduled'):
+      return NotifEvent.RIDE_SCHEDULED;
     case ('cancelled'):
       return NotifEvent.RIDE_CANCELLED;
     default:
@@ -196,7 +197,7 @@ class _NotificationsState extends State<Notifications> {
         return AdminNotification(ride, time, message, Colors.red, Icons.close);
       case NotifEvent.RIDE_EDITED:
         return AdminNotification(ride, time, message, Colors.red, Icons.edit);
-      case NotifEvent.RIDE_CONFIRMED:
+      case NotifEvent.RIDE_SCHEDULED:
         return AdminNotification(
             ride, time, message, Colors.green, Icons.check);
       default:

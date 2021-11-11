@@ -162,56 +162,6 @@ class Ride {
             : DateFormat('yyyy-MM-dd').parse(json['endDate']));
   }
 
-  factory Ride.fromJsonLocationIDs(Map<String, dynamic> json, BuildContext context) {
-    Ride ride = Ride(
-        id: json['id'],
-        type: json['type'],
-        rider: Rider.fromJson(json['rider']),
-        status: getStatusEnum(json['status']),
-        startLocation: json['startLocation'],
-        startAddress: json['startLocation'],
-        endLocation: json['endLocation'],
-        endAddress: json['endLocation'],
-        startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(json['startTime'], true)
-            .toLocal(),
-        endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(json['endTime'], true)
-            .toLocal(),
-        recurring: json['recurring'] == null ? false : json['recurring'],
-        recurringDays:
-        json['recurringDays'] == null ? null : List.from(json['recurringDays']),
-        deleted: json['deleted'] == null
-            ? null
-            : List<String>.from(json['deleted'])
-            .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
-            .toList(),
-        late: json['late'],
-        driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
-        edits: json['edits'] == null ? null : List.from(json['edits']),
-        endDate: json['endDate'] == null
-            ? null
-            : DateFormat('yyyy-MM-dd').parse(json['endDate'])
-    );
-    LocationsProvider locationsProvider = Provider.of<LocationsProvider>(context, listen: false);
-    Map<String, Location> locationsByID = locationsProvider.locationsByID();
-    String startLocationID = ride.startLocation;
-    String endLocationID = ride.endLocation;
-    Location startLocation = locationsByID[startLocationID];
-    print('----Ride factory');
-    print('startLocation');
-    print(startLocation);
-    print(locationsByID[startLocationID]);
-    Location endLocation = locationsByID[endLocationID];
-    print(locationsByID[endLocationID]);
-
-    ride.startLocation = startLocation.name;
-    ride.startAddress = startLocation.address;
-    ride.endLocation = endLocation.name;
-    ride.endAddress = endLocation.address;
-    return ride;
-  }
-
   //Widget displaying the start time of a ride using DateFormat.
   Widget buildStartTime(BuildContext context) {
     return RichText(
