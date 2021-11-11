@@ -161,8 +161,10 @@ class Notification extends StatelessWidget {
 }
 
 class BackendNotification {
-  BackendNotification(this.type, this.message, this.rideID, this.timeSent);
+  BackendNotification(
+      this.id, this.type, this.message, this.rideID, this.timeSent);
 
+  final String id;
   final NotifEvent type;
   final String message;
   final DateTime timeSent;

@@ -5,13 +5,19 @@ import 'package:flutter/material.dart';
 class NotificationsProvider with ChangeNotifier {
   bool hasNewNotif = false;
   List<BackendNotification> notifs = [];
+  // Notification ids and this id set are necessary to prevent duplicate
+  // notifications, in the case where user receives foreground notification,
+  // leaves app, then taps on notification.
+  Set<String> notifIds = new Set();
 
   void addNewNotif(BackendNotification newNotif) {
     print('addNewNotif');
     print(newNotif);
-    hasNewNotif = true;
-    notifs.add(newNotif);
-    notifyListeners();
+    if (!notifIds.contains(newNotif.id)) {
+      hasNewNotif = true;
+      notifs.add(newNotif);
+      notifyListeners();
+    }
   }
 
   void notifOpened() {
