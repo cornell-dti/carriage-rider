@@ -277,7 +277,7 @@ class _HomeState extends State<Home> {
       'High Importance Notifications', // title
       description:
           'This channel is used for important notifications.', // description
-      importance: Importance.high,
+      importance: Importance.max,
     );
 
     notificationsPlugin = FlutterLocalNotificationsPlugin();
