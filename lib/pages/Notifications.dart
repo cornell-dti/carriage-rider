@@ -232,21 +232,15 @@ class _NotificationsState extends State<Notifications> {
         appBar: ScheduleBar(
             Colors.black, Theme.of(context).scaffoldBackgroundColor),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
-                    child:
-                        Text('Notifications', style: CarriageTheme.largeTitle),
-                  ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: notifWidgets.reversed.toList(),
-                  )
-                ]),
-          ),
-        ));
+            child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 8.0),
+                child: Text('Notifications', style: CarriageTheme.largeTitle),
+              ),
+              Column(children: notifWidgets.reversed.toList())
+            ]))));
   }
 }
