@@ -60,23 +60,23 @@ class MyApp extends StatelessWidget {
                       title: 'Carriage Rider',
                       theme: ThemeData(
                           primarySwatch: Colors.green,
-                          fontFamily: 'SFPro',
+                          fontFamily: 'Inter',
                           accentColor: Color.fromRGBO(60, 60, 67, 0.6),
                           textTheme: TextTheme(
                             headline4: TextStyle(
-                                fontFamily: 'SFDisplay',
+                                fontFamily: 'Inter',
                                 fontSize: 34,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.37,
                                 color: Colors.black),
                             headline5: TextStyle(
-                                fontFamily: 'SFDisplay',
+                                fontFamily: 'Inter',
                                 fontSize: 28,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.23,
                                 color: Colors.black),
                             headline6: TextStyle(
-                                fontFamily: 'SFDisplay',
+                                fontFamily: 'Inter',
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.38,

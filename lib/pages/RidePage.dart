@@ -150,7 +150,7 @@ class PageTitle extends StatelessWidget {
         Container(
           child: Text(title,
               style: TextStyle(
-                  color: Colors.black, fontSize: 20, fontFamily: 'SFPro')),
+                  color: Colors.black, fontSize: 20, fontFamily: 'Inter')),
         )
       ],
     );
@@ -171,7 +171,7 @@ class Header extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 34,
-                fontFamily: 'SFProDisplay',
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.bold,
               )),
         )
@@ -197,7 +197,7 @@ class SubHeader extends StatelessWidget {
               style: TextStyle(
                   color: Colors.grey[800],
                   fontSize: 20,
-                  fontFamily: 'SFPro',
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.bold)),
           SizedBox(width: 10.0),
           Text(subHeader2,
@@ -250,7 +250,7 @@ class CancelRideButton extends StatelessWidget {
                 SizedBox(width: 10),
                 Text('Cancel Ride',
                     style: TextStyle(
-                        color: Colors.red, fontSize: 18, fontFamily: 'SFPro'))
+                        color: Colors.red, fontSize: 18, fontFamily: 'Inter'))
               ],
             ),
           ),
@@ -817,10 +817,10 @@ class InformationRow extends StatelessWidget {
           children: <Widget>[
             Text(loc,
                 style: TextStyle(
-                    color: Colors.black, fontSize: 18, fontFamily: 'SFPro')),
+                    color: Colors.black, fontSize: 18, fontFamily: 'Inter')),
             Text(action,
                 style: TextStyle(
-                    color: Colors.grey, fontSize: 13, fontFamily: 'SFPro')),
+                    color: Colors.grey, fontSize: 13, fontFamily: 'Inter')),
           ],
         ),
         SizedBox(height: 5.0),
@@ -829,10 +829,10 @@ class InformationRow extends StatelessWidget {
           children: <Widget>[
             Text(address,
                 style: TextStyle(
-                    color: Colors.grey, fontSize: 12, fontFamily: 'SFPro')),
+                    color: Colors.grey, fontSize: 12, fontFamily: 'Inter')),
             Text(time,
                 style: TextStyle(
-                    color: Colors.grey, fontSize: 12, fontFamily: 'SFPro'))
+                    color: Colors.grey, fontSize: 12, fontFamily: 'Inter'))
           ],
         )
       ],

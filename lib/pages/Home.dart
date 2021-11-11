@@ -26,13 +26,7 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/models/Ride.dart';
 import 'Upcoming.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
-}
-
 void main() async {
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   MaterialApp(routes: {
     '/': (context) => Home(),
   });
@@ -112,7 +106,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 30,
-                              fontFamily: 'SFPro',
+                              fontFamily: 'Inter',
                               fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -394,7 +388,7 @@ class _HomeState extends State<Home> {
       return Text(
         text,
         textAlign: TextAlign.left,
-        style: TextStyle(color: color, fontFamily: 'SFPro'),
+        style: TextStyle(color: color, fontFamily: 'Inter'),
       );
     }
 
