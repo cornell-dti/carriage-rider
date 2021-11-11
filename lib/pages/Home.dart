@@ -289,7 +289,6 @@ class _HomeState extends State<Home> {
       RidesProvider ridesProvider =
           Provider.of<RidesProvider>(context, listen: false);
       ridesProvider.updateRideByID(ride);
-      print('updated ride by ID');
 
       NotificationsProvider notifsProvider =
           Provider.of<NotificationsProvider>(context, listen: false);
@@ -300,7 +299,6 @@ class _HomeState extends State<Home> {
           ride.id,
           DateTime.now());
       notifsProvider.addNewNotif(backendNotif);
-      print('added notif');
 
       notificationsPlugin.show(
           notification.hashCode,
@@ -331,7 +329,6 @@ class _HomeState extends State<Home> {
       RidesProvider ridesProvider =
           Provider.of<RidesProvider>(context, listen: false);
       ridesProvider.updateRideByID(ride);
-      print('updated ride by ID');
 
       NotificationsProvider notifsProvider =
           Provider.of<NotificationsProvider>(context, listen: false);
@@ -342,7 +339,6 @@ class _HomeState extends State<Home> {
           ride.id,
           DateTime.now());
       notifsProvider.addNewNotif(backendNotif);
-      print('added notif');
     }
 
     Navigator.push(

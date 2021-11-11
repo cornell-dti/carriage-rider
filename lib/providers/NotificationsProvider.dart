@@ -11,8 +11,6 @@ class NotificationsProvider with ChangeNotifier {
   Set<String> notifIds = new Set();
 
   void addNewNotif(BackendNotification newNotif) {
-    print('addNewNotif');
-    print(newNotif);
     if (!notifIds.contains(newNotif.id)) {
       hasNewNotif = true;
       notifs.add(newNotif);

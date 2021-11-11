@@ -22,7 +22,6 @@ enum NotifEvent {
 }
 
 NotifEvent getNotifEventEnum(String notifEvent) {
-  print(notifEvent);
   switch (notifEvent) {
     case ('arrived'):
       return NotifEvent.DRIVER_ARRIVED;
