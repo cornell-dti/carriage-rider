@@ -10,31 +10,37 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-enum NotifType {
+enum NotifEvent {
   DRIVER_ARRIVED,
   DRIVER_ON_THE_WAY,
   DRIVER_LATE,
-  DRIVER_CANCELLED,
+  DRIVER_NO_SHOW,
+  RIDE_CREATED,
   RIDE_EDITED,
-  RIDE_CONFIRMED
+  RIDE_CONFIRMED,
+  RIDE_CANCELLED,
 }
 
-String notifMessage(NotifType type, Ride ride, DateTime time) {
-  switch (type) {
-    case NotifType.DRIVER_ARRIVED:
-      return 'Your driver is here! Meet your driver at the pickup point for ${ride.endLocation}.';
-    case NotifType.DRIVER_ON_THE_WAY:
-      return 'Your driver is on the way! Wait outside at the pickup point for ${ride.endLocation}.';
-    case NotifType.DRIVER_LATE:
-      return 'Your driver is running late but will meet you soon at the pickup point for ${ride.endLocation}.';
-    case NotifType.DRIVER_CANCELLED:
-      return 'Your driver cancelled your ride to ${ride.endLocation} because they were unable to find you.';
-    case NotifType.RIDE_EDITED:
-      return 'The information for your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been edited. Please review your ride info.';
-    case NotifType.RIDE_CONFIRMED:
-      return 'Your ride on ${DateFormat('MM/dd/yyyy').format(ride.startTime)} has been confirmed.';
+NotifEvent getNotifEventEnum(String notifEvent) {
+  switch (notifEvent) {
+    case ('arrived'):
+      return NotifEvent.DRIVER_ARRIVED;
+    case ('on_the_way'):
+      return NotifEvent.DRIVER_ON_THE_WAY;
+    case ('late'):
+      return NotifEvent.DRIVER_LATE;
+    case ('no_show'):
+      return NotifEvent.DRIVER_NO_SHOW;
+    case ('created'):
+      return NotifEvent.RIDE_CREATED;
+    case ('edited'):
+      return NotifEvent.RIDE_EDITED;
+    case ('confirmed'):
+      return NotifEvent.RIDE_CONFIRMED;
+    case ('cancelled'):
+      return NotifEvent.RIDE_CANCELLED;
     default:
-      throw Exception('Invalid notification type for notifMessage');
+      throw Exception('Notif event is invalid');
   }
 }
 
@@ -54,8 +60,8 @@ class DriverNotification extends StatelessWidget {
   }
 }
 
-class DispatcherNotification extends StatelessWidget {
-  DispatcherNotification(
+class AdminNotification extends StatelessWidget {
+  AdminNotification(
       this.ride, this.notifTime, this.text, this.color, this.iconData);
 
   final Ride ride;
@@ -74,8 +80,7 @@ class DispatcherNotification extends StatelessWidget {
           foregroundColor: Colors.white,
           child: Icon(iconData),
         ));
-    return Notification(
-        this.ride, this.notifTime, icon, 'Dispatcher', this.text);
+    return Notification(this.ride, this.notifTime, icon, 'Admin', this.text);
   }
 }
 
@@ -154,62 +159,23 @@ class Notification extends StatelessWidget {
   }
 }
 
-NotifType typeFromNotifJson(Map<String, dynamic> json) {
-  print('----Notifications typeFromNotifJson');
-  print(json['changeType']);
-
-  switch (json['changeType']) {
-    case 'on_the_way':
-      return NotifType.DRIVER_ON_THE_WAY;
-    case 'arrived':
-      return NotifType.DRIVER_ARRIVED;
-    case 'no_show':
-    case 'cancelled':
-      return NotifType.DRIVER_CANCELLED;
-    case 'late':
-      return NotifType.DRIVER_LATE;
-    case 'scheduled':
-      return NotifType.RIDE_CONFIRMED;
-    case 'edited':
-    case 'repeating_edited':
-      return NotifType.RIDE_EDITED;
-    default:
-      throw Exception('No notification type parsed from json in typeFromJson');
-  }
-}
-
-String rideIDFromNotifJson(Map<String, dynamic> json) {
-  return json['ride']['id'];
-}
-
 class BackendNotification {
-  BackendNotification(this.type, this.rideID, this.timeSent);
+  BackendNotification(this.type, this.message, this.rideID, this.timeSent);
 
-  final NotifType type;
+  final NotifEvent type;
+  final String message;
   final DateTime timeSent;
   final String rideID;
-
-  factory BackendNotification.fromJson(Map<String, dynamic> json) {
-    print('----Notifications factory');
-    print(json);
-    String rideID = rideIDFromNotifJson(json);
-    print('ride ID');
-    print(rideID);
-    NotifType type = typeFromNotifJson(json);
-    print('type');
-    print(type);
-    return BackendNotification(type, rideID, DateTime.now());
-  }
 
   String toString() => 'Notification $type: $rideID';
 }
 
-class NotificationsPage extends StatefulWidget {
+class Notifications extends StatefulWidget {
   @override
-  _NotificationsPageState createState() => _NotificationsPageState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     super.initState();
@@ -220,20 +186,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
-  Widget buildNotification(NotifType type, Ride ride, DateTime time) {
-    String message = notifMessage(type, ride, time);
+  Widget buildNotification(
+      NotifEvent type, String message, DateTime time, Ride ride) {
     switch (type) {
-      case NotifType.DRIVER_ARRIVED:
-      case NotifType.DRIVER_ON_THE_WAY:
+      case NotifEvent.DRIVER_ARRIVED:
+      case NotifEvent.DRIVER_ON_THE_WAY:
         return DriverNotification(ride, time, message);
-      case NotifType.DRIVER_CANCELLED:
-        return DispatcherNotification(
-            ride, time, message, Colors.red, Icons.close);
-      case NotifType.RIDE_EDITED:
-        return DispatcherNotification(
-            ride, time, message, Colors.red, Icons.edit);
-      case NotifType.RIDE_CONFIRMED:
-        return DispatcherNotification(
+      case NotifEvent.DRIVER_NO_SHOW:
+        return AdminNotification(ride, time, message, Colors.red, Icons.close);
+      case NotifEvent.RIDE_EDITED:
+        return AdminNotification(ride, time, message, Colors.red, Icons.edit);
+      case NotifEvent.RIDE_CONFIRMED:
+        return AdminNotification(
             ride, time, message, Colors.green, Icons.check);
       default:
         throw Exception('Notification could not be built: $type, ${ride.id}');
@@ -257,7 +221,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
       Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID,
           orElse: () => null);
       if (ride != null) {
-        notifWidgets.add(buildNotification(notif.type, ride, notif.timeSent));
+        notifWidgets.add(
+            buildNotification(notif.type, notif.message, notif.timeSent, ride));
       }
     });
 
