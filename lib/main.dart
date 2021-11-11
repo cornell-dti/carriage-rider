@@ -6,7 +6,7 @@ import 'main_common.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   String notifId = message.data['id'];
-  print('Handling a background message $notifId');
+  print('handling a background message $notifId');
 }
 
 void main() async {
