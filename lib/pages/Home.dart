@@ -204,24 +204,6 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  // // flutter local notifs callback when selecting a background notification
-  // Future<void> onSelectNotification(String payload) async {
-  //   print('onSelectNotification payload: ' + payload);
-  //   Map<String, dynamic> json = jsonDecode(payload);
-  //   Map<String, dynamic> rideJson = jsonDecode(payload)['ride'];
-  //   print(jsonEncode(rideJson));
-  //   Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
-  //   RidesProvider ridesProvider =
-  //       Provider.of<RidesProvider>(context, listen: false);
-  //   ridesProvider.updateRideByID(ride);
-  //   NotificationsProvider notifsProvider =
-  //       Provider.of<NotificationsProvider>(context, listen: false);
-  //   notifsProvider.addNewNotif(BackendNotification.fromJson(json));
-  //   print(BackendNotification.fromJson(json));
-  //   Navigator.push(
-  //       context, MaterialPageRoute(builder: (context) => Notifications()));
-  // }
-
   subscribe(String token) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
@@ -295,10 +277,13 @@ class _HomeState extends State<Home> {
   }
 
   _onMessage(RemoteMessage message) {
-    print('received message');
-    RemoteNotification notification = message.notification;
     Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('received message $notifId');
+
+    RemoteNotification notification = message.notification;
     AndroidNotification android = message.notification?.android;
+
     if (notification != null && android != null) {
       Ride ride = Ride.fromJson(json.decode(data['ride']));
       RidesProvider ridesProvider =
@@ -309,6 +294,7 @@ class _HomeState extends State<Home> {
       NotificationsProvider notifsProvider =
           Provider.of<NotificationsProvider>(context, listen: false);
       BackendNotification backendNotif = BackendNotification(
+          notifId,
           getNotifEventEnum(data['notifEvent']),
           notification.body,
           ride.id,
@@ -333,44 +319,34 @@ class _HomeState extends State<Home> {
     }
   }
 
-  // Future<void> onForegroundNotif(Map<String, dynamic> message) async {
-  //   print('onForegroundNotif');
-  //   print(message);
-  //   String data =
-  //       Platform.isIOS ? message['default'] : message['data']['default'];
-  //   Map<String, dynamic> json = jsonDecode(data);
-  //   Map<String, dynamic> rideJson = json['ride'];
-  //   print(rideJson);
-  //   print(json['changeType']);
-  //   print(json['changedBy']);
-  //   Ride ride = Ride.fromJsonLocationIDs(rideJson, context);
-  //   RidesProvider ridesProvider =
-  //       Provider.of<RidesProvider>(context, listen: false);
-  //   ridesProvider.updateRideByID(ride);
-  //   print('updated ride by ID');
-  //   NotificationsProvider notifsProvider =
-  //       Provider.of<NotificationsProvider>(context, listen: false);
-  //   notifsProvider.addNewNotif(BackendNotification.fromJson(json));
-  //   print('added new notif');
-  //   print('end of onForegroundNotif');
-  // }
-
-  // Future<void> onNotifPressed(Map<String, dynamic> message) async {
-  //   print('notifPressed');
-  //   Map<String, dynamic> json = jsonDecode(
-  //       Platform.isIOS ? message['default'] : message['data']['default']);
-  //   RidesProvider ridesProvider =
-  //       Provider.of<RidesProvider>(context, listen: false);
-  //   ridesProvider.updateRideByID(Ride.fromJson(json['ride']));
-  //   NotificationsProvider notifsProvider =
-  //       Provider.of<NotificationsProvider>(context, listen: false);
-  //   notifsProvider.addNewNotif(BackendNotification.fromJson(json));
-  //   Navigator.push(
-  //       context, MaterialPageRoute(builder: (context) => Notifications()));
-  // }
-
   _onMessageOpenedApp(RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
+    Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('app launched from message $notifId');
+
+    RemoteNotification notification = message.notification;
+
+    if (notification != null) {
+      Ride ride = Ride.fromJson(json.decode(data['ride']));
+      RidesProvider ridesProvider =
+          Provider.of<RidesProvider>(context, listen: false);
+      ridesProvider.updateRideByID(ride);
+      print('updated ride by ID');
+
+      NotificationsProvider notifsProvider =
+          Provider.of<NotificationsProvider>(context, listen: false);
+      BackendNotification backendNotif = BackendNotification(
+          notifId,
+          getNotifEventEnum(data['notifEvent']),
+          notification.body,
+          ride.id,
+          DateTime.now());
+      notifsProvider.addNewNotif(backendNotif);
+      print('added notif');
+    }
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Notifications()));
   }
 
   @override
