@@ -284,7 +284,7 @@ class _HomeState extends State<Home> {
     RemoteNotification notification = message.notification;
     AndroidNotification android = message.notification?.android;
 
-    if (notification != null && android != null) {
+    if (notification != null) {
       Ride ride = Ride.fromJson(json.decode(data['ride']));
       RidesProvider ridesProvider =
           Provider.of<RidesProvider>(context, listen: false);
@@ -300,20 +300,22 @@ class _HomeState extends State<Home> {
           DateTime.now());
       notifsProvider.addNewNotif(backendNotif);
 
-      notificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ));
+      if (android != null) {
+        notificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
+              ),
+            ));
+      }
     }
   }
 
