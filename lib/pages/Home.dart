@@ -61,7 +61,7 @@ class _HomeHeaderState extends State<HomeHeader> {
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
     NotificationsProvider notifsProvider =
-        Provider.of<NotificationsProvider>(context, listen: false);
+        Provider.of<NotificationsProvider>(context, listen: true);
 
     double iconButtonSize = 48;
     double iconButtonSpacing = 8;
