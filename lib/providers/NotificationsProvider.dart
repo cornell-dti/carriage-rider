@@ -14,6 +14,7 @@ class NotificationsProvider with ChangeNotifier {
     if (!notifIds.contains(newNotif.id)) {
       hasNewNotif = true;
       notifs.add(newNotif);
+      notifIds.add(newNotif.id);
       notifyListeners();
     }
   }
