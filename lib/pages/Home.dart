@@ -341,10 +341,10 @@ class _HomeState extends State<Home> {
           ride.id,
           DateTime.now());
       notifsProvider.addNewNotif(backendNotif);
-    }
 
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Notifications()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Notifications()));
+    }
   }
 
   @override
