@@ -18,6 +18,7 @@ The **Driver App** branch can be found [here](https://github.com/cornell-dti/car
 * Tony Yang - Software Developer
 * Megan Chang - Designer
 * Aiden Kim - Designer
+* Mikayla Lin - Software Developer
 
 **Past Contributors**
 * Sam Steinberg - Product Manager
