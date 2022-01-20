@@ -276,7 +276,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _onMessage(RemoteMessage message) {
+  _onMessage(RemoteMessage message) async {
     Map<String, dynamic> data = message.data;
     String notifId = data['id'];
     print('received message $notifId');
@@ -288,7 +288,16 @@ class _HomeState extends State<Home> {
       Ride ride = Ride.fromJson(json.decode(data['ride']));
       RidesProvider ridesProvider =
           Provider.of<RidesProvider>(context, listen: false);
-      ridesProvider.updateRideByID(ride);
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
+      AppConfig appConfig = AppConfig.of(context);
+      try {
+        ridesProvider.getRideByID(ride.id);
+      } catch (Exception) {
+        await ridesProvider.fetchAllRides(appConfig, authProvider);
+      } finally {
+        ridesProvider.updateRideByID(ride);
+      }
 
       NotificationsProvider notifsProvider =
           Provider.of<NotificationsProvider>(context, listen: false);
@@ -319,7 +328,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  _onMessageOpenedApp(RemoteMessage message) {
+  _onMessageOpenedApp(RemoteMessage message) async {
     Map<String, dynamic> data = message.data;
     String notifId = data['id'];
     print('app launched from message $notifId');
@@ -330,7 +339,16 @@ class _HomeState extends State<Home> {
       Ride ride = Ride.fromJson(json.decode(data['ride']));
       RidesProvider ridesProvider =
           Provider.of<RidesProvider>(context, listen: false);
-      ridesProvider.updateRideByID(ride);
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
+      AppConfig appConfig = AppConfig.of(context);
+      try {
+        ridesProvider.getRideByID(ride.id);
+      } catch (Exception) {
+        await ridesProvider.fetchAllRides(appConfig, authProvider);
+      } finally {
+        ridesProvider.updateRideByID(ride);
+      }
 
       NotificationsProvider notifsProvider =
           Provider.of<NotificationsProvider>(context, listen: false);

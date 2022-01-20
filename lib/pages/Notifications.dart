@@ -193,12 +193,15 @@ class _NotificationsState extends State<Notifications> {
     switch (type) {
       case NotifEvent.DRIVER_ARRIVED:
       case NotifEvent.DRIVER_ON_THE_WAY:
+      case NotifEvent.DRIVER_LATE:
         return DriverNotification(ride, time, message);
       case NotifEvent.DRIVER_NO_SHOW:
+      case NotifEvent.RIDE_CANCELLED:
         return AdminNotification(ride, time, message, Colors.red, Icons.close);
       case NotifEvent.RIDE_EDITED:
         return AdminNotification(ride, time, message, Colors.red, Icons.edit);
       case NotifEvent.RIDE_SCHEDULED:
+      case NotifEvent.RIDE_CREATED:
         return AdminNotification(
             ride, time, message, Colors.green, Icons.check);
       default:
