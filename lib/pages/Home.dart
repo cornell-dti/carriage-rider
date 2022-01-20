@@ -339,7 +339,7 @@ class _HomeState extends State<Home> {
           getNotifEventEnum(data['notifEvent']),
           notification.body,
           ride.id,
-          message.sentTime);
+          DateTime.parse(data['sentTime']));
       notifsProvider.addNewNotif(backendNotif);
 
       Navigator.push(
