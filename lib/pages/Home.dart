@@ -285,12 +285,15 @@ class _HomeState extends State<Home> {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     AppConfig appConfig = AppConfig.of(context);
-    try {
-      ridesProvider.getRideByID(ride.id);
-    } catch (Exception) {
-      await ridesProvider.fetchAllRides(appConfig, authProvider);
-    } finally {
-      ridesProvider.updateRideByID(ride);
+
+    if (ride.status != RideStatus.CANCELLED) {
+      try {
+        ridesProvider.getRideByID(ride.id);
+      } catch (Exception) {
+        await ridesProvider.fetchAllRides(appConfig, authProvider);
+      } finally {
+        ridesProvider.updateRideByID(ride);
+      }
     }
 
     NotificationsProvider notifsProvider =
