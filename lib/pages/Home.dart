@@ -276,6 +276,34 @@ class _HomeState extends State<Home> {
     );
   }
 
+  _handleNotification(RemoteNotification notification, String notifId,
+      Map<String, dynamic> data) async {
+    print(json.decode(data['ride']));
+    Ride ride = Ride.fromJson(json.decode(data['ride']));
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    AppConfig appConfig = AppConfig.of(context);
+    try {
+      ridesProvider.getRideByID(ride.id);
+    } catch (Exception) {
+      await ridesProvider.fetchAllRides(appConfig, authProvider);
+    } finally {
+      ridesProvider.updateRideByID(ride);
+    }
+
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    BackendNotification backendNotif = BackendNotification(
+        notifId,
+        getNotifEventEnum(data['notifEvent']),
+        notification.body,
+        ride.id,
+        DateTime.parse(data['sentTime']));
+    notifsProvider.addNewNotif(backendNotif);
+  }
+
   _onMessage(RemoteMessage message) async {
     Map<String, dynamic> data = message.data;
     String notifId = data['id'];
@@ -285,30 +313,7 @@ class _HomeState extends State<Home> {
     AndroidNotification android = message.notification?.android;
 
     if (notification != null) {
-      Ride ride = Ride.fromJson(json.decode(data['ride']));
-      RidesProvider ridesProvider =
-          Provider.of<RidesProvider>(context, listen: false);
-      AuthProvider authProvider =
-          Provider.of<AuthProvider>(context, listen: false);
-      AppConfig appConfig = AppConfig.of(context);
-      try {
-        ridesProvider.getRideByID(ride.id);
-      } catch (Exception) {
-        await ridesProvider.fetchAllRides(appConfig, authProvider);
-      } finally {
-        ridesProvider.updateRideByID(ride);
-      }
-
-      NotificationsProvider notifsProvider =
-          Provider.of<NotificationsProvider>(context, listen: false);
-      BackendNotification backendNotif = BackendNotification(
-          notifId,
-          getNotifEventEnum(data['notifEvent']),
-          notification.body,
-          ride.id,
-          DateTime.parse(data['sentTime']));
-      notifsProvider.addNewNotif(backendNotif);
-
+      _handleNotification(notification, notifId, data);
       if (android != null) {
         notificationsPlugin.show(
             notification.hashCode,
@@ -336,30 +341,7 @@ class _HomeState extends State<Home> {
     RemoteNotification notification = message.notification;
 
     if (notification != null) {
-      Ride ride = Ride.fromJson(json.decode(data['ride']));
-      RidesProvider ridesProvider =
-          Provider.of<RidesProvider>(context, listen: false);
-      AuthProvider authProvider =
-          Provider.of<AuthProvider>(context, listen: false);
-      AppConfig appConfig = AppConfig.of(context);
-      try {
-        ridesProvider.getRideByID(ride.id);
-      } catch (Exception) {
-        await ridesProvider.fetchAllRides(appConfig, authProvider);
-      } finally {
-        ridesProvider.updateRideByID(ride);
-      }
-
-      NotificationsProvider notifsProvider =
-          Provider.of<NotificationsProvider>(context, listen: false);
-      BackendNotification backendNotif = BackendNotification(
-          notifId,
-          getNotifEventEnum(data['notifEvent']),
-          notification.body,
-          ride.id,
-          DateTime.parse(data['sentTime']));
-      notifsProvider.addNewNotif(backendNotif);
-
+      _handleNotification(notification, notifId, data);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Notifications()));
     }
