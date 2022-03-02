@@ -56,18 +56,20 @@ class LocationsProvider with ChangeNotifier {
   //Fetches the rider's favorite locations from the backend.
   Future<void> fetchFavoriteLocations(
       AppConfig config, AuthProvider authProvider) async {
-    String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get(
-        Uri.parse('${config.baseUrl}/riders/${authProvider.id}/favorites'),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    if (response.statusCode == 200) {
-      String responseBody = response.body;
-      favLocations = _locationsFromJson(responseBody);
-      notifyListeners();
-    } else {
-      await Future.delayed(retryDelay);
-      fetchFavoriteLocations(config, authProvider);
-    }
+    // TODO: remove commented code
+    favLocations = [];
+    // String token = await authProvider.secureStorage.read(key: 'token');
+    // final response = await http.get(
+    //     Uri.parse('${config.baseUrl}/riders/${authProvider.id}/favorites'),
+    //     headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    // if (response.statusCode == 200) {
+    //   String responseBody = response.body;
+    //   favLocations = _locationsFromJson(responseBody);
+    //   notifyListeners();
+    // } else {
+    //   await Future.delayed(retryDelay);
+    //   fetchFavoriteLocations(config, authProvider);
+    // }
   }
 
   //Decodes the string [json] of locations into a list representation of the locations.
