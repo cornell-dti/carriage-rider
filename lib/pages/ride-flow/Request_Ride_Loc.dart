@@ -413,6 +413,15 @@ class LocationInput extends StatelessWidget {
           ));
     }
 
+    bool validateLocation(String input) {
+      if (locationsProvider.locationByName(input) != null) {
+        return true;
+      }
+      RegExp addressExp = RegExp(r"\d+(\s\w+){2,}");
+      Iterable<RegExpMatch> match = addressExp.allMatches(input);
+      return match.isNotEmpty;
+    }
+
     Widget textField = TextFormField(
       focusNode: AlwaysDisabledFocusNode(),
       enableInteractiveSelection: false,
@@ -428,6 +437,8 @@ class LocationInput extends StatelessWidget {
           return 'Please enter your ' +
               (isToLocation ? 'drop off' : 'pick up') +
               ' location';
+        } else if (!validateLocation(input)) {
+          return 'Invalid format (ex. 123 Campus Road)';
         }
         return null;
       },
