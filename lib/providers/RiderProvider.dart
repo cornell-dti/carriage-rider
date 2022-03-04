@@ -85,7 +85,7 @@ class Rider {
         json['description'],
         json['photoLink'] == null
             ? null
-            : 'https://${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+            : '${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
         json['joinDate'],
         json['address']);
   }
