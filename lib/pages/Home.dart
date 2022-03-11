@@ -278,15 +278,16 @@ class _HomeState extends State<Home> {
 
   _handleNotification(RemoteNotification notification, String notifId,
       Map<String, dynamic> data) async {
-    print(json.decode(data['ride']));
-    Ride ride = Ride.fromJson(json.decode(data['ride']));
-    RidesProvider ridesProvider =
-        Provider.of<RidesProvider>(context, listen: false);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    AppConfig appConfig = AppConfig.of(context);
+    NotifEvent notifEvent = getNotifEventEnum(data['notifEvent']);
+    Ride ride;
+    if (notifEvent != NotifEvent.RIDE_CANCELLED) {
+      ride = Ride.fromJson(json.decode(data['ride']));
+      RidesProvider ridesProvider =
+          Provider.of<RidesProvider>(context, listen: false);
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
+      AppConfig appConfig = AppConfig.of(context);
 
-    if (ride.status != RideStatus.CANCELLED) {
       try {
         ridesProvider.getRideByID(ride.id);
       } catch (Exception) {
@@ -302,7 +303,7 @@ class _HomeState extends State<Home> {
         notifId,
         getNotifEventEnum(data['notifEvent']),
         notification.body,
-        ride.id,
+        ride?.id,
         DateTime.parse(data['sentTime']));
     notifsProvider.addNewNotif(backendNotif);
   }

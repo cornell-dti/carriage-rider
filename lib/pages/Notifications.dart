@@ -118,8 +118,10 @@ class Notification extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RidePage(ride)));
+        if (ride != null) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => RidePage(ride)));
+        }
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -225,10 +227,8 @@ class _NotificationsState extends State<Notifications> {
     backendNotifs.forEach((notif) {
       Ride ride = rides.firstWhere((ride) => ride.id == notif.rideID,
           orElse: () => null);
-      if (ride != null) {
-        notifWidgets.add(
-            buildNotification(notif.type, notif.message, notif.timeSent, ride));
-      }
+      notifWidgets.add(
+          buildNotification(notif.type, notif.message, notif.timeSent, ride));
     });
 
     return Scaffold(
