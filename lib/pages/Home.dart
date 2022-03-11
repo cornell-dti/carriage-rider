@@ -278,23 +278,28 @@ class _HomeState extends State<Home> {
 
   _handleNotification(RemoteNotification notification, String notifId,
       Map<String, dynamic> data) async {
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    AppConfig appConfig = AppConfig.of(context);
     NotifEvent notifEvent = getNotifEventEnum(data['notifEvent']);
     Ride ride;
     if (notifEvent != NotifEvent.RIDE_CANCELLED) {
       ride = Ride.fromJson(json.decode(data['ride']));
-      RidesProvider ridesProvider =
-          Provider.of<RidesProvider>(context, listen: false);
-      AuthProvider authProvider =
-          Provider.of<AuthProvider>(context, listen: false);
-      AppConfig appConfig = AppConfig.of(context);
-
       try {
+        // Check if ride exists
         ridesProvider.getRideByID(ride.id);
       } catch (Exception) {
+        // Get most up to date rides from server
         await ridesProvider.fetchAllRides(appConfig, authProvider);
       } finally {
+        // Update ride with new information
         ridesProvider.updateRideByID(ride);
       }
+    } else {
+      // Updating from server will remove cancelled ride
+      await ridesProvider.fetchAllRides(appConfig, authProvider);
     }
 
     NotificationsProvider notifsProvider =
