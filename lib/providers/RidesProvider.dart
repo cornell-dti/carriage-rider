@@ -85,12 +85,19 @@ class RidesProvider with ChangeNotifier {
   Future<void> _fetchExistingUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final response = await http.get(
+    final upcomingRides = await http.get(
         Uri.parse(
             '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    if (response.statusCode == 200) {
-      List<Ride> rides = _ridesFromJson(response.body).toList();
+    // Small workaround for rides that are currently occuring but weren't fetched
+    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final todayRides = await http.get(
+        Uri.parse(
+            '${config.baseUrl}/rides?date=$todayDate&type=active&rider=${authProvider.id}'),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (upcomingRides.statusCode == 200 && todayRides.statusCode == 200) {
+      List<Ride> rides = _ridesFromJson(upcomingRides.body).toList();
+      rides.addAll(_ridesFromJson(todayRides.body));
       rides.sort((a, b) => a.startTime.compareTo(b.startTime));
       existingUpcomingRides = rides;
     }
