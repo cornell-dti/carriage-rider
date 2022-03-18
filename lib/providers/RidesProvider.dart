@@ -85,21 +85,27 @@ class RidesProvider with ChangeNotifier {
   Future<void> _fetchExistingUpcomingRides(
       AppConfig config, AuthProvider authProvider) async {
     String token = await authProvider.secureStorage.read(key: 'token');
-    final upcomingRides = await http.get(
+    final upcomingRidesRes = await http.get(
         Uri.parse(
             '${config.baseUrl}/rides?status=not_started&rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     // Small workaround for rides that are currently occuring but weren't fetched
     String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    final todayRides = await http.get(
+    final todayRidesRes = await http.get(
         Uri.parse(
             '${config.baseUrl}/rides?date=$todayDate&type=active&rider=${authProvider.id}'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    if (upcomingRides.statusCode == 200 && todayRides.statusCode == 200) {
-      List<Ride> rides = _ridesFromJson(upcomingRides.body).toList();
-      rides.addAll(_ridesFromJson(todayRides.body));
-      rides.sort((a, b) => a.startTime.compareTo(b.startTime));
-      existingUpcomingRides = rides;
+    if (upcomingRidesRes.statusCode == 200 && todayRidesRes.statusCode == 200) {
+      List<Ride> upcomingRides = _ridesFromJson(upcomingRidesRes.body).toList();
+      List<Ride> todayRides = _ridesFromJson(todayRidesRes.body).toList();
+      // Filter duplicate rides in case they exist and add to list
+      todayRides = todayRides
+          .where((todayRide) => !upcomingRides
+              .any((upcomingRide) => todayRide.id == upcomingRide.id))
+          .toList();
+      upcomingRides.addAll(todayRides);
+      upcomingRides.sort((a, b) => a.startTime.compareTo(b.startTime));
+      existingUpcomingRides = upcomingRides;
     }
   }
 
