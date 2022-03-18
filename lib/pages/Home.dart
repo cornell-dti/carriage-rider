@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:carriage_rider/providers/NotificationsProvider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -22,15 +23,10 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:carriage_rider/pages/Contact.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/models/Ride.dart';
 import 'Upcoming.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
-}
-
 void main() async {
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   MaterialApp(routes: {
     '/': (context) => Home(),
   });
@@ -40,6 +36,7 @@ class HomeHeader extends StatefulWidget {
   final ScrollController homeScrollCtrl;
   final double height;
   final Function refreshCallback;
+
   HomeHeader(this.homeScrollCtrl, this.height, this.refreshCallback);
 
   @override
@@ -63,6 +60,8 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     RiderProvider riderProvider = Provider.of<RiderProvider>(context);
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: true);
 
     double iconButtonSize = 48;
     double iconButtonSpacing = 8;
@@ -107,7 +106,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 30,
-                              fontFamily: 'SFPro',
+                              fontFamily: 'Inter',
                               fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -151,7 +150,24 @@ class _HomeHeaderState extends State<HomeHeader> {
                             },
                             customBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
-                            child: Icon(Icons.menu, color: Colors.black)),
+                            child: notifsProvider.hasNewNotif
+                                ? Stack(children: [
+                                    Center(
+                                        child: Icon(Icons.menu,
+                                            color: Colors.black)),
+                                    Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: Container(
+                                            width: 9,
+                                            height: 9,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            )))
+                                  ])
+                                : Icon(Icons.menu, color: Colors.black)),
                       ),
                     )),
               ),
@@ -237,7 +253,7 @@ class _HomeState extends State<Home> {
       'High Importance Notifications', // title
       description:
           'This channel is used for important notifications.', // description
-      importance: Importance.high,
+      importance: Importance.max,
     );
 
     notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -260,30 +276,84 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _onMessage(RemoteMessage message) {
-    print('received message');
+  _handleNotification(RemoteNotification notification, String notifId,
+      Map<String, dynamic> data) async {
+    RidesProvider ridesProvider =
+        Provider.of<RidesProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    AppConfig appConfig = AppConfig.of(context);
+    NotifEvent notifEvent = getNotifEventEnum(data['notifEvent']);
+    Ride ride;
+    if (notifEvent != NotifEvent.RIDE_CANCELLED) {
+      ride = Ride.fromJson(json.decode(data['ride']));
+      try {
+        // Check if ride exists
+        ridesProvider.getRideByID(ride.id);
+      } catch (Exception) {
+        // Get most up to date rides from server
+        await ridesProvider.fetchAllRides(appConfig, authProvider);
+      } finally {
+        // Update ride with new information
+        ridesProvider.updateRideByID(ride);
+      }
+    } else {
+      // Updating from server will remove cancelled ride
+      await ridesProvider.fetchAllRides(appConfig, authProvider);
+    }
+
+    NotificationsProvider notifsProvider =
+        Provider.of<NotificationsProvider>(context, listen: false);
+    BackendNotification backendNotif = BackendNotification(
+        notifId,
+        getNotifEventEnum(data['notifEvent']),
+        notification.body,
+        ride?.id,
+        DateTime.parse(data['sentTime']));
+    notifsProvider.addNewNotif(backendNotif);
+  }
+
+  _onMessage(RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('received message $notifId');
+
     RemoteNotification notification = message.notification;
     AndroidNotification android = message.notification?.android;
-    if (notification != null && android != null) {
-      notificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ));
+
+    if (notification != null) {
+      _handleNotification(notification, notifId, data);
+      if (android != null) {
+        notificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
+              ),
+            ));
+      }
     }
   }
 
-  _onMessageOpenedApp(RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
+  _onMessageOpenedApp(RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+    String notifId = data['id'];
+    print('app launched from message $notifId');
+
+    RemoteNotification notification = message.notification;
+
+    if (notification != null) {
+      _handleNotification(notification, notifId, data);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Notifications()));
+    }
   }
 
   @override
@@ -301,7 +371,7 @@ class _HomeState extends State<Home> {
       return Text(
         text,
         textAlign: TextAlign.left,
-        style: TextStyle(color: color, fontFamily: 'SFPro'),
+        style: TextStyle(color: color, fontFamily: 'Inter'),
       );
     }
 

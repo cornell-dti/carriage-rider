@@ -10,6 +10,7 @@ import '../utils/CarriageTheme.dart';
 enum RideStatus {
   NOT_STARTED,
   ON_THE_WAY,
+  LATE,
   ARRIVED,
   PICKED_UP,
   COMPLETED,

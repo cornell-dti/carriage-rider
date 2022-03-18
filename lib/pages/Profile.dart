@@ -339,13 +339,13 @@ class SettingRow extends StatelessWidget {
                   children: [
                     Text(title,
                         style: TextStyle(
-                            fontFamily: 'SFDisplay',
+                            fontFamily: 'Inter',
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
                     Text(description,
                         style: TextStyle(
-                            fontFamily: 'SFDisplay',
+                            fontFamily: 'Inter',
                             fontSize: 17,
                             color: CarriageTheme.gray1)),
                   ],
@@ -380,7 +380,7 @@ class InfoGroup extends StatelessWidget {
                   header: true,
                   child: Text(title,
                       style: TextStyle(
-                          fontFamily: 'SFDisplay',
+                          fontFamily: 'Inter',
                           fontSize: 20,
                           fontWeight: FontWeight.bold)),
                 ),
@@ -704,7 +704,7 @@ class SignOutButton extends StatelessWidget {
                 'Sign out',
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: Colors.black, fontFamily: 'SFPro', fontSize: 15),
+                    color: Colors.black, fontFamily: 'Inter', fontSize: 15),
               )
             ],
           ),

@@ -32,7 +32,7 @@ class ScheduleBar extends StatelessWidget implements PreferredSizeWidget {
                     Text(
                       'Schedule',
                       style: TextStyle(
-                          color: textColor, fontSize: 20, fontFamily: 'SFPro'),
+                          color: textColor, fontSize: 20, fontFamily: 'Inter'),
                     ),
                   ],
                 ),

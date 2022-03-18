@@ -28,4 +28,6 @@ class Location {
         info: json['info'],
         tag: json['tag']);
   }
+
+  String toString() => '$name, $address';
 }
