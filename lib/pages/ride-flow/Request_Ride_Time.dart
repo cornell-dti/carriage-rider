@@ -510,35 +510,58 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
                               SizedBox(height: 15),
                               Row(
                                 children: [
-                                  ToggleButton(
-                                      rideFlowProvider.repeatDaysSelected[0],
-                                      () => toggle(rideFlowProvider, 0),
-                                      'M',
-                                      'Mondays'),
-                                  SizedBox(width: 15),
-                                  ToggleButton(
-                                      rideFlowProvider.repeatDaysSelected[1],
-                                      () => toggle(rideFlowProvider, 1),
-                                      'T',
-                                      'Tuesdays'),
-                                  SizedBox(width: 15),
-                                  ToggleButton(
-                                      rideFlowProvider.repeatDaysSelected[2],
-                                      () => toggle(rideFlowProvider, 2),
-                                      'W',
-                                      'Wednesdays'),
-                                  SizedBox(width: 15),
-                                  ToggleButton(
-                                      rideFlowProvider.repeatDaysSelected[3],
-                                      () => toggle(rideFlowProvider, 3),
-                                      'Th',
-                                      'Thursdays'),
-                                  SizedBox(width: 15),
-                                  ToggleButton(
-                                      rideFlowProvider.repeatDaysSelected[4],
-                                      () => toggle(rideFlowProvider, 4),
-                                      'F',
-                                      'Fridays'),
+                                  Expanded(
+                                    flex: 5,
+                                    child: ToggleButton(
+                                        rideFlowProvider.repeatDaysSelected[0],
+                                        () => toggle(rideFlowProvider, 0),
+                                        'M',
+                                        'Mondays'),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: ToggleButton(
+                                        rideFlowProvider.repeatDaysSelected[1],
+                                        () => toggle(rideFlowProvider, 1),
+                                        'T',
+                                        'Tuesdays'),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: ToggleButton(
+                                        rideFlowProvider.repeatDaysSelected[2],
+                                        () => toggle(rideFlowProvider, 2),
+                                        'W',
+                                        'Wednesdays'),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: ToggleButton(
+                                        rideFlowProvider.repeatDaysSelected[3],
+                                        () => toggle(rideFlowProvider, 3),
+                                        'Th',
+                                        'Thursdays'),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: ToggleButton(
+                                        rideFlowProvider.repeatDaysSelected[4],
+                                        () => toggle(rideFlowProvider, 4),
+                                        'F',
+                                        'Fridays'),
+                                  ),
                                 ],
                               ),
                               showSelectionError &&

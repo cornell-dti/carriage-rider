@@ -14,12 +14,11 @@ class CButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.all(16),
-          primary: Colors.black,
-          onPrimary: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          fixedSize: Size.fromHeight(height)),
+        padding: EdgeInsets.all(16),
+        primary: Colors.black,
+        onPrimary: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
       child: Text(text, style: CarriageTheme.button),
       onPressed: onPressed,
     );
