@@ -33,8 +33,7 @@ class Driver {
         firstName: json['firstName'],
         lastName: json['lastName'],
         phoneNumber: json['phoneNumber'],
-        photoLink:
-            json['photoLink'] == null ? null : 'https://' + json['photoLink']);
+        photoLink: json['photoLink'] == null ? null : json['photoLink']);
   }
 
   Widget profilePicture(double diameter) {
