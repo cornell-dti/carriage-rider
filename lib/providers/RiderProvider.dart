@@ -29,7 +29,7 @@ class Rider {
   final String pronouns;
 
   //The accessibility needs of a rider as a list.
-  final List accessibility;
+  final String accessibility;
 
   //The ids of favorite locations.
   final List<String> favoriteLocations;
@@ -49,10 +49,9 @@ class Rider {
   //Creates a string representing a rider's full name from it's first name and last name
   String fullName() => firstName + ' ' + lastName;
 
-  //Converts a rider's list of accessibility needs into a string representation
+  //Makes sure a rider's accessibility is not null
   String accessibilityStr() {
-    String all = accessibility.join(', ');
-    return all == '' ? 'None' : all;
+    return accessibility == null ? 'None' : accessibility ;
   }
 
   Rider(
@@ -80,7 +79,7 @@ class Rider {
         json['firstName'],
         json['lastName'],
         json['pronouns'],
-        List.from(json['accessibility']),
+        json['accessibility'],
         List.from(json['favoriteLocations']),
         json['description'],
         json['photoLink'] == null
