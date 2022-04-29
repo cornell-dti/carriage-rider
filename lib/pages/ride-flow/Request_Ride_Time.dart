@@ -9,6 +9,8 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/pages/ride-flow/FlowWidgets.dart';
 import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 
 double timeToDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
@@ -145,31 +147,73 @@ class _RequestRideDateTimeState extends State<RequestRideDateTime> {
 
   Future<void> selectTime(
       BuildContext context, TimeOfDay init, Function selectCallback) async {
-    TimeOfDay selection = await showTimePicker(
-      context: context,
-      initialTime: init,
-    );
-    if (selection != null) {
-      selectCallback(selection);
+    if (Platform.isAndroid) {
+      TimeOfDay selection = await showTimePicker(
+        context: context,
+        initialTime: init,
+      );
+      if (selection != null) {
+        selectCallback(selection);
+      }
+    } else if (Platform.isIOS) {
+      final CupertinoDatePicker datePicker = CupertinoDatePicker(
+        backgroundColor: Colors.white,
+        initialDateTime: DateTime.now(),
+        mode: CupertinoDatePickerMode.time,
+        onDateTimeChanged: (selection) => {selectCallback(selection)},
+      );
+      showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 200,
+            child: datePicker,
+          );
+        },
+      );
+    } else {
+      //Should only be ios or android
     }
   }
 
   Future<void> selectDate(
       BuildContext context, DateTime init, Function selectCallback) async {
-    final DateTime selection = await showDatePicker(
-      context: context,
-      initialDate: init,
-      firstDate: firstPossibleRideDate(),
-      lastDate: DateTime(init.year + 1),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light(),
-          child: child,
-        );
-      },
-    );
-    if (selection != null) {
-      selectCallback(selection);
+    if (Platform.isAndroid) {
+      final DateTime selection = await showDatePicker(
+        context: context,
+        initialDate: init,
+        firstDate: firstPossibleRideDate(),
+        lastDate: DateTime(init.year + 1),
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData.light(),
+            child: child,
+          );
+        },
+      );
+      if (selection != null) {
+        selectCallback(selection);
+      }
+    } else if (Platform.isIOS) {
+      final CupertinoDatePicker datePicker = CupertinoDatePicker(
+        backgroundColor: Colors.white,
+        initialDateTime: init,
+        minimumDate: firstPossibleRideDate(),
+        maximumDate: DateTime(init.year + 1),
+        mode: CupertinoDatePickerMode.date,
+        onDateTimeChanged: (selection) => {selectCallback(selection)},
+      );
+      showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 200,
+            child: datePicker,
+          );
+        },
+      );
+    } else {
+      // Should only be Android or Ios
     }
   }
 
