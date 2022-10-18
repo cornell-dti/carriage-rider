@@ -1,12 +1,14 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-import 'dart:convert';
+
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../utils/app_config.dart';
 import 'package:http/http.dart' as http;
+
+import '../utils/app_config.dart';
 
 //Model for a rider.
 class Rider {
@@ -29,7 +31,7 @@ class Rider {
   final String pronouns;
 
   //The accessibility needs of a rider as a list.
-  final List accessibility;
+  final String accessibility;
 
   //The ids of favorite locations.
   final List<String> favoriteLocations;
@@ -49,12 +51,6 @@ class Rider {
   //Creates a string representing a rider's full name from it's first name and last name
   String fullName() => firstName + ' ' + lastName;
 
-  //Converts a rider's list of accessibility needs into a string representation
-  String accessibilityStr() {
-    String all = accessibility.join(', ');
-    return all == '' ? 'None' : all;
-  }
-
   Rider(
       this.id,
       this.email,
@@ -73,6 +69,7 @@ class Rider {
   // force the network images that display it to re-fetch the photo, because it won't
   // if the URL is the same, and the URL does not change after an upload to backend.
   factory Rider.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Rider(
         json['id'],
         json['email'],
@@ -80,7 +77,7 @@ class Rider {
         json['firstName'],
         json['lastName'],
         json['pronouns'],
-        List.from(json['accessibility']),
+        json['accessibility'],
         List.from(json['favoriteLocations']),
         json['description'],
         json['photoLink'] == null
