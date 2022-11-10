@@ -69,7 +69,6 @@ class Rider {
   // force the network images that display it to re-fetch the photo, because it won't
   // if the URL is the same, and the URL does not change after an upload to backend.
   factory Rider.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Rider(
         json['id'],
         json['email'],
