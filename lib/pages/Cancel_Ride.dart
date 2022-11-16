@@ -4,8 +4,9 @@ import 'package:carriage_rider/utils/CarriageTheme.dart';
 import 'package:carriage_rider/widgets/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import '../models/Ride.dart';
 import 'package:provider/provider.dart';
+
+import '../models/Ride.dart';
 
 class CancelRidePage extends StatefulWidget {
   CancelRidePage(this.ride);
@@ -168,7 +169,7 @@ class CancelConfirmation extends StatelessWidget {
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
             ),
             onPressed: () async {
-              Navigator.popUntil(context, ModalRoute.withName('/'));
+              Navigator.of(context).popUntil((route) => route.isFirst);
             },
           ),
         ),
