@@ -15,6 +15,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../main_common.dart';
 import '../providers/RiderProvider.dart';
 
 class Profile extends StatelessWidget {
@@ -711,7 +712,10 @@ class SignOutButton extends StatelessWidget {
           ),
           onPressed: () async {
             await authProvider.signOut();
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Main()),
+                ModalRoute.withName("/"));
           },
         ));
   }
