@@ -1,20 +1,21 @@
 import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:carriage_rider/pages/Login.dart';
+
 import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:carriage_rider/utils/app_config.dart';
 import 'package:carriage_rider/widgets/ScheduleBar.dart';
 import 'package:flutter/material.dart';
-import 'package:carriage_rider/utils/app_config.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:core';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../providers/RiderProvider.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -708,11 +709,9 @@ class SignOutButton extends StatelessWidget {
               )
             ],
           ),
-          onPressed: () {
-            authProvider.signOut();
+          onPressed: () async {
+            await authProvider.signOut();
             Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Login()));
           },
         ));
   }
