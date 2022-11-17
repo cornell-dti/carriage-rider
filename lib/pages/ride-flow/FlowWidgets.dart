@@ -1,6 +1,6 @@
 import 'package:carriage_rider/providers/RideFlowProvider.dart';
-import 'package:flutter/material.dart';
 import 'package:carriage_rider/utils/CarriageTheme.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AlwaysDisabledFocusNode extends FocusNode {
@@ -17,7 +17,7 @@ class FlowCancel extends StatelessWidget {
 
     void onTap() {
       rideFlowProvider.clear();
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
 
     return Row(

@@ -1,7 +1,7 @@
+import 'package:carriage_rider/providers/AuthProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/providers/AuthProvider.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -10,8 +10,7 @@ class Login extends StatelessWidget {
     try {
       authProvider.signInSilently();
     } catch (e) {
-      print(
-          'User has not logged in previously, therefore, we should not proceed');
+      print('Login - tried to sign in silently - $e');
     }
     return Scaffold(
       backgroundColor: Colors.black,
@@ -81,8 +80,8 @@ class SignInButton extends StatelessWidget {
                 if (states.contains(MaterialState.pressed)) return Colors.grey;
                 return null;
               })),
-          onPressed: () {
-            authProvider.signIn();
+          onPressed: () async {
+            await authProvider.signIn();
           },
           child: Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

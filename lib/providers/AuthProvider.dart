@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../utils/app_config.dart';
 
@@ -77,16 +77,17 @@ class AuthProvider with ChangeNotifier {
     return id != null;
   }
 
-  void signIn() {
-    googleSignIn.signIn();
+  Future<void> signIn() async {
+    await googleSignIn.signIn();
   }
 
-  void signInSilently() {
-    googleSignIn.signInSilently();
+  Future<GoogleSignInAccount> signInSilently() async {
+    return googleSignIn.signInSilently();
   }
 
-  void signOut() {
-    googleSignIn.signOut();
+  Future<void> signOut() async {
+    await googleSignIn.signOut();
     id = null;
+    notifyListeners();
   }
 }

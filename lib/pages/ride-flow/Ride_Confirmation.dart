@@ -78,7 +78,7 @@ class _RideConfirmationState extends State<RideConfirmation> {
                     text: 'Done',
                     height: 50,
                     onPressed: () {
-                      Navigator.popUntil(context, ModalRoute.withName('/'));
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                   ),
                 )),
