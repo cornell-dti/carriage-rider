@@ -1,10 +1,12 @@
 import 'dart:core';
+
+import 'package:carriage_rider/models/Driver.dart';
 import 'package:carriage_rider/providers/RiderProvider.dart';
 import 'package:carriage_rider/utils/Ordinal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:carriage_rider/models/Driver.dart';
+
 import '../utils/CarriageTheme.dart';
 
 enum RideStatus {
@@ -353,7 +355,7 @@ class Ride {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(riderProvider.info.accessibilityStr(),
+            Text(riderProvider.info.accessibility,
                 style: CarriageTheme.infoStyle)
           ],
         ),
