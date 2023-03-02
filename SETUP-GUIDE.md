@@ -11,7 +11,7 @@
 -   When you run `flutter doctor`, look for the errors it gives and correct them, if any
     -   for instance, cocoapods is often out of date. Run `sudo gem install cocoapods`
 
-## Running
+## First Time Run
 
 Open Android Studio
 0. Install the Flutter plugin if you haven’t already
@@ -22,10 +22,16 @@ Open Android Studio
 4. Configure the buttons along the top row of the screen to have selected the Pixel device as emulator, and main.dart as the code to run
 5. Run the following command: `keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android`
    and then send the SHA1 key to your TPM to add it to the Google Firebase list of allowed fingerprints
-7. Your TPM should then download the generated google-services.json and replace the current one under android/app/google-services.json with the new one and push
-8. Go checkout the TPM’s new changes from Git
-9. Hit Run (play button) on the device in the Device Manager
-10. If Heroku (or your respective backend) is down, logging in won’t work. Make sure Heroku is up
+6. Your TPM should then download the generated google-services.json and replace the current one under android/app/google-services.json with the new one and push
+7. Go checkout the TPM’s new changes from Git
+8. Hit Run (play button) on the device in the Device Manager
+9. If Heroku (or your respective backend) is down, logging in won’t work. Make sure Heroku is up
+
+## Future Runs
+
+1. Tools > Device Manager
+2. Hit the Play button on the Pixel device
+3. Hit the Run button in the top bar in Android Studio
 
 ## Bug Fixing
 
