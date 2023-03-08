@@ -71,6 +71,14 @@
           }
         },
         {
+          "client_id": "241748771473-e3auv2gqmba1obghurf3utbu71olvfas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carriage.carriage_rider",
+            "certificate_hash": "a26ef03ce930d09e26a0f6c4b556650eb3ecfe79"
+          }
+        },
+        {
           "client_id": "241748771473-f9t7p3d01hpo30v8jl2j0qrvhq53ff1t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

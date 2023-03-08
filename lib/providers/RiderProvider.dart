@@ -68,22 +68,43 @@ class Rider {
   // Creates a Rider from JSON representation. The query at the end of photoLink is to
   // force the network images that display it to re-fetch the photo, because it won't
   // if the URL is the same, and the URL does not change after an upload to backend.
+  // ignore: missing_return
   factory Rider.fromJson(Map<String, dynamic> json) {
-    return Rider(
-        json['id'],
-        json['email'],
-        json['phoneNumber'],
-        json['firstName'],
-        json['lastName'],
-        json['pronouns'],
-        json['accessibility'],
-        List.from(json['favoriteLocations']),
-        json['description'],
-        json['photoLink'] == null
-            ? null
-            : '${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
-        json['joinDate'],
-        json['address']);
+    if (json['favoriteLocations'] != null) {
+      return Rider(
+          json['id'],
+          json['email'],
+          json['phoneNumber'],
+          json['firstName'],
+          json['lastName'],
+          json['pronouns'],
+          json['accessibility'],
+          List.from(json['favoriteLocations']),
+          json['description'],
+          json['photoLink'] == null
+              ? null
+              : '${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+          json['joinDate'],
+          json['address']);
+    } else {
+      if (json['favoriteLocations'] == null) {
+        return Rider(
+            json['id'],
+            json['email'],
+            json['phoneNumber'],
+            json['firstName'],
+            json['lastName'],
+            json['pronouns'],
+            json['accessibility'],
+            List.from([]),
+            json['description'],
+            json['photoLink'] == null
+                ? null
+                : '${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+            json['joinDate'],
+            json['address']);
+      }
+    }
   }
 
   Widget profilePicture(double diameter) {
