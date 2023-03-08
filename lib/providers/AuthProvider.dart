@@ -13,12 +13,14 @@ import '../utils/app_config.dart';
 Future<String> auth(String baseUrl, String token, String email) async {
   Uri endpoint = Uri.parse(baseUrl + '/auth');
   Map<String, dynamic> requestBody = {
-    'token': token,
-    'email': email,
-    'clientId': Platform.isAndroid
-        ? '241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com'
-        : '241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18.apps.googleusercontent.com',
-    'table': 'Riders'
+    'table': 'Riders',
+    'userInfo': jsonEncode({
+      'token': token,
+      'email': email,
+      'clientId': Platform.isAndroid
+          ? '241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com'
+          : '241748771473-7rfda2grc8f7p099bmf98en0q9bcvp18.apps.googleusercontent.com'
+    })
   };
   return post(endpoint, body: requestBody).then((res) {
     return res.body;
