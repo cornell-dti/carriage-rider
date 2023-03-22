@@ -251,8 +251,7 @@ class _HomeState extends State<Home> {
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
-      description:
-          'This channel is used for important notifications.', // description
+      'This channel is used for important notifications.', // description
       importance: Importance.max,
     );
 
@@ -332,7 +331,7 @@ class _HomeState extends State<Home> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channelDescription: channel.description,
+                channel.description,
                 // TODO add a proper drawable resource to android, for now using
                 //      one that already exists in example app.
                 icon: 'launch_background',
