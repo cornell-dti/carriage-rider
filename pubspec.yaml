@@ -19,33 +19,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.2
-  google_sign_in: ^4.4.4
+  cupertino_icons: ^1.0.5
+  google_sign_in: ^6.0.2
   http: ^0.13.0
-  intl: ^0.16.1
-  provider: ^4.0.5+1
+  intl: ^0.18.0
+  provider: ^6.0.5
   url_launcher:
   image_picker: ^0.8.4+1
   flutter_datetime_picker: ^1.4.0
-  flutter_typeahead: ^1.8.8
-  flutter_verification_code: ^0.2.1
-  jwt_decoder: ^1.0.4
-  flutter_secure_storage: ^3.3.5
-  flutter_svg: ^0.22.0
-  pull_to_refresh: 1.6.3
-  custom_refresh_indicator: ^0.9.0
+  flutter_typeahead: ^4.3.7
+  flutter_verification_code: ^1.1.6
+  jwt_decoder: ^2.0.1
+  flutter_secure_storage: ^8.0.0
+  flutter_svg: ^2.0.4
+  pull_to_refresh: ^2.0.0
+  custom_refresh_indicator: ^2.0.1
   overlay_support:
-  firebase_messaging: ^10.0.8
-  firebase_core:
-  loading_overlay: ^0.2.1
-  flutter_local_notifications:
+  firebase_messaging: ^14.3.0
+  firebase_core: ^2.8.0
+  loading_overlay: ^0.3.0
+  flutter_local_notifications: ^13.0.0
   shared_preferences:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.2
-  flutter_lints: ^1.0.4
+  flutter_launcher_icons: ^0.12.0
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true

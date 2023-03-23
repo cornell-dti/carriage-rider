@@ -51,7 +51,9 @@ class AuthProvider with ChangeNotifier {
         String googleToken = await tokenFromAccount(newUser);
         Map<String, dynamic> authResponse =
             jsonDecode(await auth(config.baseUrl, googleToken, newUser.email));
+        print(authResponse);
         String token = authResponse['jwt'];
+        print(token);
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
