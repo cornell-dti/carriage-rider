@@ -15,7 +15,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   AppConfig configuredApp = AppConfig(
-    baseUrl: 'https://10.0.2.2:3001/api',
+    baseUrl: 'http://10.0.2.2:3001/api',
     child: MyApp(),
   );
 
