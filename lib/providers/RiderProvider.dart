@@ -70,20 +70,20 @@ class Rider {
   // if the URL is the same, and the URL does not change after an upload to backend.
   factory Rider.fromJson(Map<String, dynamic> json) {
     return Rider(
-        json['id'],
-        json['email'],
-        json['phoneNumber'],
-        json['firstName'],
-        json['lastName'],
-        json['pronouns'],
-        json['accessibility'],
-        (json['favoriteLocations'] as List)?.cast<String>() ?? [],
-        json['description'],
-        json['photoLink'] == null
+        json['data']['id'],
+        json['data']['email'],
+        json['data']['phoneNumber'],
+        json['data']['firstName'],
+        json['data']['lastName'],
+        json['data']['pronouns'],
+        json['data']['accessibility'],
+        (json['data']['favoriteLocations'] as List)?.cast<String>() ?? [],
+        json['data']['description'],
+        json['data']['photoLink'] == null
             ? null
-            : '${json['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
-        json['joinDate'],
-        json['address']);
+            : '${json['data']['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+        json['data']['joinDate'],
+        json['data']['address']);
   }
 
   Widget profilePicture(double diameter) {
