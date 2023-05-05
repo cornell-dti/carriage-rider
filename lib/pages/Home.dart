@@ -89,7 +89,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               Semantics(
                 sortKey: OrdinalSortKey(0),
                 header: true,
-                label: 'Hi ' + riderProvider.info.firstName,
+                label: 'Hi ',
                 child: Container(
                   width: MediaQuery.of(context).size.width -
                       (2 * iconButtonSize) -

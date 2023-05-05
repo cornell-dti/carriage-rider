@@ -272,7 +272,6 @@ class RideActions extends StatelessWidget {
     RideFlowProvider rideFlowProvider = Provider.of<RideFlowProvider>(context);
 
     void editSingle(BuildContext context, Ride ride) {
-      print(ride.id);
       rideFlowProvider.setEditingSingle(context, ride);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => RequestRideLoc()));

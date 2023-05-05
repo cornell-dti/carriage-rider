@@ -77,7 +77,7 @@ class Rider {
         json['lastName'],
         json['pronouns'],
         json['accessibility'],
-        List.from(json['favoriteLocations']),
+        (json['favoriteLocations'] as List)?.cast<String>() ?? [],
         json['description'],
         json['photoLink'] == null
             ? null
@@ -264,7 +264,6 @@ class RiderProvider with ChangeNotifier {
       Map<String, dynamic> json = jsonDecode(response.body);
       _setInfo(Rider.fromJson(json));
     } else {
-      print(response.body);
       throw Exception('Failed to update driver.');
     }
   }

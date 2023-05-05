@@ -10,18 +10,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../utils/app_config.dart';
 
-Future<String> auth(String baseUrl, String token, String email) async {
+Future<String> auth(String baseUrl, String code, String email) async {
   Uri endpoint = Uri.parse(baseUrl + '/auth');
-  Map<String, dynamic> requestBody = {
-    "userInfo": jsonEncode({
-      "token": token,
-      "email": email,
-      "clientId": Platform.isAndroid
-          ? "241748771473-0r3v31qcthi2kj09e5qk96mhsm5omrvr.apps.googleusercontent.com"
-          : "241748771473-a4q5skhr0is8r994o7ie9scrnm5ua760.apps.googleusercontent.com",
-    }),
-    "table": "Drivers"
-  };
+  Map<String, dynamic> requestBody = {"code": code, "table": "Riders"};
 
   return post(endpoint, body: requestBody).then((res) {
     return res.body;
@@ -54,9 +45,7 @@ class AuthProvider with ChangeNotifier {
         String googleToken = await tokenFromAccount(newUser);
         Map<String, dynamic> authResponse =
             jsonDecode(await auth(config.baseUrl, googleToken, newUser.email));
-        print(authResponse);
         String token = authResponse['jwt'];
-        print(token);
         Map<String, dynamic> jwt = JwtDecoder.decode(token);
         id = jwt['id'];
         await secureStorage.write(key: 'token', value: token);
