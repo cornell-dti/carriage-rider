@@ -130,36 +130,37 @@ class Ride {
       this.driver});
 
   factory Ride.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json;
     return Ride(
-        id: json['id'],
-        type: json['type'],
-        rider: Rider.fromJson(json['rider']),
-        status: getStatusEnum(json['status']),
-        startLocation: json['startLocation']['name'],
-        startAddress: json['startLocation']['address'],
-        endLocation: json['endLocation']['name'],
-        endAddress: json['endLocation']['address'],
+        id: data['id'],
+        type: data['type'],
+        rider: Rider.fromJson(data['rider']),
+        status: getStatusEnum(data['status']),
+        startLocation: data['startLocation']['name'],
+        startAddress: data['startLocation']['address'],
+        endLocation: data['endLocation']['name'],
+        endAddress: data['endLocation']['address'],
         startTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(json['startTime'], true)
+            .parse(data['startTime'], true)
             .toLocal(),
         endTime: DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(json['endTime'], true)
+            .parse(data['endTime'], true)
             .toLocal(),
-        recurring: json['recurring'] == null ? false : json['recurring'],
-        recurringDays: json['recurringDays'] == null
+        recurring: data['recurring'] == null ? false : data['recurring'],
+        recurringDays: data['recurringDays'] == null
             ? null
-            : List.from(json['recurringDays']),
-        deleted: json['deleted'] == null
+            : List.from(data['recurringDays']),
+        deleted: data['deleted'] == null
             ? null
-            : List<String>.from(json['deleted'])
+            : List<String>.from(data['deleted'])
                 .map((String d) => DateFormat('yyyy-MM-dd').parse(d, true))
                 .toList(),
-        late: json['late'],
-        driver: json['driver'] == null ? null : Driver.fromJson(json['driver']),
-        edits: json['edits'] == null ? null : List.from(json['edits']),
-        endDate: json['endDate'] == null
+        late: data['late'],
+        driver: data['driver'] == null ? null : Driver.fromJson(data['driver']),
+        edits: data['edits'] == null ? null : List.from(data['edits']),
+        endDate: data['endDate'] == null
             ? null
-            : DateFormat('yyyy-MM-dd').parse(json['endDate']));
+            : DateFormat('yyyy-MM-dd').parse(data['endDate']));
   }
 
   //Widget displaying the start time of a ride using DateFormat.

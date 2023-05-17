@@ -69,21 +69,22 @@ class Rider {
   // force the network images that display it to re-fetch the photo, because it won't
   // if the URL is the same, and the URL does not change after an upload to backend.
   factory Rider.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json;
     return Rider(
-        json['data']['id'],
-        json['data']['email'],
-        json['data']['phoneNumber'],
-        json['data']['firstName'],
-        json['data']['lastName'],
-        json['data']['pronouns'],
-        json['data']['accessibility'],
-        (json['data']['favoriteLocations'] as List)?.cast<String>() ?? [],
-        json['data']['description'],
-        json['data']['photoLink'] == null
+        data['id'],
+        data['email'],
+        data['phoneNumber'],
+        data['firstName'],
+        data['lastName'],
+        data['pronouns'],
+        data['accessibility'],
+        (data['favoriteLocations'] as List)?.cast<String>() ?? [],
+        data['description'],
+        data['photoLink'] == null
             ? null
-            : '${json['data']['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
-        json['data']['joinDate'],
-        json['data']['address']);
+            : '${data['photoLink']}?dummy=${DateTime.now().millisecondsSinceEpoch}',
+        data['joinDate'],
+        data['address']);
   }
 
   Widget profilePicture(double diameter) {
