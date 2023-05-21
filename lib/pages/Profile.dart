@@ -202,8 +202,10 @@ class TermsInfo extends StatelessWidget {
     void openGuidelines() async {
       String url =
           'https://sds.cornell.edu/accommodations-services/transportation/culift-guidelines';
-      if (await canLaunch(url)) {
+      try {
         await launch(url);
+      } catch (e) {
+        print(e);
       }
     }
 

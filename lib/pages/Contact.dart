@@ -135,10 +135,13 @@ class ArrowURLButton extends StatelessWidget {
               child: Icon(Icons.arrow_forward_ios, size: 20),
             ),
             onTap: () async {
-              if (await UrlLauncher.canLaunch(url)) {
+              try {
                 await UrlLauncher.launch(url);
-              } else {
+              } catch (e) {
+                print(e);
                 print('Could not launch $url');
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No email client found!')));
               }
             },
           ),
